@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{e76cb267-c56e-44ff-a05b-827c3365fe1c}">
+		<property name="name">
+			<value>Low_HP</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{6e20d3b2-8f3f-4c58-a769-224024f72ecd}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{6e20d3b2-8f3f-4c58-a769-224024f72ecd}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.19999998807907104</value>
+		</property>
+	</object>
+</objects>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerReturn" id="{e8405f36-d98c-4e9a-bb62-a9462c9a75fd}">
+		<property name="overridingInputFormat">
+			<value>2</value>
+		</property>
+		<property name="name">
+			<value>Cave Reverb</value>
+		</property>
+		<relationship name="automators">
+			<destination>{d068d609-f05c-4c81-b666-e13382d55481}</destination>
+		</relationship>
+		<relationship name="effectChain">
+			<destination>{29212260-52b1-41ee-a815-a16aaa337e36}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{0f97e47d-830c-404a-ab0d-bae3a56e872a}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{7c30b6da-0628-4118-80ef-3fae47b82d85}</destination>
+		</relationship>
+	</object>
+	<object class="Automator" id="{d068d609-f05c-4c81-b666-e13382d55481}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>volume</value>
+		</property>
+		<relationship name="automationCurves">
+			<destination>{1d0fcac1-4b73-404e-bbfb-71b2682eff2e}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{29212260-52b1-41ee-a815-a16aaa337e36}">
+		<relationship name="effects">
+			<destination>{f471b13c-4109-4150-9c8f-be97f945aba2}</destination>
+			<destination>{aaf007ba-6c80-430a-a23c-09c2fdf67b7b}</destination>
+			<destination>{249a7567-eb89-4b49-a6e6-68a469674b65}</destination>
+			<destination>{dfb76262-6bd3-4de7-b70c-3838509a543a}</destination>
+			<destination>{9938acc0-ffe1-41d1-9402-6bbdadac7b76}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{0f97e47d-830c-404a-ab0d-bae3a56e872a}" />
+	<object class="AutomationCurve" id="{1d0fcac1-4b73-404e-bbfb-71b2682eff2e}">
+		<relationship name="parameter">
+			<destination>{70a5013b-0ae2-461b-854c-b8f94f245277}</destination>
+		</relationship>
+		<relationship name="automationPoints">
+			<destination>{85ff2e1f-417f-4b7b-8afe-531bde3fa3a7}</destination>
+			<destination>{ad127781-0fa2-4528-b8c9-7b9b5b3d635c}</destination>
+		</relationship>
+	</object>
+	<object class="SFXReverbEffect" id="{f471b13c-4109-4150-9c8f-be97f945aba2}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
+		<property name="decayTime">
+			<value>2900</value>
+		</property>
+		<property name="earlyDelay">
+			<value>15</value>
+		</property>
+		<property name="lateDelay">
+			<value>22</value>
+		</property>
+		<property name="HFDecayRatio">
+			<value>100</value>
+		</property>
+		<property name="highCut">
+			<value>20000</value>
+		</property>
+		<property name="earlyLateMix">
+			<value>59</value>
+		</property>
+		<property name="dryLevel">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="MultibandEqEffect" id="{aaf007ba-6c80-430a-a23c-09c2fdf67b7b}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="filterTypeE">
+			<value>8</value>
+		</property>
+		<property name="frequencyA">
+			<value>29.6480331</value>
+		</property>
+		<property name="frequencyE">
+			<value>6753.43848</value>
+		</property>
+		<property name="qualityA">
+			<value>0.330241382</value>
+		</property>
+		<property name="qualityE">
+			<value>0.100000001</value>
+		</property>
+		<property name="gainE">
+			<value>-7.24137878</value>
+		</property>
+	</object>
+	<object class="ConvolutionReverbEffect" id="{249a7567-eb89-4b49-a6e6-68a469674b65}">
+		<property name="endFrame">
+			<value>113785</value>
+		</property>
+		<property name="wetLevel">
+			<value>-11</value>
+		</property>
+		<property name="linkChannels">
+			<value>false</value>
+		</property>
+		<relationship name="referenceableData">
+			<destination>{b5a02ac9-f6e1-4e6e-bfa1-08c9ad025b4e}</destination>
+		</relationship>
+	</object>
+	<object class="SFXReverbEffect" id="{dfb76262-6bd3-4de7-b70c-3838509a543a}">
+		<property name="decayTime">
+			<value>3400</value>
+		</property>
+		<property name="earlyDelay">
+			<value>7</value>
+		</property>
+		<property name="lateDelay">
+			<value>41</value>
+		</property>
+		<property name="HFDecayRatio">
+			<value>37</value>
+		</property>
+		<property name="lowShelfGain">
+			<value>-2.5</value>
+		</property>
+		<property name="highCut">
+			<value>20000</value>
+		</property>
+		<property name="dryLevel">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="MixerBusFader" id="{9938acc0-ffe1-41d1-9402-6bbdadac7b76}" />
+	<object class="AutomationPoint" id="{85ff2e1f-417f-4b7b-8afe-531bde3fa3a7}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{ad127781-0fa2-4528-b8c9-7b9b5b3d635c}">
+		<property name="position">
+			<value>1</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

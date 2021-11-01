@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerGroup" id="{7454daba-d540-46dc-9902-5ea0987b33d7}">
+		<property name="volume">
+			<value>-8.5</value>
+		</property>
+		<property name="name">
+			<value>CHA_Cygnus_DMG</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{95ec7c04-fd68-48bb-8024-080a691c69ea}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{a808f542-bc44-48b2-90e4-2c12e9fe0bf8}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{0d56096f-92da-47c4-85d0-6e69f1dc159b}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{95ec7c04-fd68-48bb-8024-080a691c69ea}">
+		<relationship name="effects">
+			<destination>{1b9ef188-938c-40c1-a122-955a03ae08f3}</destination>
+			<destination>{9845d703-162b-430e-831a-83abb0a07407}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{a808f542-bc44-48b2-90e4-2c12e9fe0bf8}" />
+	<object class="MixerBusFader" id="{1b9ef188-938c-40c1-a122-955a03ae08f3}" />
+	<object class="MixerSend" id="{9845d703-162b-430e-831a-83abb0a07407}">
+		<property name="level">
+			<value>0</value>
+		</property>
+		<property name="inputFormat">
+			<value>2</value>
+		</property>
+		<relationship name="mixerReturn">
+			<destination>{2008df7f-ea1a-4793-b4f0-91a30fa0d854}</destination>
+		</relationship>
+	</object>
+</objects>

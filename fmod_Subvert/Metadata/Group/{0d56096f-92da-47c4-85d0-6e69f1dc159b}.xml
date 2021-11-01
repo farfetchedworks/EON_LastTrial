@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerGroup" id="{0d56096f-92da-47c4-85d0-6e69f1dc159b}">
+		<property name="name">
+			<value>CHA_Cygnus</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{894131d5-58da-4cfa-8c51-78690fa1045e}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{69813988-e7d2-473b-89fa-39ab1506e508}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{41b7531a-49c5-491c-9f6c-818db81b6cd0}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{894131d5-58da-4cfa-8c51-78690fa1045e}">
+		<relationship name="effects">
+			<destination>{9786b3b6-320e-46c2-8854-2119a0b91d73}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{69813988-e7d2-473b-89fa-39ab1506e508}" />
+	<object class="MixerBusFader" id="{9786b3b6-320e-46c2-8854-2119a0b91d73}" />
+</objects>

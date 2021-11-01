@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{f0e68549-0783-40fe-8885-ef8b64d70e11}">
+		<property name="name">
+			<value>Eon_Dead</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{bb8db7b1-5f91-4a96-87f0-f4b7d89748ef}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{bb8db7b1-5f91-4a96-87f0-f4b7d89748ef}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.76999998092651367</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

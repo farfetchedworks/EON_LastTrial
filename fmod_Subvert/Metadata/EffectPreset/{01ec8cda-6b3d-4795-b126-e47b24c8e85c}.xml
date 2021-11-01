@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="EffectPreset" id="{01ec8cda-6b3d-4795-b126-e47b24c8e85c}">
+		<property name="name">
+			<value>ATT_SpawnAttackObject</value>
+		</property>
+		<relationship name="folder">
+			<destination>{e7b2ce4b-3b82-4b71-80a4-a073d1367843}</destination>
+		</relationship>
+		<relationship name="effect">
+			<destination>{97a046be-795d-4fe1-b433-c91a6b0a9a6f}</destination>
+		</relationship>
+	</object>
+	<object class="EffectChain" id="{97a046be-795d-4fe1-b433-c91a6b0a9a6f}">
+		<relationship name="effects">
+			<destination>{3fc8df45-dc69-4a7f-bc33-a66458a6f3f0}</destination>
+		</relationship>
+	</object>
+	<object class="SpatialiserEffect" id="{3fc8df45-dc69-4a7f-bc33-a66458a6f3f0}">
+		<property name="distanceRolloffType">
+			<value>1</value>
+		</property>
+		<property name="maximumDistance">
+			<value>70</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="soundSize">
+			<value>22</value>
+		</property>
+	</object>
+</objects>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{d3360d45-f8d4-4cf8-a64e-abb5b3403b16}">
+		<property name="name">
+			<value>Eon_Inside_Warp</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{174e65a3-769a-4871-9d61-6afc6ca49b50}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{174e65a3-769a-4871-9d61-6afc6ca49b50}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.79999995231628418</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

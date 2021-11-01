@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{85b89ce9-7ab6-4d4f-9943-025cc640455c}">
+		<property name="name">
+			<value>Area_Delay_End</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{052da4b8-9a72-4e2c-9c0e-771d6e989c37}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{052da4b8-9a72-4e2c-9c0e-771d6e989c37}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

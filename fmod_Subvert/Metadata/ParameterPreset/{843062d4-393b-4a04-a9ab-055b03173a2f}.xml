@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{843062d4-393b-4a04-a9ab-055b03173a2f}">
+		<property name="name">
+			<value>Gard_Ranged_Attack_BRANCH_Finish</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{592d6ac1-68f9-414f-9b8a-88453b5e979d}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{592d6ac1-68f9-414f-9b8a-88453b5e979d}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

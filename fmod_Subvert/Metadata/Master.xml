@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerMaster" id="{3534d023-18a6-4755-a4f0-2bf5bb2d1909}">
+		<property name="name">
+			<value>Master Bus</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{1322758d-3359-4c14-abfd-965e7317d4c7}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{a2a4f783-1a56-4082-a621-202cea0222b6}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{97132e7e-7941-415f-95be-9343e18814ec}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{1322758d-3359-4c14-abfd-965e7317d4c7}">
+		<relationship name="effects">
+			<destination>{6bda0e4c-9897-4b4a-a522-b66e2559029f}</destination>
+			<destination>{967721ac-e37e-4bb0-8297-f08cf551f36f}</destination>
+			<destination>{61874ce8-82e7-4ee8-80bf-828a6de7418d}</destination>
+			<destination>{9e6dcf78-bbde-4466-83fc-d0a896a9ed08}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{a2a4f783-1a56-4082-a621-202cea0222b6}">
+		<property name="overridingOutputFormat">
+			<value>2</value>
+		</property>
+	</object>
+	<object class="MultibandEqEffect" id="{6bda0e4c-9897-4b4a-a522-b66e2559029f}">
+		<property name="filterTypeA">
+			<value>5</value>
+		</property>
+		<property name="filterTypeD">
+			<value>8</value>
+		</property>
+		<property name="filterTypeE">
+			<value>2</value>
+		</property>
+		<property name="frequencyA">
+			<value>30.9024067</value>
+		</property>
+		<property name="frequencyD">
+			<value>8137.83301</value>
+		</property>
+		<property name="frequencyE">
+			<value>22000</value>
+		</property>
+		<property name="qualityA">
+			<value>0.497689635</value>
+		</property>
+		<property name="qualityE">
+			<value>0.100000001</value>
+		</property>
+		<property name="gainD">
+			<value>2.5</value>
+		</property>
+	</object>
+	<object class="CompressorEffect" id="{967721ac-e37e-4bb0-8297-f08cf551f36f}">
+		<property name="threshold">
+			<value>-10</value>
+		</property>
+		<property name="ratio">
+			<value>4</value>
+		</property>
+		<property name="attackTime">
+			<value>30</value>
+		</property>
+		<property name="releaseTime">
+			<value>100</value>
+		</property>
+		<property name="gain">
+			<value>0.5</value>
+		</property>
+	</object>
+	<object class="LimiterEffect" id="{61874ce8-82e7-4ee8-80bf-828a6de7418d}">
+		<property name="boost">
+			<value>4</value>
+		</property>
+		<property name="ceiling">
+			<value>-0.100000001</value>
+		</property>
+		<property name="release">
+			<value>60</value>
+		</property>
+	</object>
+	<object class="MixerBusFader" id="{9e6dcf78-bbde-4466-83fc-d0a896a9ed08}" />
+</objects>

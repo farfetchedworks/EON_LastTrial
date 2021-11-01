@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerGroup" id="{522c9285-fa29-4828-b04a-6fcef48bfd4c}">
+		<property name="name">
+			<value>CHA_Eon_FS</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{9592ba6c-24de-4012-8b00-4c2c9a3d5f5d}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{0a711d3e-64a6-4d19-b89d-2d294792c7ae}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{dce57eb0-3049-4a3d-bbc0-6609c083c42c}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{9592ba6c-24de-4012-8b00-4c2c9a3d5f5d}">
+		<relationship name="effects">
+			<destination>{e04eb355-c5e7-410f-abf4-027048611591}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{0a711d3e-64a6-4d19-b89d-2d294792c7ae}" />
+	<object class="MixerBusFader" id="{e04eb355-c5e7-410f-abf4-027048611591}" />
+</objects>

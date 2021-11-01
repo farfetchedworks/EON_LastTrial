@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{90723858-77d6-4e46-ae71-dd53ba95e1d2}">
+		<property name="name">
+			<value>Monks_Nearby</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{8d35a540-26f3-4d16-93d6-45009b7087b2}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{8d35a540-26f3-4d16-93d6-45009b7087b2}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.099999994039535522</value>
+		</property>
+	</object>
+</objects>

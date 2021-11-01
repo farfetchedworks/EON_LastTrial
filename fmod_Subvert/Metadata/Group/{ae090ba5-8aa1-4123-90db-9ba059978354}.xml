@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerGroup" id="{ae090ba5-8aa1-4123-90db-9ba059978354}">
+		<property name="name">
+			<value>CHA_Gard_FS</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{95070b7f-aebe-49bc-831f-0e0fd244ac01}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{333f1a62-ae6d-4047-b197-2b0db3e847fd}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{aae36ab7-0e0a-481e-b01e-52aef0738272}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{95070b7f-aebe-49bc-831f-0e0fd244ac01}">
+		<relationship name="effects">
+			<destination>{b3c2da01-55a0-4781-b000-63901f04ac88}</destination>
+			<destination>{5e3686e5-82ae-4277-a9e0-7928252574fe}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{333f1a62-ae6d-4047-b197-2b0db3e847fd}" />
+	<object class="MixerBusFader" id="{b3c2da01-55a0-4781-b000-63901f04ac88}" />
+	<object class="LimiterEffect" id="{5e3686e5-82ae-4277-a9e0-7928252574fe}">
+		<property name="ceiling">
+			<value>-0.900000036</value>
+		</property>
+		<property name="release">
+			<value>100</value>
+		</property>
+	</object>
+</objects>

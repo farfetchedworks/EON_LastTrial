@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerReturn" id="{2008df7f-ea1a-4793-b4f0-91a30fa0d854}">
+		<property name="volume">
+			<value>-80</value>
+		</property>
+		<property name="name">
+			<value>s_CHA_Enemy_DMGS</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{e355e2f8-4d98-42af-9a97-638a44ea8053}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{75cf11ad-d1dc-460a-b4d0-03f6ec3c0133}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{1bc3b89f-6f7e-4bc7-8bc6-8967145c1340}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{e355e2f8-4d98-42af-9a97-638a44ea8053}">
+		<relationship name="effects">
+			<destination>{f182798c-f56a-4fc1-91a5-514aadd8e5cb}</destination>
+			<destination>{d18793e1-1357-4c1f-a2a9-eb487f17aa3c}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{75cf11ad-d1dc-460a-b4d0-03f6ec3c0133}" />
+	<object class="Sidechain" id="{f182798c-f56a-4fc1-91a5-514aadd8e5cb}" />
+	<object class="MixerBusFader" id="{d18793e1-1357-4c1f-a2a9-eb487f17aa3c}" />
+</objects>

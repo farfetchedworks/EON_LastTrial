@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerGroup" id="{c8bf7f6d-d219-4958-a222-e6dddfbeadc1}">
+		<property name="volume">
+			<value>-6.5</value>
+		</property>
+		<property name="name">
+			<value>AMB</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{e71213ee-cab7-4a7e-98d9-13a07700889f}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{36b36610-4309-41e1-af35-129d64799541}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{465b9ce6-1411-481f-b3be-b4332ae39f81}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{e71213ee-cab7-4a7e-98d9-13a07700889f}">
+		<relationship name="effects">
+			<destination>{7a0f7808-f604-4ce6-93e0-621fcd198f70}</destination>
+			<destination>{b5c0786a-187e-4300-bc5a-71ede1d4ac63}</destination>
+			<destination>{7958972e-2285-4919-aa1a-e5fa16f69d8a}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{36b36610-4309-41e1-af35-129d64799541}" />
+	<object class="CompressorEffect" id="{7a0f7808-f604-4ce6-93e0-621fcd198f70}">
+		<property name="threshold">
+			<value>-12</value>
+		</property>
+		<property name="ratio">
+			<value>4</value>
+		</property>
+		<property name="attackTime">
+			<value>8.19999981</value>
+		</property>
+		<property name="releaseTime">
+			<value>340</value>
+		</property>
+		<property name="gain">
+			<value>1</value>
+		</property>
+		<relationship name="sidechains">
+			<destination>{48e5a016-0d86-450f-b4a7-3c7375d6d0da}</destination>
+		</relationship>
+	</object>
+	<object class="CompressorEffect" id="{b5c0786a-187e-4300-bc5a-71ede1d4ac63}">
+		<property name="threshold">
+			<value>-10</value>
+		</property>
+		<property name="ratio">
+			<value>4</value>
+		</property>
+		<property name="attackTime">
+			<value>120</value>
+		</property>
+		<property name="releaseTime">
+			<value>420</value>
+		</property>
+		<relationship name="sidechains">
+			<destination>{8e326e6d-642e-441f-84f8-331e316f3493}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusFader" id="{7958972e-2285-4919-aa1a-e5fa16f69d8a}" />
+</objects>

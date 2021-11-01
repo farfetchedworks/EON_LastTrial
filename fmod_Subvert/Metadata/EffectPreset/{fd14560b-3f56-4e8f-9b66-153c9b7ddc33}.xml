@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="EffectPreset" id="{fd14560b-3f56-4e8f-9b66-153c9b7ddc33}">
+		<property name="name">
+			<value>ATT_Eon</value>
+		</property>
+		<relationship name="folder">
+			<destination>{e7b2ce4b-3b82-4b71-80a4-a073d1367843}</destination>
+		</relationship>
+		<relationship name="effect">
+			<destination>{8e22436c-39b7-4804-9dde-f3f29412c57b}</destination>
+		</relationship>
+	</object>
+	<object class="EffectChain" id="{8e22436c-39b7-4804-9dde-f3f29412c57b}" />
+</objects>
