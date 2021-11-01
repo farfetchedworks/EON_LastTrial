@@ -1,3 +1,16 @@
 bin/cave02.irr filter=lfs diff=lfs merge=lfs -text
 bin/temple.irr filter=lfs diff=lfs merge=lfs -text
 bin/data/videos/menu.mp4 filter=lfs diff=lfs merge=lfs -text
+level/ceiling filter=lfs diff=lfs merge=lfs -text
+level/floor filter=lfs diff=lfs merge=lfs -text
+level/lights filter=lfs diff=lfs merge=lfs -text
+level/temple filter=lfs diff=lfs merge=lfs -text
+level/temple_entrance.max filter=lfs diff=lfs merge=lfs -text
+level/templelevel.max filter=lfs diff=lfs merge=lfs -text
+level/templelevel_backup.max filter=lfs diff=lfs merge=lfs -text
+level/animations filter=lfs diff=lfs merge=lfs -text
+level/cavelevel_new_walls.max filter=lfs diff=lfs merge=lfs -text
+level/packedrocks filter=lfs diff=lfs merge=lfs -text
+level/props filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.tga filter=lfs diff=lfs merge=lfs -text
