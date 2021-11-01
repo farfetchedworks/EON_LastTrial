@@ -630,6 +630,7 @@
     <OutDir>..\bin\</OutDir>
     <IntDir>..\objs\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)..\include\fmod;$(SolutionDir)..\include\RecastNavigation\DebugUtils\Include;$(SolutionDir)..\include\RecastNavigation\Detour\Include;$(SolutionDir)..\include\RecastNavigation\DetourCrown\Include;$(SolutionDir)..\include\RecastNavigation\DetourTileCache\Include;$(SolutionDir)..\include\RecastNavigation\Recast\Include;$(SolutionDir)..\include\PhysX\PxShared\Include;$(SolutionDir)..\include\PhysX\PhysX_3.4\Include;$(SolutionDir)..\include\Lua;$(IncludePath)</IncludePath>
+    <TargetName>EON</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

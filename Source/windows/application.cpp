@@ -136,7 +136,7 @@ bool CApplication::init(HINSTANCE hInstance, int width, int height) {
 	// Create window
 	RECT rc = { 0, 0, width, height };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-	hWnd = CreateWindow("MCVWindowsClass", "Subvert", WS_OVERLAPPEDWINDOW,
+	hWnd = CreateWindow("MCVWindowsClass", "EON: The Last Trial", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
 		NULL);
 	if (!hWnd)
