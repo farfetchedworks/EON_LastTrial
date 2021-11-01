@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <!-- https://docs.microsoft.com/es-es/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019 -->
+  
+  <Type Name="CMesh">
+    <DisplayString>CMesh {name,s}</DisplayString>
+  </Type> 
+
+  <Type Name="CMaterial">
+    <DisplayString>CMaterial {name,s}</DisplayString>
+  </Type>
+
+  <Type Name="CTransform">
+    <DisplayString>at {pos.x} {pos.y} {pos.z}</DisplayString>
+  </Type>
+
+  <Type Name="CHandle">
+    <DisplayString Condition="type==0">
+      NULL Handle
+    </DisplayString>
+    <DisplayString Condition="type==1">
+      Entity {
+        om_TCompName.objs[ 
+        
+          om_TCompName.external_to_internal[
+          
+            om_CEntity.objs[ 
+            
+              om_CEntity.external_to_internal[
+              
+                external_index
+                
+              ].internal_index
+            
+            ].comps[ om_TCompName.type ].external_index 
+          
+          ].internal_index
+        
+        ].name,s
+      }
+    </DisplayString>
+    <DisplayString Condition="type>1">
+      {CHandleManager::all_managers[type]->name,s}
+    </DisplayString>
+    <Expand>
+      <Item Name="[Owner]" Condition="type > 0" Optional="true">
+        CHandleManager::all_managers[type]->external_to_internal[ external_index ].current_owner
+      </Item>
+      <!-- Show the array of components -->
+      <ArrayItems>
+        <Size>CHandleManager::next_type_of_handle_manager</Size>
+        <ValuePointer>
+          om_CEntity.objs[
+          CHandleManager::all_managers[type]->external_to_internal[ external_index ].internal_index
+          ].comps
+        </ValuePointer>
+      </ArrayItems>
+      
+      <!-- Work in progress to try to show only the valid comps
+      <CustomListItems MaxItemsPerView="10">
+        <Variable Name="CompIdx" InitialValue="1" />
+        <Size>CHandleManager::next_type_of_handle_manager</Size>
+        <Loop>
+          <If Condition="type != 0">
+            <Item>
+              om_CEntity.objs[
+              CHandleManager::all_managers[type]->external_to_internal[ external_index ].internal_index
+              ].comps[CompIdx]
+            </Item>
+          </If>
+          <Exec>CompIdx += 1</Exec>
+        </Loop>
+      </CustomListItems>
+      -->
+      <Item Name="[Transform]" Condition="type == om_TCompTransform.type" Optional="true">
+        om_TCompTransform.objs[ CHandleManager::all_managers[type]->external_to_internal[external_index].internal_index ]
+      </Item>
+    </Expand>
+  </Type>
+
+  <Type Name="TCompBase">
+    
+    <DisplayString Condition="(uint32_t)((TCompTransform*)this - om_TCompTransform.objs) &lt; om_TCompTransform.num_objs_used">
+      TCompTransform of {  
+      om_TCompTransform.external_to_internal[ 
+        om_TCompTransform.internal_to_external [
+        (TCompTransform*)this - om_TCompTransform.objs
+        ]
+        ].current_owner
+      }
+    </DisplayString>
+    
+    <DisplayString Condition="(uint32_t)((TCompRender*)this - om_TCompRender.objs) &lt; om_TCompRender.num_objs_used">
+      TCompRender of {om_TCompRender.external_to_internal[
+      om_TCompRender.internal_to_external[ (TCompRender*)this - om_TCompRender.objs ]
+      ].current_owner}
+    </DisplayString>
+  </Type>
+
+  <!-- In the debugger, type: varname_of_typecomp, view(owner) -->
+  <!-- Allows to see the entity name owner of a component object -->
+  <Type Name="TCompRender" IncludeView="owner">
+    <Expand>
+      <Item Name="owner">
+        om_TCompRender.external_to_internal[
+        om_TCompRender.internal_to_external[ (TCompRender*)this - om_TCompRender.objs ]
+        ].current_owner
+      </Item>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>

@@ -1,0 +1,4 @@
+REGISTER_SERVICE(DistanceSquaredToPlayer)
+REGISTER_SERVICE(SetPlayerDetected)
+REGISTER_SERVICE(Cooldown)
+REGISTER_SERVICE(SetPlayerPosition)

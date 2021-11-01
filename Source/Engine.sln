@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine.vcxproj", "{CAE523F5-E839-456F-A52D-84BBACA5EC6A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F13518A5-98D4-48A8-98ED-81B5E9D70BCE} = {F13518A5-98D4-48A8-98ED-81B5E9D70BCE}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cal3D", "Cal3d\Cal3D.vcxproj", "{F13518A5-98D4-48A8-98ED-81B5E9D70BCE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CAE523F5-E839-456F-A52D-84BBACA5EC6A}.Debug|x64.ActiveCfg = Debug|x64
+		{CAE523F5-E839-456F-A52D-84BBACA5EC6A}.Debug|x64.Build.0 = Debug|x64
+		{CAE523F5-E839-456F-A52D-84BBACA5EC6A}.Release|x64.ActiveCfg = Release|x64
+		{CAE523F5-E839-456F-A52D-84BBACA5EC6A}.Release|x64.Build.0 = Release|x64
+		{F13518A5-98D4-48A8-98ED-81B5E9D70BCE}.Debug|x64.ActiveCfg = Debug|x64
+		{F13518A5-98D4-48A8-98ED-81B5E9D70BCE}.Debug|x64.Build.0 = Debug|x64
+		{F13518A5-98D4-48A8-98ED-81B5E9D70BCE}.Release|x64.ActiveCfg = Release|x64
+		{F13518A5-98D4-48A8-98ED-81B5E9D70BCE}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B4D58BE-D8E0-490F-8971-A566520212C2}
+	EndGlobalSection
+EndGlobal
