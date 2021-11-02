@@ -1,7 +1,7 @@
 #include "mcv_platform.h"
 #include "entity/entity.h"
 #include "engine.h"
-#include "modules/subvert/module_player_interaction.h"
+#include "modules/game/module_player_interaction.h"
 #include "animation/animation_callback.h"
 #include "components/messages.h"
 #include "components/gameplay/comp_game_manager.h"

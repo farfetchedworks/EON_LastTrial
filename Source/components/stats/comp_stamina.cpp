@@ -45,7 +45,7 @@ void TCompStamina::update(float dt)
 {
 	// Update UI
 	float pct = current_stamina / max_stamina;
-	ui::CWidget* w = EngineUI.getWidgetFrom("subvert_hud", "stamina_bar");
+	ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "stamina_bar");
 	assert(w);
 	ui::CWidget* wChild = w->getChildByName("bar_fill");
 	if (wChild) {

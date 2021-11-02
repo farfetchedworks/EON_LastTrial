@@ -2,7 +2,7 @@
 #include "comp_wave_projectile.h"
 #include "engine.h"
 #include "modules/module_physics.h"
-#include "modules/subvert/module_fluid_simulation.h"
+#include "modules/game/module_fluid_simulation.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_light_point.h"
 #include "render/draw_primitives.h"

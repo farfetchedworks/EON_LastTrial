@@ -158,8 +158,6 @@
     <ClCompile Include="modules\module_entities.cpp" />
     <ClCompile Include="modules\module_events.cpp" />
     <ClCompile Include="modules\module_manager.cpp" />
-    <ClCompile Include="modules\subvert\module_gameplay.cpp" />
-    <ClCompile Include="modules\subvert\module_main_menu.cpp" />
     <ClCompile Include="navmesh\module_navmesh.cpp" />
     <ClCompile Include="modules\module_physics.cpp" />
     <ClCompile Include="modules\module_tools.cpp" />
@@ -237,7 +235,6 @@
     <ClCompile Include="skeleton\bone_correction.cpp" />
     <ClCompile Include="skeleton\comp_skel_lookat.cpp" />
     <ClCompile Include="skeleton\comp_skeleton_ik.cpp" />
-    <ClCompile Include="modules\subvert\module_fluid_simulation.cpp" />
     <ClCompile Include="components\render\comp_dissolve.cpp" />
     <ClCompile Include="render\textures\video\video_texture.cpp" />
     <ClCompile Include="components\common\comp_video_player.cpp" />
@@ -246,7 +243,6 @@
     <ClCompile Include="render\textures\image.cpp" />
     <ClCompile Include="modules\module_particles_editor.cpp" />
     <ClCompile Include="components\combat\comp_hitmap.cpp" />
-    <ClCompile Include="modules\subvert\module_end_game.cpp" />
     <ClCompile Include="components\projectiles\comp_area_delay_projectile.cpp" />
     <ClCompile Include="components\projectiles\comp_wave_projectile.cpp" />
     <ClCompile Include="animation\callbacks\heal_callback.cpp" />
@@ -261,7 +257,6 @@
     <ClCompile Include="components\postfx\comp_obj_trail.cpp" />
     <ClCompile Include="components\postfx\comp_depth_fog.cpp" />
     <ClCompile Include="animation\callbacks\gard_branch_finished.cpp" />
-    <ClCompile Include="modules\subvert\module_irradiance_cache.cpp" />
     <ClCompile Include="components\common\comp_prefab_info.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_to_f2.cpp" />
     <ClCompile Include="components\gameplay\comp_launch_animation.cpp" />
@@ -269,13 +264,18 @@
     <ClCompile Include="components\ai\comp_ai_time_reversal.cpp" />
     <ClCompile Include="components\render\comp_emissive_modifier.cpp" />
     <ClCompile Include="ui\widgets\ui_video.cpp" />
-    <ClCompile Include="modules\subvert\module_player_interaction.cpp" />
-    <ClCompile Include="modules\subvert\module_you_died.cpp" />
     <ClCompile Include="ui\effects\ui_effect_fade.cpp" />
-    <ClCompile Include="modules\subvert\module_splash_screen.cpp" />
     <ClCompile Include="modules\module_subtitles.cpp" />
     <ClCompile Include="animation\callbacks\eon_cross_crack_callback.cpp" />
     <ClCompile Include="components\audio\comp_music_interactor.cpp" />
+    <ClCompile Include="modules\game\module_end_game.cpp" />
+    <ClCompile Include="modules\game\module_fluid_simulation.cpp" />
+    <ClCompile Include="modules\game\module_gameplay.cpp" />
+    <ClCompile Include="modules\game\module_irradiance_cache.cpp" />
+    <ClCompile Include="modules\game\module_main_menu.cpp" />
+    <ClCompile Include="modules\game\module_player_interaction.cpp" />
+    <ClCompile Include="modules\game\module_splash_screen.cpp" />
+    <ClCompile Include="modules\game\module_you_died.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\nn_interpolator.h" />
@@ -435,8 +435,6 @@
     <ClInclude Include="modules\module_entities.h" />
     <ClInclude Include="modules\module_events.h" />
     <ClInclude Include="modules\module_manager.h" />
-    <ClInclude Include="modules\subvert\module_gameplay.h" />
-    <ClInclude Include="modules\subvert\module_main_menu.h" />
     <ClInclude Include="navmesh\module_navmesh.h" />
     <ClInclude Include="modules\module_physics.h" />
     <ClInclude Include="modules\module_tools.h" />
@@ -538,7 +536,6 @@
     <ClInclude Include="skeleton\ik_handler.h" />
     <ClInclude Include="skeleton\comp_skeleton_ik.h" />
     <ClInclude Include="skeleton\cal3d2engine.h" />
-    <ClInclude Include="modules\subvert\module_fluid_simulation.h" />
     <ClInclude Include="components\render\comp_dissolve.h" />
     <ClInclude Include="render\textures\video\video_texture.h" />
     <ClInclude Include="components\common\comp_video_player.h" />
@@ -548,7 +545,6 @@
     <ClInclude Include="render\textures\image.h" />
     <ClInclude Include="modules\module_particles_editor.h" />
     <ClInclude Include="components\combat\comp_hitmap.h" />
-    <ClInclude Include="modules\subvert\module_end_game.h" />
     <ClInclude Include="components\projectiles\comp_area_delay_projectile.h" />
     <ClInclude Include="components\projectiles\comp_wave_projectile.h" />
     <ClInclude Include="components\particles\comp_follow_target.h" />
@@ -559,18 +555,22 @@
     <ClInclude Include="modules\module_multithreading.h" />
     <ClInclude Include="components\postfx\comp_obj_trail.h" />
     <ClInclude Include="components\postfx\comp_depth_fog.h" />
-    <ClInclude Include="modules\subvert\module_irradiance_cache.h" />
     <ClInclude Include="components\common\comp_prefab_info.h" />
     <ClInclude Include="components\gameplay\comp_launch_animation.h" />
     <ClInclude Include="components\ai\comp_ai_time_reversal.h" />
     <ClInclude Include="components\render\comp_emissive_modifier.h" />
     <ClInclude Include="ui\widgets\ui_video.h" />
-    <ClInclude Include="modules\subvert\module_player_interaction.h" />
-    <ClInclude Include="modules\subvert\module_you_died.h" />
     <ClInclude Include="ui\effects\ui_effect_fade.h" />
-    <ClInclude Include="modules\subvert\module_splash_screen.h" />
     <ClInclude Include="modules\module_subtitles.h" />
     <ClInclude Include="components\audio\comp_music_interactor.h" />
+    <ClInclude Include="modules\game\module_end_game.h" />
+    <ClInclude Include="modules\game\module_fluid_simulation.h" />
+    <ClInclude Include="modules\game\module_gameplay.h" />
+    <ClInclude Include="modules\game\module_irradiance_cache.h" />
+    <ClInclude Include="modules\game\module_main_menu.h" />
+    <ClInclude Include="modules\game\module_player_interaction.h" />
+    <ClInclude Include="modules\game\module_splash_screen.h" />
+    <ClInclude Include="modules\game\module_you_died.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

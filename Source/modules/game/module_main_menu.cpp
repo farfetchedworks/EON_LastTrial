@@ -1,5 +1,5 @@
 #include "mcv_platform.h"
-#include "modules/subvert/module_main_menu.h"
+#include "module_main_menu.h"
 #include "engine.h"
 #include "modules/module_manager.h"
 #include "render/render_module.h"
@@ -8,15 +8,15 @@
 #include "ui/ui_widget.h"
 #include "fmod_studio.hpp"
 
-bool ModuleSubvertMainMenu::start()
+bool ModuleEONMainMenu::start()
 {
     _player1 = CEngine::get().getInput(input::PLAYER_1);
     assert(_player1);
 
-    EngineUI.activateWidget("subvert_main_menu");
+    EngineUI.activateWidget("eon_main_menu");
 
-    _menuController.bind("bt_new_game", std::bind(&ModuleSubvertMainMenu::onNewGame, this));
-    _menuController.bind("bt_exit", std::bind(&ModuleSubvertMainMenu::onExit, this));
+    _menuController.bind("bt_new_game", std::bind(&ModuleEONMainMenu::onNewGame, this));
+    _menuController.bind("bt_exit", std::bind(&ModuleEONMainMenu::onExit, this));
 
     _menuController.reset();
     _menuController.selectOption(0);
@@ -28,16 +28,16 @@ bool ModuleSubvertMainMenu::start()
     return true;
 }
 
-void ModuleSubvertMainMenu::stop()
+void ModuleEONMainMenu::stop()
 {
-    EngineUI.deactivateWidget("subvert_main_menu");
+    EngineUI.deactivateWidget("eon_main_menu");
     EngineUI.getWidget("text_loading")->setVisible(false);
     
     EngineAudio.stopCurMusicEvent();
     EngineAudio.unloadBank("OutOfGame.bank");
 }
 
-void ModuleSubvertMainMenu::update(float dt)
+void ModuleEONMainMenu::update(float dt)
 {
     _menuController.update(dt);
 
@@ -47,14 +47,14 @@ void ModuleSubvertMainMenu::update(float dt)
     }
 }
 
-void ModuleSubvertMainMenu::onNewGame()
+void ModuleEONMainMenu::onNewGame()
 {
     CModuleManager& modules = CEngine::get().getModuleManager();
     EngineUI.getWidget("text_loading")->setVisible(true);
     modules.changeToGamestate("playing");
 }
 
-void ModuleSubvertMainMenu::onExit()
+void ModuleEONMainMenu::onExit()
 {
     CApplication::get().exit();
 }

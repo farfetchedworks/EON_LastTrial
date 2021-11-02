@@ -48,7 +48,7 @@ void CModuleSubtitles::parseCaption(const json& j)
 	
 	if (_fadeCaptions)
 	{
-		ui::CWidget* w = EngineUI.getWidget("subvert_subtitles");
+		ui::CWidget* w = EngineUI.getWidget("eon_subtitles");
 		ui::CEffect_FadeIn* fadeInEffect = static_cast<ui::CEffect_FadeIn*>(w->getEffect("Fade In"));
 		ui::CEffect_FadeOut* fadeOutEffect = static_cast<ui::CEffect_FadeOut*>(w->getEffect("Fade Out"));
 		_fadeThreshold = j.value("fadeThreshold", _fadeThreshold);
@@ -109,7 +109,7 @@ void CModuleSubtitles::update(float dt)
 
 bool CModuleSubtitles::setCaptionEntry()
 {
-	ui::CWidget* w = EngineUI.getWidget("subvert_subtitles");
+	ui::CWidget* w = EngineUI.getWidget("eon_subtitles");
 
 	assert(w);
 	if (!w)
@@ -144,9 +144,9 @@ void CModuleSubtitles::setState(EState state)
 		return;
 
 	if(_state == EState::STATE_IN)
-		EngineUI.activateWidget("subvert_subtitles");
+		EngineUI.activateWidget("eon_subtitles");
 	else if (_state == EState::STATE_OUT)
-		EngineUI.deactivateWidget("subvert_subtitles");
+		EngineUI.deactivateWidget("eon_subtitles");
 }
 
 void CModuleSubtitles::triggerAudio()
@@ -179,7 +179,7 @@ bool CModuleSubtitles::startCaption(const std::string& name)
 
 	if (_active)
 	{
-		EngineUI.activateWidget("subvert_subtitles", _fadeCaptions);
+		EngineUI.activateWidget("eon_subtitles", _fadeCaptions);
 		setState(EState::STATE_IN);
 	}
 
@@ -188,7 +188,7 @@ bool CModuleSubtitles::startCaption(const std::string& name)
 
 void CModuleSubtitles::stopCaption()
 {
-	EngineUI.deactivateWidget("subvert_subtitles", _fadeCaptions);
+	EngineUI.deactivateWidget("eon_subtitles", _fadeCaptions);
 	setState(EState::STATE_NONE);
 	_currentCaption = "";
 	_currentIndex = 0;

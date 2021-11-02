@@ -121,7 +121,7 @@ void TCompTimeReversal::update(float dt)
     // Update UI
     {
         float pct = (float)generated_shots / (float)buffer_size;
-        ui::CWidget* w = EngineUI.getWidgetFrom("subvert_hud", "time_reversal_bar");
+        ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "time_reversal_bar");
         assert(w);
         ui::CWidget* wChild = w->getChildByName("bar_fill");
         if (wChild) {

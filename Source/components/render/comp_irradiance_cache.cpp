@@ -9,7 +9,7 @@
 #include "components/common/comp_compute.h"
 #include "render/draw_primitives.h"
 #include "render/render_manager.h"
-#include "modules/subvert/module_fluid_simulation.h"
+#include "modules/game/module_fluid_simulation.h"
 #include "render/render_module.h"
 #include "render/compute/gpu_buffer.h"
 #include "render/compute/compute_shader.h"

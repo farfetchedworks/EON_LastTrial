@@ -2,7 +2,7 @@
 #include "engine.h"
 #include "handle/handle.h"
 #include "modules/module_physics.h"
-#include "modules/subvert/module_player_interaction.h"
+#include "modules/game/module_player_interaction.h"
 #include "comp_launch_animation.h"
 #include "components/common/comp_transform.h"
 #include "components/controllers/comp_player_controller.h"

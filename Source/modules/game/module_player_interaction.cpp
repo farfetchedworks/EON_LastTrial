@@ -26,7 +26,7 @@ void CModulePlayerInteraction::enableUI(bool v)
 	// Don't activate/deactivate each frame..
 	if (v != lastWidgetActive) {
 
-		EngineUI.setWidgetActive("subvert_message", v);
+		EngineUI.setWidgetActive("eon_message", v);
 		lastWidgetActive = v;
 	}
 }
@@ -54,7 +54,7 @@ void CModulePlayerInteraction::checkInteractions()
 			is_ok &= c_animation->resolve();
 
 		if (is_ok) {
-			auto w = EngineUI.getWidget("subvert_message");
+			auto w = EngineUI.getWidget("eon_message");
 
 			CEntity* e_camera = EngineRender.getActiveCamera();
 			TCompCamera* cam = e_camera->get<TCompCamera>();

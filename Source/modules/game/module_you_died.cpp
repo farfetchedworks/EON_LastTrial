@@ -1,5 +1,5 @@
 #include "mcv_platform.h"
-#include "modules/subvert/module_you_died.h"
+#include "module_you_died.h"
 #include "engine.h"
 #include "modules/module_manager.h"
 #include "render/render_module.h"
@@ -8,7 +8,7 @@
 #include "ui/ui_widget.h"
 #include "fmod_studio.hpp"
 
-bool ModuleSubvertYouDied::start()
+bool ModuleEONYouDied::start()
 {
     debugging = true;
     CApplication::get().changeMouseState(true, false);
@@ -17,11 +17,11 @@ bool ModuleSubvertYouDied::start()
     _player1 = CEngine::get().getInput(input::PLAYER_1);
     assert(_player1);
 
-    EngineUI.activateWidget("subvert_you_died");
-    EngineUI.deactivateWidget("subvert_hud");
+    EngineUI.activateWidget("eon_you_died");
+    EngineUI.deactivateWidget("eon_hud");
 
-    _menuController.bind("bt_continue", std::bind(&ModuleSubvertYouDied::onContinue, this));
-    _menuController.bind("bt_surrender", std::bind(&ModuleSubvertYouDied::onExit, this));
+    _menuController.bind("bt_continue", std::bind(&ModuleEONYouDied::onContinue, this));
+    _menuController.bind("bt_surrender", std::bind(&ModuleEONYouDied::onExit, this));
 
     _menuController.reset();
     _menuController.selectOption(0);
@@ -32,16 +32,16 @@ bool ModuleSubvertYouDied::start()
 
     return true;
 }
-void ModuleSubvertYouDied::stop()
+void ModuleEONYouDied::stop()
 {
-    EngineUI.deactivateWidget("subvert_you_died");
+    EngineUI.deactivateWidget("eon_you_died");
     
     /*fmod_event->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT);
     fmod_event->release();
     EngineAudio.unloadBank("OutOfGame.bank");*/
 }
 
-void ModuleSubvertYouDied::update(float dt)
+void ModuleEONYouDied::update(float dt)
 {
     _menuController.update(dt);
 
@@ -51,17 +51,17 @@ void ModuleSubvertYouDied::update(float dt)
     }
 }
 
-void ModuleSubvertYouDied::onContinue()
+void ModuleEONYouDied::onContinue()
 {
     CEngine::get().getModuleManager().changeToGamestate("playing");
 }
 
-void ModuleSubvertYouDied::onSurrender()
+void ModuleEONYouDied::onSurrender()
 {
     CEngine::get().getModuleManager().changeToGamestate("main_menu");
 }
 
-void ModuleSubvertYouDied::onExit()
+void ModuleEONYouDied::onExit()
 {
     CApplication::get().exit();
 }

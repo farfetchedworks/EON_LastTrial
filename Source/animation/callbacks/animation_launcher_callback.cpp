@@ -2,7 +2,7 @@
 #include "entity/entity.h"
 #include "engine.h"
 #include "animation/animation_callback.h"
-#include "modules/subvert/module_player_interaction.h"
+#include "modules/game/module_player_interaction.h"
 #include "components/messages.h"
 #include "components/gameplay/comp_launch_animation.h"
 #include "components/controllers/comp_player_controller.h"

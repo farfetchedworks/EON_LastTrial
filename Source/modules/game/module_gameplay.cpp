@@ -26,7 +26,7 @@
 extern CShaderCte<CtesWorld> cte_world;
 bool debugging = false;
 
-bool ModuleSubvertGameplay::start()
+bool ModuleEONGameplay::start()
 {
 	// set initial mouse state
 	debugging = false;
@@ -40,7 +40,7 @@ bool ModuleSubvertGameplay::start()
 	cte_world.in_gameplay = 1.f;
 
 	// Activate UI
-	EngineUI.activateWidget("subvert_hud");
+	EngineUI.activateWidget("eon_hud");
 
 	// Audio
 	EngineLua.executeFile("data/scripts/audio/enterCave.lua");
@@ -95,12 +95,12 @@ bool ModuleSubvertGameplay::start()
 	return true;
 }
 
-void ModuleSubvertGameplay::stop()
+void ModuleEONGameplay::stop()
 {
 	cte_world.in_gameplay = 0.f;
 }
 
-void ModuleSubvertGameplay::update(float dt)
+void ModuleEONGameplay::update(float dt)
 {
 	// DEBUG SHORTCUTS
 	{

@@ -6,7 +6,7 @@
 #include "render/draw_primitives.h"
 #include "input/input_module.h"
 #include "lua/module_scripting.h"
-#include "modules/subvert/module_player_interaction.h"
+#include "modules/game/module_player_interaction.h"
 #include "audio/module_audio.h"
 #include "audio/physical_material.h"
 #include "modules/module_physics.h"

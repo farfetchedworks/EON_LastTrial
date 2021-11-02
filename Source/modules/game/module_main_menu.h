@@ -1,22 +1,23 @@
 #pragma once
-
 #include "modules/module.h"
 #include "ui/controllers/ui_menu_controller.h"
 #include "audio/module_audio.h"
 
 namespace input { class CModule; }
 
-class ModuleSubvertEndGame : public IModule
+class ModuleEONMainMenu : public IModule
 {
-public:
-    ModuleSubvertEndGame(const std::string& name) : IModule(name) {}
+  public:
+      ModuleEONMainMenu(const std::string& name) : IModule(name) {}
 
     bool start() override;
     void stop() override;
     void update(float dt) override;
 
-private:
+  private:
+    void onNewGame();
+    void onExit();
 
     input::CModule* _player1 = nullptr;
-
+    ui::CMenuController _menuController;
 };

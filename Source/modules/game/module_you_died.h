@@ -5,10 +5,10 @@
 
 namespace input { class CModule; }
 
-class ModuleSubvertYouDied : public IModule
+class ModuleEONYouDied : public IModule
 {
 public:
-	ModuleSubvertYouDied(const std::string& name) : IModule(name) {}
+	ModuleEONYouDied(const std::string& name) : IModule(name) {}
 
 	bool start() override;
 	void stop() override;

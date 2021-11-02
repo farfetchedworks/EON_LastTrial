@@ -66,8 +66,8 @@ struct onGardDeathCallback : public CAnimationCallback
 		// TCompGameManager* c_game_mgr = e_game_manager->get<TCompGameManager>();
 		//ui::CText* w_txt_message = (ui::CText*) EngineUI.getWidget("txt_message");
 		//w_txt_message->textParams.text = c_game_mgr->ui_messages["area_unlocked"];
-		//if (!EngineUI.getWidget("subvert_message")->isActive()) {
-		//	EngineUI.activateWidget("subvert_message");
+		//if (!EngineUI.getWidget("eon_message")->isActive()) {
+		//	EngineUI.activateWidget("eon_message");
 		//}
 
 		// Spawn floor particles and geons

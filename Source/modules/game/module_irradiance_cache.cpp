@@ -1,7 +1,5 @@
 #include "mcv_platform.h"
-
 #include "module_irradiance_cache.h"
-
 #include "components/render/comp_irradiance_cache.h"
 #include "components/common/comp_name.h"
 

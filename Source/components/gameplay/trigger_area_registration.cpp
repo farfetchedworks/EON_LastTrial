@@ -199,7 +199,7 @@ public:
 		//TCompGameManager* c_game_mgr = e_game_mgr->get<TCompGameManager>();
 
 		//w_txt_message->textParams.text = c_game_mgr->ui_messages["gard_dead"];
-		//EngineUI.activateWidget("subvert_message");
+		//EngineUI.activateWidget("eon_message");
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
@@ -208,7 +208,7 @@ public:
 		TMsgDeactivateMsgArea msg_deactivate_area;
 		e_owner->sendMsg(msg_deactivate_area);
 		
-		//EngineUI.deactivateWidget("subvert_message");
+		//EngineUI.deactivateWidget("eon_message");
 	}
 };
 

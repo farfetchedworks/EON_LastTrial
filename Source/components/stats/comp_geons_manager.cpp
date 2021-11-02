@@ -26,7 +26,7 @@ void TCompGeonsManager::load(const json& j, TEntityParseContext& ctx)
 		phase_requirements[i] = (int)((phase_requirements[i - 1] + phase_requirements[i - 2]) * increase_ratio);
 	}
 
-	ui::CWidget* w = EngineUI.getWidgetFrom("subvert_hud", "geons_bar");
+	ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "geons_bar");
 	assert(w);
 	ui::CWidget* wChild = w->getChildByName("bar_fill");
 	if (wChild) {
@@ -61,7 +61,7 @@ void TCompGeonsManager::addGeons(int geons)
 	// Update UI
 	int current_req = phase_requirements[phase + 1];
 	float pct = current_geons / (float)current_req;
-	ui::CWidget* w = EngineUI.getWidgetFrom("subvert_hud", "geons_bar");
+	ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "geons_bar");
 	assert(w);
 	ui::CWidget* wChild = w->getChildByName("bar_fill");
 	if (wChild) {

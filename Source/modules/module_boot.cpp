@@ -19,7 +19,7 @@ bool CModuleBoot::start()
 		return true;
 	}
 
-	return loadBoot("data/subvert_boot.json");
+	return loadBoot("data/boot.json");
 }
 
 bool CModuleBoot::loadScene(const std::string& p, bool preloading)
