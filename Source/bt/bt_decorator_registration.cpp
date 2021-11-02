@@ -458,6 +458,26 @@ public:
 	}
 };
 
+class CBTDecoIsBlackboardKeyValid : public IBTDecorator
+{
+private:
+	std::string key;
+
+public:
+	void init() override {
+		// Load generic parameters
+		key = string_field;
+	}
+
+	EBTNodeResult evaluateCondition(CBTContext& ctx, float dt)
+	{
+		if (ctx.getBlackboard()->isValid(key)) 
+			return calculateResult(EBTNodeResult::SUCCEEDED);
+
+		return calculateResult(EBTNodeResult::FAILED);
+	}
+};
+
 
 #pragma endregion
 
