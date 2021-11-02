@@ -4,6 +4,7 @@ REGISTER_DECO(Random)
 REGISTER_DECO(IsBlackboardBoolTrue)
 REGISTER_DECO(CompareBlackboardFloat)
 REGISTER_DECO(CompareBlackboardInt)
+REGISTER_DECO(IsBlackboardKeyValid)
 REGISTER_DECO(PlayerInSight)
 REGISTER_DECO(HealthPercent)
 

@@ -1863,6 +1863,24 @@ public:
 	}
 };
 
+class CBTTaskCygnusChangePhase : public IBTTask
+{
+private:
+	int phase_num = 2;
+
+public:
+	void init() override {
+		phase_num = number_field[0];
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {		
+		clamp(phase_num, 2, 4);
+		ctx.setFSMVariable("phase_number", phase_num);
+		ctx.getBlackboard()->setValue<int>("phaseNumber", phase_num);
+		return EBTNodeResult::SUCCEEDED;
+	}
+};
+
 #pragma endregion
 
 #pragma region General Enemies Tasks
