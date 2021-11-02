@@ -357,7 +357,7 @@ bool CalMixer::removeAction(int id, float delayOut)
 }
 
 /*****************************************************************************/
-/** MCV SUBVERT
+/** MCV EON
   *
   * @param id The ID of the animation cycle
   *
@@ -741,7 +741,7 @@ CalAnimationAction* CalMixer::getActionAnim(const std::string& name) {
 }
 
 /*****************************************************************************/
-/** Get cycle animation (Subvert)
+/** Get cycle animation (Eon)
   *
   * This function return an animation from the anim vector
   *

@@ -31,15 +31,15 @@
 #include "ui/ui_module.h"
 #include "render/textures/video/video_texture.h"
 
-// Subvert modules
-#include "modules/subvert/module_splash_screen.h"
-#include "modules/subvert/module_main_menu.h"
-#include "modules/subvert/module_gameplay.h"
-#include "modules/subvert/module_you_died.h"
-#include "modules/subvert/module_end_game.h"
-#include "modules/subvert/module_fluid_simulation.h"
-#include "modules/subvert/module_irradiance_cache.h"
-#include "modules/subvert/module_player_interaction.h"
+// Eon's modules
+#include "modules/game/module_splash_screen.h"
+#include "modules/game/module_main_menu.h"
+#include "modules/game/module_gameplay.h"
+#include "modules/game/module_you_died.h"
+#include "modules/game/module_end_game.h"
+#include "modules/game/module_fluid_simulation.h"
+#include "modules/game/module_irradiance_cache.h"
+#include "modules/game/module_player_interaction.h"
 
 #include "utils/directory_watcher.h"
 #include "utils/resource_json.h"
@@ -74,12 +74,12 @@ void CEngine::registerResourceTypes()
 void CEngine::init()
 {
   PROFILE_FUNCTION("Engine::init");
-  static ModuleSubvertSplashScreen splash_screen_module_subvert("subvert_splash_screen");
-  static ModuleSubvertMainMenu mainmenu_module_subvert("subvert_main_menu");
-  static ModuleSubvertGameplay gameplay_module_subvert("subvert_gameplay");
-  static ModuleSubvertYouDied you_died_module_subvert("subvert_you_died");
-  static CModuleIrradianceCache irradiance_cache_module_subvert("subvert_irradiance_cache");
-  static ModuleSubvertEndGame endgame_module_subvert("subvert_end_game");
+  static ModuleEONSplashScreen splash_screen_module("eon_splash_screen");
+  static ModuleEONMainMenu mainmenu_module("eon_main_menu");
+  static ModuleEONGameplay gameplay_module("eon_gameplay");
+  static ModuleEONYouDied you_died_module("eon_you_died");
+  static CModuleIrradianceCache irradiance_cache_module("eon_irradiance_cache");
+  static ModuleEONEndGame endgame_module("eon_end_game");
 
   registerResourceTypes();
 
@@ -136,14 +136,14 @@ void CEngine::init()
   // game modules
   _moduleManager.registerGameModule(_boot);
 
-  // subvert specific
-  _moduleManager.registerGameModule(&splash_screen_module_subvert);
-  _moduleManager.registerGameModule(&mainmenu_module_subvert);
-  _moduleManager.registerGameModule(&gameplay_module_subvert);
-  _moduleManager.registerGameModule(&you_died_module_subvert);
+  // Eon's specific
+  _moduleManager.registerGameModule(&splash_screen_module);
+  _moduleManager.registerGameModule(&mainmenu_module);
+  _moduleManager.registerGameModule(&gameplay_module);
+  _moduleManager.registerGameModule(&you_died_module);
   _moduleManager.registerGameModule(_playerInteraction);
-  _moduleManager.registerGameModule(&irradiance_cache_module_subvert);
-  _moduleManager.registerGameModule(&endgame_module_subvert);
+  _moduleManager.registerGameModule(&irradiance_cache_module);
+  _moduleManager.registerGameModule(&endgame_module);
 
   // boot
   _moduleManager.boot();
@@ -211,5 +211,5 @@ void CEngine::initInput(input::CModule* input)
     input->registerDevice(new input::CDeviceMouseWindows(CApplication::get().getHandle()));
     input->registerDevice(new input::CDevicePadXboxWindows(input->getId()));
 
-    input->loadMapping("data/input/subvert_mappings.json");
+    input->loadMapping("data/input/mappings.json");
 }

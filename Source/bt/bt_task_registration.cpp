@@ -1410,27 +1410,27 @@ public:
 			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
 		};
 
-		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
-		{
-			CEntity* player = getPlayer();
-			VEC3 player_pos = player->getPosition();
-			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+		//callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		//{
+		//	CEntity* player = getPlayer();
+		//	VEC3 player_pos = player->getPosition();
+		//	TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 
-			// Apply an impulse at the beginning of the active frames
-			TCompTransform* c_player_trans = player->get<TCompTransform>();
-			VEC3 force_dir = h_trans->getPosition() - c_player_trans->getPosition();
-			force_dir.y = 0.f;
-			float strength = 2.f;
-			force_dir.Normalize();
+		//	// Apply an impulse at the beginning of the active frames
+		//	TCompTransform* c_player_trans = player->get<TCompTransform>();
+		//	VEC3 force_dir = h_trans->getPosition() - c_player_trans->getPosition();
+		//	force_dir.y = 0.f;
+		//	float strength = 2.f;
+		//	force_dir.Normalize();
 
-			TMsgAddForce msgForce;
-			msgForce.force = force_dir * strength;
-			msgForce.h_applier = ctx.getOwnerEntity();
-			msgForce.byPlayer = false;
-			msgForce.disableGravity = true;
-			msgForce.force_origin = "Cygnus";
-			player->sendMsg(msgForce);
-		};
+		//	TMsgAddForce msgForce;
+		//	msgForce.force = force_dir * strength;
+		//	msgForce.h_applier = ctx.getOwnerEntity();
+		//	msgForce.byPlayer = false;
+		//	msgForce.disableGravity = true;
+		//	msgForce.force_origin = "Cygnus";
+		//	player->sendMsg(msgForce);
+		//};
 		
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{

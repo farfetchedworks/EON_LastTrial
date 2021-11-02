@@ -10,7 +10,7 @@
 #include "components/controllers/comp_player_controller.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/stats/comp_geons_drop.h"
-#include "modules/subvert/module_gameplay.h"
+#include "modules/game/module_gameplay.h"
 #include "components/gameplay/comp_game_manager.h"
 #include "components/common/comp_parent.h"
 #include "ui/ui_module.h"
@@ -62,7 +62,7 @@ void TCompHealth::update(float dt)
         return;
 
     // Update UI for PLAYER
-    ui::CWidget* w = EngineUI.getWidgetFrom("subvert_hud", "life_bar");
+    ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "life_bar");
     assert(w);
 
     ui::CWidget* wChild = w->getChildByName("bar_fill");

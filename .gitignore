@@ -26,3 +26,6 @@ level/cavelevel_new_walls_backup.max
 level/floor/srgb.zip
 level/floor/srgb/.autosave
 level/floor/srgb/templefloor_tiled.resources
+bin/EON.exe
+bin/EON.lib
+bin/EON.exp

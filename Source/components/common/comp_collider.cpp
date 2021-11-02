@@ -402,8 +402,6 @@ void TCompCollider::onEachShape(TShapeFn fn)
 	}
 }
 
-// SUBVERT
-
 //minVel: minimum velocity to stop force actor (rigidbody)
 void TCompCollider::addForce(VEC3 force, const std::string force_origin, bool disableGravity, float minVel)
 {

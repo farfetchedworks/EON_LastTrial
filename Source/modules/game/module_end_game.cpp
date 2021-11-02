@@ -1,5 +1,5 @@
 #include "mcv_platform.h"
-#include "modules/subvert/module_end_game.h"
+#include "module_end_game.h"
 #include "engine.h"
 #include "modules/module_manager.h"
 #include "modules/module_entities.h"
@@ -9,20 +9,20 @@
 #include "ui/ui_widget.h"
 #include "fmod_studio.hpp"
 
-bool ModuleSubvertEndGame::start()
+bool ModuleEONEndGame::start()
 {
-    EngineUI.activateWidget("subvert_end_game");
+    EngineUI.activateWidget("eon_end_game");
     EngineAudio.stop();
     Entities.clearDebugList();
     return true;
 }
 
-void ModuleSubvertEndGame::stop()
+void ModuleEONEndGame::stop()
 {
 
 }
 
-void ModuleSubvertEndGame::update(float dt)
+void ModuleEONEndGame::update(float dt)
 {
 
 }

@@ -1,25 +1,25 @@
 #include "mcv_platform.h"
-#include "modules/subvert/module_splash_screen.h"
+#include "module_splash_screen.h"
 #include "engine.h"
 #include "modules/module_manager.h"
 #include "render/render_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
 
-bool ModuleSubvertSplashScreen::start()
+bool ModuleEONSplashScreen::start()
 {
     _timer = 3.f;
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
-    EngineUI.activateWidget("subvert_splash_screen");
+    EngineUI.activateWidget("eon_splash_screen");
     return true;
 }
 
-void ModuleSubvertSplashScreen::stop()
+void ModuleEONSplashScreen::stop()
 {
-    EngineUI.deactivateWidget("subvert_splash_screen");
+    EngineUI.deactivateWidget("eon_splash_screen");
 }
 
-void ModuleSubvertSplashScreen::update(float dt)
+void ModuleEONSplashScreen::update(float dt)
 {
     _timer -= dt;
     

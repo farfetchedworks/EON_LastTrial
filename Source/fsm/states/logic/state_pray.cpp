@@ -6,14 +6,13 @@
 #include "fsm/states/logic/state_logic.h"
 #include "animation/blend_animation.h"
 #include "modules/module_physics.h"
-#include "modules/subvert/module_player_interaction.h"
+#include "modules/game/module_player_interaction.h"
 #include "components/common/comp_transform.h"
 #include "components/stats/comp_stamina.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/controllers/comp_player_controller.h"
 #include "skeleton/comp_skeleton.h"
 #include "skeleton/game_core_skeleton.h"
-
 
 using namespace fsm;
 

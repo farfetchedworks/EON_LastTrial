@@ -1,7 +1,7 @@
 #include "mcv_platform.h"
 #include "handle/handle.h"
 #include "engine.h"
-#include "modules/subvert/module_player_interaction.h"
+#include "modules/game/module_player_interaction.h"
 #include "audio/module_audio.h"
 #include "components/gameplay/comp_energy_wall.h"
 #include "components/common/comp_transform.h"

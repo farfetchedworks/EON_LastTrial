@@ -50,7 +50,8 @@ bool TCompAttachedToBone::resolveTarget(CHandle h_entity_parent)
 }
 
 void TCompAttachedToBone::update(float delta) {
-	if (bone_id == -1)
+
+	if (bone_id == -1 || !enabled)
 		return;
 	TCompSkeleton* c_skel = h_target_skeleton;
 	if (!c_skel)
@@ -78,6 +79,7 @@ void TCompAttachedToBone::applyOffset(CTransform& trans, VEC3 new_offset)
 {
 	if (bone_id == -1)
 		return;
+
 	TCompSkeleton* c_skel = h_target_skeleton;
 	if (!c_skel)
 		return;

@@ -3,24 +3,16 @@
 #include "components/messages.h"
 #include "module_events.h"
 #include "components/abilities/comp_area_delay.h"
+#include "skeleton/comp_attached_to_bone.h"
+#include "components/common/comp_parent.h"
+#include "components/controllers/comp_rigid_animation_controller.h"
 
 bool CModuleEventSystem::start()
 {
 	event_callbacks = {};
 	unregister_pending = {};
 
-	// Some global events
-
-	EventSystem.registerEventCallback("Gameplay/Eon/detachAD", [](CHandle t, CHandle o) {
-
-		CEntity* e = getEntityByName("player");
-		assert(e);
-		if (!e)
-			return;
-		TCompAreaDelay* c_ad = e->get<TCompAreaDelay>();
-		c_ad->detachADBall();
-		e->sendMsg(TMsgStopAiming({ 0.5f }));
-	});
+	registerGlobalEvents();
 
 	return true;
 }
@@ -110,6 +102,58 @@ bool CModuleEventSystem::atUnregisterPendingList(unsigned int id)
 {
 	auto it = std::find_if(begin(unregister_pending), end(unregister_pending), [id](const TCallbackInfo& cbi) {return cbi.id == id; });
 	return it != unregister_pending.end();
+}
+
+void CModuleEventSystem::registerGlobalEvents()
+{
+	// Some global events
+
+	EventSystem.registerEventCallback("Gameplay/Eon/detachAD", [](CHandle t, CHandle o) {
+
+		CEntity* e = getEntityByName("player");
+		assert(e);
+		if (!e)
+			return;
+		TCompAreaDelay* c_ad = e->get<TCompAreaDelay>();
+		c_ad->detachADBall();
+		e->sendMsg(TMsgStopAiming({ 0.5f }));
+		});
+
+	EventSystem.registerEventCallback("Gameplay/Animation/detachSocket", [](CHandle t, CHandle o) {
+		CEntity* e = t;
+		assert(e);
+		if (!e)
+			return;
+		TCompParent* parent = e->get<TCompParent>();
+		for (auto& h : parent->children)
+		{
+			CEntity* child = h;
+			TCompAttachedToBone* socket = child->get<TCompAttachedToBone>();
+			socket->detach();
+			TCompRigidAnimationController * controller = child->get<TCompRigidAnimationController>();
+			if (!controller)
+				continue;
+			controller->start();
+		}
+	});
+
+	EventSystem.registerEventCallback("Gameplay/Animation/attachSocket", [](CHandle t, CHandle o) {
+		CEntity* e = t;
+		assert(e);
+		if (!e)
+			return;
+		TCompParent* parent = e->get<TCompParent>();
+		for (auto& h : parent->children)
+		{
+			CEntity* child = h;
+			TCompAttachedToBone* socket = child->get<TCompAttachedToBone>();
+			socket->attach();
+			TCompRigidAnimationController* controller = child->get<TCompRigidAnimationController>();
+			if (!controller)
+				continue;
+			controller->stop();
+		}
+	});
 }
 
 void CModuleEventSystem::renderInMenu()

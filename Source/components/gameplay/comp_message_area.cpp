@@ -63,7 +63,7 @@ void TCompMessageArea::showMessage()
 	}
 
 	w_txt_message->textParams.text = c_game_mgr->ui_messages[message_id];
-	EngineUI.activateWidget("subvert_message");
+	EngineUI.activateWidget("eon_message");
 }
 
 void TCompMessageArea::clearMessage()
@@ -72,8 +72,8 @@ void TCompMessageArea::clearMessage()
 		return;
 	}
 	
-	if (EngineUI.getWidget("subvert_message")->isActive()) {
-		EngineUI.deactivateWidget("subvert_message");
+	if (EngineUI.getWidget("eon_message")->isActive()) {
+		EngineUI.deactivateWidget("eon_message");
 	}
 
 	is_active = false;

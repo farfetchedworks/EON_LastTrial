@@ -1,10 +1,10 @@
 #pragma once
 #include "modules/module.h"
 
-class ModuleSubvertSplashScreen : public IModule
+class ModuleEONSplashScreen : public IModule
 {
 public:
-	ModuleSubvertSplashScreen(const std::string& name) : IModule(name) {}
+	ModuleEONSplashScreen(const std::string& name) : IModule(name) {}
 
 	bool start() override;
 	void stop() override;

@@ -37,7 +37,7 @@ void TCompWarpEnergy::update(float dt)
 
 	// Update UI
 	float pct = warp_energy / (float)max_warp_energy;
-	ui::CWidget* w = EngineUI.getWidgetFrom("subvert_hud", "warp_energy_bar");
+	ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
 	assert(w);
 	ui::CWidget* wChild = w->getChildByName("bar_fill");
 	if (wChild) {
