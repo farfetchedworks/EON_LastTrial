@@ -84,6 +84,7 @@ void TCompRigidAnimationController::setSpeed(float speed)
 
 void TCompRigidAnimationController::start()
 {
+	curr_time = animation_data->header.min_time;
 	playing = true;
 }
 

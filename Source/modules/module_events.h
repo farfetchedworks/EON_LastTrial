@@ -34,6 +34,8 @@ public:
 	void stop() override;
 	void renderInMenu() override;
 
+	void registerGlobalEvents();
+
 	unsigned int registerEventCallback(const std::string& name, CHandle observer, std::function<void(CHandle, CHandle)> callback);
 	unsigned int registerEventCallback(const std::string& name, std::function<void(CHandle, CHandle)> callback);
 	void unregisterEventCallback(const std::string& name, unsigned int id);

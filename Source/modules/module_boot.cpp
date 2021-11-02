@@ -121,6 +121,14 @@ bool CModuleBoot::loadPreviewBoot()
 		output_names.set(character_entries, total_entries);
 	}
 
+	// We have finish parsing all the components of the entity
+	for (auto ctx : ctxs)
+	{
+		TMsgAllEntitiesCreated msg;
+		for (auto h : ctx.entities_loaded)
+			h.sendMsg(msg);
+	}
+
 	// don't render debug
 	Entities.clearDebugList();
 	return is_ok;
@@ -151,6 +159,14 @@ void CModuleBoot::renderInMenu()
 			std::string to_parse = "data/scenes/3dviewer/" + next + std::string(".json");
 			bool is_ok = loadScene(to_parse);
 			assert(is_ok);
+
+			// We have finish parsing all the components of the entity
+			for (auto ctx : ctxs)
+			{
+				TMsgAllEntitiesCreated msg;
+				for (auto h : ctx.entities_loaded)
+					h.sendMsg(msg);
+			}
 
 			_lastLoaded = _loaded;
 		}

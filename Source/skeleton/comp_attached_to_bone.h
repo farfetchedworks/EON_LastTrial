@@ -18,6 +18,7 @@ struct TCompAttachedToBone : public TCompBase {
 
 	CTransform		local_t;
 	bool			skip_rotation = false;
+	bool			enabled = true;
 
 	bool resolveTarget(CHandle h_entity_parent);
 	void load(const json& j, TEntityParseContext& ctx);
@@ -26,5 +27,7 @@ struct TCompAttachedToBone : public TCompBase {
 	void debugInMenu();
 	void onEntityCreated();
 
+	void detach() { enabled = false; };
+	void attach() { enabled = true; };
 };
 
