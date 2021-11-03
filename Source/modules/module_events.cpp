@@ -1,11 +1,14 @@
 #include "mcv_platform.h"
 #include "engine.h"
-#include "components/messages.h"
 #include "module_events.h"
+#include "input/input_module.h"
+#include "components/messages.h"
 #include "components/abilities/comp_area_delay.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/common/comp_parent.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
+#include "components/controllers/comp_player_controller.h"
+#include "components/controllers/pawn_utils.h"
 
 bool CModuleEventSystem::start()
 {
@@ -107,6 +110,25 @@ bool CModuleEventSystem::atUnregisterPendingList(unsigned int id)
 void CModuleEventSystem::registerGlobalEvents()
 {
 	// Some global events
+
+	EventSystem.registerEventCallback("Input/block", [](CHandle t, CHandle o) {
+		PlayerInput.blockInput();
+	});
+
+	EventSystem.registerEventCallback("Input/unblock", [](CHandle t, CHandle o) {
+		PlayerInput.unBlockInput();
+	});
+
+	EventSystem.registerEventCallback("Gameplay/Eon/setLocomotion", [](CHandle t, CHandle o) {
+
+		CEntity* e = getEntityByName("player");
+		assert(e);
+		if (!e)
+			return;
+		TCompPlayerController* controller = e->get<TCompPlayerController>();
+		if(controller->getSpeed() > 0.1f)
+			PawnUtils::stopAction(e, "AreaDelay_Throw", 0.2f);
+	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/detachAD", [](CHandle t, CHandle o) {
 
