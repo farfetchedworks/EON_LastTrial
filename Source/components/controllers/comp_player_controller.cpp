@@ -247,7 +247,7 @@ void TCompPlayerController::update(float dt)
 	// Custom debug
 	if (PlayerInput['Z'].getsPressed()) {
 
-		// ...
+		PawnUtils::playAction(getEntity(), "Shrine");
 	}
 
 	if (is_locked_on) {
