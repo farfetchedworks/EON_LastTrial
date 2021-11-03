@@ -26,7 +26,7 @@ public:
 
 	int  shadows_resolution = 1024;
 	float shadows_step = 1.75f;
-	float shadows_bias = 0.0001f;
+	float shadows_bias = 0.00001f;
 
 	float intensity = 1.0f;
 	float godrays_intensity = 1.0f;
