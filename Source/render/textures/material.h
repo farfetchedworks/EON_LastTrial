@@ -18,7 +18,7 @@ class CMaterial : public IResource {
   const CTexture* normal			= nullptr;
   const CTexture* combined			= nullptr; // AO, Rough, Metal
   const CTexture* emissive			= nullptr;
-  //const CTexture* opacity			= nullptr;
+  const CTexture* height			= nullptr;
   const CPhysicalMaterial* phys_mat = nullptr;
 
   const CMaterial* material_shadows = nullptr;
