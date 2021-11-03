@@ -21,7 +21,10 @@ void TCompDissolveEffect::load(const json& j, TEntityParseContext& ctx)
 
 void TCompDissolveEffect::debugInMenu()
 {
+	ImGui::Checkbox("Enabled", &_enabled);
 	ImGui::Checkbox("Recovering", &_recovering);
+	ImGui::Text("Timer: %f", _timer);
+	ImGui::Text("Original: %s", _originalMatName.c_str());
 }
 
 void TCompDissolveEffect::fromLifetime(float ttl)
@@ -143,9 +146,9 @@ void TCompDissolveEffect::update(float dt)
 void TCompDissolveEffect::reset()
 {
 	_dissolveTime = 0.f;
+	_waitTimer = 0.f;
 	_timer = 0.f;
 	_recovering = false;
 	_enabled = false;
 	setMaterial(_originalMatName);
-	_originalMatName = "";
 }

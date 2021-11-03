@@ -76,6 +76,9 @@ bool CMaterial::createFromJson(const json& j) {
   std::string normal_name = j.value("normal", "data/textures/null_normal.dds");
   normal = Resources.get(normal_name)->as<CTexture>();
 
+  std::string height_name = j.value("height", "data/textures/black.dds");
+  height = Resources.get(height_name)->as<CTexture>();
+
   std::string combined_name = j.value("combined", "data/textures/combined_default.dds");
   combined = Resources.get(combined_name)->as<CTexture>();
 
@@ -189,8 +192,8 @@ void CMaterial::cacheSRVS()
     shader_resource_views[TS_COMBINED] = combined->getShaderResourceView();
   if(emissive)
     shader_resource_views[TS_EMISSIVE] = emissive->getShaderResourceView();
-  /*if (opacity)
-      shader_resource_views[TS_OPACITY] = opacity->getShaderResourceView();*/
+  if (height)
+    shader_resource_views[TS_HEIGHT] = height->getShaderResourceView();
 }
 
 void CMaterial::activateTextures(int slot_base) const
@@ -204,7 +207,6 @@ void CMaterial::activate() const {
 
   if (gpu_ctes) {
     gpu_ctes->activate();
-    // gpu_ctes->updateFromCPU(&ctes);
   }
 
   assert(TS_ALBEDO == 0);
@@ -218,7 +220,7 @@ void CMaterial::destroy() {
   normal = nullptr;
   combined = nullptr;
   emissive = nullptr;
-  //opacity = nullptr;
+  height = nullptr;
 
   auto ctes = comp_buffers.getCteByName("TMaterialCtes");
   SAFE_DESTROY(ctes);
@@ -237,8 +239,8 @@ bool CMaterial::renderInMenu() const {
         combined->renderInMenu();
     if (emissive)
       emissive->renderInMenu();
-    /*if (opacity)
-        opacity->renderInMenu();*/
+    if (height)
+        height->renderInMenu();
     ImGui::TreePop();
   }
 

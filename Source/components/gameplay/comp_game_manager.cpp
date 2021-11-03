@@ -108,7 +108,7 @@ void TCompGameManager::setEonDied()
 	assert(player);
 	TCompDissolveEffect* c_dissolve = player->get<TCompDissolveEffect>();
 	if (c_dissolve) {
-		c_dissolve->enable(8.f);
+		c_dissolve->enable(7.f);
 	}
 }
 

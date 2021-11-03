@@ -131,6 +131,8 @@ struct TMaterialExporter (
 			fs.writeComma()
 			exportMap "metallic" mat.specularLevelMap "data/textures/black.dds"
 			fs.writeComma()
+			exportMap "height" mat.displacementMap "data/textures/black.dds"
+			fs.writeComma()
 			exportMap "emissive" mat.selfIllumMap "data/textures/black.dds"
 			
 			if ( findString mat.name "plants" != undefined ) then (
@@ -182,9 +184,9 @@ struct TMaterialExporter (
 		fs.writeComma()
 		exportMap "roughness" mat.roughness_map "data/textures/white.dds"
 		fs.writeComma()
+		exportMap "height" mat.displacement_map "data/textures/black.dds"
+		fs.writeComma()
 		exportMap "emissive" mat.emit_color_map "data/textures/black.dds"
-		--fs.writeComma()
-		--exportMap "height" mat.displacement_map "data/textures/black.dds"
 	
 		if ( findString mat.name "plants" != undefined ) then (
 				fs.writeComma()
