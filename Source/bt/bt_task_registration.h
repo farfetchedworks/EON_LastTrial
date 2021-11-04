@@ -51,6 +51,7 @@ REGISTER_TASK(SetBlackboardBool)
 REGISTER_TASK(SetBlackboardFloat)
 REGISTER_TASK(SetBlackboardInt)
 REGISTER_TASK(DecrementBlackboardInt)
+REGISTER_TASK(PlayAnimation)
 
 // Debugging tasks
 REGISTER_TASK(Success)
