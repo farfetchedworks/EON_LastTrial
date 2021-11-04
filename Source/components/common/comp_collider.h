@@ -50,6 +50,7 @@ public:
 	physx::PxF32 _stepOffset = 0.f;
 
 	void setSphereShapeRadius(float radius);
+	void setBoxShapeDimensions(VEC3 dims);
 
 	void setGlobalPose(VEC3 new_pos, QUAT new_rotation, bool autowake = true);
 	void addForce(VEC3 force, const std::string force_origin, bool disableGravity = false, float minVel = 0.2f);
