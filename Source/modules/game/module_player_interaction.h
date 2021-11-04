@@ -13,7 +13,7 @@ class CModulePlayerInteraction : public IModule
 	CHandle h_currAnimLauncher;
 
 	bool lastWidgetActive = false;
-	bool playing = false;
+	bool active = false;
 
 	void enableUI(bool v);
 
@@ -27,7 +27,7 @@ public:
 	void setAnimationLauncher(CHandle h) { h_currAnimLauncher = h; };
 	void setEnergyWall(CHandle h) { h_currEnergyWall = h; };
 	void setLastShrine(CHandle h) { h_lastShrine = h; };
-	void setPlaying(bool v) { playing = v; };
+	void setActive(bool v) { active = v; };
 
 	bool start() override;
 	void checkInteractions();

@@ -182,7 +182,7 @@ void CModuleEventSystem::registerGlobalEvents()
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/onShrineActivated", [](CHandle t, CHandle o) {
-		PlayerInteraction.setPlaying(false);
+		PlayerInteraction.setActive(false);
 		TCompGameManager* comp_gm = GameManager->get<TCompGameManager>();
 		comp_gm->respawnEnemies();
 		CEntity* owner = t;
@@ -191,6 +191,10 @@ void CModuleEventSystem::registerGlobalEvents()
 		shrine->restorePlayer();
 		TCompTimeReversal* c_time_reversal = owner->get<TCompTimeReversal>();
 		c_time_reversal->clearBuffer();
+	});
+
+	EventSystem.registerEventCallback("Gameplay/Eon/onInteractionEnded", [](CHandle t, CHandle o) {
+		PlayerInteraction.setActive(false);
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {

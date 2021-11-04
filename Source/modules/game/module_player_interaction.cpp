@@ -73,7 +73,7 @@ void CModulePlayerInteraction::checkInteractions()
 		}
 	}
 
-	if (playing)
+	if (active)
 		return;
 
 	enableUI(is_ok);
@@ -97,8 +97,6 @@ void CModulePlayerInteraction::interact(CHandle object)
 	TCompEnergyWall* c_energyWall = e_interactable->get<TCompEnergyWall>();
 	TCompLaunchAnimation* c_animation = e_interactable->get<TCompLaunchAnimation>();
 
-	// If it interacts with a shrine go to pray state (saving the latest shrine), 
-	// otherwise go to interacting state
 	if (c_shrine) {
 		setLastShrine(object.getOwner());
 		controller->setVariable("is_praying", true);
@@ -113,7 +111,7 @@ void CModulePlayerInteraction::interact(CHandle object)
 		controller->setVariable("is_interacting", true);
 	}
 
-	PlayerInteraction.setPlaying(true);
+	PlayerInteraction.setActive(true);
 	enableUI(false);
 }
 
