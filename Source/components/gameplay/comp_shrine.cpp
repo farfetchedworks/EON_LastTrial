@@ -1,12 +1,15 @@
 #include "mcv_platform.h"
+#include "engine.h"
 #include "render/draw_primitives.h"
 #include "comp_shrine.h"
+#include "modules/module_physics.h"
 #include "components/common/comp_transform.h"
 #include "components/stats/comp_health.h"
 #include "components/stats/comp_warp_energy.h"
 #include "components/stats/comp_stamina.h"
 #include "components/gameplay/comp_game_manager.h"
 #include "skeleton/comp_skeleton.h"
+#include "utils/resource_json.h"
 
 DECL_OBJ_MANAGER("shrine", TCompShrine)
 
@@ -14,6 +17,12 @@ void TCompShrine::load(const json& j, TEntityParseContext& ctx)
 {
 	shrine_info = j.value("info", shrine_info);
 	active = j.value("active", active);
+
+	// load info from animation launchers
+	const CJson* launchers = Resources.get("data/animations/launchers.json")->as<CJson>();
+	const json& jData = launchers->getJson();
+	const json& jItem = jData["is_praying"];
+	acceptance_dist = jItem.value("acceptance_dist", 0.f);
 }
 
 void TCompShrine::onEntityCreated()
@@ -32,21 +41,39 @@ void TCompShrine::onEntityCreated()
 
 void TCompShrine::onPray(const TMsgShrinePray& msg)
 {
-	TCompSkeleton* c_skel = get<TCompSkeleton>();
-	assert(c_skel);
-	
 	if (!active)
 	{
 		active = true;
 		pray_pos.player = msg.position;
 		pray_pos.collider = msg.collider_pos;
-		c_skel->playAnimation("Shrine_active", ANIMTYPE::CYCLE);
 	}
 
-	c_skel->playAnimation("Shrine_charge", ANIMTYPE::ACTION);
-	
 	// Shrine_charge has an associated callback,
 	// so the respawn is managed in animation/callbacks/shrine_callback.cpp
+}
+
+bool TCompShrine::resolve()
+{
+	CEntity* player = getEntityByName("player");
+	if (!player)
+		return false;
+	
+	bool is_ok = canPray();
+
+	TCompTransform* transform = get<TCompTransform>();
+	TCompTransform* player_transform = player->get<TCompTransform>();
+
+	VHandles colliders;
+	is_ok &= EnginePhysics.raycast(player_transform->getPosition(),
+		player_transform->getForward(), 2.f, colliders, CModulePhysics::FilterGroup::Interactable);
+
+	is_ok &= player_transform->getForward().Dot(transform->getForward()) < 0.f;
+
+	VEC3 pos = transform->getPosition();
+	float dist = VEC3::Distance(pos, player_transform->getPosition());
+	is_ok &= (dist < acceptance_dist);
+
+	return is_ok;
 }
 
 void TCompShrine::restorePlayer()
@@ -82,18 +109,15 @@ void TCompShrine::onEnemyExit(const TMsgEnemyExit& msg)
 
 void TCompShrine::renderDebug()
 {
-//#ifdef _DEBUG
-//	CEntity* player = getEntityByName("player");
-//	TCompTransform* t_shrine = get<TCompTransform>();
-//	TCompTransform* t_player = player->get<TCompTransform>();
-//
-//	VEC3 shrine_pos = t_shrine->getPosition();
-//	VEC3 player_pos = t_player->getPosition();
-//
-//	float sq_dist = VEC3::DistanceSquared(shrine_pos, player_pos);
-//
-//	if (sq_dist < 3.f && canPray()) {
-//		drawText2D(VEC2(0, 20), Colors::White, "Pray in shrine [E - PadA]", true);
-//	}
-//#endif // _DEBUG
+#ifdef _DEBUG
+	CEntity* player = getEntityByName("player");
+	TCompTransform* t_shrine = get<TCompTransform>();
+	TCompTransform* t_player = player->get<TCompTransform>();
+
+	VEC3 shrine_pos = t_shrine->getPosition();
+	VEC3 player_pos = t_player->getPosition();
+
+	std::string ss = "ANGLE: " + std::to_string(t_player->getForward().Dot(t_shrine->getForward()));
+	drawText2D(VEC2(0, 20), Colors::White, ss.c_str(), true);
+#endif // _DEBUG
 }
