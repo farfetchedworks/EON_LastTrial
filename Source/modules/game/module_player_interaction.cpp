@@ -50,8 +50,11 @@ void CModulePlayerInteraction::checkInteractions()
 		TCompCollider* c_collider = objects_in_area[0];
 		CEntity* e_interactable = c_collider->getEntity();
 		TCompLaunchAnimation* c_animation = e_interactable->get<TCompLaunchAnimation>();
+		TCompShrine* c_shrine = e_interactable->get<TCompShrine>();
 		if (c_animation)
 			is_ok &= c_animation->resolve();
+		else if(c_shrine)
+			is_ok &= c_shrine->resolve();
 
 		if (is_ok) {
 			auto w = EngineUI.getWidget("eon_message");
@@ -97,10 +100,8 @@ void CModulePlayerInteraction::interact(CHandle object)
 	// If it interacts with a shrine go to pray state (saving the latest shrine), 
 	// otherwise go to interacting state
 	if (c_shrine) {
-		if (c_shrine->canPray()) {
-			setLastShrine(object.getOwner());
-			controller->setVariable("is_praying", true);
-		}
+		setLastShrine(object.getOwner());
+		controller->setVariable("is_praying", true);
 	}
 	else if (c_energyWall) {
 		h_currEnergyWall = c_energyWall;

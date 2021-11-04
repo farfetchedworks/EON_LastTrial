@@ -23,7 +23,6 @@
     <ClCompile Include="animation\callbacks\gard_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_insert_branches_callback.cpp" />
     <ClCompile Include="animation\callbacks\heal_callback.cpp" />
-    <ClCompile Include="animation\callbacks\shrine_callback.cpp" />
     <ClCompile Include="animation\nn_interpolator.cpp" />
     <ClCompile Include="audio\physical_material.cpp" />
     <ClCompile Include="bt\bt_service.cpp" />
