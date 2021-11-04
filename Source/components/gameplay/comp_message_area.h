@@ -19,6 +19,7 @@ private:
 	bool closable				= false;    // Closes on interact
 	bool activated				= false;
 	bool is_active				= false;
+	bool inside					= true;
 
 	std::string message_id		= "";					// Message to display
 	std::string widget_name		= "";					// Widget to display
@@ -31,8 +32,6 @@ private:
 	void clearMessage();
 
 public:
-
-	static bool MESSAGES_ENABLED;
 
 	void load(const json& j, TEntityParseContext& ctx);
 	void onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg);

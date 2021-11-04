@@ -13,8 +13,6 @@ static NamedValues<EWidgetType>::TEntry widget_types[] = {
 };
 static NamedValues<EWidgetType> widget_type_names(widget_types, sizeof(widget_types) / sizeof(NamedValues<EWidgetType>::TEntry));
 
-bool TCompMessageArea::MESSAGES_ENABLED = false;
-
 DECL_OBJ_MANAGER("message_area", TCompMessageArea)
 
 void TCompMessageArea::load(const json& j, TEntityParseContext& ctx)
@@ -104,16 +102,17 @@ void TCompMessageArea::clearMessage()
 
 void TCompMessageArea::onActivateMsg(const TMsgActivateMsgArea& msg)
 {
-	if (is_active || !TCompMessageArea::MESSAGES_ENABLED) {
+	if (is_active || inside) {
 		return;
 	}
 
+	inside = true;
 	showMessage();
 }
 
 void TCompMessageArea::onDeactivateMsg(const TMsgDeactivateMsgArea& msg)
 {
-	
+	inside = false;
 }
 
 void TCompMessageArea::debugInMenu()

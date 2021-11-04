@@ -20,7 +20,6 @@
 #include "components/common/comp_tags.h"
 #include "components/render/comp_irradiance_cache.h"
 #include "components/gameplay/comp_game_manager.h"
-#include "components/gameplay/comp_message_area.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
 
@@ -91,7 +90,6 @@ bool ModuleEONGameplay::start()
 		}
 	}
 
-	TCompMessageArea::MESSAGES_ENABLED = true;
 	started = true;
 	return true;
 }
