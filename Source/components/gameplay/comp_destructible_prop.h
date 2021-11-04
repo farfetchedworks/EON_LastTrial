@@ -15,6 +15,7 @@ private:
 
 	std::string spawn_prefab;
 	std::string fmod_event; // path to the event to play when the prop is destroyed
+	std::string callback_event;
 	void onDestroy(const TMsgPropDestroyed& msg);
 
 public:

@@ -1,15 +1,15 @@
 #include "mcv_platform.h"
 #include "handle/handle.h"
 #include "engine.h"
-#include "entity/entity_parser.h"
-#include "components/gameplay/comp_destructible_prop.h"
-#include "components/common/comp_transform.h"
 #include "entity/entity.h"
-#include "components/common/comp_collider.h"
-#include "components/messages.h"
-#include "components/cameras/comp_camera_shake.h"
+#include "entity/entity_parser.h"
+#include "comp_destructible_prop.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
+#include "modules/module_events.h"
+#include "components/common/comp_transform.h"
+#include "components/common/comp_collider.h"
+#include "components/cameras/comp_camera_shake.h"
 
 DECL_OBJ_MANAGER("destructible", TCompDestructible)
 
@@ -17,6 +17,7 @@ void TCompDestructible::load(const json& j, TEntityParseContext& ctx)
 {
 	spawn_prefab	= j.value("spawn_prefab", std::string());
 	fmod_event		= j.value("fmod_event", std::string());
+	callback_event	= j.value("callback_event", std::string());
 	drops_warp		= j.value("drops_warp", drops_warp);
 }
 
@@ -63,18 +64,20 @@ void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 		dir.Normalize();
 		collider->addForce(dir * 5.f, "prop");
 
-
 		TCompTransform* t = e->get<TCompTransform>();
-		t->setScale(VEC3(0.85f));
+		t->setScale(VEC3(0.9f));
 
 		((physx::PxRigidDynamic*)collider->actor)->setLinearDamping(physx::PxReal(1.5f));
-		((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(0.3f));
+		((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(1.f));
 
 		EngineLua.executeScript("destroyEntity('" + std::string(e->getName()) + "')", Random::range(120.f, 140.f));
 	}
 
 	// Post fmod event
-	EngineAudio.postEvent(fmod_event, transform->getPosition());
+	if (fmod_event.length())
+		EngineAudio.postEvent(fmod_event, transform->getPosition());
+	if (callback_event.length())
+		EventSystem.dispatchEvent(callback_event, getEntity());
 
 	// Recover warp energy
 	if (drops_warp) {

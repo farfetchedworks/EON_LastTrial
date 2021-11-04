@@ -176,6 +176,10 @@ void CModuleEventSystem::registerGlobalEvents()
 			controller->stop();
 		}
 	});
+
+	EventSystem.registerEventCallback("Gameplay/openCygnusPath", [](CHandle t, CHandle o) {
+		// ...
+	});
 }
 
 void CModuleEventSystem::renderInMenu()
