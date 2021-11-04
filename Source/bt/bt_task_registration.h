@@ -43,6 +43,7 @@ REGISTER_TASK(CygnusWalkAggressive)
 REGISTER_TASK(CygnusDeath)
 REGISTER_TASK(CygnusTimeReversal)
 REGISTER_TASK(CygnusChangePhase)
+REGISTER_TASK(CygnusTeleport)
 
 // Generic Tasks
 REGISTER_TASK(Wait)
