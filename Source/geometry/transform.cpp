@@ -228,7 +228,7 @@ bool CTransform::fromJson(const json& j) {
 void CTransform::interpolateTo(const CTransform& target, float amount_of_target)
 {
   assert(amount_of_target >= 0 && amount_of_target <= 1.f);
-  position += (target.position - position) * amount_of_target;
+  position = VEC3::Lerp(position, target.position, amount_of_target);
   rotation = QUAT::Slerp(rotation, target.rotation, amount_of_target);
-  scale += (target.scale - scale) * amount_of_target;
+  scale = VEC3::Lerp(scale, target.scale, amount_of_target);
 }

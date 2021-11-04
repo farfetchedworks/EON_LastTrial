@@ -55,6 +55,7 @@ bool TCompRender::TDrawCall::debugInMenu() {
   bool changed = false;
   ImGui::LabelText("Mesh", "%s", mesh ? mesh->getName().c_str() : "null" );
   changed |= ImGui::Checkbox("Enabled", &enabled);
+  changed |= material->renderInMenu();
   changed |= ImGui::Checkbox("Show Tangent Space", &show_tangent_space);
   if(show_tangent_space)
     ImGui::DragFloat("Draw Scale", &TDrawCall::render_tangent_space_scale, 0.01f, 0.001f, 1.0f);
