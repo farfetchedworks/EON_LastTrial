@@ -19,6 +19,7 @@ namespace ui
         ImGui::Checkbox("Additive", &additive);
         ImGui::Checkbox("HUD", &hud);
         ImGui::DragFloat("Alpha Cut", &alpha_cut, 0.01f, 0.f, 1.f);
+        ImGui::Text("Time normalized: %f", time_normalized);
     }
 
     void TFontParams::renderInMenu()
