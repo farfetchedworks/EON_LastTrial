@@ -71,14 +71,14 @@ void TCompCollapsingRocks::onPlayerStepOn(const TMsgEntityTriggerEnter& msg)
 		TCompCollider* collider = e_rock->get<TCompCollider>();
 		assert(collider);
 
-		((physx::PxRigidDynamic*)collider->actor)->setLinearDamping(physx::PxReal(5.f));
-		((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(0.5f));
+		((physx::PxRigidDynamic*)collider->actor)->setLinearDamping(physx::PxReal(0.5f));
+		((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(0.1f));
 
 		TCompTransform* rockTransform = e_rock->get<TCompTransform>();
 		float distToPlayer = rockTransform->distance(*playerTransform);
-		rock->setWaitTime(powf(distToPlayer / maxDistance, 4.f) * 3.f);
+		rock->setWaitTime(powf(distToPlayer / maxDistance, 6.f) * 4.f);
 
-		EngineLua.executeScript("destroyEntity('" + std::string(e_rock->getName()) + "')", Random::range(10.f, 30.f));
+		EngineLua.executeScript("destroyEntity('" + std::string(e_rock->getName()) + "')", Random::range(110.f, 130.f));
 	}
 
 	CEntity* outputCamera = getEntityByName("camera_mixed");
@@ -86,7 +86,7 @@ void TCompCollapsingRocks::onPlayerStepOn(const TMsgEntityTriggerEnter& msg)
 	shaker->shakeOnce(1.5f, 0.25f, 0.1f);
 
 	// call Lua to shake camera in "fall_time" seconds
-	EngineLua.executeScript("shakeOnce(4, 0.1, 2.5)", fall_time);
+	EngineLua.executeScript("shakeOnce(3, 0.1, 2)", fall_time);
 
 	// post fmod event
 	EngineAudio.postEvent("ENV/Cave/Rocks_Falling", transform->getPosition());

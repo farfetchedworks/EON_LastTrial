@@ -192,6 +192,14 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 	if (flags & PxShapeFlag::eTRIGGER_SHAPE)
 		ImGui::Text("Is trigger");
 
+	PxTransform t = shape->getLocalPose();
+	VEC3 offset = PXVEC3_TO_VEC3(t.p);
+	if (ImGui::DragFloat3("Offset", &offset.x, 0.1f, 0.f, 50.f))
+	{
+		t.p = VEC3_TO_PXVEC3(offset);
+		shape->setLocalPose(t);
+	}
+
 	switch (geometry_type)
 	{
 		case PxGeometryType::eSPHERE: {
@@ -201,6 +209,11 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 		}
 		case PxGeometryType::eBOX: {
 			PxBoxGeometry* box = (PxBoxGeometry*)geom;
+			VEC3 dims = PXVEC3_TO_VEC3(box->halfExtents);
+			if (ImGui::DragFloat3("Half", &dims.x, 0.1f, 0.f, 50.f))
+			{
+				setBoxShapeDimensions(dims);
+			}
 			ImGui::LabelText("Box", "Half:%f %f %f", box->halfExtents.x, box->halfExtents.y, box->halfExtents.z);
 			break;
 		}
@@ -494,6 +507,28 @@ void TCompCollider::setGlobalPose(VEC3 new_pos, QUAT new_rotation, bool autowake
 	physx::PxTransform transform(VEC3_TO_PXVEC3(new_pos), QUAT_TO_PXQUAT(new_rotation));
 	!active_force ? actor->setGlobalPose(transform, autowake) 
 				  : force_actor->setGlobalPose(transform, autowake);
+}
+
+void TCompCollider::setBoxShapeDimensions(VEC3 dims)
+{
+	// Set the radius of the collider as the radius defined in the json
+	physx::PxU32 num_shapes = actor->getNbShapes();
+
+	std::allocator<physx::PxShape*> alloc; // allocator for PxShape*
+	physx::PxShape** shapes = alloc.allocate(sizeof(physx::PxShape*) * num_shapes);
+
+	// change the radius of all the shapes of the actor 
+	// (it only has one, the sphere, but there is no single "getShape")
+	actor->getShapes(shapes, num_shapes);
+	for (physx::PxU32 i = 0; i < num_shapes; i++)
+	{
+		physx::PxShape* shape = shapes[i];
+		physx::PxBoxGeometry box;
+		if (shape->getBoxGeometry(box)) {
+			box.halfExtents = VEC3_TO_PXVEC3(dims);
+			shape->setGeometry(box);
+		}
+	}
 }
 
 void TCompCollider::setSphereShapeRadius(float radius)
