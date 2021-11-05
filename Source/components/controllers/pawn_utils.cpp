@@ -232,7 +232,6 @@ void PawnUtils::spawnHealParticles(VEC3 pos, const std::string& name)
 	CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte< CtesParticleSystem >*>(buffers->getCteByName("CtesParticleSystem"));
 
 	cte->emitter_initial_pos = t.getPosition();
-	cte->emitter_num_particles_per_spawn = 2000;
 	cte->updateFromCPU();
 
 	// "smoke" particles
@@ -241,6 +240,5 @@ void PawnUtils::spawnHealParticles(VEC3 pos, const std::string& name)
 	cte = static_cast<CShaderCte< CtesParticleSystem >*>(buffers->getCteByName("CtesParticleSystem"));
 
 	cte->emitter_initial_pos = t.getPosition();
-	cte->emitter_num_particles_per_spawn = 100;
 	cte->updateFromCPU();
 }
