@@ -91,7 +91,6 @@ bool ModuleEONGameplay::start()
 	}
 
 	started = true;
-
 	return true;
 }
 

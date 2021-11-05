@@ -181,7 +181,8 @@ public:
 #pragma endregion
 
 
-#pragma region Display Message
+#pragma region UI Messages
+
 class CTriggerAreaDisplayMessage : public ITriggerArea {
 
 public:
@@ -190,25 +191,13 @@ public:
 	void onAreaEnter(CHandle event_trigger, CHandle observer) override
 	{
 		CEntity* e_trigger_area = event_trigger;
-		TMsgActivateMsgArea msg_activate_area;
-		e_trigger_area->sendMsg(msg_activate_area);
-				
-		//ui::CText* w_txt_message = (ui::CText*) EngineUI.getWidget("txt_message");
-
-		//CEntity* e_game_mgr = getEntityByName("game_manager");
-		//TCompGameManager* c_game_mgr = e_game_mgr->get<TCompGameManager>();
-
-		//w_txt_message->textParams.text = c_game_mgr->ui_messages["gard_dead"];
-		//EngineUI.activateWidget("eon_message");
+		e_trigger_area->sendMsg(TMsgActivateMsgArea());
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
 	{
-		CEntity* e_owner = event_trigger;
-		TMsgDeactivateMsgArea msg_deactivate_area;
-		e_owner->sendMsg(msg_deactivate_area);
-		
-		//EngineUI.deactivateWidget("eon_message");
+		CEntity* e_trigger_area = event_trigger;
+		e_trigger_area->sendMsg(TMsgDeactivateMsgArea());
 	}
 };
 
