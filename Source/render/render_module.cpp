@@ -387,18 +387,19 @@ void CRenderModule::renderAll()
 	rt_deferred_output->activate(TS_DEFERRED_OUTPUT);
 	drawFullScreenQuad("deferred_resolve.pipeline", rt_deferred_output);
 
-	RenderManager.renderAll(eRenderChannel::RC_DISTORSIONS, e_camera);
 
 	// to john: temporary solution to render single particles
-	getObjectManager<TCompParticles>()->forEach([](TCompParticles* particles) {
+	/*getObjectManager<TCompParticles>()->forEach([](TCompParticles* particles) {
 		particles->render();
-		});
+		});*/
 
 	getObjectManager<TCompIrradianceCache>()->forEach([](TCompIrradianceCache* irradiance) {
 		irradiance->renderProbes();
-		});
+	});
 
 	exposure_avg_texture->activate(TS_EXPOSURE);
+
+	RenderManager.renderAll(eRenderChannel::RC_DISTORSIONS, e_camera);
 
 	RenderManager.renderAll(eRenderChannel::RC_TRANSPARENT, e_camera);
 
