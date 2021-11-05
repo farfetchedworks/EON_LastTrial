@@ -4,6 +4,7 @@
 #include "components/messages.h"
 #include "input/input_module.h"
 #include "modules/game/module_player_interaction.h"
+#include "lua/module_scripting.h"
 #include "components/abilities/comp_area_delay.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/common/comp_parent.h"
@@ -198,7 +199,7 @@ void CModuleEventSystem::registerGlobalEvents()
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {
-		// ...
+		EngineLua.executeScript("shakeOnce(5, 0.1, 3)");
 	});
 }
 

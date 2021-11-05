@@ -12,6 +12,7 @@ private:
 	CHandle h_transform; // cached transform component
 
 	bool drops_warp = true;
+	float force = 5.f;
 
 	std::string spawn_prefab;
 	std::string fmod_event; // path to the event to play when the prop is destroyed

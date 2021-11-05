@@ -312,7 +312,7 @@ void TCompGameManager::parseMessages(const std::string& filename) {
 	const json jData = loadJson(filename);
 	for (const json& jFileEntry : jData) {
 		for (const json& jMessage : jFileEntry["messages"]) {
-			ui_messages[jFileEntry["id"]] = jMessage["text"];
+			ui_messages[jFileEntry["id"]] = jMessage["data"];
 		}
 	}
 }

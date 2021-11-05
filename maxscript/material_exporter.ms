@@ -130,8 +130,8 @@ struct TMaterialExporter (
 			exportMap "roughness" mat.glossinessMap "data/textures/white.dds"
 			fs.writeComma()
 			exportMap "metallic" mat.specularLevelMap "data/textures/black.dds"
-			fs.writeComma()
-			exportMap "height" mat.displacementMap "data/textures/black.dds"
+			--fs.writeComma()
+			--exportMap "height" mat.displacementMap "data/textures/black.dds"
 			fs.writeComma()
 			exportMap "emissive" mat.selfIllumMap "data/textures/black.dds"
 			
@@ -183,8 +183,8 @@ struct TMaterialExporter (
 		exportMap "normal" mat.norm_map "data/textures/null_normal.dds" skip_compression:true
 		fs.writeComma()
 		exportMap "roughness" mat.roughness_map "data/textures/white.dds"
-		fs.writeComma()
-		exportMap "height" mat.displacement_map "data/textures/black.dds"
+		--fs.writeComma()
+		--exportMap "height" mat.displacement_map "data/textures/black.dds"
 		fs.writeComma()
 		exportMap "emissive" mat.emit_color_map "data/textures/black.dds"
 	
