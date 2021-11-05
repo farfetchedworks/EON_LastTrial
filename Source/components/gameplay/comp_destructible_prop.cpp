@@ -19,6 +19,7 @@ void TCompDestructible::load(const json& j, TEntityParseContext& ctx)
 	fmod_event		= j.value("fmod_event", std::string());
 	callback_event	= j.value("callback_event", std::string());
 	drops_warp		= j.value("drops_warp", drops_warp);
+	force			= j.value("force", force);
 }
 
 void TCompDestructible::debugInMenu()
@@ -52,23 +53,23 @@ void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 		TCompCollider* collider = e->get<TCompCollider>();
 		assert(collider);
 
-		float r = 0.4f;
+		if (collider->actor->is<physx::PxRigidDynamic>())
+		{
+			float r = 0.4f;
 
-		QUAT q = QUAT::CreateFromYawPitchRoll(
-			Random::range(-r, r), 
-			Random::range(-r, r), 
-			Random::range(-r, r)
-		);
-		
-		VEC3 dir = VEC3::Transform(msg.direction, q);
-		dir.Normalize();
-		collider->addForce(dir * 5.f, "prop");
+			QUAT q = QUAT::CreateFromYawPitchRoll(
+				Random::range(-r, r),
+				Random::range(-r, r),
+				Random::range(-r, r)
+			);
 
-		TCompTransform* t = e->get<TCompTransform>();
-		t->setScale(VEC3(0.9f));
+			VEC3 dir = VEC3::Transform(msg.direction, q);
+			dir.Normalize();
+			collider->addForce(dir * force, "prop");
 
-		((physx::PxRigidDynamic*)collider->actor)->setLinearDamping(physx::PxReal(1.5f));
-		((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(1.f));
+			((physx::PxRigidDynamic*)collider->actor)->setLinearDamping(physx::PxReal(1.5f));
+			((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(1.f));
+		}
 
 		EngineLua.executeScript("destroyEntity('" + std::string(e->getName()) + "')", Random::range(120.f, 140.f));
 	}
