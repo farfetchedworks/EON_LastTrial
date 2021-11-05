@@ -19,6 +19,7 @@ void TCompDestructible::load(const json& j, TEntityParseContext& ctx)
 	fmod_event		= j.value("fmod_event", std::string());
 	callback_event	= j.value("callback_event", std::string());
 	drops_warp		= j.value("drops_warp", drops_warp);
+	force			= j.value("force", force);
 }
 
 void TCompDestructible::debugInMenu()
@@ -62,10 +63,7 @@ void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 		
 		VEC3 dir = VEC3::Transform(msg.direction, q);
 		dir.Normalize();
-		collider->addForce(dir * 5.f, "prop");
-
-		TCompTransform* t = e->get<TCompTransform>();
-		t->setScale(VEC3(0.9f));
+		collider->addForce(dir * force, "prop");
 
 		((physx::PxRigidDynamic*)collider->actor)->setLinearDamping(physx::PxReal(1.5f));
 		((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(1.f));
