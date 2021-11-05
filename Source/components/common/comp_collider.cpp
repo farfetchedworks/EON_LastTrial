@@ -119,11 +119,13 @@ void TCompCollider::createForceActor()
 	EnginePhysics.createActor(*this);
 	
 	{
-		PxTransform actor_trans = actor->getGlobalPose();
+		CTransform trans = toTransform(((physx::PxRigidDynamic*)actor)->getGlobalPose());
+		physx::PxTransform px_trans(VEC3_TO_PXVEC3(VEC3(0.f, 1000.f, 0.f)), QUAT_TO_PXQUAT(trans.getRotation()));
 		float contact_offset = is_capsule_controller ? cap_controller->getContactOffset() : box_controller->getContactOffset();
 		PxVec3 height = PxVec3(0, this->height * 0.5f + radius + contact_offset, 0);
-		actor_trans.p += height;
-		force_actor->setGlobalPose(actor_trans);
+		px_trans.p += height;
+		force_actor->setGlobalPose(px_trans);
+		if (box_controller) box_controller->setFootPosition(PxExtendedVec3(0.f, 1000.0f, 0.f));
 		EnginePhysics.setSimulationDisabled(force_actor, true);
 		EnginePhysics.setupFilteringOnAllShapesOfActor(force_actor, EnginePhysics.getFilterByName("none"), EnginePhysics.getFilterByName("none"));
 	}
