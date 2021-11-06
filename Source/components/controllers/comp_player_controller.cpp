@@ -223,31 +223,34 @@ void TCompPlayerController::update(float dt)
 	// Auto-Kill (K)
 	if (PlayerInput['K'].getsPressed()) {
 
+		CEntity* player = getEntity();
+
 		if (is_locked_on) {
 
 			CEntity* enemy = h_locked_transform.getOwner();
-
 			TMsgHit msgHit;
 			msgHit.damage = 10000;
 			msgHit.hitByPlayer = true;
-			msgHit.h_striker = CHandle(this).getOwner();
+			msgHit.h_striker = player;
 			enemy->sendMsg(msgHit);
 		}
 		else
 		{
-			CEntity* player = CHandle(this).getOwner();
-
 			TMsgHit msgHit;
 			msgHit.damage = 10000;
-			msgHit.h_striker = CHandle(this).getOwner();
+			msgHit.h_striker = player;
 			player->sendMsg(msgHit);
 		}
 	}
 
 	// Custom debug
 	if (PlayerInput['Z'].getsPressed()) {
-
-		PawnUtils::playAction(getEntity(), "Shrine");
+		CEntity* player = getEntity();
+		CTransform t;
+		t.setPosition(player->getPosition() + VEC3(0, 1.7f, 0));
+		t.setRotation(QUAT(0.707f, 0, 0, 0.707f));
+		t.setScale(VEC3(5.f));
+		spawn("data/scenes/paintings.json", t);
 	}
 
 	if (is_locked_on) {
@@ -513,7 +516,7 @@ void TCompPlayerController::move(float dt)
 	if (is_moving)
 		moving_timer += dt;
 
-	float lerp_factor = is_sprinting || target_speed == walk_speed ? 8.5f : 3.f;
+	float lerp_factor = is_sprinting || target_speed == walk_speed ? 8.5f : 2.5f;
 	current_speed = damp<float>(current_speed, target_speed * speed_multiplier_move, lerp_factor, dt);
 	movePhysics(move_dir * current_speed * dt, dt);
 
