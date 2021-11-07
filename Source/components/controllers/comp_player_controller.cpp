@@ -220,6 +220,12 @@ void TCompPlayerController::update(float dt)
 		Entities.enableBasicDebug();													// Display the minimum UI for debug
 	}
 
+	if (PlayerInput['C'].getsPressed()) {
+		spawnParticles("data/particles/compute_levelup_particles.json", transform->getPosition(), 2.f, 1);
+		spawnParticles("data/particles/compute_levelup_smoke_particles.json", transform->getPosition(), 2.f, 1);
+		spawnParticles("data/particles/compute_levelup_spread_particles.json", transform->getPosition(), 2.f, 1);
+	}
+
 	// Auto-Kill (K)
 	if (PlayerInput['K'].getsPressed()) {
 

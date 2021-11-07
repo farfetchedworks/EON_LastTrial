@@ -4,6 +4,7 @@
 #include "entity/entity.h"
 #include "render/draw_primitives.h"
 #include "components/stats/comp_attributes.h"
+#include "components/common/comp_transform.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 #include "ui/ui_module.h"
@@ -76,6 +77,12 @@ void TCompGeonsManager::increasePhase()
 	++phase;
 	TCompAttributes* attrs = get<TCompAttributes>();
 	attrs->onNewPhase(phase);
+
+	TCompTransform* c_trans = get<TCompTransform>();
+
+	spawnParticles("data/particles/compute_levelup_particles.json", c_trans->getPosition(), 2.f, 1);
+	spawnParticles("data/particles/compute_levelup_smoke_particles.json", c_trans->getPosition(), 2.f, 1);
+	spawnParticles("data/particles/compute_levelup_spread_particles.json", c_trans->getPosition(), 2.f, 1);
 }
 
 void TCompGeonsManager::setPhase(int new_phase)

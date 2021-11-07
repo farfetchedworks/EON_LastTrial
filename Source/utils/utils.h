@@ -24,6 +24,8 @@ uint32_t getID(const char* txt);
 
 bool fileExists( const char* name );
 
+void spawnParticles(const std::string& name, VEC3 position, float radius, int iterations = 1, int num_particles = -1);
+
 #include "data_provider.h"
 #include "data_saver.h"
 #include "utils/time.h"
