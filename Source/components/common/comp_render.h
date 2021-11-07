@@ -40,6 +40,7 @@ public:
   void onEntityCreated();
   void setMaterialForAll(const CMaterial* mat);
   void enableMeshesWithTag(int tag);
+  void setEnabled(bool v);
 
   void load(const json& j, TEntityParseContext& ctx);
   void onDefineLocalAABB(const TMsgDefineLocalAABB& msg);

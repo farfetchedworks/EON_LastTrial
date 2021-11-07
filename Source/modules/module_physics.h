@@ -51,6 +51,8 @@ public:
 	physx::PxRigidActor* createBoxController(TCompCollider& comp_collider);
 	physx::PxMaterial* createMaterial(const VEC3& mat);
 
+	void removeActors(TCompCollider& comp_collider);
+
 	CModulePhysics(const std::string& name) : IModule(name) { }
 	bool start() override;
 	void stop() override;

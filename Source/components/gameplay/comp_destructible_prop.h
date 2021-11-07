@@ -1,5 +1,4 @@
 #pragma once
-
 #include "components/common/comp_base.h"
 #include "entity/entity.h"
 #include "components/messages.h"
