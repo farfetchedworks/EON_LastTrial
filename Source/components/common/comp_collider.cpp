@@ -18,6 +18,9 @@ using namespace physx;
 
 TCompCollider::~TCompCollider()
 {
+	disable(true);
+	EnginePhysics.removeActors(*this);
+
 	if (actor && EnginePhysics.isActive())
 	{
 		releaseController();
@@ -235,8 +238,8 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 			break;
 		}
 		case PxGeometryType::eCONVEXMESH: {
-			PxConvexMesh* convex_mesh = (PxConvexMesh*)geom;
-			ImGui::LabelText("Convex mesh", "%d verts", convex_mesh->getNbVertices());
+			PxConvexMeshGeometry* convex_mesh = (PxConvexMeshGeometry*)geom;
+			ImGui::LabelText("Convex mesh", "%d verts", convex_mesh->convexMesh->getNbVertices());
 			break;
 		}
 	}
@@ -597,7 +600,7 @@ VEC3 TCompCollider::getLinearVelocity()
 {	
 	if (is_controller && active_force)
 		return PXVEC3_TO_VEC3(((physx::PxRigidDynamic*)force_actor)->getLinearVelocity());
-	else if(actor)
+	else if(actor && actor->is<physx::PxRigidDynamic>())
 		return PXVEC3_TO_VEC3(((physx::PxRigidDynamic*)actor)->getLinearVelocity());
 
 	return VEC3::Zero;

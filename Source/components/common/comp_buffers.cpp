@@ -35,7 +35,7 @@ bool debugCteInMenu<CtesCSDemo>(CtesCSDemo& ct) {
 // -------------------------------------------------------
 void from_json(const json& j, CtesParticleSystem& p) {
   p.emitter_time_between_spawns = j.value("emitter_time_between_spawns", 0.02f);
-  p.emitter_num_particles_per_spawn = j.value("emitter_num_particles_per_spawn", 2);
+  p.emitter_num_particles_per_spawn = j.value("emitter_num_particles_per_spawn", 50);
   p.emitter_initial_pos = loadVEC3(j, "emitter_initial_pos");
   p.emitter_initial_scale_avg = j.value("emitter_initial_scale_avg", 0.02f);
   p.emitter_initial_scale_range = j.value("emitter_initial_scale_range", 0.02f);

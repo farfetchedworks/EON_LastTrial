@@ -1,9 +1,9 @@
 #include "mcv_platform.h"
-#include "handle/handle.h"
 #include "engine.h"
 #include "entity/entity.h"
 #include "entity/entity_parser.h"
 #include "comp_destructible_prop.h"
+#include "comp_cygnus_key.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 #include "modules/module_events.h"
@@ -39,6 +39,11 @@ void TCompDestructible::onEntityCreated()
 
 void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 {
+	// If it's a Cygnus Key, let it decide
+	TCompCygnusKey* key = get<TCompCygnusKey>();
+	if (key && !key->resolve())
+		return;
+
 	// Spawn new broken mesh
 	TCompTransform* transform = h_transform;
 	CTransform t;
@@ -68,7 +73,7 @@ void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 			collider->addForce(dir * force, "prop");
 
 			((physx::PxRigidDynamic*)collider->actor)->setLinearDamping(physx::PxReal(1.5f));
-			((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(1.f));
+			((physx::PxRigidDynamic*)collider->actor)->setAngularDamping(physx::PxReal(3.f));
 		}
 
 		EngineLua.executeScript("destroyEntity('" + std::string(e->getName()) + "')", Random::range(120.f, 140.f));
@@ -89,6 +94,10 @@ void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 		msgHitWarp.multiplier= 0.75f;
 		player->sendMsg(msgHitWarp);
 	}
+
+	TCompCollider* collider = get<TCompCollider>();
+	collider->setGroupAndMask("none", "none");
+	collider->disable(true);
 
 	// Delete this
 	CHandle(this).getOwner().destroy();
