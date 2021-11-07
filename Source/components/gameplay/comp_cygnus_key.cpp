@@ -20,6 +20,10 @@ void TCompCygnusKey::load(const json& j, TEntityParseContext& ctx)
 
 void TCompCygnusKey::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 {
+	CEntity* e = getEntity();
+	int nb = sscanf(e->getName(), "CygnusKey_%d", &_order);
+	assert(nb > 0);
+
 	if (_order == 0)
 		setActive();
 }
