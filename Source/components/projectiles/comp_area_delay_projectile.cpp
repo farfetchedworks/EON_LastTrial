@@ -8,6 +8,7 @@
 #include "render/draw_primitives.h"
 #include "audio/module_audio.h"
 #include "fmod_studio.hpp"
+#include "geometry/interpolators.h"
 
 extern CShaderCte<CtesWorld> cte_world;
 extern CShaderCte<CtesAreaDelay> cte_area_delay;
@@ -100,6 +101,8 @@ void TCompAreaDelayProjectile::update(float dt)
 	cte_world.exposure_factor = lerp(1.f, 0.2f, area_intensity);
 
 	if (fluid_id != -1) {
+		float time_clamped = clampf(current_time, 0.0f, 1.0f);
+		//EngineFluidSimulation.setFluidIntensity(fluid_id, clampf(current_time * 3.0f, 0.0f, 1.0f) * (1.0 - interpolators::cubicOut(0.0, 1.0, clampf(-1. + current_time, 0.0f, 1.0f))));
 		EngineFluidSimulation.setFluidIntensity(fluid_id, area_intensity);
 	}
 
