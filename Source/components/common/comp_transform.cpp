@@ -3,6 +3,7 @@
 #include "entity/entity.h"
 #include "entity/entity_parser.h"
 #include "render/draw_primitives.h"
+#include "../bin/data/shaders/constants_particles.h"
 
 DECL_OBJ_MANAGER("transform", TCompTransform)
 
@@ -29,5 +30,19 @@ void TCompTransform::set(const CTransform& new_tmx)
 
 void TCompTransform::renderDebug() {
 	//drawAxis(asMatrix());
+}
+
+void TCompTransform::update(float dt)
+{
+	TCompBuffers* buffers = get<TCompBuffers>();
+	if (!buffers) return;
+
+	CBaseShaderCte* base_cte = buffers->getCteByName("CtesParticleSystem");
+	if (!base_cte) return;
+
+	CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte< CtesParticleSystem >*>(base_cte);
+
+	cte->emitter_initial_pos = getPosition();
+	cte->updateFromCPU();
 }
 

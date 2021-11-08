@@ -27,6 +27,7 @@ bool CDeferredRenderer::create(int new_xres, int new_yres, bool new_irradiance_c
 		rt_albedos = new CRenderToTexture;
 		rt_normals = new CRenderToTexture;
 		rt_normals_aux = new CRenderToTexture;
+		rt_albedos_aux = new CRenderToTexture;
 		rt_depth = new CRenderToTexture;
 		rt_emissive = new CRenderToTexture;
 	}
@@ -34,6 +35,8 @@ bool CDeferredRenderer::create(int new_xres, int new_yres, bool new_irradiance_c
 	std::string res = std::to_string(new_xres) + "x" + std::to_string(new_yres);
 
 	if (!rt_albedos->createRT((res + std::string("g_albedos.dds")).c_str(), xres, yres, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN, true, irradiance_cache, false, 1, true))
+		return false;
+	if (!rt_albedos_aux->createRT((res + std::string("g_albedos_aux.dds")).c_str(), xres, yres, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN, true, irradiance_cache, false, 1, true))
 		return false;
 	if (!rt_normals->createRT((res + std::string("g_normals.dds")).c_str(), xres, yres, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN, false, false, false, 1, true))
 		return false;
@@ -62,6 +65,7 @@ void CDeferredRenderer::destroy() {
 		rt_albedos->destroy();
 		rt_normals->destroy();
 		rt_normals_aux->destroy();
+		rt_albedos_aux->destroy();
 		rt_emissive->destroy();
 		rt_depth->destroy();
 	}
@@ -234,6 +238,7 @@ void CDeferredRenderer::renderDecals()
 	CTexture::deactivate(TS_DEFERRED_EMISSIVES);
 
 	// Clone texture (method to use the stencil mask)
+	rt_albedos_aux->copyFromResource(rt_albedos);
 	rt_normals_aux->copyFromResource(rt_normals);
 
 	// Activate el multi-render-target MRT
@@ -254,6 +259,7 @@ void CDeferredRenderer::renderDecals()
 
 	Render.ctx->OMSetRenderTargets(nrender_targets, rts, Render.depth_stencil_view);
 	rt_albedos->activateViewport();
+	rt_albedos_aux->activate(TS_DEFERRED_ALBEDOS);
 	rt_normals_aux->activate(TS_DEFERRED_NORMALS);
 
 	RenderManager.renderAll(eRenderChannel::RC_DECALS, h_camera);
