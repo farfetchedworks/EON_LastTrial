@@ -30,7 +30,7 @@ enum class ZConfig {
   , INVERSE_TEST_NO_WRITE_READ_STENCIL
   , COUNT
 };
-void activateZConfig(ZConfig cfg, uint32_t stencil_ref = 1);
+void activateZConfig(ZConfig cfg, uint32_t stencil_ref = 255);
 
 // ---------------------------------------
 enum class RSConfig {

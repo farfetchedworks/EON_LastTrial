@@ -168,16 +168,6 @@ struct TMaterialExporter (
 		fs.begin output_filename
 		fs.beginObj()
 		
-		if is_decal then (
-			
-			fs.writeKeyValue "pipeline" "decals.pipeline"
-			fs.writeComma()
-			fs.writeKeyValue "casts_shadows" false
-			fs.writeComma()
-			fs.writeKeyValue "render_channel" "decals"
-			fs.writeComma()	
-		) 
-		
 		exportMap "albedo" mat.base_color_map "data/textures/missing.dds"
 		fs.writeComma()
 		exportMap "normal" mat.norm_map "data/textures/null_normal.dds" skip_compression:true
@@ -189,11 +179,20 @@ struct TMaterialExporter (
 		exportMap "emissive" mat.emit_color_map "data/textures/black.dds"
 	
 		if ( findString mat.name "plants" != undefined ) then (
-				fs.writeComma()
-				fs.writeKeyValue "pipeline" "pbr_gbuffer_two_sided_plants.pipeline"
-		)else if (disable_backculling) then (
+			fs.writeComma()
+			fs.writeKeyValue "pipeline" "pbr_gbuffer_two_sided_plants.pipeline"
+		)else if (disable_backculling and not is_decal) then (
 			fs.writeComma()
 			fs.writeKeyValue "pipeline" "pbr_gbuffer_two_sided.pipeline"
+		)
+		
+		if is_decal then (
+			fs.writeComma()
+			fs.writeKeyValue "pipeline" "decals.pipeline"
+			fs.writeComma()
+			fs.writeKeyValue "casts_shadows" false
+			fs.writeComma()
+			fs.writeKeyValue "render_channel" "decals"	
 		)
 		
 		--Export custom attributes
