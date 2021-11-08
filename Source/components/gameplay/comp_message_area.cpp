@@ -21,7 +21,7 @@ void TCompMessageArea::load(const json& j, TEntityParseContext& ctx)
 	assert(message_id.length() > 0);
 	widget_name = j["widget_name"];
 	assert(widget_name.length() > 0);
-	widget_type = widget_type_names.valueOf(j.value("widget_type", "text").c_str());
+	widget_type = widget_type_names.valueOf(j.value("widget_type", "image").c_str());
 	one_time_activation = j.value("one_time_activation", one_time_activation);
 	duration = j.value("duration", duration);
 	pause_game = j.value("pause_game", pause_game);

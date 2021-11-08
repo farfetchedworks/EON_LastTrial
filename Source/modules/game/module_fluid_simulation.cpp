@@ -21,7 +21,7 @@ int CModuleFluidSimulation::addFluid(VEC3 position)
 
     CEntity* fluid_sim = spawn("data/prefabs/fluid_simulation.json", {});
     TCompBuffers* c_buffers = fluid_sim->get<TCompBuffers>();
-    CTexture* texture = c_buffers->getTextureByName("fluid_ripples_back");
+    CTexture* texture = c_buffers->getTextureByName("fluid_texture");
 
     fluid_instances[index].fluid_sim_handle = fluid_sim;
     fluid_instances[index].fluid_texture = texture;

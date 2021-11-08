@@ -156,7 +156,7 @@ struct CZConfigs {
 
     // Stencil test parameters
     desc.StencilEnable = true;
-    desc.StencilWriteMask = 0x01;
+    desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
     desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
 
     // Stencil operations if pixel is front-facing

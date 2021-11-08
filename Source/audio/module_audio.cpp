@@ -100,7 +100,7 @@ myFMOD_RESULT CModuleAudio::create3DEventInstance(const std::string& event_name,
 	// If the actor has a collider, retrieve speed from it
 	VEC3 velocity = VEC3(0, 0, 0);
 	TCompCollider* collider = e_actor->get<TCompCollider>();
-	if (collider != nullptr) {
+	if (collider) {
 		velocity = collider->getLinearVelocity();
 	}
 

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "mcv_platform.h"
 #include "components/controllers/comp_pawn_controller.h"
 #include "entity/entity.h"
@@ -8,6 +7,7 @@
 #include "components/common/comp_transform.h"
 
 namespace input { class CModule; }
+using TNavPath = std::vector<VEC3>;
 
 class TCompPlayerController : public TCompPawnController {
 
@@ -94,6 +94,12 @@ private:
     
     int max_combo_attacks           = 4;              // Maximum number of hits that comprise a string of regular attacks
 
+    // Navmesh stuff
+    TNavPath currentPath;
+    int pathIndex = 0;
+    float pathSpeed = 1.6f;
+    float currentPathSpeed = 0.f;
+
     bool toggleFlyover(bool last_enabled);
     void manageLockOn();
     void manageAimCamera();
@@ -137,6 +143,7 @@ public:
     void lockOnToTarget(CHandle target);
     void setDashAnim();
     void setVariable(const std::string& name, fsm::TVariableValue value);
+    void setPathSpeed(float speed);
 
     float getRotFactor() { return rot_factor; }
     float getSpeed() { return current_speed; }
@@ -150,13 +157,14 @@ public:
     void changeLockedTarget(VEC2& dir);
     void calcMoveDirection();
     void resetAttackCombo();
+    bool moveTo(VEC3 position, float speed = 1.6f);
+    void updatePath(float dt);
 
     bool hasEnoughWarpEnergy(int value);
     bool hasMaxStamina();
     bool hasStamina();
     bool checkDashInput();
     bool checkSprintInput();
-
 
     // Messages subscription
     static void registerMsgs() {

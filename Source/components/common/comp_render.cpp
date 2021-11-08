@@ -156,6 +156,13 @@ void TCompRender::onEntityCreated() {
   updateRenderManager();
 }
 
+void TCompRender::setEnabled(bool v)
+{
+    for (auto& dc : draw_calls) {
+        dc.enabled = v;
+    }
+    updateRenderManager();
+}
 
 void TCompRender::updateAABB() {
   for (size_t i = 0; i < draw_calls.size(); ++i) {
