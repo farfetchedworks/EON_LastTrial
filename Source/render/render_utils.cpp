@@ -142,7 +142,7 @@ struct CZConfigs {
     // Stencil operations if pixel is back-facing
     desc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
     desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_ZERO;
+    desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
     desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 
     if (!add(desc, ZConfig::INVERSE_TEST_NO_WRITE_READ_STENCIL, "inverse_test_no_write_stencil_read"))
@@ -156,7 +156,7 @@ struct CZConfigs {
 
     // Stencil test parameters
     desc.StencilEnable = true;
-    desc.StencilWriteMask = 0x01;
+    desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
     desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
 
     // Stencil operations if pixel is front-facing
