@@ -868,7 +868,7 @@ bool TCompPlayerController::moveTo(VEC3 position, float speed)
 	return currentPath.empty();
 }
 
-bool TCompPlayerController::setPathSpeed(float speed)
+void TCompPlayerController::setPathSpeed(float speed)
 {
 	pathSpeed = speed;
 }

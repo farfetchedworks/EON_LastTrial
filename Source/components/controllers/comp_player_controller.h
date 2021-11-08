@@ -143,7 +143,7 @@ public:
     void lockOnToTarget(CHandle target);
     void setDashAnim();
     void setVariable(const std::string& name, fsm::TVariableValue value);
-    bool setPathSpeed(float speed);
+    void setPathSpeed(float speed);
 
     float getRotFactor() { return rot_factor; }
     float getSpeed() { return current_speed; }
