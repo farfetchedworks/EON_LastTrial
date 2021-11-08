@@ -6,10 +6,10 @@
 #include "fsm/states/logic/state_logic.h"
 #include "animation/blend_animation.h"
 #include "modules/module_physics.h"
+#include "modules/module_events.h"
 #include "modules/game/module_player_interaction.h"
 #include "components/common/comp_transform.h"
 #include "components/stats/comp_stamina.h"
-#include "components/abilities/comp_time_reversal.h"
 #include "components/controllers/comp_player_controller.h"
 #include "skeleton/comp_skeleton.h"
 #include "skeleton/game_core_skeleton.h"
@@ -28,6 +28,29 @@ public:
     {
         anim.load(params);
         loadStateProperties(params);
+
+        callbacks.onRecovery = [&](CContext& ctx) {
+
+            CEntity* owner = ctx.getOwnerEntity();
+            TCompPlayerController* controller = owner->get<TCompPlayerController>();
+
+            bool finish = false;
+
+            if (controller->checkDashInput()) {
+                controller->calcMoveDirection();
+                ctx.setVariableValue("is_dashing", true);
+                finish = true;
+            }
+
+            // If the player is moving, immediately blend to the locomotion animation
+            finish |= controller->isMoving(true);
+
+            if (finish) {
+                CEntity* player = getEntityByName("player");
+                EventSystem.dispatchEvent("Gameplay/Animation/attachSocket", player);
+                ctx.setStateFinished(true);
+            }
+        };
     }
 
     void onEnter(CContext& ctx, const ITransition* transition) const
@@ -53,16 +76,13 @@ public:
         }
 
         ctx.setVariableValue("is_praying", false);
-
-        TCompTimeReversal* c_time_reversal = owner->get<TCompTimeReversal>();
-        c_time_reversal->clearBuffer();
-
         anim.stop(ctx);
     }
 
     void onUpdate(CContext& ctx, float dt) const
     {
         anim.update(ctx, dt);
+        updateLogic(ctx, dt);
     }
 };
 

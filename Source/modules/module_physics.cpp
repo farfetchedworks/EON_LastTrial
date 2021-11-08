@@ -705,6 +705,21 @@ void CModulePhysics::createActor(TCompCollider& comp_collider)
 	}
 }
 
+
+void CModulePhysics::removeActors(TCompCollider& comp_collider)
+{
+	if (comp_collider.actor)
+		gScene->removeActor(*comp_collider.actor);
+
+	if (comp_collider.c_actor)
+		gScene->removeActor(*comp_collider.c_actor);
+
+	if (comp_collider.b_actor)
+		gScene->removeActor(*comp_collider.b_actor);
+
+	gScene->flushQueryUpdates();
+}
+
 // ------------------------------------------------------------------
 PxFilterFlags CustomFilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,

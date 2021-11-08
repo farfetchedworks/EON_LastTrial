@@ -1,14 +1,18 @@
 #include "mcv_platform.h"
 #include "engine.h"
 #include "module_events.h"
-#include "input/input_module.h"
 #include "components/messages.h"
+#include "input/input_module.h"
+#include "modules/game/module_player_interaction.h"
 #include "components/abilities/comp_area_delay.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/common/comp_parent.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
 #include "components/controllers/comp_player_controller.h"
 #include "components/controllers/pawn_utils.h"
+#include "components/gameplay/comp_game_manager.h"
+#include "components/gameplay/comp_shrine.h"
+#include "components/abilities/comp_time_reversal.h"
 
 bool CModuleEventSystem::start()
 {
@@ -175,6 +179,26 @@ void CModuleEventSystem::registerGlobalEvents()
 				continue;
 			controller->stop();
 		}
+	});
+
+	EventSystem.registerEventCallback("Gameplay/Eon/onShrineActivated", [](CHandle t, CHandle o) {
+		PlayerInteraction.setActive(false);
+		TCompGameManager* comp_gm = GameManager->get<TCompGameManager>();
+		comp_gm->respawnEnemies();
+		CEntity* owner = t;
+		assert(owner);
+		TCompShrine* shrine = owner->get<TCompShrine>();
+		shrine->restorePlayer();
+		TCompTimeReversal* c_time_reversal = owner->get<TCompTimeReversal>();
+		c_time_reversal->clearBuffer();
+	});
+
+	EventSystem.registerEventCallback("Gameplay/Eon/onInteractionEnded", [](CHandle t, CHandle o) {
+		PlayerInteraction.setActive(false);
+	});
+
+	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {
+		// ...
 	});
 }
 

@@ -18,6 +18,9 @@ using namespace physx;
 
 TCompCollider::~TCompCollider()
 {
+	disable(true);
+	EnginePhysics.removeActors(*this);
+
 	if (actor && EnginePhysics.isActive())
 	{
 		releaseController();
@@ -119,11 +122,13 @@ void TCompCollider::createForceActor()
 	EnginePhysics.createActor(*this);
 	
 	{
-		PxTransform actor_trans = actor->getGlobalPose();
+		CTransform trans = toTransform(((physx::PxRigidDynamic*)actor)->getGlobalPose());
+		physx::PxTransform px_trans(VEC3_TO_PXVEC3(VEC3(0.f, 1000.f, 0.f)), QUAT_TO_PXQUAT(trans.getRotation()));
 		float contact_offset = is_capsule_controller ? cap_controller->getContactOffset() : box_controller->getContactOffset();
 		PxVec3 height = PxVec3(0, this->height * 0.5f + radius + contact_offset, 0);
-		actor_trans.p += height;
-		force_actor->setGlobalPose(actor_trans);
+		px_trans.p += height;
+		force_actor->setGlobalPose(px_trans);
+		if (box_controller) box_controller->setFootPosition(PxExtendedVec3(0.f, 1000.0f, 0.f));
 		EnginePhysics.setSimulationDisabled(force_actor, true);
 		EnginePhysics.setupFilteringOnAllShapesOfActor(force_actor, EnginePhysics.getFilterByName("none"), EnginePhysics.getFilterByName("none"));
 	}
@@ -192,6 +197,14 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 	if (flags & PxShapeFlag::eTRIGGER_SHAPE)
 		ImGui::Text("Is trigger");
 
+	PxTransform t = shape->getLocalPose();
+	VEC3 offset = PXVEC3_TO_VEC3(t.p);
+	if (ImGui::DragFloat3("Offset", &offset.x, 0.1f, 0.f, 50.f))
+	{
+		t.p = VEC3_TO_PXVEC3(offset);
+		shape->setLocalPose(t);
+	}
+
 	switch (geometry_type)
 	{
 		case PxGeometryType::eSPHERE: {
@@ -201,6 +214,11 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 		}
 		case PxGeometryType::eBOX: {
 			PxBoxGeometry* box = (PxBoxGeometry*)geom;
+			VEC3 dims = PXVEC3_TO_VEC3(box->halfExtents);
+			if (ImGui::DragFloat3("Half", &dims.x, 0.1f, 0.f, 50.f))
+			{
+				setBoxShapeDimensions(dims);
+			}
 			ImGui::LabelText("Box", "Half:%f %f %f", box->halfExtents.x, box->halfExtents.y, box->halfExtents.z);
 			break;
 		}
@@ -220,8 +238,8 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 			break;
 		}
 		case PxGeometryType::eCONVEXMESH: {
-			PxConvexMesh* convex_mesh = (PxConvexMesh*)geom;
-			ImGui::LabelText("Convex mesh", "%d verts", convex_mesh->getNbVertices());
+			PxConvexMeshGeometry* convex_mesh = (PxConvexMeshGeometry*)geom;
+			ImGui::LabelText("Convex mesh", "%d verts", convex_mesh->convexMesh->getNbVertices());
 			break;
 		}
 	}
@@ -496,6 +514,28 @@ void TCompCollider::setGlobalPose(VEC3 new_pos, QUAT new_rotation, bool autowake
 				  : force_actor->setGlobalPose(transform, autowake);
 }
 
+void TCompCollider::setBoxShapeDimensions(VEC3 dims)
+{
+	// Set the radius of the collider as the radius defined in the json
+	physx::PxU32 num_shapes = actor->getNbShapes();
+
+	std::allocator<physx::PxShape*> alloc; // allocator for PxShape*
+	physx::PxShape** shapes = alloc.allocate(sizeof(physx::PxShape*) * num_shapes);
+
+	// change the radius of all the shapes of the actor 
+	// (it only has one, the sphere, but there is no single "getShape")
+	actor->getShapes(shapes, num_shapes);
+	for (physx::PxU32 i = 0; i < num_shapes; i++)
+	{
+		physx::PxShape* shape = shapes[i];
+		physx::PxBoxGeometry box;
+		if (shape->getBoxGeometry(box)) {
+			box.halfExtents = VEC3_TO_PXVEC3(dims);
+			shape->setGeometry(box);
+		}
+	}
+}
+
 void TCompCollider::setSphereShapeRadius(float radius)
 {
 	// Set the radius of the collider as the radius defined in the json
@@ -560,7 +600,7 @@ VEC3 TCompCollider::getLinearVelocity()
 {	
 	if (is_controller && active_force)
 		return PXVEC3_TO_VEC3(((physx::PxRigidDynamic*)force_actor)->getLinearVelocity());
-	else if(actor)
+	else if(actor && actor->is<physx::PxRigidDynamic>())
 		return PXVEC3_TO_VEC3(((physx::PxRigidDynamic*)actor)->getLinearVelocity());
 
 	return VEC3::Zero;

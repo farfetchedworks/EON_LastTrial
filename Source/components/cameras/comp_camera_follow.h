@@ -15,9 +15,11 @@ struct TCompCameraFollow : public TCompBase, IGameplayCamera {
     std::string target;
     bool target_dead = false;
 
-    float lerp_scale = 5.5f;
     float distance = 0.0f;
     float height = 0.0f;
+    float current_distance = 0.0f;
+    float current_height = 0.0f;
+    float lerp_scale = 5.5f;
     float time_elapsed = 0.0f;
 
     float speed_lerp = 5.0f;

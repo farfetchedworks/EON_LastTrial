@@ -43,6 +43,7 @@ REGISTER_TASK(CygnusWalkAggressive)
 REGISTER_TASK(CygnusDeath)
 REGISTER_TASK(CygnusTimeReversal)
 REGISTER_TASK(CygnusChangePhase)
+REGISTER_TASK(CygnusTeleport)
 
 // Generic Tasks
 REGISTER_TASK(Wait)
@@ -50,6 +51,7 @@ REGISTER_TASK(SetBlackboardBool)
 REGISTER_TASK(SetBlackboardFloat)
 REGISTER_TASK(SetBlackboardInt)
 REGISTER_TASK(DecrementBlackboardInt)
+REGISTER_TASK(PlayAnimation)
 
 // Debugging tasks
 REGISTER_TASK(Success)

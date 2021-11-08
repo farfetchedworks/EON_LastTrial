@@ -47,7 +47,7 @@ int TCompPlayerWeapon::getDamage(bool fromBack)
     assert(attrs);
     int dmg = attrs->computeDamageSent(damages[current_action]);
 
-    if (fromBack) dmg = attrs->computeDamageSent(damages[6]);     // 6 is a critical attack (backstab)
+    //if (fromBack) dmg = attrs->computeDamageSent(damages[6]);     // 6 is a critical attack (backstab)
     return dmg;
 }
 

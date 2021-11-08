@@ -43,7 +43,9 @@ void TCompRigidAnimationController::load(const json& j, TEntityParseContext& ctx
 	if (!animation_src.empty())
 		animation_data = Resources.get(animation_src)->as<TCoreAnimationData>();
 	speed_factor = j.value("speed_factor", speed_factor);
+	frame_start = j.value("frame_start", frame_start);
 	loop = j.value("loop", loop);
+	dynamic = j.value("dynamic", dynamic);
 	autoplay = j.value("autoplay", autoplay);
 	animate_prefabs = j.value("animate_prefabs", animate_prefabs);
 	cinematic_animation = j.value("cinematic_animation", cinematic_animation);
@@ -84,7 +86,7 @@ void TCompRigidAnimationController::setSpeed(float speed)
 
 void TCompRigidAnimationController::start()
 {
-	curr_time = animation_data->header.min_time;
+	curr_time = frame_start / 30.f;
 	playing = true;
 }
 
@@ -97,6 +99,18 @@ void TCompRigidAnimationController::update(float delta_time)
 {
 	if (!playing)
 		return;
+
+	if (dynamic)
+	{
+		for (auto& t : tracks)
+		for (auto& o : t.objs) {
+			if (strcmp(t.core_track->property_name, "transform") != 0)
+				continue;
+			CEntity* player = getEntityByName("player");
+			TCompTransform* transform = player->get<TCompTransform>();
+			o.initial_pose.fromMatrix(*transform);
+		}
+	}
 
 	for (auto t : tracks)
 		t.apply(curr_time);

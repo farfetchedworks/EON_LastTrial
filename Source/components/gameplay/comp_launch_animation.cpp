@@ -115,7 +115,7 @@ void TCompLaunchAnimation::oncomplete()
 		return;
 
 	PlayerInteraction.setAnimationLauncher(CHandle());
-	PlayerInteraction.setPlaying(false);
+	PlayerInteraction.setActive(false);
 
 	// to avoid Eon exiting the energy wall using time reversal
 	TCompTimeReversal* c_time_reversal = player->get<TCompTimeReversal>();

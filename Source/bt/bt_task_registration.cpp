@@ -1863,6 +1863,41 @@ public:
 	}
 };
 
+// Teleport to a position defined in the blackboard
+class CBTTaskCygnusTeleport : public IBTTask
+{
+private:
+	VEC3 target_pos;
+
+public:
+	void init() override {
+
+		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		{
+			TCompCollider* h_collider = ctx.getComponent<TCompCollider>();
+			h_collider->setFootPosition(target_pos);
+
+			CEntity* player = getPlayer();
+			VEC3 player_pos = player->getPosition();
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			TaskUtils::rotateToFace(h_trans, player_pos, 1000.f, dt);
+			
+			ctx.setFSMVariable("is_teleporting", 0);
+
+		};
+
+	}
+
+	void onEnter(CBTContext& ctx) override {
+		target_pos = ctx.getBlackboard()->getValue<VEC3>(string_field);
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
+		return tickCondition(ctx, "is_teleporting", dt, false);
+	}
+
+};
+
 class CBTTaskCygnusChangePhase : public IBTTask
 {
 private:

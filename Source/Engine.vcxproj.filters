@@ -9,7 +9,6 @@
     <ClCompile Include="animation\callbacks\enemy_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_insert_branches_callback.cpp" />
-    <ClCompile Include="animation\callbacks\shrine_callback.cpp" />
     <ClCompile Include="animation\nn_interpolator.cpp" />
     <ClCompile Include="bt\bt_service.cpp" />
     <ClCompile Include="bt\bt_task.cpp" />
@@ -276,6 +275,7 @@
     <ClCompile Include="modules\game\module_player_interaction.cpp" />
     <ClCompile Include="modules\game\module_splash_screen.cpp" />
     <ClCompile Include="modules\game\module_you_died.cpp" />
+    <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\nn_interpolator.h" />
@@ -571,6 +571,7 @@
     <ClInclude Include="modules\game\module_player_interaction.h" />
     <ClInclude Include="modules\game\module_splash_screen.h" />
     <ClInclude Include="modules\game\module_you_died.h" />
+    <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

@@ -23,7 +23,6 @@
     <ClCompile Include="animation\callbacks\gard_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_insert_branches_callback.cpp" />
     <ClCompile Include="animation\callbacks\heal_callback.cpp" />
-    <ClCompile Include="animation\callbacks\shrine_callback.cpp" />
     <ClCompile Include="animation\nn_interpolator.cpp" />
     <ClCompile Include="audio\physical_material.cpp" />
     <ClCompile Include="bt\bt_service.cpp" />
@@ -32,6 +31,7 @@
     <ClCompile Include="components\ai\comp_ai_time_reversal.cpp" />
     <ClCompile Include="components\audio\comp_music_interactor.cpp" />
     <ClCompile Include="components\common\comp_prefab_info.cpp" />
+    <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
     <ClCompile Include="components\gameplay\comp_launch_animation.cpp" />
     <ClCompile Include="components\gameplay\trigger_area.cpp" />
     <ClCompile Include="components\particles\comp_follow_target.cpp" />
@@ -297,6 +297,7 @@
     <ClInclude Include="components\ai\comp_ai_time_reversal.h" />
     <ClInclude Include="components\audio\comp_music_interactor.h" />
     <ClInclude Include="components\common\comp_prefab_info.h" />
+    <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
     <ClInclude Include="components\gameplay\comp_launch_animation.h" />
     <ClInclude Include="components\particles\comp_follow_target.h" />
     <ClInclude Include="components\postfx\comp_depth_fog.h" />

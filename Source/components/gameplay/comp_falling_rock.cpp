@@ -19,7 +19,10 @@ void TCompFallingRock::update(float dt)
 		TCompCollider* collider = get<TCompCollider>();
 		collider->disable(false);
 		physx::PxRigidDynamic* actor = (physx::PxRigidDynamic*)collider->actor;
-		actor->setLinearVelocity(physx::PxVec3(0.f, -0.1f, 0.f));
+		actor->setLinearVelocity(physx::PxVec3(0.f, -0.001f, 0.f));
+		actor->setAngularDamping(physx::PxReal(0.01f));
+		actor->setLinearDamping(physx::PxReal(0.01f));
+		
 		_isFalling = true;
 	}
 }

@@ -90,6 +90,8 @@ struct TCompRigidAnimationController : public TCompBase
 	bool                  playing_forward = true;
 	bool                  autoplay = false;
 	bool                  animate_prefabs = false;
+	bool                  dynamic = false;
+	int					  frame_start = 0;
 
 	CHandle				  cinematic_target;
 	bool                  cinematic_animation = false;

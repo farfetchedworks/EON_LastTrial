@@ -58,6 +58,9 @@ void TCompCameraFollow::load(const json& j, TEntityParseContext& ctx)
 
     delta_yaw = delta_yaw_lerp = j.value("yaw", delta_yaw);
     delta_pitch = delta_pitch_lerp = j.value("pitch", delta_pitch);
+
+    current_distance = distance;
+    current_height = height;
 }
 
 void TCompCameraFollow::debugInMenu()
@@ -173,9 +176,15 @@ void TCompCameraFollow::update(float dt)
     delta_pitch_lerp = lerpRadians(delta_pitch_lerp, delta_pitch, 8.0f * angleLerpFactor, dt);
     delta_yaw_lerp = lerpRadians(delta_yaw_lerp, delta_yaw, 12.0f * angleLerpFactor, dt);
 
+    TCompPlayerController* c_player = h_player;
+    bool is_praying = std::get<bool>(c_player->getVariable("is_praying"));
+    current_distance = is_praying ? damp(current_distance, 6.f, 3.f, dt) : damp(current_distance, distance, 3.f, dt);
+    current_height = is_praying ? damp(current_height, 2.f, 3.f, dt) : damp(current_height, height, 3.f, dt);
+
     // Modify camera settings when locked depending on the distance to the target
-    float finalDistance = distance;
-    float finalHeight = height;
+    float finalDistance = current_distance;
+    float finalHeight = current_height;
+
     TCompTransform* c_trans = h_trans_target;
     TCompTransform* t_locked = h_trans_locked_enemy;
 
@@ -211,7 +220,6 @@ void TCompCameraFollow::update(float dt)
     MAT44 rot = MAT44::CreateRotationX(delta_pitch_lerp) * MAT44::CreateRotationY(delta_yaw_lerp);
     VEC3 position = target_position_lerp + rot.Forward() * finalDistance;
 
-    TCompPlayerController* c_player = h_player;
     bool is_crossing_objects = std::get<bool>(c_player->getVariable("is_crossing_wall"));
     is_crossing_objects |= std::get<bool>(c_player->getVariable("is_crossing_rift"));
 

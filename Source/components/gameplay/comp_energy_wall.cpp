@@ -46,7 +46,7 @@ void TCompEnergyWall::update(float dt)
 
 	is_active = false;
 	curr_time = 0.f;
-	PlayerInteraction.setPlaying(false);
+	PlayerInteraction.setActive(false);
 
 	// enable collisions
 	TCompCollider* c_collider = get<TCompCollider>();

@@ -19,17 +19,21 @@ private:
     std::string shrine_info = "";
     bool active = false;
     int num_enemies = 0;
+
+    float acceptance_dist = 0.f;
+
 public:
 
     void load(const json& j, TEntityParseContext& ctx);
     void onEntityCreated();
     void debugInMenu();
     void renderDebug();
+    void restorePlayer();
+    bool resolve();
 
     bool isActive() { return active; }
     bool canPray() { return num_enemies == 0; }
     const PrayPos& getPrayPos() { return pray_pos; }
-    void restorePlayer();
 
     void onPray(const TMsgShrinePray& msg);
     void onEnemyEnter(const TMsgEnemyEnter& msg);
