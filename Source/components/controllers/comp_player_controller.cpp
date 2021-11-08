@@ -12,6 +12,7 @@
 #include "modules/module_physics.h"
 #include "modules/module_camera_mixer.h"
 #include "modules/module_entities.h"
+#include "navmesh/module_navmesh.h"
 #include "fsm/states/logic/state_logic.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_render.h"
@@ -103,18 +104,24 @@ void TCompPlayerController::update(float dt)
 
 	if (isFlyoverEnabled) return;
 
-	// Check if any change to avoid sending msgs every frame
-	if (_lastIsMoving != is_moving) {
-		_lastIsMoving = is_moving;
-		setVariable("is_walking", is_moving);
-	}
-
 	VEC2 blend_speed = getBlendSpeed();
 
 	if (_lastSpeed != blend_speed) {
 		_lastSpeed = blend_speed;
 
 		setVariable("blend_factor", blend_speed);
+	}
+
+	if (currentPath.size())
+	{
+		updatePath(dt);
+		return;
+	}
+
+	// Check if any change to avoid sending msgs every frame
+	if (_lastIsMoving != is_moving) {
+		_lastIsMoving = is_moving;
+		setVariable("is_walking", is_moving);
 	}
 
 	// Call this always to read state from the component
@@ -224,6 +231,10 @@ void TCompPlayerController::update(float dt)
 		spawnParticles("data/particles/compute_levelup_particles.json", transform->getPosition(), 2.f, 1);
 		spawnParticles("data/particles/compute_levelup_smoke_particles.json", transform->getPosition(), 2.f, 1);
 		spawnParticles("data/particles/compute_levelup_spread_particles.json", transform->getPosition(), 2.f, 1);
+	}
+
+	if (PlayerInput['B'].getsPressed()) {
+		moveTo(VEC3(), 6.f);
 	}
 
 	// Auto-Kill (K)
@@ -423,7 +434,7 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 void TCompPlayerController::move(float dt)
 {
 	TCompGameManager* c_gm = GameManager->get<TCompGameManager>();
-	if (c_gm->isInCinematic()) {
+	if (c_gm->isInCinematic() || !currentPath.empty()) {
 		return;
 	}
 
@@ -702,7 +713,9 @@ VEC2 TCompPlayerController::getBlendSpeed()
 	if (PlayerInteraction.isEnergyWallActive())
 			return VEC2(0.f, 2.0f);
 
-	if (!is_moving)
+	bool inPath = currentPath.size() > 0;
+
+	if (!is_moving && !inPath)
 		return blend_speed;
 
 	TCompCollider* c_collider = h_collider;
@@ -715,11 +728,15 @@ VEC2 TCompPlayerController::getBlendSpeed()
 	bool lockedMovement = is_locked_on && !is_sprinting;
 	// ------------
 
-	if (!lockedMovement)
+	if (inPath)
+	{
+		blend_speed = VEC2(0.f, currentPathSpeed);
+	}
+	else if (!lockedMovement)
 	{
 		blend_speed = VEC2(0.f, move_speed);
 	}
-	else
+	else 
 	{
 		TCompTransform* transform = h_transform;
 		float dx = move_dir.Dot(transform->getRight());
@@ -840,6 +857,59 @@ bool TCompPlayerController::isCameraEnabled(const std::string& cameraName)
 void TCompPlayerController::calcMoveDirection()
 {
 	move_dir = getMoveDirection(is_moving);
+}
+
+bool TCompPlayerController::moveTo(VEC3 position, float speed)
+{
+	pathSpeed = speed;
+	pathIndex = 0;
+	currentPath.clear();
+	EngineNavMesh.getPath(getEntity()->getPosition(), position, currentPath);
+	return currentPath.empty();
+}
+
+void TCompPlayerController::setPathSpeed(float speed)
+{
+	pathSpeed = speed;
+}
+
+void TCompPlayerController::updatePath(float dt)
+{
+	if (pathIndex < currentPath.size())
+	{
+		TCompTransform* transform = h_transform;
+		VEC3 target = currentPath[pathIndex];
+		VEC3 origin = transform->getPosition();
+
+		float lerp_factor = 3.f;
+		currentPathSpeed = damp<float>(currentPathSpeed, pathSpeed, lerp_factor, dt);
+
+		float dist = VEC3::Distance(origin, target);
+			
+		move_dir = normVEC3(target - origin);
+		current_rot = transform->getRotation();
+		new_rot = QUAT::CreateFromAxisAngle(VEC3(0, 1, 0), atan2(move_dir.x, move_dir.z));
+		transform->setRotation(dampQUAT(current_rot, new_rot, 5.0f, dt));
+		move_dir *= currentPathSpeed * dt;
+		
+		rot_factor = 0.f;
+		last_dir = move_dir;
+		movePhysics(move_dir, dt);
+
+		// Detect end
+		origin += move_dir;
+		origin.y = target.y = 0;
+		dist = VEC3::Distance(origin, target);
+
+		if (dist < 0.1f) {
+			pathIndex++;
+		}
+	}
+	else 
+	{
+		pathIndex = 0;
+		currentPath.clear();
+	}
 }
 
 void TCompPlayerController::blendCamera(const std::string& cameraName, float blendTime, const interpolators::IInterpolator* interpolator)
@@ -1462,6 +1532,7 @@ void TCompPlayerController::debugInMenu()
 	ImGui::Separator();
 	ImGui::DragFloat("Walk Speed", &walk_speed, 0.1f, 1.f, 5.f);
 	ImGui::DragFloat("Move Speed", &move_speed, 0.1f, 1.f, 10.f);
+	ImGui::DragFloat("Path Speed", &pathSpeed, 0.1f, 1.f, 10.f);
 	ImGui::DragFloat("Sprint Speed", &sprint_speed, 0.1f, 1.f, 10.f);
 	ImGui::DragFloat("Cone Full Fov", &fov_rad, 0.01f, 0.0f, (float)M_PI);
 	ImGui::DragFloat("Cone Length", &sight_radius, 0.1f, 0.1f, 250.f);
