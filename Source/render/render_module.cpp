@@ -401,6 +401,8 @@ void CRenderModule::renderAll()
 
 	RenderManager.renderAll(eRenderChannel::RC_DISTORSIONS, e_camera);
 
+	//_lastOutput->activate()
+	rt_deferred_output->activateCS(TS_DEFERRED_OUTPUT);
 	RenderManager.renderAll(eRenderChannel::RC_TRANSPARENT, e_camera);
 
 	// Render projectile effects

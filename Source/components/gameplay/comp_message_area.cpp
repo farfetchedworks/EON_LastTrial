@@ -102,17 +102,17 @@ void TCompMessageArea::clearMessage()
 
 void TCompMessageArea::onActivateMsg(const TMsgActivateMsgArea& msg)
 {
-	if (is_active || inside) {
+	if (is_active/* || inside*/) {
 		return;
 	}
 
-	inside = true;
+	/*inside = true;*/
 	showMessage();
 }
 
 void TCompMessageArea::onDeactivateMsg(const TMsgDeactivateMsgArea& msg)
 {
-	inside = false;
+	/*inside = false;*/
 }
 
 void TCompMessageArea::debugInMenu()

@@ -6,6 +6,7 @@
 #include "render/compute/compute_shader.h"
 #include "components/common/comp_buffers.h"
 #include "components/common/comp_num_instances.h"
+#include "render/render_module.h"
 
 DECL_OBJ_MANAGER("compute", TCompCompute);
 
@@ -105,6 +106,7 @@ void TCompCompute::TExecution::bindArguments(TCompBuffers* c_buffers) {
         cte = &cte_world;
       }
       else if (strcmp(it.Name, "CtesCamera") == 0) {
+        EngineRender.activateMainCamera();
         cte = &cte_camera;
       }
       else {
@@ -142,6 +144,7 @@ void TCompCompute::TExecution::bindArguments(TCompBuffers* c_buffers) {
     { // Texture for ro
       assert(c_buffers);
       CTexture* texture = c_buffers->getTextureByName(it.Name);
+      if (!texture) break;
       assert(texture);
       assert(texture->getShaderResourceView());
       auto srv = texture->getShaderResourceView();
@@ -161,7 +164,7 @@ void TCompCompute::TExecution::bindArguments(TCompBuffers* c_buffers) {
     }
 
     default:
-      fatal("Don't know how to bind a compute shader arg of type %d named %s\n", it.Type, it.Name);
+      //fatal("Don't know how to bind a compute shader arg of type %d named %s\n", it.Type, it.Name);
       break;
 
       //D3D_SIT_TBUFFER = (D3D_SIT_CBUFFER + 1),
