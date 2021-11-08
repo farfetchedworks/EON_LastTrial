@@ -10,6 +10,7 @@ class CDeferredRenderer {
   CRenderToTexture* rt_albedos		= nullptr;
   CRenderToTexture* rt_normals		= nullptr;
   CRenderToTexture* rt_normals_aux	= nullptr;
+  CRenderToTexture* rt_albedos_aux	= nullptr;
   CRenderToTexture* rt_depth		= nullptr;
   CRenderToTexture* rt_emissive		= nullptr;
   ASSAO_Effect*     assao_fx		= nullptr;
