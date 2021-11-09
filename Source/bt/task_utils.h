@@ -47,7 +47,7 @@ struct TaskUtils {
 	static void spawnProjectile(const VEC3 shoot_orig, const VEC3 shoot_target, const int dmg, const bool from_player, bool is_homing = false);
 	static void spawnCygnusProjectiles(const VEC3 shoot_orig, const VEC3 shoot_target, const int dmg, const int num_projectiles);
 	static void spawnParticles(const std::string& name, VEC3 position, float radius, int iterations = 1, int num_particles = -1);
-	static void spawnCygnusForm1Clone(VEC3 position);
+	static void spawnCygnusForm1Clone(VEC3 position, float lifespan = 10.f);
 
 	static CHandle getPlayer()
 	{

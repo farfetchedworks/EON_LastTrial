@@ -15,6 +15,7 @@
 #include "components/abilities/comp_area_delay.h"
 #include "components/projectiles/comp_gard_branch.h"
 #include "components/common/comp_fsm.h"
+#include "components/gameplay/comp_lifetime.h"
 #include "fsm/states/logic/state_logic.h"
 #include "../bin/data/shaders/constants_particles.h"
 
@@ -273,11 +274,17 @@ void TaskUtils::spawnBranch(VEC3 position, const int dmg, const float speed)
 	c_branch->setParameters(dmg);
 }
 
-void TaskUtils::spawnCygnusForm1Clone(VEC3 position)
+void TaskUtils::spawnCygnusForm1Clone(VEC3 position, float lifespan)
 {
 	CTransform clone_trans;
 	clone_trans.setPosition(position);
 	CEntity* e_cygnus = spawn("data/prefabs/cygnus_form_1_clone.json", clone_trans);
+
+	if (lifespan <= 0.f)
+		lifespan = 10.f;
+
+	TCompLifetime* c_lifetime = e_cygnus->get<TCompLifetime>();
+	c_lifetime->setTTL(lifespan);
 }
 
 void TaskUtils::spawnParticles(const std::string& name, VEC3 position, float radius, int iterations, int num_particles)

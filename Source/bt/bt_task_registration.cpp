@@ -2006,13 +2006,14 @@ public:
 class CBTTaskCygnusSpawnClones : public IBTTask
 {
 private:
-	float rotation_speed;
+	float period = 1.f;
+	float clone_lifespan = 10.f;
 
 public:
 	void init() override {
 		// Load generic parameters
-		move_speed = number_field[0];
-		rotation_speed = number_field[1];
+		period = number_field[0];
+		clone_lifespan = number_field[1];
 
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
 		{
@@ -2022,34 +2023,30 @@ public:
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
-			//CEntity* player = getPlayer();
+			// Spawn enemies when time is 0
+			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
+			if (dt_acum <= 0) {
+				TaskUtils::spawnCygnusForm1Clone(TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt"), clone_lifespan);
+			}
 
-			//TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			//TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
+			// Accumulate time
+			dt_acum += dt;
+			if (dt_acum >= period)
+				dt_acum = 0.f;
 
-			//// Rotate while dodging
-			//VEC3 player_pos = player->getPosition();
-			//TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
+			ctx.setNodeVariable(name, "dt_acum", dt_acum);
 
-			//// Dodge left or right depending on the rotation multiplier sign
-			//TaskUtils::moveAnyDir(ctx, h_trans->getRight(), move_speed * ctx.getNodeVariable<float>(name, "rot_multiplier"), dt);
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			ctx.setNodeVariable(name, "allow_aborts", true);
-			TaskUtils::spawnCygnusForm1Clone(TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt"));
 		};
 	}
 
 	// Executed on first frame
 	void onEnter(CBTContext& ctx) override {
-		//bool dodge_left = (rand() % 100) <= 50;
-		//std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
-		//float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
-
-		//ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
-		//ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
+		ctx.setNodeVariable(name, "dt_acum", 0.f);
 		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 
