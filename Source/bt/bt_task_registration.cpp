@@ -384,11 +384,14 @@ private:
 	float rotation_speed;
 	float duration;
 
+	bool not_animated = false;																// So that it can be used with enemies that do not have rotation animations
+
 public:
 	void init() override {
 		// Load generic parameters
 		rotation_speed = number_field[0];
 		duration = number_field[1];
+		not_animated = bool_field;
 	}
 
 	void onEnter(CBTContext& ctx) override {
@@ -407,13 +410,13 @@ public:
 		VEC3 face_target_pos = e_face_target->getPosition();
 
 		// Rotate to the left using the animation if the previous rotation was higher than a threshold
-		if (ctx.getNodeVariable<bool>(name, DT_ROT_LEFT)) {
+		if (ctx.getNodeVariable<bool>(name, DT_ROT_LEFT) && !not_animated) {
 			TaskUtils::rotateToFace(h_trans, face_target_pos, rotation_speed, dt);
 			return tickCondition(ctx, "is_turning_left", dt);
 		}		
 		
 		// Rotate to the right using the animation if the previous rotation was higher than a threshold
-		if (ctx.getNodeVariable<bool>(name, DT_ROT_RIGHT)) {
+		if (ctx.getNodeVariable<bool>(name, DT_ROT_RIGHT) && !not_animated) {
 			TaskUtils::rotateToFace(h_trans, face_target_pos, rotation_speed, dt);
 			return tickCondition(ctx, "is_turning_right", dt);
 		}
@@ -430,13 +433,13 @@ public:
 		else {
 
 			// If the rotation is higher than a threshold, rotate left
-			if (h_trans->getYawRotationToAimTo(face_target_pos) > max_rot_by_anim_angle) {
+			if (h_trans->getYawRotationToAimTo(face_target_pos) > max_rot_by_anim_angle && !not_animated) {
 				ctx.setNodeVariable(name, DT_ROT_LEFT, true);
 				return tickCondition(ctx, "is_turning_left", dt);
 			}			
 			
 			// If the rotation is lower than a threshold, rotate right
-			if (h_trans->getYawRotationToAimTo(face_target_pos) < -max_rot_by_anim_angle) {
+			if (h_trans->getYawRotationToAimTo(face_target_pos) < -max_rot_by_anim_angle && !not_animated) {
 				ctx.setNodeVariable(name, DT_ROT_RIGHT, true);
 				return tickCondition(ctx, "is_turning_right", dt);
 			}
@@ -1880,9 +1883,13 @@ public:
 			CEntity* player = getPlayer();
 			VEC3 player_pos = player->getPosition();
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			TaskUtils::rotateToFace(h_trans, player_pos, 1000.f, dt);
+			//TaskUtils::rotateToFace(h_trans, player_pos, 1000.f, dt);
 			
+			//h_trans->setRotation()
+
 			ctx.setFSMVariable("is_teleporting", 0);
+
+			h_trans->lookAt(h_trans->getPosition(), player_pos, VEC3::Up);
 
 		};
 
@@ -1913,6 +1920,162 @@ public:
 		ctx.setFSMVariable("phase_number", phase_num);
 		ctx.getBlackboard()->setValue<int>("phaseNumber", phase_num);
 		return EBTNodeResult::SUCCEEDED;
+	}
+};
+
+class CBTTaskCygnusBeamAttack : public IBTTask
+{
+private:
+	int damage;
+	float max_arc;
+	float move_speed;
+	float sphere_radius = 0.5;
+	VEC3 ray_dir;
+	float dist_to_eon;
+	VEC3 black_hole_pos;
+	float depression_arc = deg2rad(45.0f);
+
+public:
+	void init() override {
+		// Load generic parameters
+		damage = (int)number_field[0];
+		max_arc = number_field[1];
+		move_speed = number_field[2];
+
+		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		{
+			ctx.setNodeVariable(name, "allow_aborts", false);
+
+			// Get forward vector and distance for the beam
+			CEntity* player = getPlayer();
+			VEC3 player_pos = player->getPosition();
+
+			CEntity* e_cygnus = ctx.getOwnerEntity();
+			black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
+
+			ray_dir = player_pos - black_hole_pos;
+			dist_to_eon = ray_dir.Length();
+			ray_dir.Normalize();
+
+			// Get initial beam direction
+			TCompTransform* c_trans = ctx.getComponent<TCompTransform>();
+			//DirectX::XMVector3Rotate(c_trans->getForward(),QUAT::CreateFromAxisAngle(VEC3::)
+		};
+
+		// Set animation callbacks
+		callbacks.onActive = [&](CBTContext& ctx, float dt)
+		{
+			physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
+			std::vector<physx::PxSweepHit> sweepHits;
+			physx::PxTransform trans(VEC3_TO_PXVEC3(black_hole_pos));
+			physx::PxSphereGeometry geometry = { sphere_radius };
+
+			
+
+			bool has_hit = EnginePhysics.sweep(trans, ray_dir, dist_to_eon, geometry, sweepHits, layerMask, true, false);
+			
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
+
+			
+		};
+
+		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
+		{
+			ctx.setNodeVariable(name, "allow_aborts", true);
+		};
+	}
+
+	// Executed on first frame
+	void onEnter(CBTContext& ctx) override {
+		bool dodge_left = (rand() % 100) <= 50;
+		std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
+		float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
+
+		ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
+		ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
+		ctx.setNodeVariable(name, "allow_aborts", true);
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
+		std::string fsm_var = ctx.getNodeVariable<std::string>(name, "current_fsm_var");
+		return tickCondition(ctx, fsm_var, dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+	}
+};
+
+class CBTTaskCygnusSpawnClones : public IBTTask
+{
+private:
+	float period = 1.f;
+	float clone_lifespan = 10.f;
+
+public:
+	void init() override {
+		// Load generic parameters
+		period = number_field[0];
+		clone_lifespan = number_field[1];
+
+		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		{
+			ctx.setNodeVariable(name, "allow_aborts", false);
+		};
+
+		// Set animation callbacks
+		callbacks.onActive = [&](CBTContext& ctx, float dt)
+		{
+			// Spawn enemies when time is 0
+			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
+			if (dt_acum <= 0) {
+				TaskUtils::spawnCygnusForm1Clone(TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt"), clone_lifespan);
+			}
+
+			// Accumulate time
+			dt_acum += dt;
+			if (dt_acum >= period)
+				dt_acum = 0.f;
+
+			ctx.setNodeVariable(name, "dt_acum", dt_acum);
+
+		};
+
+		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
+		{
+			ctx.setNodeVariable(name, "allow_aborts", true);
+		};
+	}
+
+	// Executed on first frame
+	void onEnter(CBTContext& ctx) override {
+		ctx.setNodeVariable(name, "dt_acum", 0.f);
+		ctx.setNodeVariable(name, "allow_aborts", true);
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
+		return tickCondition(ctx, "is_spawning_enemies", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+	}
+};
+
+class CBTTaskCygnusCloneDeath : public IBTTask
+{
+public:
+	void init() override {}
+
+	void onEnter(CBTContext& ctx) override {
+		ctx.setIsDying(true);
+		TaskUtils::dissolveAt(ctx, 5.f, 0.1f);
+
+		CEntity* owner = ctx.getOwnerEntity();
+
+		// Destroy entity
+		std::string name = owner->getName();
+		std::string argument = "destroyEntity('" + name + "')";
+
+		// sync with dissolve time
+		EngineLua.executeScript(argument, 5.f);
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
+		return tickCondition(ctx, "is_dead", dt);
 	}
 };
 
@@ -2161,7 +2324,7 @@ private:
 public:
 	void init() override {
 		// Load generic parameters
-		animation_name = string_field[0];
+		animation_name = string_field;
 		is_cycle = bool_field;
 	}
 

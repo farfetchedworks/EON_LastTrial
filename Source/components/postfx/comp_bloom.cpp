@@ -11,7 +11,7 @@ DECL_OBJ_MANAGER("bloom", TCompBloom);
 // ---------------------
 TCompBloom::TCompBloom()
 {
-	bool is_ok = cte_bloom.create(CB_SLOT_BLOOM, "bloom");
+	bool is_ok = cte_bloom.create(CB_SLOT_CUSTOM, "bloom");
 	assert(is_ok);
 }
 
