@@ -328,4 +328,7 @@ void CDeferredRenderer::render(CRenderToTexture* out_rt, CHandle new_h_camera, i
   renderSpotLights(true);
   renderEmissivePass();
   renderSkyBox();
+
+  rt_depth->activateCS(TS_DEFERRED_LINEAR_DEPTH);
+
 }

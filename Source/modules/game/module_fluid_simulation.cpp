@@ -52,11 +52,13 @@ void CModuleFluidSimulation::activateFluids()
     for (int i = 0; i < MAX_FLUID_COUNT; ++i) {
         if (ctes_fluid_sim.fs_data[i].fs_enabled == 1) {
             fluid_instances[i].fluid_texture->activateVS(TS_FLUID_SIMULATION0 + i);
+            fluid_instances[i].fluid_texture->activateCS(TS_FLUID_SIMULATION0 + i);
         }
     }
 
     ctes_fluid_sim.updateFromCPU();
     ctes_fluid_sim.activate();
+    ctes_fluid_sim.activateCS();
 }
 
 void CModuleFluidSimulation::deactivateFluids()
@@ -68,7 +70,7 @@ void CModuleFluidSimulation::deactivateFluids()
 
 bool CModuleFluidSimulation::start()
 {
-    ctes_fluid_sim.create(CB_SLOT_CUSTOM, "fluid_sim");
+    ctes_fluid_sim.create(CB_SLOT_FLUID_SIM, "fluid_sim");
 
     for (int i = 0; i < MAX_FLUID_COUNT; ++i) {
         ctes_fluid_sim.fs_data[i] = {};

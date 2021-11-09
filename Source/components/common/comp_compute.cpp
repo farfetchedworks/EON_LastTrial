@@ -7,6 +7,7 @@
 #include "components/common/comp_buffers.h"
 #include "components/common/comp_num_instances.h"
 #include "render/render_module.h"
+#include "modules/game/module_fluid_simulation.h"
 
 DECL_OBJ_MANAGER("compute", TCompCompute);
 
@@ -113,7 +114,8 @@ void TCompCompute::TExecution::bindArguments(TCompBuffers* c_buffers) {
         cte = c_buffers->getCteByName(it.Name);
       }
       if (cte == nullptr)
-        fatal("Don't know how to bind cte buffer called %s\n", it.Name);
+        break;
+        //fatal("Don't know how to bind cte buffer called %s\n", it.Name);
       cte->activateInCS(it.BindPoint);
       break;
     }
@@ -277,6 +279,8 @@ void CObjectManager< TCompCompute > ::updateAll(float dt) {
 
   EngineCulling.run();
   EngineCullingShadows.run();
+
+  EngineFluidSimulation.activateFluids();
 
   for (uint32_t i = 0; i < num_objs_used; ++i)
     objs[i].update(dt);
