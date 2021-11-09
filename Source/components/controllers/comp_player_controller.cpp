@@ -228,7 +228,7 @@ void TCompPlayerController::update(float dt)
 	}
 
 	if (PlayerInput['C'].getsPressed()) {
-	    spawnParticles("data/particles/compute_time_distortion_particles.json", transform->getPosition(), 2.f, 1);
+	    //spawnParticles("data/particles/compute_time_distortion_particles.json", transform->getPosition(), 2.f, 1);
 
 		//spawnParticles("data/particles/compute_levelup_particles.json", transform->getPosition(), 2.f, 1);
 		//spawnParticles("data/particles/compute_levelup_smoke_particles.json", transform->getPosition(), 2.f, 1);
