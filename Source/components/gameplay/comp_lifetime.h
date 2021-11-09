@@ -14,6 +14,7 @@ private:
 public:
 
 	void load(const json& j, TEntityParseContext& ctx);
+	void setTTL(float lifespan = 0.f) { _ttl = lifespan; }
 	void onEntityCreated();
 	void init();
 };
