@@ -172,6 +172,11 @@ struct TSceneExporter (
 			)
 		
 		fs.endArray()
+			
+		if hasDecal then (
+			fs.writeComma()
+			fs.writeKeyValue "gpu_instancing" "true"
+		)
 		
 		local opath = level_path
 		local object_name = curr_obj.name
