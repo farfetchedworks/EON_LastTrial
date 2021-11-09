@@ -471,9 +471,7 @@ void CRenderModule::generateFrame()
 	// Give an opportunity to all the modules to render something
 	CModuleManager& modules = CEngine::get().getModuleManager();
 
-	bool onlyUI = (modules.getCurrentGamestate() != modules.getGamestate("playing"));
-
-	if (!onlyUI)
+	if (modules.inGamestate("playing"))
 	{
 		renderAll();
 		modules.render();

@@ -21,6 +21,7 @@ class CModuleManager
     void registerGamestate(const std::string& gsName, const VModules& modules);
     void changeToGamestate(const std::string& gsName);
     void changeToGamestate(CGamestate* gamestate);
+    bool inGamestate(const std::string& gsName);
 
     IModule* getModule(const std::string& name);
     const CGamestate* getCurrentGamestate() { return _currentGamestate;  };

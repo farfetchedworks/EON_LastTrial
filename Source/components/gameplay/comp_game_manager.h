@@ -120,6 +120,7 @@ public:
 	void debugInMenu();
 
 	void enableCamera(const std::string& activeCamera);
+	void clearCameraDeltas();
 	void respawnLevel();
 	void respawnEnemies();
 	void restartLevel();

@@ -288,6 +288,19 @@ void TCompGameManager::enableCamera(const std::string& activeCamera)
 	}
 }
 
+void TCompGameManager::clearCameraDeltas()
+{
+	for (auto& cam : _cameras) {
+
+		CEntity* owner = cam.second.getOwner();
+		std::string cameraName = owner->getName();
+
+		IGameplayCamera* gameCamera = IGameplayCamera::fromCamera(owner);
+		assert(gameCamera);
+		gameCamera->clearDeltas();
+	}
+}
+
 void TCompGameManager::registerTriggerAreaEvents()
 {
 	for (auto& area : trigger_areas)

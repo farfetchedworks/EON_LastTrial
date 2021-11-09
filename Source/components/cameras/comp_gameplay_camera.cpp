@@ -33,6 +33,17 @@ void IGameplayCamera::deltasFromCamera(const IGameplayCamera& camera)
     delta_pitch_lerp = camera.delta_pitch_lerp;
 }
 
+void IGameplayCamera::clearDeltas()
+{
+    if (!orbit_enabled)
+        return;
+
+    delta_yaw = 0.f;
+    delta_pitch = 0.f;
+    delta_yaw_lerp = 0.f;
+    delta_pitch_lerp = 0.f;
+}
+
 void IGameplayCamera::updateDeltas(float dt)
 {
     if (debugging && !isPressed(VK_LCONTROL))

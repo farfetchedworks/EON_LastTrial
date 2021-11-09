@@ -64,6 +64,11 @@ const CGamestate* CModuleManager::getGamestate(const std::string& gsName)
     return &(gsIt->second);
 }
 
+bool CModuleManager::inGamestate(const std::string& gsName)
+{
+    return (_currentGamestate == getGamestate(gsName));
+}
+
 void CModuleManager::changeToGamestate(CGamestate* gamestate)
 {
     _requestedGamestate = gamestate;
