@@ -46,6 +46,7 @@ REGISTER_TASK(CygnusChangePhase)
 REGISTER_TASK(CygnusTeleport)
 REGISTER_TASK(CygnusBeamAttack)
 REGISTER_TASK(CygnusSpawnClones)
+REGISTER_TASK(CygnusCloneDeath)
 
 // Generic Tasks
 REGISTER_TASK(Wait)

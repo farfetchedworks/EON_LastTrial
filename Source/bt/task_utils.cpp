@@ -273,6 +273,13 @@ void TaskUtils::spawnBranch(VEC3 position, const int dmg, const float speed)
 	c_branch->setParameters(dmg);
 }
 
+void TaskUtils::spawnCygnusForm1Clone(VEC3 position)
+{
+	CTransform clone_trans;
+	clone_trans.setPosition(position);
+	CEntity* e_cygnus = spawn("data/prefabs/cygnus_form_1_clone.json", clone_trans);
+}
+
 void TaskUtils::spawnParticles(const std::string& name, VEC3 position, float radius, int iterations, int num_particles)
 {
 	for (int i = 0; i < iterations; ++i) {

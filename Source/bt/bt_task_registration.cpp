@@ -2022,39 +2022,60 @@ public:
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
-			CEntity* player = getPlayer();
+			//CEntity* player = getPlayer();
 
-			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
+			//TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			//TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
 
-			// Rotate while dodging
-			VEC3 player_pos = player->getPosition();
-			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
+			//// Rotate while dodging
+			//VEC3 player_pos = player->getPosition();
+			//TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
 
-			// Dodge left or right depending on the rotation multiplier sign
-			TaskUtils::moveAnyDir(ctx, h_trans->getRight(), move_speed * ctx.getNodeVariable<float>(name, "rot_multiplier"), dt);
+			//// Dodge left or right depending on the rotation multiplier sign
+			//TaskUtils::moveAnyDir(ctx, h_trans->getRight(), move_speed * ctx.getNodeVariable<float>(name, "rot_multiplier"), dt);
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			ctx.setNodeVariable(name, "allow_aborts", true);
+			TaskUtils::spawnCygnusForm1Clone(TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt"));
 		};
 	}
 
 	// Executed on first frame
 	void onEnter(CBTContext& ctx) override {
-		bool dodge_left = (rand() % 100) <= 50;
-		std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
-		float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
+		//bool dodge_left = (rand() % 100) <= 50;
+		//std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
+		//float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
 
-		ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
-		ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
+		//ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
+		//ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
 		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
-		std::string fsm_var = ctx.getNodeVariable<std::string>(name, "current_fsm_var");
-		return tickCondition(ctx, fsm_var, dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+		return tickCondition(ctx, "is_spawning_enemies", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+	}
+};
+
+class CBTTaskCygnusCloneDeath : public IBTTask
+{
+public:
+	void init() override {}
+
+	void onEnter(CBTContext& ctx) override {
+		ctx.setIsDying(true);
+		TaskUtils::dissolveAt(ctx, 20.f, 0.5f);
+
+		CEntity* owner = ctx.getOwnerEntity();
+
+		// Destroy form 1 entity
+		ctx.getOwnerEntity().destroy();
+		CHandleManager::destroyAllPendingObjects();
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
+		return tickCondition(ctx, "is_dead", dt);
 	}
 };
 
