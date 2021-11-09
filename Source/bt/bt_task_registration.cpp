@@ -2065,13 +2065,16 @@ public:
 
 	void onEnter(CBTContext& ctx) override {
 		ctx.setIsDying(true);
-		TaskUtils::dissolveAt(ctx, 20.f, 0.5f);
+		TaskUtils::dissolveAt(ctx, 5.f, 0.1f);
 
 		CEntity* owner = ctx.getOwnerEntity();
 
-		// Destroy form 1 entity
-		ctx.getOwnerEntity().destroy();
-		CHandleManager::destroyAllPendingObjects();
+		// Destroy entity
+		std::string name = owner->getName();
+		std::string argument = "destroyEntity('" + name + "')";
+
+		// sync with dissolve time
+		EngineLua.executeScript(argument, 5.f);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
