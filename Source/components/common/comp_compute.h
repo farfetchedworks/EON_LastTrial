@@ -29,6 +29,8 @@ class TCompCompute : public TCompBase
     std::string           swapA;
     std::string           swapB;
 
+    bool uses_fluid = false;
+
     void debugInMenu();
     bool getDispatchArgs(uint32_t* args);
     void load(const json& j);

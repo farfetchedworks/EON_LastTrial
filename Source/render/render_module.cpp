@@ -368,13 +368,15 @@ void CRenderModule::generateShadowMaps() {
 
 void CRenderModule::renderAll()
 {
+	CTexture::deactivateCS(TS_DEFERRED_OUTPUT);
+	CTexture::deactivate(TS_DEFERRED_OUTPUT);
+
 	generateShadowMaps();
 
 	activateMainCamera();
 
 	EngineFluidSimulation.activateFluids();
 
-	CTexture::deactivate(TS_DEFERRED_OUTPUT);
 	CEntity* e_camera = CEngine::get().getRender().getActiveCamera();
 	deferred_renderer.render(rt_deferred_output, e_camera);
 
@@ -385,13 +387,9 @@ void CRenderModule::renderAll()
 
 	rt_final->activateRT();
 	rt_deferred_output->activate(TS_DEFERRED_OUTPUT);
+	rt_deferred_output->activateCS(TS_DEFERRED_OUTPUT);
+
 	drawFullScreenQuad("deferred_resolve.pipeline", rt_deferred_output);
-
-
-	// to john: temporary solution to render single particles
-	/*getObjectManager<TCompParticles>()->forEach([](TCompParticles* particles) {
-		particles->render();
-		});*/
 
 	getObjectManager<TCompIrradianceCache>()->forEach([](TCompIrradianceCache* irradiance) {
 		irradiance->renderProbes();
@@ -401,8 +399,6 @@ void CRenderModule::renderAll()
 
 	RenderManager.renderAll(eRenderChannel::RC_DISTORSIONS, e_camera);
 
-	//_lastOutput->activate()
-	rt_deferred_output->activateCS(TS_DEFERRED_OUTPUT);
 	RenderManager.renderAll(eRenderChannel::RC_TRANSPARENT, e_camera);
 
 	// Render projectile effects

@@ -312,6 +312,8 @@ void CDeferredRenderer::renderWater()
 // ---------------------------------------------------------------
 void CDeferredRenderer::render(CRenderToTexture* out_rt, CHandle new_h_camera, int array_index)
 {
+  rt_depth->deactivateCS(TS_DEFERRED_LINEAR_DEPTH);
+
   h_camera = new_h_camera;
   assert(out_rt);
 
@@ -330,5 +332,4 @@ void CDeferredRenderer::render(CRenderToTexture* out_rt, CHandle new_h_camera, i
   renderSkyBox();
 
   rt_depth->activateCS(TS_DEFERRED_LINEAR_DEPTH);
-
 }

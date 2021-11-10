@@ -65,6 +65,7 @@ void CModuleFluidSimulation::deactivateFluids()
 {
     for (int i = 0; i < MAX_FLUID_COUNT; ++i) {
         CTexture::deactivateVS(TS_FLUID_SIMULATION0 + i);
+        CTexture::deactivateCS(TS_FLUID_SIMULATION0 + i);
     }
 }
 

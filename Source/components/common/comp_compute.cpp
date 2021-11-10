@@ -47,6 +47,10 @@ void TCompCompute::TExecution::load(const json& j) {
     return;
   }
 
+  if (j.count("uses_fluid")) {
+      uses_fluid = true;
+  }
+
   // Compute shader
   cmd = eCmd::RUN_COMPUTE;
   std::string cs = j.value("cs", "");
@@ -201,6 +205,10 @@ bool TCompCompute::TExecution::getDispatchArgs(uint32_t* args) {
 void TCompCompute::TExecution::run(TCompBuffers* c_buffers) {
   CGpuScope gpu_scope(compute->getName().c_str());
 
+  if (uses_fluid) {
+      EngineFluidSimulation.activateFluids();
+  }
+
   if (is_indirect) {
     // Num thread groups is defined by the contents of another buffer
     compute->activate();
@@ -221,6 +229,9 @@ void TCompCompute::TExecution::run(TCompBuffers* c_buffers) {
     Render.ctx->Dispatch(args[0], args[1], args[2]);
   }
 
+  if (uses_fluid) {
+      EngineFluidSimulation.deactivateFluids();
+  }
 }
 
 
@@ -279,8 +290,6 @@ void CObjectManager< TCompCompute > ::updateAll(float dt) {
 
   EngineCulling.run();
   EngineCullingShadows.run();
-
-  EngineFluidSimulation.activateFluids();
 
   for (uint32_t i = 0; i < num_objs_used; ++i)
     objs[i].update(dt);
