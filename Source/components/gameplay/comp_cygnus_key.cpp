@@ -9,6 +9,7 @@
 #include "components/common/comp_parent.h"
 #include "components/common/comp_render.h"
 #include "components/common/comp_collider.h"
+#include "components/controllers/comp_rigid_animation_controller.h"
 #include "../bin/data/shaders/constants_particles.h"
 
 DECL_OBJ_MANAGER("cygnus_key", TCompCygnusKey)
@@ -130,10 +131,13 @@ void TCompCygnusKey::setActive()
 
 void TCompCygnusKey::onAllKeysOpened()
 {
-	// TODO
-	// ...
+	/*CEntity* e = getEntityByName("structures_controller");
+	assert(e);
+	
+	TCompRigidAnimationController* controller = get<TCompRigidAnimationController>();
+	controller->start();
 
-	EngineLua.executeScript("shakeOnce(5, 0.1, 3)");
+	EngineLua.executeScript("shakeOnce(5, 0.1, 3)");*/
 }
 
 void TCompCygnusKey::debugInMenu()

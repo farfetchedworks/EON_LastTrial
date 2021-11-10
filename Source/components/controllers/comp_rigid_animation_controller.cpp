@@ -49,6 +49,7 @@ void TCompRigidAnimationController::load(const json& j, TEntityParseContext& ctx
 	autoplay = j.value("autoplay", autoplay);
 	animate_prefabs = j.value("animate_prefabs", animate_prefabs);
 	cinematic_animation = j.value("cinematic_animation", cinematic_animation);
+	reverse = j.value("reverse", reverse);
 }
 
 void TCompRigidAnimationController::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
@@ -71,7 +72,18 @@ void TCompRigidAnimationController::setAnimation(const std::string& animation_na
 {
 	animation_data = Resources.get(animation_name)->as<TCoreAnimationData>();
 	assignTracksToSceneObjects();
-	curr_time = animation_data->header.min_time;
+	
+	if (!reverse)
+	{
+		curr_time = animation_data->header.min_time;
+	}
+	else
+	{
+		curr_time = animation_data->header.max_time;
+	}
+
+	for (auto t : tracks)
+		t.apply(curr_time);
 }
 
 void TCompRigidAnimationController::setTargetBone(const std::string& bone_name)
@@ -86,7 +98,13 @@ void TCompRigidAnimationController::setSpeed(float speed)
 
 void TCompRigidAnimationController::start()
 {
-	curr_time = frame_start / 30.f;
+	if (frame_start > 0)
+	{
+		float time = std::min(frame_start / 30.f, animation_data->header.max_time);
+		time = std::max(time, animation_data->header.min_time);
+		curr_time = time;
+	}
+
 	playing = true;
 }
 
@@ -115,7 +133,7 @@ void TCompRigidAnimationController::update(float delta_time)
 	for (auto t : tracks)
 		t.apply(curr_time);
 
-	if (playing_forward)
+	if (!reverse)
 	{
 		if (curr_time <= animation_data->header.max_time)
 		{
@@ -278,7 +296,7 @@ void TCompRigidAnimationController::assignTracksToSceneObjects()
 
 void TCompRigidAnimationController::updateCurrentTime(float delta_time)
 {
-	curr_time += delta_time * speed_factor * (playing_forward ? 1.0f : -1.0f);
+	curr_time += delta_time * speed_factor * (reverse ? -1.0f : 1.0f);
 	// Never go beyond the time
 	if (curr_time > animation_data->header.max_time)
 		curr_time = animation_data->header.max_time;
@@ -292,9 +310,9 @@ void TCompRigidAnimationController::onEndOfAnimation()
 	if (loop)
 	{
 		if (ping_pong)
-			playing_forward = !playing_forward;
+			reverse = !reverse;
 
-		if (playing_forward)
+		if (!reverse)
 			curr_time = animation_data->header.min_time;
 		else
 			curr_time = animation_data->header.max_time;
@@ -313,14 +331,19 @@ void TCompRigidAnimationController::onEndOfAnimation()
 
 void TCompRigidAnimationController::debugInMenu()
 {
-	ImGui::Text("Current Time: %f", curr_time);
+	if (ImGui::DragFloat("Current Time", &curr_time, 0.01f, animation_data->header.min_time, animation_data->header.max_time))
+	{
+		for (auto t : tracks)
+			t.apply(curr_time);
+	}
+		
 	ImGui::Separator();
 	if (ImGui::Checkbox("Playing", &playing))
 	{
 		if (playing)
 			start();
 	}
-	ImGui::Checkbox("Forward", &playing_forward);
+	ImGui::Checkbox("Reverse", &reverse);
 	ImGui::Checkbox("Loop", &loop);
 	if (loop)
 		ImGui::Checkbox("Ping Pong", &ping_pong);

@@ -87,7 +87,7 @@ struct TCompRigidAnimationController : public TCompBase
 	bool                  playing = false;
 	bool                  loop = false;
 	bool                  ping_pong = false;
-	bool                  playing_forward = true;
+	bool                  reverse = false;
 	bool                  autoplay = false;
 	bool                  animate_prefabs = false;
 	bool                  dynamic = false;
