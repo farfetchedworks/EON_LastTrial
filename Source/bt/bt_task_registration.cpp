@@ -1877,20 +1877,20 @@ public:
 
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
 		{
+			// Set the position
 			TCompCollider* h_collider = ctx.getComponent<TCompCollider>();
 			h_collider->setFootPosition(target_pos);
 
+			// Set the rotation to look at Eon
 			CEntity* player = getPlayer();
 			VEC3 player_pos = player->getPosition();
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			//TaskUtils::rotateToFace(h_trans, player_pos, 1000.f, dt);
-			
-			//h_trans->setRotation()
+			TCompTransform* h_trans_eon = player->get<TCompTransform>();
+			h_trans->setRotation(h_trans_eon->getRotation());
 
+			// Stop the animation and return to Locomotion state
+			TaskUtils::stopAction(ctx.getOwnerEntity(), "cygnus_f2_heal", 0.f);
 			ctx.setFSMVariable("is_teleporting", 0);
-
-			h_trans->lookAt(h_trans->getPosition(), player_pos, VEC3::Up);
-
 		};
 
 	}
