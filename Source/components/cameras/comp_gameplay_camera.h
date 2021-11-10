@@ -33,6 +33,7 @@ struct IGameplayCamera {
 
     void deltasFromCamera(const IGameplayCamera& camera);
     void updateDeltas(float dt);
+    void clearDeltas();
 
     void load(const json& j, TEntityParseContext& ctx);
     void enable();

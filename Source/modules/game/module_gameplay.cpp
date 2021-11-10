@@ -39,6 +39,8 @@ bool ModuleEONGameplay::start()
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;
 
+	PlayerInput.unBlockInput();
+
 	// Activate UI
 	EngineUI.activateWidget("eon_hud");
 
@@ -96,6 +98,7 @@ bool ModuleEONGameplay::start()
 
 void ModuleEONGameplay::stop()
 {
+	PlayerInput.blockInput();
 	cte_world.in_gameplay = 0.f;
 }
 

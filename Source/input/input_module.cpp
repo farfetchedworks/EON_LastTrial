@@ -18,6 +18,7 @@ namespace input
 
     bool CModule::start()
     {
+        blockInput();
         return true;
     }
 
@@ -37,8 +38,13 @@ namespace input
         _mouse.update(delta);
         _pad.update(delta);
 
-        if (_blocked) return;
-        _mapping.update(delta);
+        // Block input in the gameplay state
+        bool inGame = CEngine::get().getModuleManager().inGamestate("playing");
+
+        if (!inGame || (inGame && !_blocked))
+        {
+            _mapping.update(delta);
+        }
     }
 
     void CModule::registerDevice(IDevice* device)
