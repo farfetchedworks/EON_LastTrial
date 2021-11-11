@@ -108,7 +108,7 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
                 return;
 
             // Blood Hit marker
-            spawn("data/particles/hit_blood.json", t, ctx);
+            //spawn("data/particles/hit_blood.json", t, ctx);
 
             // Blood Trail
             TCompPlayerController* controller = eParent->get<TCompPlayerController>();
@@ -116,22 +116,16 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
 
             TCompTransform* trans_target = target->get<TCompTransform>();
             VEC3 tPos = trans_target->getPosition() + VEC3(0, 1.25f, 0);
-            VEC3 playerPos = eParent->getPosition() + VEC3(0, 1.25f, 0);
-
-            VEC3 right = normVEC3(playerPos - tPos);
-            right = VEC3::Transform(right, QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(110.f))) * 0.8f;
 
             switch (controller->attack_count)
             {
             case 1:
             case 3:
-                t.setPosition(tPos + right);
-                spawn("data/particles/splatter_blood_left.json", t, ctx);
+                spawnParticles("data/particles/splatter_blood_left.json", tPos, 1);
                 break;
             case 2:
             case 4:
-                t.setPosition(tPos - right);
-                spawn("data/particles/splatter_blood_right.json", t, ctx);
+                spawnParticles("data/particles/splatter_blood_right.json", tPos, 1);
                 break;
             }
         }
