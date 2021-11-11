@@ -111,7 +111,7 @@ void TCompAttributes::updateVitality()
 	TAttribute attr = get("vitality");
 	int base_health = 100;
 	int max_health = base_health + (attr.value - 1) * attr.ratio;
-	health->setMaxHealth(max_health);
+	health->setCurrMaxHealth(max_health);
 
 	// Alex: I think for health its logic 
 	// (stamina and warp can be recovered easily)
@@ -154,15 +154,16 @@ void TCompAttributes::updateEndurance()
 
 void TCompAttributes::onNewPhase(int phase)
 {
+	updateVitality();
 	// even/odd phases
-	if (phase % 2 == 0) increment("strength");
-	else updateVitality();
+	//if (phase % 2 == 0) increment("strength");
+	//else updateVitality();
 
-	// every 3 phases
-	phase_helper = (phase_helper + 1) % 3;
-	if (phase_helper == 0) increment("armor");
-	else if (phase_helper == 1) updateCoherence();
-	else if (phase_helper == 2) updateEndurance();
+	//// every 3 phases
+	//phase_helper = (phase_helper + 1) % 3;
+	//if (phase_helper == 0) increment("armor");
+	//else if (phase_helper == 1) updateCoherence();
+	//else if (phase_helper == 2) updateEndurance();
 }
 
 void TCompAttributes::forEach(std::function<void(const std::string, unsigned short int)> fn)

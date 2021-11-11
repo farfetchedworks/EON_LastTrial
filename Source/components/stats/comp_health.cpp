@@ -169,13 +169,15 @@ void TCompHealth::setHealth(int value)
 
 void TCompHealth::fillHealth()
 {
-    health = max_health;
-    lerp_health = max_health;
+    health = curr_max_health;
+    lerp_health = curr_max_health;
+
+    dbg("Current health %d\n", health);
 }
 
 void TCompHealth::increaseHealth(int health_points)
 {
-    health = std::min<int>(health + health_points, max_health);
+    health = std::min<int>(health + health_points, curr_max_health);
     lerp_health = health;
 }
 
