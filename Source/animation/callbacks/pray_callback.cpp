@@ -9,10 +9,13 @@
 #include "components/common/comp_parent.h"
 #include "components/gameplay/comp_lifetime.h"
 
+extern CShaderCte<CtesWorld> cte_world;
+
 struct onPrayCallback : public CAnimationCallback
 {
 	bool spawned = false;
 	bool stopped = false;
+	float exposure = 1.f;
 	CHandle h_e;
 
 	void AnimationUpdate(float anim_time, CalModel* model, CalCoreAnimation* animation, void* userData)
@@ -44,6 +47,8 @@ struct onPrayCallback : public CAnimationCallback
 			cte->emitter_num_particles_per_spawn = 1500;
 			cte->emitter_time_between_spawns = 0.3f;
 			cte->updateFromCPU();
+
+			exposure = 0.12f;
 		}
 
 		if (anim_time > 4.f && !stopped)
@@ -58,12 +63,21 @@ struct onPrayCallback : public CAnimationCallback
 				stopped = true;
 			}
 		}
+
+		if (anim_time > 6.5f && exposure != 1.f)
+		{
+			exposure = 1.f;
+		}
+
+		cte_world.exposure_factor = damp(cte_world.exposure_factor, exposure, 2.f, Time.delta);
 	}
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
 		spawned = false;
 		stopped = false;
+		exposure = 1.f;
+		cte_world.exposure_factor = 1.f;
 	}
 };
 

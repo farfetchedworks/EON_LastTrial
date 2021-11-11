@@ -104,7 +104,7 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
         else
         {
             // Hit too high..
-            if (fabsf(position.y - target->getPosition().y) > 1.7f)
+            if (fabsf(position.y - target->getPosition().y) > 1.8f)
                 return;
 
             // Blood Hit marker
@@ -117,17 +117,50 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
             TCompTransform* trans_target = target->get<TCompTransform>();
             VEC3 tPos = trans_target->getPosition() + VEC3(0, 1.25f, 0);
 
-            switch (controller->attack_count)
-            {
-            case 1:
-            case 3:
-                spawnParticles("data/particles/splatter_blood_left.json", tPos, 1);
-                break;
-            case 2:
-            case 4:
-                spawnParticles("data/particles/splatter_blood_right.json", tPos, 1);
-                break;
+            // Detect Hit Type to get trail direction
+
+            std::string particlesName = "";
+
+            if (std::get<bool>(controller->getVariable("is_sprint_regular_attack"))) {
+                particlesName = "data/particles/splatter_blood_left.json";
             }
+            else if (std::get<bool>(controller->getVariable("is_sprint_strong_attack")) || 
+                controller->is_dash_strike) {
+                particlesName = "data/particles/splatter_blood_left.json";
+            }
+            else {
+                int attackHeavy = std::get<int>(controller->getVariable("is_attacking_heavy"));
+
+                if (attackHeavy > 0)
+                {
+                    switch (attackHeavy)
+                    {
+                        // Vertical (up to down)
+                        case 1:
+                            particlesName = "data/particles/splatter_blood_left.json";
+                            break;
+                        // Charge (left to right)
+                        case 2:
+                            particlesName = "data/particles/splatter_blood_left.json";
+                            break;
+                    }
+                }
+                else {
+                    switch (controller->attack_count) {
+                        case 1:
+                        case 3:
+                            particlesName = "data/particles/splatter_blood_left.json";
+                            break;
+                        case 2:
+                        case 4:
+                            particlesName = "data/particles/splatter_blood_right.json";
+                            break;
+                    }
+                }
+            }
+
+            if(particlesName.length())
+                spawnParticles(particlesName, tPos, 1);
         }
     }
 }
