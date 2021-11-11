@@ -178,7 +178,7 @@ void TCompLightSpot::generateShadowMap() {
           TCompTransform* c_trans_player = player->get<TCompTransform>();
           TCompTransform* c_trans_camera = h_transform;
 
-          if (c_trans_player->distance(*c_trans_camera) > getFar()) {
+          if (c_trans_player->distance(*c_trans_camera) > getFar() * 1.5f) {
               return;
           }
       }
