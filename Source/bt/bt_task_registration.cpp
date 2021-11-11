@@ -3,6 +3,7 @@
 #include "task_utils.h"
 #include "bt.h"
 #include "engine.h"
+#include "bt_task.h"
 #include "modules/module_physics.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
@@ -19,7 +20,8 @@
 #include "components/projectiles/comp_gard_branch.h"
 #include "components/ai/comp_ai_time_reversal.h"
 #include "components/render/comp_emissive_modifier.h"
-#include "bt_task.h"
+#include "components/ai/comp_bt.h"
+#include "components/stats/comp_health.h"
 #include "skeleton/comp_skel_lookat.h"
 
 /*
@@ -1919,6 +1921,23 @@ public:
 		clamp(phase_num, 2, 4);
 		ctx.setFSMVariable("phase_number", phase_num);
 		ctx.getBlackboard()->setValue<int>("phaseNumber", phase_num);
+
+		if (phase_num == 3)
+		{
+			CEntity* e = ctx.getOwnerEntity();
+
+			TCompBT* c_bt = e->get<TCompBT>();
+			assert(c_bt);
+			c_bt->setEnabled(false);
+
+			// Hide health bar
+			TCompHealth* c_health = e->get<TCompHealth>();
+			c_health->setRenderActive(false);
+
+			// Intro form 3
+			EngineLua.executeScript("CinematicCygnusF2ToF3()");
+		}
+
 		return EBTNodeResult::SUCCEEDED;
 	}
 };

@@ -257,7 +257,6 @@
     <ClCompile Include="components\postfx\comp_depth_fog.cpp" />
     <ClCompile Include="animation\callbacks\gard_branch_finished.cpp" />
     <ClCompile Include="components\common\comp_prefab_info.cpp" />
-    <ClCompile Include="animation\callbacks\cygnus_to_f2.cpp" />
     <ClCompile Include="components\gameplay\comp_launch_animation.cpp" />
     <ClCompile Include="animation\callbacks\animation_launcher_callback.cpp" />
     <ClCompile Include="components\ai\comp_ai_time_reversal.cpp" />
@@ -276,6 +275,8 @@
     <ClCompile Include="modules\game\module_splash_screen.cpp" />
     <ClCompile Include="modules\game\module_you_died.cpp" />
     <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_f1_to_f2.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\nn_interpolator.h" />
