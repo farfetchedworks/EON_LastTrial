@@ -277,6 +277,7 @@
     <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f1_to_f2.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
+    <ClCompile Include="animation\callbacks\pray_callback.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\nn_interpolator.h" />

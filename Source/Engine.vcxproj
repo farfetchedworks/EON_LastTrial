@@ -20,6 +20,7 @@
     <ClCompile Include="animation\callbacks\event_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_branch_finished.cpp" />
     <ClCompile Include="animation\callbacks\hitstun_callback.cpp" />
+    <ClCompile Include="animation\callbacks\pray_callback.cpp" />
     <ClCompile Include="animation\callbacks\turn_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_insert_branches_callback.cpp" />
