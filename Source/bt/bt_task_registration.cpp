@@ -1976,6 +1976,17 @@ public:
 			dist_to_eon = ray_dir.Length();
 			ray_dir.Normalize();
 
+			physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
+			std::vector<physx::PxSweepHit> sweepHits;
+			physx::PxTransform trans(VEC3_TO_PXVEC3(black_hole_pos));
+			physx::PxSphereGeometry geometry = { sphere_radius };
+
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			VEC3 cygnus_forward = h_trans->getForward();
+			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, -45.f, 0.f));
+
+			bool has_hit = EnginePhysics.sweep(trans, rotated_vec, dist_to_eon, geometry, sweepHits, layerMask, true, true);
+
 			// Get initial beam direction
 			TCompTransform* c_trans = ctx.getComponent<TCompTransform>();
 			//DirectX::XMVector3Rotate(c_trans->getForward(),QUAT::CreateFromAxisAngle(VEC3::)
@@ -1984,7 +1995,7 @@ public:
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
-			physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
+			/*physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
 			std::vector<physx::PxSweepHit> sweepHits;
 			physx::PxTransform trans(VEC3_TO_PXVEC3(black_hole_pos));
 			physx::PxSphereGeometry geometry = { sphere_radius };
@@ -1994,7 +2005,7 @@ public:
 			bool has_hit = EnginePhysics.sweep(trans, ray_dir, dist_to_eon, geometry, sweepHits, layerMask, true, false);
 			
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
+			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();*/
 
 			
 		};
@@ -2007,18 +2018,17 @@ public:
 
 	// Executed on first frame
 	void onEnter(CBTContext& ctx) override {
-		bool dodge_left = (rand() % 100) <= 50;
-		std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
-		float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
+		//bool dodge_left = (rand() % 100) <= 50;
+		//std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
+		//float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
 
-		ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
-		ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
+		//ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
+		//ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
 		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
-		std::string fsm_var = ctx.getNodeVariable<std::string>(name, "current_fsm_var");
-		return tickCondition(ctx, fsm_var, dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+		return tickCondition(ctx, "is_ranged_attacking", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
 	}
 };
 
