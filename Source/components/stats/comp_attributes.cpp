@@ -154,16 +154,15 @@ void TCompAttributes::updateEndurance()
 
 void TCompAttributes::onNewPhase(int phase)
 {
-	updateVitality();
 	// even/odd phases
-	//if (phase % 2 == 0) increment("strength");
-	//else updateVitality();
+	if (phase % 2 == 0) increment("strength");
+	else updateVitality();
 
-	//// every 3 phases
-	//phase_helper = (phase_helper + 1) % 3;
-	//if (phase_helper == 0) increment("armor");
-	//else if (phase_helper == 1) updateCoherence();
-	//else if (phase_helper == 2) updateEndurance();
+	// every 3 phases
+	phase_helper = (phase_helper + 1) % 3;
+	if (phase_helper == 0) increment("armor");
+	else if (phase_helper == 1) updateCoherence();
+	else if (phase_helper == 2) updateEndurance();
 }
 
 void TCompAttributes::forEach(std::function<void(const std::string, unsigned short int)> fn)
