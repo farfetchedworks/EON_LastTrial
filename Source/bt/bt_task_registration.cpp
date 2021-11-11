@@ -2205,6 +2205,10 @@ public:
 		TaskUtils::dissolveAt(ctx, 20.f, 0.5f);
 
 		CEntity* owner = ctx.getOwnerEntity();
+		// Change group to avoid new hits (blood, etc)
+		TCompCollider* collider = owner->get<TCompCollider>();
+		assert(collider);
+		collider->setGroupAndMask("invisible_wall", "all");
 
 		TCompForceReceiver* force = owner->get<TCompForceReceiver>();
 		if (force) {
