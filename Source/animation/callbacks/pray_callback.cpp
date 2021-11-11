@@ -48,7 +48,7 @@ struct onPrayCallback : public CAnimationCallback
 			cte->emitter_time_between_spawns = 0.3f;
 			cte->updateFromCPU();
 
-			exposure = 0.2f;
+			exposure = 0.12f;
 		}
 
 		if (anim_time > 4.f && !stopped)
