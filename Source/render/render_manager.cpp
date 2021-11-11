@@ -13,6 +13,8 @@
 #include "entity/entity.h"
 #include "engine.h"
 
+const float MAX_RENDER_DISTANCE_TRANSPARENTS = 50.f;
+
 extern CShaderCte<CtesObject> cte_object;
 CRenderManager RenderManager;
 
@@ -150,6 +152,7 @@ void CRenderManager::renderAll(eRenderChannel render_channel, CHandle h_entity_c
       if (!e_camera)
           return;
       
+      const TCompTransform* camera_transform = e_camera->get<TCompTransform>();
       const TCompCulling* c_culling = e_camera->get<TCompCulling>();
       const TCompCulling::TCullingBits* culling_bits = c_culling ? &c_culling->bits : nullptr;
 
@@ -188,6 +191,13 @@ void CRenderManager::renderAll(eRenderChannel render_channel, CHandle h_entity_c
 
         TCompTransform* c_transform = key.h_transform;
         assert(c_transform);
+
+        if (render_channel == RC_TRANSPARENT)
+        {
+            float distance = c_transform->distance(*camera_transform);
+            if (distance > MAX_RENDER_DISTANCE_TRANSPARENTS)
+                continue;
+        }
 
         activateObject(c_transform->asMatrix(), Colors::White, entity);
 

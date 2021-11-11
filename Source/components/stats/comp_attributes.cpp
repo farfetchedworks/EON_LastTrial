@@ -111,7 +111,7 @@ void TCompAttributes::updateVitality()
 	TAttribute attr = get("vitality");
 	int base_health = 100;
 	int max_health = base_health + (attr.value - 1) * attr.ratio;
-	health->setMaxHealth(max_health);
+	health->setCurrMaxHealth(max_health);
 
 	// Alex: I think for health its logic 
 	// (stamina and warp can be recovered easily)

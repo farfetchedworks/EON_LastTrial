@@ -3,6 +3,7 @@
 #include "task_utils.h"
 #include "bt.h"
 #include "engine.h"
+#include "bt_task.h"
 #include "modules/module_physics.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
@@ -19,7 +20,8 @@
 #include "components/projectiles/comp_gard_branch.h"
 #include "components/ai/comp_ai_time_reversal.h"
 #include "components/render/comp_emissive_modifier.h"
-#include "bt_task.h"
+#include "components/ai/comp_bt.h"
+#include "components/stats/comp_health.h"
 #include "skeleton/comp_skel_lookat.h"
 
 /*
@@ -1919,6 +1921,23 @@ public:
 		clamp(phase_num, 2, 4);
 		ctx.setFSMVariable("phase_number", phase_num);
 		ctx.getBlackboard()->setValue<int>("phaseNumber", phase_num);
+
+		if (phase_num == 3)
+		{
+			CEntity* e = ctx.getOwnerEntity();
+
+			TCompBT* c_bt = e->get<TCompBT>();
+			assert(c_bt);
+			c_bt->setEnabled(false);
+
+			// Hide health bar
+			TCompHealth* c_health = e->get<TCompHealth>();
+			c_health->setRenderActive(false);
+
+			// Intro form 3
+			EngineLua.executeScript("CinematicCygnusF2ToF3()");
+		}
+
 		return EBTNodeResult::SUCCEEDED;
 	}
 };
@@ -1957,6 +1976,17 @@ public:
 			dist_to_eon = ray_dir.Length();
 			ray_dir.Normalize();
 
+			physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
+			std::vector<physx::PxSweepHit> sweepHits;
+			physx::PxTransform trans(VEC3_TO_PXVEC3(black_hole_pos));
+			physx::PxSphereGeometry geometry = { sphere_radius };
+
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			VEC3 cygnus_forward = h_trans->getForward();
+			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, -45.f, 0.f));
+
+			bool has_hit = EnginePhysics.sweep(trans, rotated_vec, dist_to_eon, geometry, sweepHits, layerMask, true, true);
+
 			// Get initial beam direction
 			TCompTransform* c_trans = ctx.getComponent<TCompTransform>();
 			//DirectX::XMVector3Rotate(c_trans->getForward(),QUAT::CreateFromAxisAngle(VEC3::)
@@ -1965,7 +1995,7 @@ public:
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
-			physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
+			/*physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
 			std::vector<physx::PxSweepHit> sweepHits;
 			physx::PxTransform trans(VEC3_TO_PXVEC3(black_hole_pos));
 			physx::PxSphereGeometry geometry = { sphere_radius };
@@ -1975,7 +2005,7 @@ public:
 			bool has_hit = EnginePhysics.sweep(trans, ray_dir, dist_to_eon, geometry, sweepHits, layerMask, true, false);
 			
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
+			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();*/
 
 			
 		};
@@ -1988,18 +2018,17 @@ public:
 
 	// Executed on first frame
 	void onEnter(CBTContext& ctx) override {
-		bool dodge_left = (rand() % 100) <= 50;
-		std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
-		float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
+		//bool dodge_left = (rand() % 100) <= 50;
+		//std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
+		//float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
 
-		ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
-		ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
+		//ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
+		//ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
 		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
-		std::string fsm_var = ctx.getNodeVariable<std::string>(name, "current_fsm_var");
-		return tickCondition(ctx, fsm_var, dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+		return tickCondition(ctx, "is_ranged_attacking", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
 	}
 };
 
@@ -2176,6 +2205,10 @@ public:
 		TaskUtils::dissolveAt(ctx, 20.f, 0.5f);
 
 		CEntity* owner = ctx.getOwnerEntity();
+		// Change group to avoid new hits (blood, etc)
+		TCompCollider* collider = owner->get<TCompCollider>();
+		assert(collider);
+		collider->setGroupAndMask("invisible_wall", "all");
 
 		TCompForceReceiver* force = owner->get<TCompForceReceiver>();
 		if (force) {

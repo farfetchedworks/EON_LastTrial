@@ -12,13 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\callbacks\animation_launcher_callback.cpp" />
-    <ClCompile Include="animation\callbacks\cygnus_to_f2.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_f1_to_f2.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
     <ClCompile Include="animation\callbacks\death_callback.cpp" />
     <ClCompile Include="animation\callbacks\enemy_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\eon_cross_crack_callback.cpp" />
     <ClCompile Include="animation\callbacks\event_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_branch_finished.cpp" />
     <ClCompile Include="animation\callbacks\hitstun_callback.cpp" />
+    <ClCompile Include="animation\callbacks\pray_callback.cpp" />
     <ClCompile Include="animation\callbacks\turn_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_insert_branches_callback.cpp" />
