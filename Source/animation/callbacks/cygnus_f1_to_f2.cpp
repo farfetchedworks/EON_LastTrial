@@ -9,7 +9,7 @@
 #include "audio/module_audio.h"
 #include "components/stats/comp_health.h"
 
-struct onCygnusToF2 : public CAnimationCallback
+struct onCygnusF1ToF2 : public CAnimationCallback
 {
 	float t = 0.f;
 	bool correct_pos = false;
@@ -75,4 +75,4 @@ struct onCygnusToF2 : public CAnimationCallback
 	}
 };
 
-REGISTER_CALLBACK("onCygnusToF2", onCygnusToF2)
+REGISTER_CALLBACK("onCygnusF1ToF2", onCygnusF1ToF2)
