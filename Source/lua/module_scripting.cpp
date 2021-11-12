@@ -193,8 +193,10 @@ void CModuleScripting::update(float dt)
 {
 	bool removePending = false;
 
-	for (auto& s : pending_scripts)
+	for (int i = 0; i < pending_scripts.size(); ++i)
 	{
+		TScript& s = pending_scripts[i];
+
 		s.delay -= dt;
 
 		if (s.delay <= 0.f)
