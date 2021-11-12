@@ -9,7 +9,8 @@ class TCompStamina: public TCompBase {
     DECL_SIBLING_ACCESS();
 
     float max_stamina = 100.f;
-    float current_stamina = max_stamina;
+    float curr_max_stamina = 100.f;
+    float current_stamina = curr_max_stamina;
     float recovery_points = 2.f;
     float recovery_frequency = 0.03f;
     float recovery_penalization = 0.1f;
@@ -45,6 +46,7 @@ public:
   // Returns true if the player has the max stamina
   bool hasMaxStamina();
   void setMaxStamina(int max) { max_stamina = (float)max; };
+  void setCurrMaxStamina(int max) { curr_max_stamina = (float)max; };
 
   // Returns true if the player has enough stamina to perform the action
   bool hasStamina(EAction);
