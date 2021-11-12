@@ -193,6 +193,11 @@ namespace ui
         // pipeline
         params.additive ? _pipelineVideoAdditive->activate() : _pipelineVideoCombinative->activate();
 
+        if (params.fx_pipeline)
+        {
+            params.fx_pipeline->activate();
+        }
+
         // texture
         params.video->getTexture()->activate(TS_ALBEDO);
 
