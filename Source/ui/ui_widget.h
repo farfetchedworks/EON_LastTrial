@@ -48,7 +48,11 @@ namespace ui
         VEC2& getSize() { return _localSize; };
         const VEC2& getSize() const { return _worldSize; }
         const EState& getState() const { return _state; }
+        std::vector<CWidget*> getChildren() { return _children; }
+        CWidget* getChildByName(const std::string& name);
+        MAT44 getWorldTransform() { return _worldTransform; };
        
+        void propagateState(EState s);
         void updateLocalTransform();
         void updateWorldTransform();
         void updateSize();
@@ -62,9 +66,6 @@ namespace ui
         void addEffect(CEffect* effect);
         CEffect* getEffect(const std::string& name);
 
-        std::vector<CWidget*> getChildren() { return _children; }
-        CWidget* getChildByName(const std::string& name);
-        MAT44 getWorldTransform() { return _worldTransform; };
 
     protected:
         std::string _name;

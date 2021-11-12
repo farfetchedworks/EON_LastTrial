@@ -26,6 +26,10 @@ namespace ui
             effect->update(this, elapsed);
         }
 
+        // Don't update children until parent is completed
+        if (getState() != EState::STATE_NONE)
+            return;
+
         for (auto child : _children)
         {
             child->updateRecursive(elapsed);
@@ -59,6 +63,17 @@ namespace ui
         for (auto& child : _children)
         {
             child->renderDebugRecursive();
+        }
+    }
+
+    void CWidget::propagateState(EState s)
+    {
+        for (auto& child : _children)
+        {
+            if (child->_effects.size() == 0)
+                return;
+
+            child->setState(s);
         }
     }
 

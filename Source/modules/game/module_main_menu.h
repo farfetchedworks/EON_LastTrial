@@ -16,6 +16,7 @@ class ModuleEONMainMenu : public IModule
 
   private:
     void onNewGame();
+    void onSettings() {}
     void onExit();
 
     input::CModule* _player1 = nullptr;

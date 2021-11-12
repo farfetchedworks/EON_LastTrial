@@ -78,6 +78,13 @@ void TCompHealth::update(float dt)
         ui::TImageParams& params = fill->imageParams;
         params.alpha_cut = (float)lerp_health / (float)max_health;
     }
+
+    /*wChild = w->getChildByName("bar_background");
+    if (wChild) {
+        ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+        ui::TImageParams& params = fill->imageParams;
+        params.alpha_cut = (float)lerp_health / (float)max_health;
+    }*/
 }
 
 void TCompHealth::debugInMenu()

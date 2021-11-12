@@ -15,8 +15,9 @@ bool ModuleEONMainMenu::start()
 
     EngineUI.activateWidget("eon_main_menu");
 
-    _menuController.bind("bt_new_game", std::bind(&ModuleEONMainMenu::onNewGame, this));
-    _menuController.bind("bt_exit", std::bind(&ModuleEONMainMenu::onExit, this));
+    _menuController.bind("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
+    _menuController.bind("settings_btn", std::bind(&ModuleEONMainMenu::onSettings, this));
+    _menuController.bind("exit_btn", std::bind(&ModuleEONMainMenu::onExit, this));
 
     _menuController.reset();
     _menuController.selectOption(0);

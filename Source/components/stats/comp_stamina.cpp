@@ -27,6 +27,7 @@ static NamedValues<EAction> output_names(output_entries, sizeof(output_entries) 
 void TCompStamina::load(const json& j, TEntityParseContext& ctx)
 {
 	max_stamina = j.value("max_stamina", max_stamina);
+	curr_max_stamina = j.value("curr_max_stamina", max_stamina);
 	recovery_frequency = j.value("recovery_frequency", recovery_frequency);
 	recovery_points = j.value("recovery_points", recovery_points);
 	recovery_penalization = j.value("recovery_penalization", recovery_penalization);
@@ -53,11 +54,18 @@ void TCompStamina::update(float dt)
 		ui::TImageParams& params = fill->imageParams;
 		params.alpha_cut = pct;
 	}
+
+	/*wChild = w->getChildByName("bar_background");
+	if (wChild) {
+		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+		ui::TImageParams& params = fill->imageParams;
+		params.alpha_cut = pct;
+	}*/
 }
 
 void TCompStamina::fillStamina()
 {
-	current_stamina = max_stamina;
+	current_stamina = curr_max_stamina;
 }
 
 void TCompStamina::reduceStamina(EAction player_action)
@@ -79,7 +87,7 @@ void TCompStamina::reduceStamina(EAction player_action)
 
 bool TCompStamina::hasMaxStamina()
 {
-	return (current_stamina == max_stamina);
+	return (current_stamina == curr_max_stamina);
 }
 
 bool TCompStamina::hasStamina(EAction player_action)
@@ -123,7 +131,7 @@ void TCompStamina::recoverStamina(bool can_recover, float dt)
 	}
 
 	if (time_elapsed >= recovery_frequency && current_stamina != max_stamina) {
-		current_stamina = std::min<float>(current_stamina + recovery_points, max_stamina);
+		current_stamina = std::min<float>(current_stamina + recovery_points, curr_max_stamina);
 		time_elapsed = 0;
 	}
 }
