@@ -19,6 +19,7 @@ namespace ui
     protected:
         float _time = 1.f;
         float _timer = 0.f;
+        float _factor = 0.f;
     };
 
     class CEffect_FadeOut : public CEffect_FadeIn
