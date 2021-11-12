@@ -233,6 +233,8 @@ void CDeferredRenderer::renderAO() {
 
 void CDeferredRenderer::renderDecals()
 {
+	if (irradiance_cache) return;
+
 	CTexture::deactivate(TS_DEFERRED_ALBEDOS);
 	CTexture::deactivate(TS_DEFERRED_NORMALS);
 	CTexture::deactivate(TS_DEFERRED_EMISSIVES);
@@ -246,7 +248,7 @@ void CDeferredRenderer::renderDecals()
 	ID3D11RenderTargetView* rts[nrender_targets] = {
 	  rt_albedos->getRenderTargetView(),
 	  rt_normals->getRenderTargetView(),
-	  rt_emissive->getRenderTargetView()
+	  rt_emissive->getRenderTargetView(),
 	};
 
 	/*const int n_uavs = 1;
@@ -309,6 +311,46 @@ void CDeferredRenderer::renderWater()
 	rt_emissive->activate(TS_DEFERRED_EMISSIVES);
 }
 
+void CDeferredRenderer::renderBlackHoles(CRenderToTexture* color_buffer, CTexture* prev_color)
+{
+	if (irradiance_cache) return;
+
+	CTexture::deactivate(TS_DEFERRED_ALBEDOS);
+	CTexture::deactivate(TS_DEFERRED_LINEAR_DEPTH);
+	CTexture::deactivate(TS_DEFERRED_NORMALS);
+	CTexture::deactivate(TS_DEFERRED_EMISSIVES);
+
+	// Activate el multi-render-target MRT
+	const int nrender_targets = 4;
+	ID3D11RenderTargetView* rts[nrender_targets] = {
+	  rt_albedos->getRenderTargetView(),
+	  rt_normals->getRenderTargetView(),
+	  rt_emissive->getRenderTargetView(),
+	  color_buffer->getRenderTargetView()
+	};
+
+	const int n_uavs = 1;
+	ID3D11UnorderedAccessView* uavs[n_uavs] = {
+	  rt_depth->getUAV()
+	};
+
+	Render.ctx->OMSetRenderTargetsAndUnorderedAccessViews(nrender_targets, rts, Render.depth_stencil_view, nrender_targets, n_uavs, uavs, nullptr);
+
+	rt_albedos->activateViewport();
+	prev_color->activate(TS_DEFERRED_ALBEDOS);
+
+	RenderManager.renderAll(eRenderChannel::RC_BLACK_HOLES, h_camera);
+
+	// Disable rendering to all render targets.
+	CRenderToTexture::deactivate(nrender_targets);
+
+	// Activate the gbuffer textures to other shaders
+	rt_albedos->activate(TS_DEFERRED_ALBEDOS);
+	rt_depth->activate(TS_DEFERRED_LINEAR_DEPTH);
+	rt_normals->activate(TS_DEFERRED_NORMALS);
+	rt_emissive->activate(TS_DEFERRED_EMISSIVES);
+}
+
 // ---------------------------------------------------------------
 void CDeferredRenderer::render(CRenderToTexture* out_rt, CHandle new_h_camera, int array_index)
 {
@@ -330,6 +372,4 @@ void CDeferredRenderer::render(CRenderToTexture* out_rt, CHandle new_h_camera, i
   renderSpotLights(true);
   renderEmissivePass();
   renderSkyBox();
-
-  rt_depth->activateCS(TS_DEFERRED_LINEAR_DEPTH);
 }

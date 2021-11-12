@@ -21,6 +21,7 @@ static NamedValues<eRenderChannel>::TEntry culling_render_channel_entries[] = {
   {eRenderChannel::RC_SHADOW_CASTERS_DYNAMIC, "dynamic_shadows"},
   {eRenderChannel::RC_DISTORSIONS, "distorsion"},
   {eRenderChannel::RC_WATER, "water"},
+  {eRenderChannel::RC_BLACK_HOLES, "black_hole"},
   {eRenderChannel::RC_EMISSIVE, "emissive"},
   {eRenderChannel::RC_TRANSPARENT, "transparent"},
   {eRenderChannel::RC_DECALS, "decals"},

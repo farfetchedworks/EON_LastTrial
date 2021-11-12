@@ -82,7 +82,7 @@ void TCompLightSpot::debugInMenu() {
       ImGui::DragFloat("Godrays Intensity", &godrays_intensity, 0.0f, 0.f, 10.f);
   
   ImGui::Image(shadows_rt->getZTexture()->getShaderResourceView(), ImVec2(256, 256));
-  Resources.edit(&pattern);
+  if (pattern) Resources.edit(&pattern);
 }
 
 void TCompLightSpot::renderDebug() {

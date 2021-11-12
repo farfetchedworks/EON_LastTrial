@@ -216,5 +216,5 @@ void spawnParticles(const std::string& name, VEC3 position, float radius, int it
 float expImpulse(float x, float k)
 {
     const float h = k * x;
-    return h * exp(1.0 - h);
+    return h * exp(1.f - h);
 }

@@ -45,6 +45,19 @@ void TCompWarpEnergy::update(float dt)
 		ui::TImageParams& params = fill->imageParams;
 		params.alpha_cut = pct;
 	}
+
+	if (empty_warp_timer > 0.f)
+	{
+		empty_warp_timer -= dt;
+
+		if (empty_warp_timer < 0.f)
+		{
+			ui::CWidget* wChild = w->getChildByName("bar_background_empty");
+			assert(wChild);
+			ui::CImage* img = static_cast<ui::CImage*>(wChild);
+			img->setVisible(false);
+		}
+	}
 }
 
 void TCompWarpEnergy::debugInMenu()
@@ -70,6 +83,25 @@ void TCompWarpEnergy::onHit(const TMsgHitWarpRecover& msg)
 
 	warp_energy = std::min<float>(warp_energy +
 		on_hit_amount_warp * multiplier, (float)max_warp_energy);
+}
+
+bool TCompWarpEnergy::hasWarpEnergy(int warp_cost)
+{ 
+	bool is_ok = floor(warp_energy) >= warp_cost;
+
+	if (!is_ok)
+	{
+		ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
+		assert(w);
+		ui::CWidget* wChild = w->getChildByName("bar_background_empty");
+		if (wChild) {
+			ui::CImage* img = static_cast<ui::CImage*>(wChild);
+			img->setVisible(true);
+			empty_warp_timer = 0.5f;
+		}
+	}
+
+	return is_ok;
 }
 
 void TCompWarpEnergy::consumeWarpEnergy(int warp_nrg_points)
