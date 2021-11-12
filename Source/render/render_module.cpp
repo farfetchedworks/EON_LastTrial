@@ -397,9 +397,11 @@ void CRenderModule::renderAll()
 	RenderManager.renderAll(eRenderChannel::RC_DISTORSIONS, e_camera);
 	RenderManager.renderAll(eRenderChannel::RC_TRANSPARENT, e_camera);
 
-	// Get last output
+	// Render black holes
 	_blackHole->copyFromResource(rt_final);
 	deferred_renderer.renderBlackHoles(rt_final, _blackHole);
+
+	rt_final->activateRT();
 
 	// Render projectile effects
 	_lastOutput->copyFromResource(rt_final); 
@@ -449,6 +451,8 @@ void CRenderModule::renderAll()
 
 	// HDR a ToneMapped+Gamma+LDR
 	drawFullScreenQuad("presentation.pipeline", curr_output, exposure_avg_texture);
+
+	deferred_renderer.getDepthFBO()->activateCS(TS_DEFERRED_LINEAR_DEPTH);
 }
 
 void CRenderModule::generateFrame()
