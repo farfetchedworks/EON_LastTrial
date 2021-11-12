@@ -1569,6 +1569,7 @@ public:
 			// If the combo continues, cancel the current animation and get the next attack to be executed
 			if (continue_combo) {
 				
+				ctx.setFSMVariable("combo_attack_active", true);
 				ctx.setNodeVariable(name, "current_hits", ++current_hits);						// Always increment the amount of hits struck
 				
 				// If the previous attack was a regular attack, go to the next regular attack or to a strong attack
@@ -1588,22 +1589,16 @@ public:
 										
 				}
 				else {
-					// If the previous attack was strong
-					// Check if the next attack should be regular or strong
-					bool is_strong = rand() % 100 < strong_prob;
-					if (!is_strong) {
-						ctx.setNodeVariable(name, "current_fsm_var", std::string("is_regular_attacking"));
-						ctx.setFSMVariable("is_regular_attacking", 1);
-						ctx.setFSMVariable("is_strong_attacking", 0);
-					}
-					else {
-						ctx.setFSMVariable("is_strong_attacking", 1);
-					}
+					// If the previous attack was strong it should only go to a regular attack
+					ctx.setNodeVariable(name, "current_fsm_var", std::string("is_regular_attacking"));
+					ctx.setFSMVariable("is_regular_attacking", 1);
+					ctx.setFSMVariable("is_strong_attacking", 0);
 				}
 				
 			}
 			else {
-				ctx.setFSMVariable(fsm_var, 0);
+				// If the combo does not continue, inactive the combo so that the variable can be reset in the FSM
+				ctx.setFSMVariable("combo_attack_active", false);
 			}
 
 			controller->setWeaponStatusAndDamage(false);
@@ -1646,7 +1641,18 @@ public:
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
 		// Only update the variable of the animation that is currently being executed
 		std::string fsm_var = ctx.getNodeVariable<std::string>(name, "current_fsm_var");
-		return tickCondition(ctx, fsm_var, dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+		EBTNodeResult result = tickCondition(ctx, fsm_var, dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+		
+		// If the task has finished, set the variables to -1 for another execution
+		if (result == EBTNodeResult::SUCCEEDED)
+			cleanTask(ctx);
+
+		return result;
+	}
+
+	void cleanTask(CBTContext& ctx) override {
+		ctx.setFSMVariable("is_regular_attacking", -1);
+		ctx.setFSMVariable("is_strong_attacking", -1);
 	}
 };
 
