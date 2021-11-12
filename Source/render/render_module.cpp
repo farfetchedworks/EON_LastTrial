@@ -171,9 +171,9 @@ bool CRenderModule::start()
 	rt_deferred_output = new CRenderToTexture;
 	is_ok &= rt_deferred_output->createRT("rt_deferred_output.dds", xres, yres, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_UNKNOWN, true);
 
-	_areaDelayFBO = new CTexture;
-	is_ok &= _areaDelayFBO->create("area_delay.dds", xres, yres, DXGI_FORMAT_R16G16B16A16_FLOAT, CTexture::CREATE_DYNAMIC);
-	Resources.registerResource(_areaDelayFBO, "rt_area_delay.dds", getClassResourceType<CTexture>());
+	_blackHole = new CTexture;
+	is_ok &= _blackHole->create("black_hole.dds", xres, yres, DXGI_FORMAT_R16G16B16A16_FLOAT, CTexture::CREATE_DYNAMIC);
+	Resources.registerResource(_blackHole, "rt_black_hole.dds", getClassResourceType<CTexture>());
 
 	_lastOutput = new CTexture;
 	is_ok &= _lastOutput->create("last_rt_final.dds", xres, yres, DXGI_FORMAT_R16G16B16A16_FLOAT, CTexture::CREATE_DYNAMIC);
@@ -382,9 +382,6 @@ void CRenderModule::renderAll()
 
 	EngineFluidSimulation.deactivateFluids();
 
-	// Get last output
-	_lastOutput->copyFromResource(rt_final);
-
 	rt_final->activateRT();
 	rt_deferred_output->activate(TS_DEFERRED_OUTPUT);
 	rt_deferred_output->activateCS(TS_DEFERRED_OUTPUT);
@@ -398,13 +395,17 @@ void CRenderModule::renderAll()
 	exposure_avg_texture->activate(TS_EXPOSURE);
 
 	RenderManager.renderAll(eRenderChannel::RC_DISTORSIONS, e_camera);
-
 	RenderManager.renderAll(eRenderChannel::RC_TRANSPARENT, e_camera);
 
+	// Get last output
+	_blackHole->copyFromResource(rt_final);
+	deferred_renderer.renderBlackHoles(rt_final, _blackHole);
+
 	// Render projectile effects
-	_areaDelayFBO->copyFromResource(rt_final);
-	TCompAreaDelayProjectile::renderAll(_areaDelayFBO);
-	TCompWaveProjectile::renderAll(_areaDelayFBO);
+	_lastOutput->copyFromResource(rt_final); 
+
+	TCompAreaDelayProjectile::renderAll(_lastOutput);
+	TCompWaveProjectile::renderAll(_lastOutput);
 
 	CTexture::deactivate(TS_EXPOSURE);
 
@@ -501,7 +502,7 @@ void CRenderModule::generateFrame()
 
 void CRenderModule::stop() {
 	SAFE_DESTROY(rt_deferred_output);
-	SAFE_DESTROY(_areaDelayFBO);
+	SAFE_DESTROY(_blackHole);
 	SAFE_DESTROY(_lastOutput);
 	SAFE_DESTROY(rt_final);
 	SAFE_DESTROY(exposure_avg_texture);
