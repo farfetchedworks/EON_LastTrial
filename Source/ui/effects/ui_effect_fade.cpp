@@ -11,6 +11,8 @@ namespace ui
 
     void CEffect_FadeIn::setTimeFactor(CWidget* widget, float f)
     {
+        _factor = f;
+
         TImageParams* iParams = widget->getImageParams();
         if (iParams)
             iParams->time_normalized = f;
@@ -27,12 +29,13 @@ namespace ui
         if (widget->getState() != EState::STATE_IN)
             return;
 
-        _timer += elapsed;
+        _timer += Time.delta_unscaled;
 
         if (_timer > _time)
         {
             _timer = 0.f;
             widget->setState(EState::STATE_NONE);
+            widget->propagateState(EState::STATE_IN);
             return;
         }
 
@@ -43,6 +46,7 @@ namespace ui
     {
         ImGui::DragFloat("Timer", &_timer, kDebugMenuSensibility);
         ImGui::DragFloat("Fade Time", &_time, kDebugMenuSensibility);
+        ImGui::DragFloat("Factor", &_factor, kDebugMenuSensibility);
     }
 
     // Fade out
@@ -57,12 +61,13 @@ namespace ui
         if (widget->getState() != EState::STATE_OUT)
             return;
 
-        _timer += elapsed;
+        _timer += Time.delta_unscaled;
 
         if (_timer > _time)
         {
             _timer = 0.f;
             widget->setState(EState::STATE_CLEAR);
+            widget->propagateState(EState::STATE_OUT);
             return;
         }
 

@@ -10,6 +10,7 @@ namespace ui
         bool auto_loop = true;
         bool additive = false;
         float time_normalized = 1.f;
+        const CPipelineState* fx_pipeline = nullptr;
 
         void renderInMenu();
     };

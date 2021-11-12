@@ -13,7 +13,9 @@ namespace ui
         TTextParams& tParams = _currentState ? _currentState->textParams : textParams;
             
         ui.renderBitmap(_worldTransform, iParams, _worldSize);
-        ui.renderText(_worldTransform, tParams, _worldSize);
+        
+        if(tParams.font)
+            ui.renderText(_worldTransform, tParams, _worldSize);
     }
 
     void CButton::renderInMenu()

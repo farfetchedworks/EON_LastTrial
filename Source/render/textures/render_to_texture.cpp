@@ -230,9 +230,9 @@ CRenderToTexture* CRenderToTexture::activateRT(ID3D11DepthStencilView* new_depth
 }
 
 void CRenderToTexture::deactivate(int num_rts) {
-  assert(num_rts <= 4);
+  assert(num_rts <= 5);
   // Disable rendering to all render targets.
-  ID3D11RenderTargetView* rt_nulls[4] = { nullptr, nullptr, nullptr, nullptr };
+  ID3D11RenderTargetView* rt_nulls[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
   Render.ctx->OMSetRenderTargets(num_rts, rt_nulls, nullptr);
 }
 

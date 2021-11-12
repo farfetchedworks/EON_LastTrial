@@ -78,6 +78,13 @@ void TCompHealth::update(float dt)
         ui::TImageParams& params = fill->imageParams;
         params.alpha_cut = (float)lerp_health / (float)max_health;
     }
+
+    /*wChild = w->getChildByName("bar_background");
+    if (wChild) {
+        ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+        ui::TImageParams& params = fill->imageParams;
+        params.alpha_cut = (float)lerp_health / (float)max_health;
+    }*/
 }
 
 void TCompHealth::debugInMenu()
@@ -169,13 +176,15 @@ void TCompHealth::setHealth(int value)
 
 void TCompHealth::fillHealth()
 {
-    health = max_health;
-    lerp_health = max_health;
+    health = curr_max_health;
+    lerp_health = curr_max_health;
+
+    dbg("Current health %d\n", health);
 }
 
 void TCompHealth::increaseHealth(int health_points)
 {
-    health = std::min<int>(health + health_points, max_health);
+    health = std::min<int>(health + health_points, curr_max_health);
     lerp_health = health;
 }
 

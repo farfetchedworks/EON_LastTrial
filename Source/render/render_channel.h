@@ -9,6 +9,7 @@ enum eRenderChannel {
   RC_EMISSIVE,
   RC_DISTORSIONS,
   RC_WATER,
+  RC_BLACK_HOLES,
   RC_DECALS,
   RC_TRANSPARENT,
   RC_UI,

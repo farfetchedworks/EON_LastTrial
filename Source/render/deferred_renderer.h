@@ -35,4 +35,7 @@ public:
   bool create(int xres, int yres, bool irradiance_cache = false);
   void destroy();
   void render(CRenderToTexture* out_rt, CHandle new_h_camera, int array_index = 0);
+  void renderBlackHoles(CRenderToTexture* color_buffer, CTexture* prev_color);
+  CRenderToTexture* getDepthFBO() { return rt_depth; }
+
 };

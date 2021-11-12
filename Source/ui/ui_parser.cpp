@@ -112,7 +112,6 @@ namespace ui
         {
             CVideo* video = new CVideo();
             parseVideoParams(video->videoParams, jData);
-
             return video;
         }
 
@@ -120,7 +119,6 @@ namespace ui
         {
             CImage* image = new CImage();
             parseImageParams(image->imageParams, jData);
-
             return image;
         }
 
@@ -128,7 +126,6 @@ namespace ui
         {
             CText* text = new CText();
             parseTextParams(text->textParams, jData);
-
             return text;
         }
 
@@ -136,7 +133,6 @@ namespace ui
         {
             CProgressBar* bar = new CProgressBar();
             parseImageParams(bar->imageParams, jData);
-
             return bar;
         }
 
@@ -244,6 +240,11 @@ namespace ui
             }
             
             params.additive = jData.value("additive", params.additive);
+            std::string fx = jData.value("fx", std::string());
+            if (fx.length() > 0)
+            {
+                params.fx_pipeline = Resources.get(fx)->as<CPipelineState>();
+            }
         }
 
         void parseImageParams(TImageParams& params, const json& jData)

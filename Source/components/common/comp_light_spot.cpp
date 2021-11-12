@@ -82,7 +82,7 @@ void TCompLightSpot::debugInMenu() {
       ImGui::DragFloat("Godrays Intensity", &godrays_intensity, 0.0f, 0.f, 10.f);
   
   ImGui::Image(shadows_rt->getZTexture()->getShaderResourceView(), ImVec2(256, 256));
-  Resources.edit(&pattern);
+  if (pattern) Resources.edit(&pattern);
 }
 
 void TCompLightSpot::renderDebug() {
@@ -178,7 +178,7 @@ void TCompLightSpot::generateShadowMap() {
           TCompTransform* c_trans_player = player->get<TCompTransform>();
           TCompTransform* c_trans_camera = h_transform;
 
-          if (c_trans_player->distance(*c_trans_camera) > getFar()) {
+          if (c_trans_player->distance(*c_trans_camera) > getFar() * 1.5f) {
               return;
           }
       }

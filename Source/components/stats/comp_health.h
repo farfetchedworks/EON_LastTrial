@@ -15,7 +15,8 @@ class TCompHealth : public TCompBase {
 
     int health                  = 100;
     int lerp_health             = 100;
-    int max_health              = 100;
+    int curr_max_health         = 100;
+    int max_health              = 200;
 
     int     lastDamageTaken       = 0;
 
@@ -33,6 +34,8 @@ class TCompHealth : public TCompBase {
 
     const interpolators::IInterpolator* interpolator = nullptr;
 
+    void setMaxHealth(int value) { max_health = value; }
+
 public:
 
     void debugInMenu();
@@ -44,11 +47,12 @@ public:
     void onReduceHealth(const TMsgReduceHealth& msg);
 
     const int getHealth() const { return health; }
+    const int getCurrMaxHealth() const { return curr_max_health; }
     const int getMaxHealth() const { return max_health; }
     const float getHealthPercentage() const { return (float)health / (float)max_health; }
 
     void setRenderActive(bool active) { render_active = active; }
-    void setMaxHealth(int value) { max_health = value; }
+    void setCurrMaxHealth(int value) { curr_max_health = value; }
     void setHealth(int value);
 
     // returns if the animation has been completed and sets it to completed

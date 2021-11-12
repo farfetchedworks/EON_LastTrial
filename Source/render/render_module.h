@@ -48,7 +48,7 @@ class CRenderModule : public IModule
     CRenderToTexture* rt_deferred_output = nullptr;
     CRenderToTexture* rt_final = nullptr;
     
-    CTexture* _areaDelayFBO = nullptr;
+    CTexture* _blackHole = nullptr;
     CTexture* _lastOutput = nullptr;
     
     TCompCompute comp_exposure;
