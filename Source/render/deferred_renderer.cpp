@@ -321,16 +321,21 @@ void CDeferredRenderer::renderBlackHoles(CRenderToTexture* color_buffer, CTextur
 	CTexture::deactivate(TS_DEFERRED_EMISSIVES);
 
 	// Activate el multi-render-target MRT
-	const int nrender_targets = 5;
+	const int nrender_targets = 4;
 	ID3D11RenderTargetView* rts[nrender_targets] = {
 	  rt_albedos->getRenderTargetView(),
 	  rt_normals->getRenderTargetView(),
-	  rt_depth->getRenderTargetView(),
 	  rt_emissive->getRenderTargetView(),
 	  color_buffer->getRenderTargetView()
 	};
 
-	Render.ctx->OMSetRenderTargets(nrender_targets, rts, Render.depth_stencil_view);
+	const int n_uavs = 1;
+	ID3D11UnorderedAccessView* uavs[n_uavs] = {
+	  rt_depth->getUAV()
+	};
+
+	Render.ctx->OMSetRenderTargetsAndUnorderedAccessViews(nrender_targets, rts, Render.depth_stencil_view, nrender_targets, n_uavs, uavs, nullptr);
+
 	rt_albedos->activateViewport();
 	prev_color->activate(TS_DEFERRED_ALBEDOS);
 

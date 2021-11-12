@@ -37,18 +37,17 @@ struct onCygnusF1ToF2 : public CAnimationCallback
 		{
 			if (!correct_pos) {
 				CEntity* e = getOwnerEntity(userData);
-				VEC3 pos = TaskUtils::getBoneWorldPosition(e, "cygnus_head_jnt");
-				pos.y = e->getPosition().y + 0.02f;
+				VEC3 pos = TaskUtils::getBoneWorldPosition(e, "cygnus_hole_jnt");
 				trans->setPosition(pos);
 				correct_pos = true;
 			}
 
-			t += Time.delta * 2.f;
+			t += Time.delta * 0.8f;
 			trans->setScale(VEC3(t));
 		}
 		// Close [9.25-end]
 		else if (anim_time > 9.f) {
-			t -= Time.delta * 2.f;
+			t -= Time.delta * 0.8f;
 			t = std::max(t, 0.f);
 			trans->setScale(VEC3(t));
 		}
