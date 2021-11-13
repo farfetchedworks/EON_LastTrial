@@ -10,6 +10,9 @@
 
 bool ModuleEONMainMenu::start()
 {
+    debugging = true;
+    CApplication::get().changeMouseState(debugging, false);
+
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 

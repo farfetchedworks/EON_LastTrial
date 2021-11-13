@@ -276,6 +276,7 @@ namespace ui
         changed = changed || ImGui::DragFloat2("Size", &_localSize.x, kDebugMenuSensibility);
         changed = changed || ImGui::DragFloat2("Pivot", &_pivot.x, kDebugMenuSensibility);
 
+        ImGui::DragInt("Priority", &_priority, 1, 0, 10);
         ImGui::Checkbox("Visible", &_visible);
 
         if (changed)

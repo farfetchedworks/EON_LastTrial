@@ -59,17 +59,16 @@ void ModuleEONLoadingScreen::update(float dt)
             // Change textures of states
             {
                 ui::CButton* btn = static_cast<ui::CButton*>(w);
-                for (auto& s : btn->states)
-                {
-                    s.second.imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_selected.dds")->as<CTexture>();
-                }
+                btn->states["default"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue.dds")->as<CTexture>();
+                btn->states["selected"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_selected.dds")->as<CTexture>();
+                btn->states["pressed"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_selected.dds")->as<CTexture>();
             }
 
             // Change basic texture
             {
                 ui::CImage* img = static_cast<ui::CImage*>(w);
                 ui::TImageParams& params = img->imageParams;
-                params.texture = Resources.get("data/textures/ui/subvert/menu/continue_selected.dds")->as<CTexture>();
+                params.texture = Resources.get("data/textures/ui/subvert/menu/continue.dds")->as<CTexture>();
             }
         }
     }

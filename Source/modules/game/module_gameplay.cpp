@@ -143,11 +143,6 @@ void ModuleEONGameplay::update(float dt)
 		if (PlayerInput['L'].getsPressed()) {
 			EngineLua.openConsole();
 		}
-
-		// render Imgui in any mode
-		if (PlayerInput['I'].getsPressed()) {
-			CRenderModule::RENDER_IMGUI = !CRenderModule::RENDER_IMGUI;
-		}
 	}
 
 	CEntity* e_camera = EngineRender.getActiveCamera();

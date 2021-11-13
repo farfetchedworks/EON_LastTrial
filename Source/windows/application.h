@@ -10,6 +10,7 @@ class CApplication {
     static CApplication* the_app;
 
     bool mouse_visible = true;
+    bool wnd_mouse_visible = false;
     bool mouse_centered = false;
     bool should_exit = false;
 
@@ -28,9 +29,11 @@ public:
     void getDimensions(int& awidth, int& aheight) const;
     void setDimensions(int awidth, int aheight);
 
-    void setMouseVisible(bool hidden);
+    void setMouseVisible(bool visible);
+    void setWndMouseVisible(bool visible);
     void setMouseCentered(bool centered);
     bool getMouseHidden();
+    bool getWndMouseHidden();
     bool getMouseCentered();
     void exit() { should_exit = true; };
 

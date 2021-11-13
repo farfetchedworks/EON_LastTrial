@@ -65,8 +65,14 @@ namespace ui
 
     void CMenuController::selectOption(int idx)
     {
-        if(idx < 0 || idx >= _options.size())
+        if (idx < 0 || idx >= _options.size())
+        {
+            for (auto& option : _options)
+            {
+                option.button->changeToState("default");
+            }
             return;
+        }
 
         if (_currentOption != kUndefinedOption)
         {
@@ -105,11 +111,7 @@ namespace ui
         {
             last_mouse_pos = mouse_pos;
             hoveredButton = getButton(mouse_pos);
-
-            if (hoveredButton != -1) {
-                selectOption(hoveredButton);
-            }
-
+            selectOption(hoveredButton);
             isHoverButton = hoveredButton != -1;
         }
     }

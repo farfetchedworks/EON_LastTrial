@@ -16,6 +16,7 @@ class CRenderModule : public IModule
 
     void load(const std::string& filename);
     bool start() override;
+    void update(float dt) override;
     void stop() override;
     void renderInMenu() override;
 
