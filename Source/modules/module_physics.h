@@ -76,14 +76,14 @@ public:
 	std::vector<DBG_Line> _debugLines;
 
 	// Creates a raycast and saves the results in a colliders vector and gives THE FIRST HIT
-	bool raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, VEC3& first_hit, physx::PxU32 hitMask = CModulePhysics::FilterGroup::All);
+	bool raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, VEC3& first_hit, physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool render_debug = false);
 
 	// Creates a raycast and saves the results in a colliders vector
-	bool raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool getClosestHit = false);
+	bool raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool getClosestHit = false, bool render_debug = false);
 
 	// Creates a raycast and returns a raycast buffer to get information about each hit
 	bool raycast(const VEC3& origin, const VEC3& dir, float distance, std::vector<physx::PxRaycastHit>& raycastHits,
-		physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool getClosestHit = false, bool render_debug = true);
+		physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool getClosestHit = false, bool render_debug = false);
 
 	bool sweep(physx::PxTransform initial_pose, const VEC3& dir, float distance, const physx::PxGeometry& shape, std::vector<physx::PxSweepHit>& sweepHits,
 		physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool getClosestHit = false, bool render_debug = true);

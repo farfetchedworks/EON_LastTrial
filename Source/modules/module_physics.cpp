@@ -1340,7 +1340,7 @@ bool CModulePhysics::sweep(PxTransform initial_pose, const VEC3& dir, float dist
 	Fills the vector "colliders" with the handle of the colliders which were detected in the hit
 	If GetClosestHit is True, it will return the first blocking hit (by default is false)
 */
-bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, PxU32 hitMask, bool getClosestHit)
+bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, PxU32 hitMask, bool getClosestHit, bool render_debug)
 {
 	std::vector<physx::PxRaycastHit> raycastHits;
 	bool status = raycast(origin, dir, distance, raycastHits, hitMask, getClosestHit);
@@ -1365,7 +1365,7 @@ bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance
 			}
 		}
 
-		if (1)
+		if (render_debug)
 		{
 			DBG_Line line;
 			line.origin = origin;
@@ -1379,7 +1379,7 @@ bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance
 	return status;
 }
 
-bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, VEC3& first_hit, PxU32 hitMask)
+bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, VEC3& first_hit, PxU32 hitMask, bool render_debug)
 {
 	std::vector<physx::PxRaycastHit> raycastHits;
 	bool status = raycast(origin, dir, distance, raycastHits, hitMask, true);
@@ -1392,7 +1392,7 @@ bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance
 		colliders.push_back(h_collider);
 		first_hit = PXVEC3_TO_VEC3(raycastHits[0].position);
 
-		if (1)
+		if (render_debug)
 		{
 			DBG_Line line;
 			line.origin = origin;
