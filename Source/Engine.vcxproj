@@ -210,6 +210,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="audio\module_audio.cpp" />
+    <ClCompile Include="modules\game\module_loading_screen.cpp" />
     <ClCompile Include="modules\module_boot.cpp" />
     <ClCompile Include="modules\module_camera_mixer.cpp" />
     <ClCompile Include="modules\module_entities.cpp" />
@@ -481,6 +482,7 @@
     <ClInclude Include="lua\sol\forward.hpp" />
     <ClInclude Include="lua\sol\sol.hpp" />
     <ClInclude Include="mcv_platform.h" />
+    <ClInclude Include="modules\game\module_loading_screen.h" />
     <ClInclude Include="modules\module.h" />
     <ClInclude Include="audio\module_audio.h" />
     <ClInclude Include="modules\module_boot.h" />

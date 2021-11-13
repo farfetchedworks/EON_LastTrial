@@ -278,6 +278,7 @@
     <ClCompile Include="animation\callbacks\cygnus_f1_to_f2.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
     <ClCompile Include="animation\callbacks\pray_callback.cpp" />
+    <ClCompile Include="modules\game\module_loading_screen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\nn_interpolator.h" />
@@ -574,6 +575,7 @@
     <ClInclude Include="modules\game\module_splash_screen.h" />
     <ClInclude Include="modules\game\module_you_died.h" />
     <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
+    <ClInclude Include="modules\game\module_loading_screen.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

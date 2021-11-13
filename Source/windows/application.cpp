@@ -69,13 +69,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEWHEEL:
 	case WM_INPUT:
 	{
-		std::vector<input::IDevice*> devices = CEngine::get().getInput(input::PLAYER_1)->getDevices();
-		for (auto device : devices)
+		for (auto input : CEngine::get().getInputs())
 		{
-			input::IDeviceWindows* winDevice = dynamic_cast<input::IDeviceWindows*>(device);
-			if (winDevice)
+			std::vector<input::IDevice*> devices = input->getDevices();
+			for (auto device : devices)
 			{
-				winDevice->processMsg(hWnd, message, wParam, lParam);
+				input::IDeviceWindows* winDevice = dynamic_cast<input::IDeviceWindows*>(device);
+				if (winDevice)
+				{
+					winDevice->processMsg(hWnd, message, wParam, lParam);
+				}
 			}
 		}
 		break;
@@ -98,6 +101,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// Application lost focus   
 		{
 			PlayerInput.clearInput();
+			CEngine::get().getInput(input::MENU)->clearInput();
 		}
 	}
 

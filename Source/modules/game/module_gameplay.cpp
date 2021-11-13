@@ -39,6 +39,7 @@ bool ModuleEONGameplay::start()
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;
 
+	// TODO: Poner esto después de la cinematica de inicio
 	PlayerInput.unBlockInput();
 
 	// Activate UI

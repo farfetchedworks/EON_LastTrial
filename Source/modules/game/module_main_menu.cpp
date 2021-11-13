@@ -10,11 +10,12 @@
 
 bool ModuleEONMainMenu::start()
 {
-    _player1 = CEngine::get().getInput(input::PLAYER_1);
-    assert(_player1);
+    input = CEngine::get().getInput(input::MENU);
+    assert(input);
 
     EngineUI.activateWidget("eon_main_menu");
 
+    _menuController.setInput(input);
     _menuController.bind("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
     _menuController.bind("settings_btn", std::bind(&ModuleEONMainMenu::onSettings, this));
     _menuController.bind("exit_btn", std::bind(&ModuleEONMainMenu::onExit, this));
@@ -32,8 +33,6 @@ bool ModuleEONMainMenu::start()
 void ModuleEONMainMenu::stop()
 {
     EngineUI.deactivateWidget("eon_main_menu");
-    EngineUI.getWidget("text_loading")->setVisible(false);
-    
     EngineAudio.stopCurMusicEvent();
     EngineAudio.unloadBank("OutOfGame.bank");
 }
@@ -43,7 +42,7 @@ void ModuleEONMainMenu::update(float dt)
     _menuController.update(dt);
 
     // Exit game
-    if (PlayerInput["exit_game"].getsPressed()) {
+    if (input->getButton("exit_game").getsPressed()) {
         onExit();
     }
 }
@@ -51,8 +50,7 @@ void ModuleEONMainMenu::update(float dt)
 void ModuleEONMainMenu::onNewGame()
 {
     CModuleManager& modules = CEngine::get().getModuleManager();
-    EngineUI.getWidget("text_loading")->setVisible(true);
-    modules.changeToGamestate("playing");
+    modules.changeToGamestate("loading");
 }
 
 void ModuleEONMainMenu::onExit()

@@ -33,6 +33,7 @@
 
 // Eon's modules
 #include "modules/game/module_splash_screen.h"
+#include "modules/game/module_loading_screen.h"
 #include "modules/game/module_main_menu.h"
 #include "modules/game/module_gameplay.h"
 #include "modules/game/module_you_died.h"
@@ -75,6 +76,7 @@ void CEngine::init()
 {
   PROFILE_FUNCTION("Engine::init");
   static ModuleEONSplashScreen splash_screen_module("eon_splash_screen");
+  static ModuleEONLoadingScreen loading_screen_module("eon_loading_screen");
   static ModuleEONMainMenu mainmenu_module("eon_main_menu");
   static ModuleEONGameplay gameplay_module("eon_gameplay");
   static ModuleEONYouDied you_died_module("eon_you_died");
@@ -96,6 +98,7 @@ void CEngine::init()
   _physics = new CModulePhysics("physics");
   _cameraMixer = new CModuleCameraMixer("camera_mixer");
   _input.push_back(new input::CModule("input_1", input::PLAYER_1));
+  _input.push_back(new input::CModule("input_2", input::MENU));
   _navMesh = new CModuleNavMesh("navmesh");
   _eventSystem = new CModuleEventSystem("event_system");
   _tools = new CModuleTools("tools");
@@ -138,6 +141,7 @@ void CEngine::init()
 
   // Eon's specific
   _moduleManager.registerGameModule(&splash_screen_module);
+  _moduleManager.registerGameModule(&loading_screen_module);
   _moduleManager.registerGameModule(&mainmenu_module);
   _moduleManager.registerGameModule(&gameplay_module);
   _moduleManager.registerGameModule(&you_died_module);
@@ -205,7 +209,7 @@ input::CModule* CEngine::getInput(int id)
 
 void CEngine::initInput(input::CModule* input)
 {
-  assert(input);
+    assert(input);
 
     input->registerDevice(new input::CDeviceKeyboardWindows());
     input->registerDevice(new input::CDeviceMouseWindows(CApplication::get().getHandle()));

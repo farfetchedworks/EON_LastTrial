@@ -29,6 +29,7 @@ class CEngine
 
 public:
   static CEngine& get();
+  std::vector<input::CModule*> getInputs() { return _input; };
 
   void init();
   void destroy();

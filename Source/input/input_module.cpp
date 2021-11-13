@@ -8,22 +8,36 @@ namespace input
 {
     const TButton TButton::dummy;
     std::map<std::string, TButtonDef> CModule::_definitions;
-    bool CModule::_blocked = false;
 
     CModule::CModule(const std::string& name, int id)
         : IModule(name)
         , _id(id)
         , _mapping(*this)
-    {}
+    {
+        if (id != MENU)
+        {
+            _playerInput = true;
+        }
+    }
 
     bool CModule::start()
     {
-        blockInput();
+        if (_playerInput)
+        {
+            blockInput();
+        }
+
         return true;
     }
 
     void CModule::update(float delta)
     {
+        // Block input in the gameplay state
+        // bool inGame = CEngine::get().getModuleManager().inGamestate("playing");
+
+        if (_blocked)
+            return;
+
         delta = Time.delta_unscaled;
 
         for (auto device : _devices)
@@ -37,14 +51,7 @@ namespace input
         _keyboard.update(delta);
         _mouse.update(delta);
         _pad.update(delta);
-
-        // Block input in the gameplay state
-        bool inGame = CEngine::get().getModuleManager().inGamestate("playing");
-
-        if (!inGame || (inGame && !_blocked))
-        {
-            _mapping.update(delta);
-        }
+        _mapping.update(delta);
     }
 
     void CModule::registerDevice(IDevice* device)
@@ -166,6 +173,8 @@ namespace input
 
         if (ImGui::TreeNode(getName().c_str()))
         {
+            ImGui::Checkbox("Blocked", &_blocked);
+
             if (ImGui::TreeNode("Keyboard"))
             {
                 for (int idx = 0; idx < NUM_KEYBOARD_KEYS; ++idx)

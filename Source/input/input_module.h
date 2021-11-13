@@ -43,13 +43,14 @@ namespace input
         static const TButtonDef* getButtonDefinition(const std::string& name);
         static const std::string& getButtonName(const TButtonDef& def);
 
-        static void blockInput() { _blocked = true; };
-        static void unBlockInput() { _blocked = false; };
-        static void toggleBlockInput() { _blocked = !_blocked; };
+        void blockInput() { _blocked = true; };
+        void unBlockInput() { _blocked = false; };
+        void toggleBlockInput() { _blocked = !_blocked; };
 
     private:
         int _id = 0;
-        static bool _blocked;
+        bool _blocked;
+        bool _playerInput;
 
         VDevices _devices;
         TKeyboardData _keyboard;

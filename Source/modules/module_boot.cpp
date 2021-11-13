@@ -15,10 +15,17 @@ static NamedValues<int> output_names(character_entries, sizeof(character_entries
 
 bool CModuleBoot::start()
 {
-	if (jBoot.size()) {
+	if (jBoot.size())
 		return true;
-	}
 
+	jBoot = loadJson("data/boot.json");
+	_loadPreview = jBoot.count("preview_mode") && jBoot["preview_mode"] == true;
+
+	return true;
+}
+
+bool CModuleBoot::customStart()
+{
 	return loadBoot("data/boot.json");
 }
 
@@ -44,12 +51,11 @@ bool CModuleBoot::loadBoot(const std::string& p)
 {
 	jBoot = loadJson(p);
 
-	// If preview enabled, forget about loading the game
-	if (jBoot.count("preview_mode") && jBoot["preview_mode"])
+	if (_loadPreview)
 	{
 		return loadPreviewBoot();
 	}
-	
+
 	// Pre load resources
 	if(jBoot.count("resources_to_load")){
 
@@ -87,6 +93,8 @@ bool CModuleBoot::loadBoot(const std::string& p)
 			h.sendMsg(msg);
 	}
 
+	_bootCompleted = true;
+
 	return true;
 }
 
@@ -101,8 +109,10 @@ bool CModuleBoot::destroyBoot()
 
 bool CModuleBoot::loadPreviewBoot()
 {
+	_loadPreview = false;
+	_previewEnabled = true;
+
 	bool is_ok = loadBoot("data/scenes/3dviewer/boot.json");
-	previewEnabled = true;
 	cte_world.boot_in_preview = 1.f;
 
 	// load entries
@@ -136,7 +146,7 @@ bool CModuleBoot::loadPreviewBoot()
 
 void CModuleBoot::renderInMenu()
 {
-	if (!previewEnabled)
+	if (!_previewEnabled)
 	{
 		
 	}
