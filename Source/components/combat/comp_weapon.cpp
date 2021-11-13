@@ -107,9 +107,6 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
             if (fabsf(position.y - target->getPosition().y) > 1.8f)
                 return;
 
-            // Blood Hit marker
-            //spawn("data/particles/hit_blood.json", t, ctx);
-
             // Blood Trail
             TCompPlayerController* controller = eParent->get<TCompPlayerController>();
             if (!controller) return;
@@ -126,7 +123,7 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
             }
             else if (std::get<bool>(controller->getVariable("is_sprint_strong_attack")) || 
                 controller->is_dash_strike) {
-                particlesName = "data/particles/splatter_blood_left.json";
+                particlesName = "data/particles/splatter_blood_front.json";
             }
             else {
                 int attackHeavy = std::get<int>(controller->getVariable("is_attacking_heavy"));
@@ -137,7 +134,7 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
                     {
                         // Vertical (up to down)
                         case 1:
-                            particlesName = "data/particles/splatter_blood_left.json";
+                            particlesName = "data/particles/splatter_blood_front.json";
                             break;
                         // Charge (left to right)
                         case 2:
