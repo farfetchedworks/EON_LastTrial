@@ -26,7 +26,7 @@ int CModuleFluidSimulation::addFluid(VEC3 position)
     fluid_instances[index].fluid_sim_handle = fluid_sim;
     fluid_instances[index].fluid_texture = texture;
     ctes_fluid_sim.fs_data[index].fs_position = position;
-    ctes_fluid_sim.fs_data[index].fs_size = 15;
+    ctes_fluid_sim.fs_data[index].fs_size = 8;
     ctes_fluid_sim.fs_data[index].fs_enabled = 1;
     ctes_fluid_sim.fs_data[index].fs_intensity = 0.0;
 
