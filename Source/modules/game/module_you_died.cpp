@@ -14,12 +14,13 @@ bool ModuleEONYouDied::start()
     CApplication::get().changeMouseState(true, false);
 
     EngineRender.setClearColor({ 0.f, 0.f, 0.f, 1.f });
-    _player1 = CEngine::get().getInput(input::PLAYER_1);
-    assert(_player1);
+    _input = CEngine::get().getInput(input::MENU);
+    assert(_input);
 
     EngineUI.activateWidget("eon_you_died");
     EngineUI.deactivateWidget("eon_hud");
 
+    _menuController.setInput(_input);
     _menuController.bind("bt_continue", std::bind(&ModuleEONYouDied::onContinue, this));
     _menuController.bind("bt_surrender", std::bind(&ModuleEONYouDied::onExit, this));
 
@@ -46,7 +47,7 @@ void ModuleEONYouDied::update(float dt)
     _menuController.update(dt);
 
     // Exit game
-    if (PlayerInput["exit_game"].getsPressed()) {
+    if (_input->getButton("exit_game").getsPressed()) {
         onExit();
     }
 }
