@@ -61,7 +61,7 @@ void ModuleEONLoadingScreen::update(float dt)
                 ui::CButton* btn = static_cast<ui::CButton*>(w);
                 btn->states["default"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue.dds")->as<CTexture>();
                 btn->states["selected"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_selected.dds")->as<CTexture>();
-                btn->states["pressed"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_selected.dds")->as<CTexture>();
+                btn->states["pressed"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_pressed.dds")->as<CTexture>();
             }
 
             // Change basic texture
