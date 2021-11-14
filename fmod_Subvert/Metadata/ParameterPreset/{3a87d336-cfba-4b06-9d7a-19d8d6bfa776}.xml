@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{3a87d336-cfba-4b06-9d7a-19d8d6bfa776}">
+		<property name="name">
+			<value>Cygnus_Phase</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{e6cb4f0e-215c-4789-bca9-bed488a138ab}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{e6cb4f0e-215c-4789-bca9-bed488a138ab}">
+		<property name="maximum">
+			<value>5</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
