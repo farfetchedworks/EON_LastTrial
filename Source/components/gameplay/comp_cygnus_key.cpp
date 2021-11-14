@@ -131,17 +131,35 @@ void TCompCygnusKey::setActive()
 
 void TCompCygnusKey::onAllKeysOpened()
 {
-	/*CEntity* e = getEntityByName("structures_controller");
-	assert(e);
-	
-	TCompRigidAnimationController* controller = get<TCompRigidAnimationController>();
-	controller->start();
+	// Play animation
+	{
+		CEntity* e = getEntityByName("Sculptures_Broken");
+		assert(e);
+		TCompRigidAnimationController* controller = e->get<TCompRigidAnimationController>();
+		assert(controller);
+		controller->start();
+		EngineLua.executeScript("shakeOnce(1.5, 2, 9)");
+	}
 
-	EngineLua.executeScript("shakeOnce(5, 0.1, 3)");*/
+	// Destroy collider
+	{
+		CEntity* e = getEntityByName("Sculptures_Broken_Collider");
+		assert(e);
+		TCompCollider* collider = e->get<TCompCollider>();
+		assert(collider);
+		collider->setGroupAndMask("none", "none");
+		e->destroy();
+	}
 }
 
 void TCompCygnusKey::debugInMenu()
 {
 	ImGui::DragInt("Order", &_order);
 	ImGui::Checkbox("Active", &_active);
+
+	if(ImGui::Button("Debug All opened"))
+	{
+		onAllKeysOpened();
+	}
+
 }
