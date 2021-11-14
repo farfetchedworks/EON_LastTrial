@@ -3,6 +3,7 @@
 #include "module_gameplay.h"
 #include "render/draw_primitives.h"
 #include "input/input_module.h"
+#include "modules/module_boot.h"
 #include "render/render_module.h"
 #include "entity/entity.h"
 #include "modules/module_entities.h"
@@ -31,6 +32,11 @@ bool ModuleEONGameplay::start()
 	// set initial mouse state
 	debugging = false;
 	CApplication::get().changeMouseState(debugging, false);
+
+	if (!Boot.ready())
+	{
+		Boot.customStart();
+	}
 
 	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
 	mixer.setOutputCamera(getEntityByName("camera_mixed"));
