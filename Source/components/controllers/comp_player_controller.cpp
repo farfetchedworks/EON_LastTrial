@@ -292,16 +292,16 @@ void TCompPlayerController::update(float dt)
 	}
 }
 
-bool TCompPlayerController::toggleFlyover(bool last_enabled)
+bool TCompPlayerController::toggleFlyover(bool was_enabled)
 {
 	// Keep positions in sync
 	{
 		CEntity* camera = getEntityByName("camera_mixed");
-		bool shiftPressed = PlayerInput[VK_SHIFT].isPressed();
-		if (shiftPressed && last_enabled) {
+		bool shiftPressed = isPressed(VK_SHIFT);
+		if (shiftPressed && was_enabled) {
 			PawnUtils::setPosition(getEntityByName("player"), camera->getPosition());
 		}
-		else if (shiftPressed && !last_enabled) {
+		else if (shiftPressed && !was_enabled) {
 			CEntity* flyover = getEntityByName("camera_flyover");
 			assert(flyover);
 			TCompTransform* last_cam_t = camera->get<TCompTransform>();
@@ -312,7 +312,7 @@ bool TCompPlayerController::toggleFlyover(bool last_enabled)
 
 	// Blend cameras
 	{
-		if (!last_enabled) {
+		if (!was_enabled) {
 			const TMixedCamera& last_used_camera = CameraMixer.getLastCamera();
 			last_camera = last_used_camera.entity;
 			assert(last_camera.isValid());
@@ -325,7 +325,7 @@ bool TCompPlayerController::toggleFlyover(bool last_enabled)
 		}
 	}
 
-	debugging = !last_enabled;
+	debugging = !was_enabled;
 	CApplication::get().changeMouseState(debugging);
 	PlayerInput.toggleBlockInput();
 	return debugging;

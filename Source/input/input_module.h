@@ -12,7 +12,7 @@ namespace input
         CModule(const std::string& name, int id);
 
         bool start() override;
-        void update(float delta) override;
+        void update(float dt) override;
         void renderInMenu() override;
 
         void registerDevice(IDevice* device);

@@ -4,6 +4,7 @@
 #include "comp_cygnus_key.h"
 #include "entity/entity_parser.h"
 #include "audio/module_audio.h"
+#include "input/input_module.h"
 #include "lua/module_scripting.h"
 #include "skeleton/comp_skeleton.h"
 #include "components/common/comp_parent.h"
@@ -29,9 +30,13 @@ void TCompCygnusKey::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 		setActive();
 }
 
-
 void TCompCygnusKey::update(float dt)
 {
+#ifdef _DEBUG
+	if (PlayerInput['O'].getsPressed())
+		onAllKeysOpened();
+#endif // _DEBUG
+
 	if (_waitTime > 0.f)
 	{
 		_waitTime -= dt;
@@ -131,6 +136,9 @@ void TCompCygnusKey::setActive()
 
 void TCompCygnusKey::onAllKeysOpened()
 {
+	if (_keysOpened)
+		return;
+
 	// Play animation
 	{
 		CEntity* e = getEntityByName("Sculptures_Broken");
@@ -138,18 +146,29 @@ void TCompCygnusKey::onAllKeysOpened()
 		TCompRigidAnimationController* controller = e->get<TCompRigidAnimationController>();
 		assert(controller);
 		controller->start();
-		EngineLua.executeScript("shakeOnce(1.5, 2, 9)");
+		EngineLua.executeScript("shakeOnce(2, 2, 9)");
 	}
 
 	// Destroy collider
+
+	CEntity* e = getEntityByName("Sculptures_Broken_Collider");
+	assert(e);
+	
 	{
-		CEntity* e = getEntityByName("Sculptures_Broken_Collider");
-		assert(e);
 		TCompCollider* collider = e->get<TCompCollider>();
 		assert(collider);
 		collider->setGroupAndMask("none", "none");
 		e->destroy();
 	}
+
+	// Spawn complete colliders
+	{
+		CTransform t;
+		t.setPosition(e->getPosition());
+		spawn("data/prefabs/Sculptures_Complete_Colliders.json", t);
+	}
+
+	_keysOpened = true;
 }
 
 void TCompCygnusKey::debugInMenu()
