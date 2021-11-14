@@ -679,6 +679,5 @@ void TCompCollider::enableCapsuleController()
 
 void TCompCollider::disableGravity(bool disable)
 {
-	physx::PxRigidDynamic* actor_collider = static_cast<physx::PxRigidDynamic*>(actor);
-	actor_collider->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, disable);
+	actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, disable);
 }
