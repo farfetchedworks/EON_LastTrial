@@ -9,6 +9,7 @@
 #include "audio/module_audio.h"
 #include "navmesh/module_navmesh.h"
 #include "entity/entity_parser.h"
+#include "components/common/comp_render.h"
 #include "components/common/comp_name.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_parent.h"
@@ -23,6 +24,7 @@
 #include "components/ai/comp_bt.h"
 #include "components/stats/comp_health.h"
 #include "skeleton/comp_skel_lookat.h"
+#include "skeleton/comp_attached_to_bone.h"
 
 /*
  *	Declare and implement all tasks here
@@ -1878,39 +1880,90 @@ public:
 class CBTTaskCygnusTeleport : public IBTTask
 {
 private:
-	VEC3 target_pos;
+	float initial_hole_scale = 0.16f;
+	float max_hole_scale = 2.5f;
+	float damp_speed = 8.f;
 
 public:
 	void init() override {
 
+		callbacks.onStartup = [&](CBTContext& ctx, float dt)
+		{
+			CEntity* owner = ctx.getOwnerEntity();
+			TCompParent* parent = owner->get<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(max_hole_scale), damp_speed, dt));
+		};
+
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		{
+			TCompRender* render = ctx.getComponent<TCompRender>();
+			render->setEnabled(false);
+			// Stop the animation and return to Locomotion state
+			TaskUtils::stopAction(ctx.getOwnerEntity(), "cygnus_f2_heal", 0.1f);
+		};
+
+		callbacks.onActive = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3::Zero, damp_speed, dt));
+		};
+
+		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			// Set the position
 			TCompCollider* h_collider = ctx.getComponent<TCompCollider>();
-			h_collider->setFootPosition(target_pos);
+			h_collider->setFootPosition(ctx.getBlackboard()->getValue<VEC3>(string_field));
 
 			// Set the rotation to look at Eon
 			CEntity* player = getPlayer();
-			VEC3 player_pos = player->getPosition();
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			TCompTransform* h_trans_eon = player->get<TCompTransform>();
 			h_trans->setRotation(h_trans_eon->getRotation());
-
-			// Stop the animation and return to Locomotion state
-			TaskUtils::stopAction(ctx.getOwnerEntity(), "cygnus_f2_heal", 0.f);
-			ctx.setFSMVariable("is_teleporting", 0);
 		};
 
+		callbacks.onRecovery = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+
+			TCompRender* render = ctx.getComponent<TCompRender>();
+			bool render_ok = render->draw_calls[0].enabled;
+
+			if (!render_ok)
+			{
+				t.setScale(damp<VEC3>(t.getScale(), VEC3(max_hole_scale), damp_speed, dt));
+				if (VEC3::Distance(t.getScale(), VEC3(max_hole_scale)) < 0.01f)
+				{
+					TCompRender* render = ctx.getComponent<TCompRender>();
+					render->setEnabled(true);
+				}
+			}
+			else
+			{
+				t.setScale(damp<VEC3>(t.getScale(), VEC3(initial_hole_scale), damp_speed, dt));
+				if (VEC3::Distance(t.getScale(), VEC3(initial_hole_scale)) < 0.01f)
+				{
+					ctx.setFSMVariable("is_teleporting", 0);
+				}
+			}
+		};
 	}
 
 	void onEnter(CBTContext& ctx) override {
-		target_pos = ctx.getBlackboard()->getValue<VEC3>(string_field);
+		
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
 		return tickCondition(ctx, "is_teleporting", dt, false);
 	}
-
 };
 
 class CBTTaskCygnusChangePhase : public IBTTask
@@ -1920,7 +1973,7 @@ private:
 
 public:
 	void init() override {
-		phase_num = number_field[0];
+		phase_num = (int)number_field[0];
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {		
