@@ -12,13 +12,12 @@ private:
 
 	int damage = 10;
 
-	CHandle projectile_transform;
-	CHandle projectile_collider;
-	CHandle target;											// Target of the projectile when chasing the player
-	CHandle trail;
+	CHandle h_collider;
+	CHandle h_transform;
 
-	VEC3 front;
-	VEC3 initial_scale;
+	CTransform		local_trans;
+
+	VEC3 offset;
 
 	void destroy();
 

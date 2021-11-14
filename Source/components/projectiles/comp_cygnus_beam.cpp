@@ -6,24 +6,19 @@
 #include "lua/module_scripting.h"
 #include "entity/entity_parser.h"
 #include "../bin/data/shaders/constants_particles.h"
+#include "modules/module_physics.h"
 
 DECL_OBJ_MANAGER("cygnus_beam", TCompCygnusBeam)
 
 void TCompCygnusBeam::load(const json& j, TEntityParseContext& ctx)
 {
 	damage = j.value("damage", damage);
+	offset = loadVEC3(j, "offset");
 }
 
 void TCompCygnusBeam::setParameters(int new_damage)
 {
 	damage = new_damage;
-	//assert(trail.isValid());
-
-	//CEntity* e = trail;
-	//TCompBuffers* buffers = e->get<TCompBuffers>();
-	//CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(buffers->getCteByName("CtesParticleSystem"));
-	//cte->emitter_initial_pos = e->getPosition();
-	//cte->updateFromCPU();
 }
 
 void TCompCygnusBeam::debugInMenu()
@@ -32,10 +27,30 @@ void TCompCygnusBeam::debugInMenu()
 }
 
 void TCompCygnusBeam::onEntityCreated()
-{}
+{
+	h_collider = get<TCompCollider>();
+	h_transform = get<TCompTransform>();
+}
 
 void TCompCygnusBeam::update(float dt)
-{}
+{
+	// Apply the offset directly to the beam
+	TCompCollider* c_collider = h_collider;
+	TCompTransform* c_transform = h_transform;
+	assert(c_collider && c_transform);
+	assert(c_collider->actor);
+
+	CTransform t = static_cast<CTransform>(*c_transform);
+
+	CTransform t2;
+	t2.fromMatrix(MAT44::CreateTranslation(offset));
+	t = t.combinedWith(t2);
+
+	physx::PxTransform pose = toPxTransform(t);
+
+	c_collider->actor->setGlobalPose(pose);
+
+}
 
 // When the projectile hits something, sends a message to the player and gets destroyed
 void TCompCygnusBeam::onTriggerEnter(const TMsgEntityTriggerEnter& msg)
