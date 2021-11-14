@@ -3,6 +3,7 @@
 #include "engine.h"
 #include "render/render_module.h"
 #include "render/draw_primitives.h"
+#include "input/input_module.h"
 #include "modules/module_boot.h"
 #include "modules/game/module_fluid_simulation.h"
 #include "geometry/geometry.h"
@@ -208,6 +209,16 @@ bool CRenderModule::start()
 	return true;
 }
 
+void CRenderModule::update(float dt)
+{
+#ifndef _DEBUG
+	if (CEngine::get().getInput(input::MENU)->getKey('I').getsPressed())
+	{
+		RENDER_IMGUI = !RENDER_IMGUI;
+		CApplication::get().setWndMouseVisible(RENDER_IMGUI);
+	}
+#endif // _DEBUG
+}
 
 void CRenderModule::createPipelineFromJson(const std::string& name, const json& jdef)
 {

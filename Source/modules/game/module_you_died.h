@@ -19,7 +19,7 @@ private:
 	void onSurrender();
 	void onExit();
 
-	input::CModule* _player1 = nullptr;
+	input::CModule* _input = nullptr;
 	ui::CMenuController _menuController;
 	FMOD::Studio::EventInstance* fmod_event = nullptr;
 };

@@ -209,6 +209,7 @@ namespace ui
         void parseBaseParams(CWidget& params, const json& jData)
         {
             params.setVisible(jData.value("visible", true));
+            params.setPriority(jData.value("priority", 1));
             params.setName(jData.value("name", ""));
             params.setAlias(jData.value("alias", ""));
             params.setPivot(loadVEC2(jData, "pivot", VEC2::Zero));

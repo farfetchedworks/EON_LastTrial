@@ -19,6 +19,6 @@ class ModuleEONMainMenu : public IModule
     void onSettings() {}
     void onExit();
 
-    input::CModule* _player1 = nullptr;
+    input::CModule* input = nullptr;
     ui::CMenuController _menuController;
 };

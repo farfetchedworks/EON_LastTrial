@@ -39,6 +39,7 @@ bool ModuleEONGameplay::start()
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;
 
+	// TODO: Poner esto después de la cinematica de inicio
 	PlayerInput.unBlockInput();
 
 	// Activate UI
@@ -87,7 +88,11 @@ bool ModuleEONGameplay::start()
 			else {
 				CEntity* e_player_start = v_player_start[0];
 				TCompTransform* h_start_trans = e_player_start->get<TCompTransform>();
-				e_player->setTransform(*h_start_trans, true);
+				TCompTransform* h_player_trans = e_player->get<TCompTransform>();
+
+				// only assign pos and rotation (not scale!!!)
+				e_player->setPosition(h_start_trans->getPosition(), true);
+				h_player_trans->setRotation(h_start_trans->getRotation());
 			}
 		}
 	}
@@ -137,11 +142,6 @@ void ModuleEONGameplay::update(float dt)
 		// open Lua console
 		if (PlayerInput['L'].getsPressed()) {
 			EngineLua.openConsole();
-		}
-
-		// render Imgui in any mode
-		if (PlayerInput['I'].getsPressed()) {
-			CRenderModule::RENDER_IMGUI = !CRenderModule::RENDER_IMGUI;
 		}
 	}
 

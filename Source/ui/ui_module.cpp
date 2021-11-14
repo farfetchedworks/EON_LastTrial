@@ -6,6 +6,7 @@
 #include "ui/ui_parser.h"
 #include "ui/ui_widget.h"
 #include "ui/effects/ui_effect_fade.h"
+#include "input/input_module.h"
 
 extern CShaderCte<CtesUI> cte_ui;
 
@@ -30,6 +31,8 @@ namespace ui
         _pipelineHUD = Resources.get("ui_hud.pipeline")->as<CPipelineState>();
         _pipelineDebug = Resources.get("debug.pipeline")->as<CPipelineState>();
         _mesh = Resources.get("unit_quad_xy.mesh")->as<CMesh>();
+
+        activateWidget("cursor");
 
         return true;
     }
@@ -130,8 +133,12 @@ namespace ui
 
     void CModule::update(float delta)
     {
+        VEC2 pos = CEngine::get().getInput(input::MENU)->getMousePosition();
+        auto cursorWidget = getWidget("cursor");
+        cursorWidget->setPosition(pos * getResolution());
+
         // Remove widgets to clear from active 
-        auto eraseIt = std::remove_if(begin(_activeWidgets), end(_activeWidgets), [](CWidget * w) {
+        auto eraseIt = std::remove_if(begin(_activeWidgets), end(_activeWidgets), [&](CWidget * w) {
             bool to_clear = (w->getState() == EState::STATE_CLEAR);
             if (to_clear) {
                 w->setState(EState::STATE_NONE);
@@ -154,8 +161,22 @@ namespace ui
 
         for (CWidget* widget : _activeWidgets)
         {
-            widget->renderRecursive();
+            if (widget->getPriority() > 0)
+                widget->renderRecursive();
         }
+
+#ifndef _DEBUG
+        // Render custom cursor
+        if (!CApplication::get().getMouseHidden() &&
+            CApplication::get().getWndMouseHidden())
+        {
+            for (CWidget* widget : _activeWidgets)
+            {
+                if (widget->getPriority() == 0)
+                    widget->renderRecursive();
+            }
+    }
+#endif
 
         if (!_showDebug)
         {

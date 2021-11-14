@@ -17,21 +17,25 @@ namespace ui
 
     void CMenuController::update(float elapsed)
     {
+        assert(input);
+        if (!input)
+            return;
+
         processMouseHover();
 
-        if (PlayerInput["menu_down"].getsPressed())
+        if (input->getButton("menu_down").getsPressed())
         {
             nextOption();
         }
-        else if (PlayerInput["menu_up"].getsPressed())
+        else if (input->getButton("menu_up").getsPressed())
         {
             prevOption();
         }
-        else if ((isHoverButton && PlayerInput["mouse_left"].getsPressed()) || PlayerInput["menu_confirm"].getsPressed())
+        else if ((isHoverButton && input->getButton("mouse_left").getsPressed()) || input->getButton("menu_confirm").getsPressed())
         {
             highlightOption();
         }
-        else if ((isHoverButton && PlayerInput["mouse_left"].getsReleased()) || PlayerInput["menu_confirm"].getsReleased())
+        else if ((isHoverButton && input->getButton("mouse_left").getsReleased()) || input->getButton("menu_confirm").getsReleased())
         {
             confirmOption();
         }
@@ -61,8 +65,14 @@ namespace ui
 
     void CMenuController::selectOption(int idx)
     {
-        if(idx < 0 || idx >= _options.size())
+        if (idx < 0 || idx >= _options.size())
+        {
+            for (auto& option : _options)
+            {
+                option.button->changeToState("default");
+            }
             return;
+        }
 
         if (_currentOption != kUndefinedOption)
         {
@@ -93,9 +103,6 @@ namespace ui
 
     void CMenuController::processMouseHover()
     {
-        input::CModule* input = CEngine::get().getInput();
-        assert(input);
-
         int hoveredButton = -1;
         VEC2 mouse_pos = input->getMousePosition()  * EngineUI.getResolution();
         bool mouse_active = mouse_pos != last_mouse_pos;
@@ -104,11 +111,7 @@ namespace ui
         {
             last_mouse_pos = mouse_pos;
             hoveredButton = getButton(mouse_pos);
-
-            if (hoveredButton != -1) {
-                selectOption(hoveredButton);
-            }
-
+            selectOption(hoveredButton);
             isHoverButton = hoveredButton != -1;
         }
     }

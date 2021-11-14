@@ -69,13 +69,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEWHEEL:
 	case WM_INPUT:
 	{
-		std::vector<input::IDevice*> devices = CEngine::get().getInput(input::PLAYER_1)->getDevices();
-		for (auto device : devices)
+		for (auto input : CEngine::get().getInputs())
 		{
-			input::IDeviceWindows* winDevice = dynamic_cast<input::IDeviceWindows*>(device);
-			if (winDevice)
+			std::vector<input::IDevice*> devices = input->getDevices();
+			for (auto device : devices)
 			{
-				winDevice->processMsg(hWnd, message, wParam, lParam);
+				input::IDeviceWindows* winDevice = dynamic_cast<input::IDeviceWindows*>(device);
+				if (winDevice)
+				{
+					winDevice->processMsg(hWnd, message, wParam, lParam);
+				}
 			}
 		}
 		break;
@@ -94,10 +97,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_ACTIVATEAPP:
 	{
+		// Application lost focus   
 		if (wParam == FALSE)
-			// Application lost focus   
 		{
-			PlayerInput.clearInput();
+			for (auto input : CEngine::get().getInputs())
+			{
+				input->clearInput();
+			}
 		}
 	}
 
@@ -147,6 +153,15 @@ bool CApplication::init(HINSTANCE hInstance, int width, int height) {
 	// Avoids jump when first delta is calculated
 	centerMousePos();
 
+	// Hide cursor by default
+	while (ShowCursor(false) >= 0);
+
+#ifdef _DEBUG
+	wnd_mouse_visible = true;
+#endif // _DEBUG
+
+	setMouseVisible(true);
+
 	return true;
 }
 
@@ -186,13 +201,36 @@ void CApplication::setDimensions(int awidth, int aheight)
 void CApplication::setMouseVisible(bool visible)
 {
 	mouse_visible = visible;
+
+	// don't use windows cursor
+	if (!wnd_mouse_visible)
+		return;
+
 	if (!mouse_visible) {
 		// internal counter needs to be < 0 to be hidden
 		while (ShowCursor(mouse_visible) >= 0);
 	}
-	else {
+	else if (wnd_mouse_visible) {
 		// internal counter needs to be >= 0 to be shown
 		while (ShowCursor(mouse_visible) < 0);
+	}
+}
+
+void CApplication::setWndMouseVisible(bool visible)
+{
+	wnd_mouse_visible = visible;
+	mouse_visible = visible;
+	
+	if (!mouse_visible) {
+		// internal counter needs to be < 0 to be hidden
+		while (ShowCursor(mouse_visible) >= 0);
+		setMouseCentered(true);
+		centerMousePos();
+	}
+	else if (wnd_mouse_visible) {
+		// internal counter needs to be >= 0 to be shown
+		while (ShowCursor(mouse_visible) < 0);
+		setMouseCentered(false);
 	}
 }
 
@@ -203,7 +241,12 @@ void CApplication::setMouseCentered(bool centered)
 
 bool CApplication::getMouseHidden()
 {
-	return mouse_visible;
+	return !mouse_visible;
+}
+
+bool CApplication::getWndMouseHidden()
+{
+	return !wnd_mouse_visible;
 }
 
 bool CApplication::getMouseCentered()

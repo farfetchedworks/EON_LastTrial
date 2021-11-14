@@ -42,6 +42,7 @@ namespace ui
         void setActive(bool active) { _active = active; }
         void setVisible(bool visible) { _visible = visible; }
         void setState(EState s) { _state = s; }
+        void setPriority(int p) { _priority = p; }
 
         const VEC2& getScale() const { return _scale; }
         VEC2& getPosition() { return _position; };
@@ -51,6 +52,7 @@ namespace ui
         std::vector<CWidget*> getChildren() { return _children; }
         CWidget* getChildByName(const std::string& name);
         MAT44 getWorldTransform() { return _worldTransform; };
+        int getPriority() const { return _priority; };
        
         void propagateState(EState s);
         void updateLocalTransform();
@@ -79,6 +81,7 @@ namespace ui
         VEC2 _worldSize = VEC2::Zero;
         bool _active = false;
         bool _visible = true;
+        int _priority = 1;
 
         EState _state = EState::STATE_NONE;
 

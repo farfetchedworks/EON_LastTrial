@@ -3,16 +3,19 @@
 #include "ui/ui_controller.h"
 #include "ui/ui.fwd.h"
 
+namespace input { class CModule; }
+
 namespace ui
 {
     class CMenuController : public IController
     {
       public:
+
         void reset();
         void update(float elapsed) override;
         void bind(const std::string& buttonName, Callback callback);
-
         void selectOption(int idx);
+        void setInput(input::CModule* new_input) { input = new_input; }
 
       private:
         void nextOption();
@@ -33,5 +36,6 @@ namespace ui
         int _currentOption = kUndefinedOption;
         VEC2 last_mouse_pos = VEC2::Zero;
         bool isHoverButton = false;
+        input::CModule* input = nullptr;
     };
 }

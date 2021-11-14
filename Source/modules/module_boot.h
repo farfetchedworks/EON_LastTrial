@@ -5,8 +5,10 @@
 
 class CModuleBoot : public IModule
 {
+	bool _bootCompleted = false;
 	bool _preloadingResources = false;
-	bool previewEnabled = false;
+	bool _previewEnabled = false;
+	bool _loadPreview = false;
 	int total_entries = 1;
 
 	json jBoot;
@@ -25,9 +27,11 @@ public:
 	bool destroyBoot();
 
 	bool start() override;
+	bool customStart();
 	void onFileChanged(const std::string& strfilename);
 	void renderInMenu() override;
-	bool inGame() { return !previewEnabled; }
+	bool inGame() { return !_previewEnabled; }
 	bool isPreloading() { return _preloadingResources; }
+	bool ready() { return _bootCompleted; }
 };
 
