@@ -4,6 +4,8 @@
 #include "components/messages.h"
 #include "input/input_module.h"
 #include "modules/game/module_player_interaction.h"
+#include "modules/module_camera_mixer.h"
+#include "ui/ui_module.h"
 #include "components/abilities/comp_area_delay.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/common/comp_parent.h"
@@ -13,6 +15,8 @@
 #include "components/gameplay/comp_game_manager.h"
 #include "components/gameplay/comp_shrine.h"
 #include "components/abilities/comp_time_reversal.h"
+
+extern CShaderCte<CtesWorld> cte_world;
 
 bool CModuleEventSystem::start()
 {
@@ -198,7 +202,14 @@ void CModuleEventSystem::registerGlobalEvents()
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {
-		// ...
+		CameraMixer.blendCamera("camera_follow", 1.5f, &interpolators::quadInOutInterpolator);
+		PlayerInput.unBlockInput();
+		EngineUI.fadeOut(1.f);
+
+		CEntity* owner = getEntityByName("player");
+		assert(owner);
+		TCompTimeReversal* c_time_reversal = owner->get<TCompTimeReversal>();
+		c_time_reversal->renderEffect(false);
 	});
 }
 

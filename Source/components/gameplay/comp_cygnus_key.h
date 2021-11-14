@@ -9,8 +9,9 @@ class TCompCygnusKey : public TCompBase {
 
 	int _order			= 0;
 	bool _active		= false;
-	bool _keysOpened	= false;
 	float _waitTime		= -1.f;
+
+	static bool _keysOpened;
 
 public:
 

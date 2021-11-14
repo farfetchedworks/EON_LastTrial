@@ -112,6 +112,7 @@ struct TCompRigidAnimationController : public TCompBase
 	void setSpeed(float speed);
 
 	bool hasTracks() { return tracks.size() > 0; }
+	float getAnimationTime();
 
 	static void registerMsgs() {
 		DECL_MSG(TCompRigidAnimationController, TMsgAllEntitiesCreated, onAllEntitiesCreated);

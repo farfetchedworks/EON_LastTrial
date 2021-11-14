@@ -23,6 +23,12 @@ struct STRShot {
     MAT44 bones[MAX_SUPPORTED_BONES];
 };
 
+enum class eEffectState{
+    NONE = 0,
+    FADE_IN,
+    FADE_OUT
+};
+
 class TCompTimeReversal : public TCompBase {
 
     DECL_SIBLING_ACCESS();
@@ -37,7 +43,8 @@ private:
     CHandle h_fsm;
     CHandle h_game_manager;
 
-    bool is_rewinding = false;
+    bool is_rewinding               = false;
+    eEffectState rendering_effect   = eEffectState::NONE;
 
     int warp_consumption = 2;
     int max_seconds = 5;
@@ -84,4 +91,5 @@ public:
     bool isRewinding() { return is_rewinding; }
     int getWarpConsumption() { return warp_consumption; }
     void clearBuffer() { generated_shots = 0; }
+    void renderEffect(bool state);
 };

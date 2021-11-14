@@ -57,11 +57,42 @@ void TCompTimeReversal::onEntityCreated()
     circular_buffer = new STRShot[buffer_size];
 }
 
+void TCompTimeReversal::renderEffect(bool state)
+{
+    rendering_effect = state ? eEffectState::FADE_IN : eEffectState::FADE_OUT;
+    if (state)
+    {
+        cte_world.timeReversal_rewinding = 1.f;
+        EngineAudio.setGlobalRTPC(FMOD_PARAM_END, 0);
+        EngineAudio.postEvent(FMOD_EVENT);
+    }
+}
+
 void TCompTimeReversal::update(float dt)
 {
     PROFILE_FUNCTION("Time Reversal Update");
 
     dt = Time.delta_unscaled;
+
+    if (rendering_effect != eEffectState::NONE)
+    {
+        if (rendering_effect == eEffectState::FADE_IN)
+        {
+            cte_world.timeReversal_rewinding_time = damp(cte_world.timeReversal_rewinding_time, 0.3f, 2.f, dt);
+        }
+        else if (rendering_effect == eEffectState::FADE_OUT)
+        {
+            cte_world.timeReversal_rewinding_time = damp(cte_world.timeReversal_rewinding_time, 0.f, 2.f, dt);
+            if (cte_world.timeReversal_rewinding_time == 0.f)
+            {
+                rendering_effect = eEffectState::NONE;
+                cte_world.timeReversal_rewinding = 0.f;
+                EngineAudio.setGlobalRTPC(FMOD_PARAM_END, 1);
+            }
+        }
+
+        return;
+    }
 
     // When not rewinding we add new shot every TIME_PER_SHOT seconds
     if (!is_rewinding) {

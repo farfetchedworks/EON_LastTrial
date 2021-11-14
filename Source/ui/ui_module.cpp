@@ -133,6 +133,13 @@ namespace ui
 
     void CModule::update(float delta)
     {
+        if (_modalTime > 0.f)
+        {
+            _modalTime -= delta;
+            if (_modalTime < 0.f)
+                deactivateWidget("modal_black");
+        }
+
         VEC2 pos = CEngine::get().getInput(input::MENU)->getMousePosition();
         auto cursorWidget = getWidget("cursor");
         cursorWidget->setPosition(pos * getResolution());
@@ -314,6 +321,12 @@ namespace ui
 
             characterWorld = tr * characterWorld;
         }
+    }
+
+    void CModule::fadeOut(float time)
+    {
+        _modalTime = time;
+        activateWidget("modal_black");
     }
 
     void CModule::renderInMenu()
