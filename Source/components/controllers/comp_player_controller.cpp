@@ -690,6 +690,8 @@ void TCompPlayerController::castArea(bool isShooterCamerEnabled)
 			PawnUtils::playAction(owner, "SimpleInteract", 0.1f, 0.25f);
 		else {
 			PawnUtils::playAction(owner, "AreaDelay_Throw", 0.1f, 0.25f);
+			TCompTransform* transform = h_transform;
+			EngineAudio.postEvent("CHA/Eon/AT/Eon_Throw_AD_Ball", owner->getPosition());
 		}
 	}
 	else if (isShooterCamerEnabled) {
@@ -944,6 +946,8 @@ void TCompPlayerController::manageAimCamera()
 		{
 			blendCamera("camera_shooter", 0.5f, &interpolators::quadInOutInterpolator);
 			PawnUtils::playAction(getEntity(), "AreaDelay_Begin", 0.2f);
+			TCompTransform* transform = h_transform;
+			EngineAudio.postEvent("CHA/Eon/AT/Eon_Begin_AD_Ball", transform->getPosition());
 			// Use as AD Back Cycle
 			PawnUtils::playCycle(getEntity(), "AreaDelay_Idle", 0.3f);
 			CHandle h = spawn("data/prefabs/plasma_ball.json", CTransform());

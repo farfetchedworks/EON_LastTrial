@@ -381,3 +381,14 @@ void CModuleAudio::stopCurMusicEvent()
 {
 	stopAndRelease(cur_mus_event);
 }
+
+void CModuleAudio::postAmbienceEvent(const std::string& event_name)
+{
+	stopAndRelease(cur_amb_event);
+	cur_amb_event = post2DEventGetInst(event_name);
+}
+
+void CModuleAudio::stopCurAmbienceEvent()
+{
+	stopAndRelease(cur_amb_event);
+}

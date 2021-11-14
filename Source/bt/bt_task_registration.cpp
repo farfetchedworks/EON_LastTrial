@@ -25,6 +25,7 @@
 #include "components/stats/comp_health.h"
 #include "skeleton/comp_skel_lookat.h"
 #include "skeleton/comp_attached_to_bone.h"
+#include "components/projectiles/comp_cygnus_beam.h"
 
 /*
  *	Declare and implement all tasks here
@@ -2012,6 +2013,8 @@ private:
 	float dist_to_eon;
 	VEC3 black_hole_pos;
 	float depression_arc = deg2rad(45.0f);
+	CEntity* e_beam = nullptr;
+	VEC3 beam_target;
 
 public:
 	void init() override {
@@ -2031,58 +2034,49 @@ public:
 			CEntity* e_cygnus = ctx.getOwnerEntity();
 			black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
 
-			ray_dir = player_pos - black_hole_pos;
-			dist_to_eon = ray_dir.Length();
-			ray_dir.Normalize();
-
-			physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
-			std::vector<physx::PxSweepHit> sweepHits;
-			physx::PxTransform trans(VEC3_TO_PXVEC3(black_hole_pos));
-			physx::PxSphereGeometry geometry = { sphere_radius };
-
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			VEC3 cygnus_forward = h_trans->getForward();
-			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, -45.f, 0.f));
+			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, 15.f, 0.f));
 
-			bool has_hit = EnginePhysics.sweep(trans, rotated_vec, dist_to_eon, geometry, sweepHits, layerMask, true, true);
+			std::vector<physx::PxRaycastHit> raycastHits;
+			bool has_hit = EnginePhysics.raycast(black_hole_pos, rotated_vec, 2000.f, raycastHits, CModulePhysics::FilterGroup::Scenario, true, true);
 
-			// Get initial beam direction
+			// Get initial beam direction. The target will be the first position hit by the raycast
+			beam_target = player_pos;
+			if(has_hit)
+				beam_target = PXVEC3_TO_VEC3(raycastHits[0].position);
+
+			// Place the beam in the black hole, looking at the target
 			TCompTransform* c_trans = ctx.getComponent<TCompTransform>();
-			//DirectX::XMVector3Rotate(c_trans->getForward(),QUAT::CreateFromAxisAngle(VEC3::)
+			CTransform clone_trans;
+			clone_trans.setPosition(black_hole_pos);
+			clone_trans.lookAt(black_hole_pos, PXVEC3_TO_VEC3(raycastHits[0].position), VEC3::Up);
+			e_beam = spawn("data/prefabs/cygnus_beam.json", clone_trans);
+
+			TCompCygnusBeam* c_cygnusbeam = e_beam->get<TCompCygnusBeam>();
+			c_cygnusbeam->setParameters(damage);
 		};
 
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
-			/*physx::PxU32 layerMask = CModulePhysics::FilterGroup::Player;
-			std::vector<physx::PxSweepHit> sweepHits;
-			physx::PxTransform trans(VEC3_TO_PXVEC3(black_hole_pos));
-			physx::PxSphereGeometry geometry = { sphere_radius };
-
-			
-
-			bool has_hit = EnginePhysics.sweep(trans, ray_dir, dist_to_eon, geometry, sweepHits, layerMask, true, false);
-			
-			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();*/
-
-			
+			beam_target = VEC3(beam_target.x + 2*dt, beam_target.y, beam_target.z + 2* dt);
+			TCompTransform* c_trans = e_beam->get<TCompTransform>();
+			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
+			// Destroy the beam after the animation has ended
+			e_beam->destroy();
+
 			ctx.setNodeVariable(name, "allow_aborts", true);
 		};
 	}
 
 	// Executed on first frame
 	void onEnter(CBTContext& ctx) override {
-		//bool dodge_left = (rand() % 100) <= 50;
-		//std::string fsm_var = dodge_left ? "is_dodging_left" : "is_dodging_right";
-		//float dodge_dir_multip = dodge_left ? 1.0f : -1.0f;
-
-		//ctx.setNodeVariable(name, "current_fsm_var", fsm_var);
-		//ctx.setNodeVariable(name, "rot_multiplier", dodge_dir_multip);
+		ctx.setNodeVariable(name, "dt_acum", 0.f);
 		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 

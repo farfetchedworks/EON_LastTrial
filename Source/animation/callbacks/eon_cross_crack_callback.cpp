@@ -7,8 +7,16 @@
 
 struct onEonCrossCrackCallback : public CAnimationCallback
 {
+
+	bool first = true;
+
 	void AnimationUpdate(float anim_time, CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		if (first) {
+			first = false;
+			CEntity* e_owner = getOwnerEntity(userData);
+			EngineAudio.postEvent("CHA/Eon/CrossCrack", e_owner->getPosition());
+		}
 	}
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
@@ -20,6 +28,13 @@ struct onEonCrossCrackCallback : public CAnimationCallback
 
 		// Start temple music
 		EngineAudio.postMusicEvent("Music/Temple_Theme");
+
+		// Start temple ambience
+		EngineAudio.postAmbienceEvent("AMB/Cave/cave_ambience");
+
+		// Activate reverbs
+		EngineAudio.setGlobalRTPC("Cave_Reverb", 0.0);
+		EngineAudio.setGlobalRTPC("Monastery_Reverb", 1.0);
 	}
 };
 
