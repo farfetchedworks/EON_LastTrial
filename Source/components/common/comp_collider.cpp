@@ -100,6 +100,7 @@ void TCompCollider::load(const json& j, TEntityParseContext& ctx) {
 	height = j.value("height", height);
 	mask = j.value("mask", "all");
 	simulation_disabled = j.value("simulation_disabled", false);
+	gravity_disabled_default = j.value("gravity_disabled_default", false);
 }
 
 void TCompCollider::onEntityCreated()
@@ -111,6 +112,8 @@ void TCompCollider::onEntityCreated()
 		createForceActor();
 
 	h_transform = get<TCompTransform>();
+
+	disableGravity(gravity_disabled_default);
 }
 
 void TCompCollider::createForceActor()
@@ -672,4 +675,10 @@ void TCompCollider::enableCapsuleController()
 	cap_controller->setFootPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
 	EnginePhysics.setSimulationDisabled(box_controller->getActor(), true);
 	EnginePhysics.setSimulationDisabled(cap_controller->getActor(), false);
+}
+
+void TCompCollider::disableGravity(bool disable)
+{
+	physx::PxRigidDynamic* actor_collider = static_cast<physx::PxRigidDynamic*>(actor);
+	actor_collider->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, disable);
 }
