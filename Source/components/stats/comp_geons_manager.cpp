@@ -101,13 +101,6 @@ void TCompGeonsManager::onEnemyDied(const TMsgEnemyDied& msg)
 
 	// Alex: 3sec is the aprox time to add geons when particles arrive!
 	EngineLua.executeScript("addGeons(" + std::to_string(geonsGained) + ")", 3.f);
-
-	CEntity* enemy = msg.h_enemy;
-
-	// FMOD event
-	static const std::string EVENT_NAME = "ENV/General/Suck_Eons";
-	const std::string fmod_exec = "fmodPostEvent(\"" + EVENT_NAME + "\", getEntityByName(\"" + enemy->getName() + "\"))";
-	EngineLua.executeScript(fmod_exec, 2.9f);
 }
 
 void TCompGeonsManager::debugInMenu()

@@ -7,8 +7,16 @@
 
 struct onEonCrossCrackCallback : public CAnimationCallback
 {
+
+	bool first = true;
+
 	void AnimationUpdate(float anim_time, CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		if (first) {
+			first = false;
+			CEntity* e_owner = getOwnerEntity(userData);
+			EngineAudio.postEvent("CHA/Eon/CrossCrack", e_owner->getPosition());
+		}
 	}
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
