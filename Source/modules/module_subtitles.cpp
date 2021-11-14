@@ -5,6 +5,7 @@
 #include "ui/ui_widget.h"
 #include "ui/ui_params.h"
 #include "ui/effects/ui_effect_fade.h"
+#include "audio/module_audio.h"
 
 static NamedValues<CModuleSubtitles::EState>::TEntry state_entries[] = {
 	 {CModuleSubtitles::EState::STATE_NONE, "none"},
@@ -162,7 +163,7 @@ void CModuleSubtitles::triggerAudio()
 	// TODO Isaac
 	// Fmod: Parar el audio activo (en caso de q no se pare solo)
 	// y activar el nuevo usando 'event'
-	// ...
+	EngineAudio.postEvent(event);
 }
 
 bool CModuleSubtitles::startCaption(const std::string& name)
