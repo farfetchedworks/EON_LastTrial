@@ -27,6 +27,7 @@ private:
 	// std::unordered_map<std::string, FMOD::Studio::EventDescription*> cached_event_descriptors;
 
 	FMOD::Studio::EventInstance* cur_mus_event = nullptr;
+	FMOD::Studio::EventInstance* cur_amb_event = nullptr;
 
 	myFMOD_RESULT createEventInstance(const std::string& event_name, FMOD::Studio::EventInstance** event_inst) const;
 	myFMOD_RESULT create3DEventInstance(const std::string& event_name, FMOD::Studio::EventInstance** event_inst, VEC3 pos) const;
@@ -110,4 +111,13 @@ public:
 	 */
 	void stopCurMusicEvent();
 
+	/*
+	 * Posts a music event and stores it as the music being played
+	 */
+	void postAmbienceEvent(const std::string& event_name);
+
+	/*
+	 * Stops the current music event being played
+	 */
+	void stopCurAmbienceEvent();
 };

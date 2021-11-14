@@ -28,6 +28,13 @@ struct onEonCrossCrackCallback : public CAnimationCallback
 
 		// Start temple music
 		EngineAudio.postMusicEvent("Music/Temple_Theme");
+
+		// Start temple ambience
+		EngineAudio.postAmbienceEvent("AMB/Cave/cave_ambience");
+
+		// Activate reverbs
+		EngineAudio.setGlobalRTPC("Cave_Reverb", 0.0);
+		EngineAudio.setGlobalRTPC("Monastery_Reverb", 1.0);
 	}
 };
 
