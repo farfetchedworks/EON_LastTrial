@@ -43,11 +43,6 @@ void ModuleEONMainMenu::stop()
 void ModuleEONMainMenu::update(float dt)
 {
     _menuController.update(dt);
-
-    // Exit game
-    if (input->getButton("exit_game").getsPressed()) {
-        onExit();
-    }
 }
 
 void ModuleEONMainMenu::onNewGame()

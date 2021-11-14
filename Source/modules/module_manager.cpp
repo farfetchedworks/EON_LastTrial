@@ -1,5 +1,7 @@
 #include "mcv_platform.h"
+#include "engine.h"
 #include "modules/module_manager.h"
+#include "input/input_module.h"
 
 void CModuleManager::boot()
 {
@@ -107,6 +109,12 @@ void CModuleManager::update(float dt)
             PROFILE_FUNCTION(module->getName().c_str());
             module->update(dt);
         }
+    }
+
+    // Exit game
+    // TODO: Remove this from here... show message for a double confirmation
+    if (CEngine::get().getInput(input::MENU)->getButton("exit_game").getsPressed()) {
+        CApplication::get().exit();
     }
 }
 

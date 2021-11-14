@@ -90,11 +90,6 @@ void TCompPlayerController::update(float dt)
 
 	dt *= speed_multiplier;
 
-	// Exit game
-	if (PlayerInput["exit_game"].getsPressed()) {
-		CApplication::get().exit();
-	}
-
 	bool isFlyoverEnabled = isCameraEnabled("camera_flyover");
 
 	// Flyover camera (F6)
