@@ -7,9 +7,11 @@ class TCompCygnusKey : public TCompBase {
 
 	DECL_SIBLING_ACCESS();
 
-	int _order		= 0;
-	bool _active	= false;
-	float _waitTime	= -1.f;
+	int _order			= 0;
+	bool _active		= false;
+	float _waitTime		= -1.f;
+
+	static bool _keysOpened;
 
 public:
 

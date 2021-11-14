@@ -45,11 +45,6 @@ void ModuleEONYouDied::stop()
 void ModuleEONYouDied::update(float dt)
 {
     _menuController.update(dt);
-
-    // Exit game
-    if (_input->getButton("exit_game").getsPressed()) {
-        onExit();
-    }
 }
 
 void ModuleEONYouDied::onContinue()

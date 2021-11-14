@@ -217,8 +217,8 @@ void PawnUtils::spawnGeons(VEC3 pos, CHandle h_owner)
 	cte->updateFromCPU();
 
 	// FMOD event
-	static const char* EVENT_NAME = "ENV/General/Drop_Eons";
-	EngineAudio.postEvent(EVENT_NAME, e_owner);
+	static const char* EVENT_NAME = "ENV/General/Suck_Eons";
+	EngineAudio.postEvent(EVENT_NAME, e_owner->getPosition());
 }
 
 void PawnUtils::spawnHealParticles(VEC3 pos, const std::string& name)

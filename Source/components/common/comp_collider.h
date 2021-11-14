@@ -29,6 +29,7 @@ public:
 	bool active_force = false;
 	bool disable_gravity = true;
 	bool is_capsule_controller = true;
+	bool gravity_disabled_default = false;		// To be read from JSON
 	//bool disabled_box_controller = true;
 
 	std::string shape;
@@ -85,4 +86,5 @@ public:
 	physx::PxU32 getControllerNbShapes();
 	void enableBoxController();
 	void enableCapsuleController();
+	void disableGravity(bool disable = true);
 };

@@ -27,7 +27,9 @@ struct TCompAttachedToBone : public TCompBase {
 	void debugInMenu();
 	void onEntityCreated();
 
+	CTransform& getLocalTransform() { return local_t; };
 	void detach() { enabled = false; };
 	void attach() { enabled = true; };
+	
 };
 

@@ -89,6 +89,10 @@ void CModuleTools::stop()
 
 bool CModuleTools::pickEntity(TEntityPickerContext& ctx)
 {
+    CModuleManager& modules = CEngine::get().getModuleManager();
+    if (!modules.inGamestate("playing"))
+        return false;
+
 	CEntity* e_camera = EngineRender.getActiveCamera();
 	TCompCamera* cam = e_camera->get<TCompCamera>();
 	if (!cam)

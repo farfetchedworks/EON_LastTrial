@@ -90,11 +90,6 @@ void TCompPlayerController::update(float dt)
 
 	dt *= speed_multiplier;
 
-	// Exit game
-	if (PlayerInput["exit_game"].getsPressed()) {
-		CApplication::get().exit();
-	}
-
 	bool isFlyoverEnabled = isCameraEnabled("camera_flyover");
 
 	// Flyover camera (F6)
@@ -292,16 +287,16 @@ void TCompPlayerController::update(float dt)
 	}
 }
 
-bool TCompPlayerController::toggleFlyover(bool last_enabled)
+bool TCompPlayerController::toggleFlyover(bool was_enabled)
 {
 	// Keep positions in sync
 	{
 		CEntity* camera = getEntityByName("camera_mixed");
-		bool shiftPressed = PlayerInput[VK_SHIFT].isPressed();
-		if (shiftPressed && last_enabled) {
+		bool shiftPressed = isPressed(VK_SHIFT);
+		if (shiftPressed && was_enabled) {
 			PawnUtils::setPosition(getEntityByName("player"), camera->getPosition());
 		}
-		else if (shiftPressed && !last_enabled) {
+		else if (shiftPressed && !was_enabled) {
 			CEntity* flyover = getEntityByName("camera_flyover");
 			assert(flyover);
 			TCompTransform* last_cam_t = camera->get<TCompTransform>();
@@ -312,7 +307,7 @@ bool TCompPlayerController::toggleFlyover(bool last_enabled)
 
 	// Blend cameras
 	{
-		if (!last_enabled) {
+		if (!was_enabled) {
 			const TMixedCamera& last_used_camera = CameraMixer.getLastCamera();
 			last_camera = last_used_camera.entity;
 			assert(last_camera.isValid());
@@ -325,7 +320,7 @@ bool TCompPlayerController::toggleFlyover(bool last_enabled)
 		}
 	}
 
-	debugging = !last_enabled;
+	debugging = !was_enabled;
 	CApplication::get().changeMouseState(debugging);
 	PlayerInput.toggleBlockInput();
 	return debugging;
@@ -695,6 +690,8 @@ void TCompPlayerController::castArea(bool isShooterCamerEnabled)
 			PawnUtils::playAction(owner, "SimpleInteract", 0.1f, 0.25f);
 		else {
 			PawnUtils::playAction(owner, "AreaDelay_Throw", 0.1f, 0.25f);
+			TCompTransform* transform = h_transform;
+			EngineAudio.postEvent("CHA/Eon/AT/Eon_Throw_AD_Ball", owner->getPosition());
 		}
 	}
 	else if (isShooterCamerEnabled) {
@@ -949,6 +946,8 @@ void TCompPlayerController::manageAimCamera()
 		{
 			blendCamera("camera_shooter", 0.5f, &interpolators::quadInOutInterpolator);
 			PawnUtils::playAction(getEntity(), "AreaDelay_Begin", 0.2f);
+			TCompTransform* transform = h_transform;
+			EngineAudio.postEvent("CHA/Eon/AT/Eon_Begin_AD_Ball", transform->getPosition());
 			// Use as AD Back Cycle
 			PawnUtils::playCycle(getEntity(), "AreaDelay_Idle", 0.3f);
 			CHandle h = spawn("data/prefabs/plasma_ball.json", CTransform());

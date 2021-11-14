@@ -4,8 +4,12 @@
 #include "comp_cygnus_key.h"
 #include "entity/entity_parser.h"
 #include "audio/module_audio.h"
+#include "modules/module_camera_mixer.h"
+#include "ui/ui_module.h"
+#include "input/input_module.h"
 #include "lua/module_scripting.h"
 #include "skeleton/comp_skeleton.h"
+#include "components/abilities/comp_time_reversal.h"
 #include "components/common/comp_parent.h"
 #include "components/common/comp_render.h"
 #include "components/common/comp_collider.h"
@@ -13,6 +17,8 @@
 #include "../bin/data/shaders/constants_particles.h"
 
 DECL_OBJ_MANAGER("cygnus_key", TCompCygnusKey)
+
+bool TCompCygnusKey::_keysOpened = false;
 
 void TCompCygnusKey::load(const json& j, TEntityParseContext& ctx)
 {
@@ -29,9 +35,13 @@ void TCompCygnusKey::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 		setActive();
 }
 
-
 void TCompCygnusKey::update(float dt)
 {
+// #ifdef _DEBUG
+	if (PlayerInput['O'].getsPressed())
+		onAllKeysOpened();
+// #endif
+
 	if (_waitTime > 0.f)
 	{
 		_waitTime -= dt;
@@ -131,17 +141,70 @@ void TCompCygnusKey::setActive()
 
 void TCompCygnusKey::onAllKeysOpened()
 {
-	/*CEntity* e = getEntityByName("structures_controller");
-	assert(e);
-	
-	TCompRigidAnimationController* controller = get<TCompRigidAnimationController>();
-	controller->start();
+	if (_keysOpened)
+		return;
 
-	EngineLua.executeScript("shakeOnce(5, 0.1, 3)");*/
+	// Play animation
+	CEntity* eBroken = getEntityByName("Sculptures_Broken");
+	assert(eBroken);
+	TCompRigidAnimationController* controller = eBroken->get<TCompRigidAnimationController>();
+	assert(controller);
+	controller->start();
+	EngineLua.executeScript("shakeOnce(1.5, 2.5, 9, false)");
+
+	// Spawn complete colliders
+
+	CEntity* eBrokenCollider = getEntityByName("Sculptures_Broken_Collider");
+	assert(eBrokenCollider);
+
+	CTransform t;
+	t.setPosition(eBrokenCollider->getPosition());
+	CEntity* eCollider = spawn("data/prefabs/Sculptures_Complete_Colliders.json", t);
+	assert(eCollider);
+
+	// Destroy collider
+	TCompCollider* collider = eBrokenCollider->get<TCompCollider>();
+	assert(collider);
+	collider->setGroupAndMask("none", "none");
+	eBrokenCollider->destroy();
+
+	// Set camera
+	{
+		CEntity* eCam = getEntityByName("camera_sculptures");
+		TCompTransform* transform = eCam->get<TCompTransform>();
+		transform->lookAt(transform->getPosition(), 
+			eCollider->getPosition() + VEC3(0, 2.f, 0), 
+			VEC3::Up);
+		CameraMixer.blendCamera("camera_sculptures", 1.f, &interpolators::quadInOutInterpolator);
+		PlayerInput.blockInput();
+		EngineUI.fadeOut(0.5f);
+	}
+
+	// Time reversal effect
+	{
+		CEntity* owner = getEntityByName("player");
+		assert(owner);
+		TCompTimeReversal* c_time_reversal = owner->get<TCompTimeReversal>();
+		c_time_reversal->renderEffect(true);
+	}
+
+	// Callback when finished.. about 10 secs
+	{
+		float animtime = controller->getAnimationTime() + 2.f; // adding extra time
+		EngineLua.executeScript("dispatchEvent('Gameplay/Eon/openCygnusPath')", animtime);
+	}
+
+	_keysOpened = true;
 }
 
 void TCompCygnusKey::debugInMenu()
 {
 	ImGui::DragInt("Order", &_order);
 	ImGui::Checkbox("Active", &_active);
+
+	if(ImGui::Button("Debug All opened"))
+	{
+		onAllKeysOpened();
+	}
+
 }

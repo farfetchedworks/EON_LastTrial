@@ -11,6 +11,7 @@ class TCompCameraShake : public TCompBase {
 	CHandle hListener;
 	std::string listener_name;
 	float listenerRadius = 1.f;
+	bool use3D = true;
 	// 
 
 	VEC3 shakeOffset;
@@ -29,8 +30,8 @@ public:
 	void load(const json& j, TEntityParseContext& ctx);
 	void update(float dt);
 
-	void shake(float amount, float fadeIn);
-	void shakeOnce(float amount, float fadeIn, float fadeOut);
+	void shake(float amount, float fadeIn, bool is_3d = true);
+	void shakeOnce(float amount, float fadeIn, float fadeOut, bool is_3d = true);
 	void stop(float fadeOut);
 
 	void setListener(CHandle listener) { hListener = listener; };

@@ -118,6 +118,9 @@
 		<property name="timelockedOffset">
 			<value>2</value>
 		</property>
+		<relationship name="fadeInCurve">
+			<destination>{285195e0-3fc3-4557-9b9d-a7bed51f39f0}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{8b0ea971-4688-4aae-a7f4-a27724745f4a}</destination>
 		</relationship>
@@ -154,7 +157,7 @@
 	</object>
 	<object class="NamedMarker" id="{e26c45bb-751f-47f1-b7c7-9bace4a82027}">
 		<property name="position">
-			<value>0</value>
+			<value>1</value>
 		</property>
 		<property name="name">
 			<value>Start</value>
@@ -190,6 +193,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{8666c793-8dd9-4513-879a-17537d405b5e}" />
 	<object class="MixerBusFader" id="{5ac075c6-b041-444e-aebc-1397ffa09b28}" />
+	<object class="FadeCurve" id="{285195e0-3fc3-4557-9b9d-a7bed51f39f0}">
+		<relationship name="startPoint">
+			<destination>{a569872e-41b1-42ff-9cc3-052cdfdd9257}</destination>
+		</relationship>
+		<relationship name="endPoint">
+			<destination>{d7724997-a268-4615-8a20-e0aa6a8a273d}</destination>
+		</relationship>
+	</object>
 	<object class="TransitionSourceFadeOutCurve" id="{d7ff64a9-a305-49b6-a4f1-f1b8606fc8ad}">
 		<relationship name="startPoint">
 			<destination>{c68dcf28-33b1-4127-91aa-d2874b1b0dc8}</destination>
@@ -230,6 +241,25 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{23c25fe9-b61a-4f6b-9e46-116322940717}" />
+	<object class="AutomationPoint" id="{a569872e-41b1-42ff-9cc3-052cdfdd9257}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.2547189</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{d7724997-a268-4615-8a20-e0aa6a8a273d}">
+		<property name="position">
+			<value>1</value>
+		</property>
+		<property name="value">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{c68dcf28-33b1-4127-91aa-d2874b1b0dc8}">
 		<property name="position">
 			<value>0</value>

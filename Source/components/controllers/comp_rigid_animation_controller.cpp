@@ -86,6 +86,14 @@ void TCompRigidAnimationController::setAnimation(const std::string& animation_na
 		t.apply(curr_time);
 }
 
+float TCompRigidAnimationController::getAnimationTime()
+{
+	if (!animation_data)
+		return 0.f;
+
+	return std::max(animation_data->header.max_time - animation_data->header.min_time, 0.f) / speed_factor;
+}
+
 void TCompRigidAnimationController::setTargetBone(const std::string& bone_name)
 {
 	cinematic_target_bone = bone_name;

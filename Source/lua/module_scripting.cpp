@@ -154,12 +154,20 @@ void CModuleScripting::bindLua()
 
 	// Cameras
 
-	lua_state.set("shakeOnce", [](float amount, float fadeIn, float fadeOut) {
-		CEntity* outputCamera = getEntityByName("camera_mixed");
-		TCompCameraShake* shaker = outputCamera->get<TCompCameraShake>();
-		if(shaker)
-			shaker->shakeOnce(amount, fadeIn, fadeOut);
-	});
+	lua_state.set("shakeOnce", sol::overload(
+		[](float amount, float fadeIn, float fadeOut) {
+			CEntity* outputCamera = getEntityByName("camera_mixed");
+			TCompCameraShake* shaker = outputCamera->get<TCompCameraShake>();
+			if(shaker)
+				shaker->shakeOnce(amount, fadeIn, fadeOut);
+		},
+		[](float amount, float fadeIn, float fadeOut, bool is_3d) {
+			CEntity* outputCamera = getEntityByName("camera_mixed");
+			TCompCameraShake* shaker = outputCamera->get<TCompCameraShake>();
+			if (shaker)
+				shaker->shakeOnce(amount, fadeIn, fadeOut, is_3d);
+		}
+	));
 
 	// Colliders
 

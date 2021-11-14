@@ -30,15 +30,9 @@ namespace input
         return true;
     }
 
-    void CModule::update(float delta)
+    void CModule::update(float dt)
     {
-        // Block input in the gameplay state
-        // bool inGame = CEngine::get().getModuleManager().inGamestate("playing");
-
-        if (_blocked)
-            return;
-
-        delta = Time.delta_unscaled;
+        dt = Time.delta_unscaled;
 
         for (auto device : _devices)
         {
@@ -48,10 +42,14 @@ namespace input
           device->fetchData(_pad);
         }
 
-        _keyboard.update(delta);
-        _mouse.update(delta);
-        _pad.update(delta);
-        _mapping.update(delta);
+        _keyboard.update(dt);
+        _mouse.update(dt);
+        _pad.update(dt);
+
+        if (_blocked)
+            return;
+
+        _mapping.update(dt);
     }
 
     void CModule::registerDevice(IDevice* device)

@@ -35,10 +35,12 @@ namespace ui
         float getHeight() { return _resolution.y; }
 
         void setResolution(const VEC2& res);
+        void fadeOut(float time);
 
     private:
         VEC2 _resolution;
         CCamera _camera;
+        float _modalTime = 0.f;
 
         // test
         CImage* background = nullptr;

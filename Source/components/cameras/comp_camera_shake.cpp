@@ -25,10 +25,10 @@ void TCompCameraShake::update(float dt)
 		hListener = getEntityByName(listener_name);
 
 	// Modulate Magnitude using Listener's position
-	if (hListener.isValid()) {
+	if (use3D && hListener.isValid()) {
 		CEntity* eListener = hListener;
 		float distance = VEC3::Distance(shakePos, eListener->getPosition());
-		shakeScale *= (1.f - clampf((distance / 10.f), 0.f, 1.f));
+		shakeScale *= (1.f - clampf((distance / listenerRadius), 0.f, 1.f));
 	}
 
 	if (IsShaking() || IsFadingIn() || IsFadingOut())
@@ -56,11 +56,12 @@ void TCompCameraShake::update(float dt)
 	camera->lookAt(pos, target);
 }
 
-void TCompCameraShake::shake(float amount, float fadeIn)
+void TCompCameraShake::shake(float amount, float fadeIn, bool is_3d)
 {
 	assert(fadeIn > 0.f);
 	TCompTransform* transform = get<TCompTransform>();
 	shakePos = transform->getPosition();
+	use3D = is_3d;
 
 	Magnitude = amount;
 	fadeInDuration = fadeIn;
@@ -78,9 +79,9 @@ void TCompCameraShake::shake(float amount, float fadeIn)
 	}
 }
 
-void TCompCameraShake::shakeOnce(float amount, float fadeIn, float fadeOut)
+void TCompCameraShake::shakeOnce(float amount, float fadeIn, float fadeOut, bool is_3d)
 {
-	shake(amount, fadeIn);
+	shake(amount, fadeIn, is_3d);
 	fadeOutDuration = fadeOut;
 }
 
