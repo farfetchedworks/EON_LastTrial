@@ -43,6 +43,7 @@
     <ClCompile Include="components\projectiles\comp_area_delay_projectile.cpp" />
     <ClCompile Include="components\abilities\comp_heal.cpp" />
     <ClCompile Include="components\abilities\comp_time_reversal.cpp" />
+    <ClCompile Include="components\projectiles\comp_cygnus_beam.cpp" />
     <ClCompile Include="components\projectiles\comp_wave_projectile.cpp" />
     <ClCompile Include="components\ai\comp_ai_squad.cpp" />
     <ClCompile Include="components\ai\comp_bt.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="components\projectiles\comp_area_delay_projectile.h" />
     <ClInclude Include="components\abilities\comp_heal.h" />
     <ClInclude Include="components\abilities\comp_time_reversal.h" />
+    <ClInclude Include="components\projectiles\comp_cygnus_beam.h" />
     <ClInclude Include="components\projectiles\comp_wave_projectile.h" />
     <ClInclude Include="components\ai\comp_ai_squad.h" />
     <ClInclude Include="components\ai\comp_bt.h" />
