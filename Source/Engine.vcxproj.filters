@@ -281,6 +281,7 @@
     <ClCompile Include="modules\game\module_loading_screen.cpp" />
     <ClCompile Include="components\projectiles\comp_cygnus_beam.cpp" />
     <ClCompile Include="animation\callbacks\eon_loop_ad_ball_callback.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_f1_intro.cpp" />
     <ClCompile Include="components\audio\comp_audio_emitter.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,8 @@ public:
     void debugInMenu();
     void renderDebug();
 
+    void startCtx();
+
     void onSetVariable(const TMsgFSMVariable& msg);
     const fsm::IState* getCurrentState();
     fsm::CContext& getCtx() { return _context; };

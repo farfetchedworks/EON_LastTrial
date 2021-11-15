@@ -40,7 +40,12 @@ void TCompFSM::onEntityCreated()
 {
 	_context.setOwnerEntity(CHandle(this).getOwner());
 	assert(_context.isValid());
+	startCtx();
+}
 
+void TCompFSM::startCtx()
+{
+	_context.setEnabled(true);
 	_context.start();
 }
 
@@ -71,10 +76,13 @@ void TCompFSM::onSetVariable(const TMsgFSMVariable& msg)
 void TCompFSM::renderDebug()
 {
 #ifdef _DEBUG
-	TCompTransform* c_transform = get<TCompTransform>();
-	VEC3 pos = c_transform->getPosition();
-	pos.y += 2.f;
-	drawText3D(pos, Colors::White, getCurrentState()->name.c_str());
+	if (getCurrentState())
+	{
+		TCompTransform* c_transform = get<TCompTransform>();
+		VEC3 pos = c_transform->getPosition();
+		pos.y += 2.f;
+		drawText3D(pos, Colors::White, getCurrentState()->name.c_str());
+	}
 #endif // _DEBUG
 }
 
