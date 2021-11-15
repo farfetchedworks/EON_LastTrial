@@ -6,6 +6,7 @@
 #include "components/common/comp_transform.h"
 #include "components/common/comp_light_point.h"
 #include "render/draw_primitives.h"
+#include "audio/module_audio.h"
 
 extern CShaderCte<CtesWorld> cte_world;
 extern CShaderCte<CtesAreaDelay> cte_area_delay;
@@ -37,6 +38,8 @@ void TCompWaveProjectile::onEntityCreated()
 
 	TCompTransform* comp_transform = h_transform;
 	fluid_id = EngineFluidSimulation.addFluid(comp_transform->getPosition());
+
+	EngineAudio.postEvent("CHA/General/AT/Area_Delay_Wave", comp_transform->getPosition());
 }
 
 void TCompWaveProjectile::renderAll(CTexture* diffuse)
