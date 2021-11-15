@@ -282,6 +282,7 @@
     <ClCompile Include="components\projectiles\comp_cygnus_beam.cpp" />
     <ClCompile Include="animation\callbacks\eon_loop_ad_ball_callback.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f1_intro.cpp" />
+    <ClCompile Include="components\audio\comp_audio_emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\nn_interpolator.h" />
@@ -580,6 +581,7 @@
     <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
     <ClInclude Include="modules\game\module_loading_screen.h" />
     <ClInclude Include="components\projectiles\comp_cygnus_beam.h" />
+    <ClInclude Include="components\audio\comp_audio_emitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

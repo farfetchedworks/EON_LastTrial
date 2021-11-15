@@ -33,6 +33,7 @@
     <ClCompile Include="bt\bt_task.cpp" />
     <ClCompile Include="components\abilities\comp_area_delay.cpp" />
     <ClCompile Include="components\ai\comp_ai_time_reversal.cpp" />
+    <ClCompile Include="components\audio\comp_audio_emitter.cpp" />
     <ClCompile Include="components\audio\comp_music_interactor.cpp" />
     <ClCompile Include="components\common\comp_prefab_info.cpp" />
     <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="audio\physical_material.h" />
     <ClInclude Include="components\abilities\comp_area_delay.h" />
     <ClInclude Include="components\ai\comp_ai_time_reversal.h" />
+    <ClInclude Include="components\audio\comp_audio_emitter.h" />
     <ClInclude Include="components\audio\comp_music_interactor.h" />
     <ClInclude Include="components\common\comp_prefab_info.h" />
     <ClInclude Include="components\gameplay\comp_cygnus_key.h" />

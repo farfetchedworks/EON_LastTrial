@@ -184,7 +184,6 @@ public:
 };
 #pragma endregion
 
-
 #pragma region UI Messages
 
 class CTriggerAreaDisplayMessage : public ITriggerArea {
@@ -260,6 +259,85 @@ public:
 
 #pragma endregion
 
+#pragma region FMOD Volumes
+
+class CTriggerAreaCaveArea : public ITriggerArea {
+public:
+	CTriggerAreaCaveArea(const std::string& name) : ITriggerArea(name) {}
+
+	void onAreaEnter(CHandle event_trigger, CHandle observer) override
+	{
+		// Start ambience
+		EngineAudio.postAmbienceEvent("AMB/Cave/cave_ambience");
+
+		// Switch on cave reverb
+		EngineAudio.setGlobalRTPC("Cave_Reverb", 1.0);
+	}
+
+	void onAreaExit(CHandle event_trigger, CHandle observer) override
+	{
+		// Switch off cave reverb
+		EngineAudio.setGlobalRTPC("Cave_Reverb", 0.0);
+	}
+};
+
+class CTriggerAreaRiftArea : public ITriggerArea {
+public:
+	CTriggerAreaRiftArea(const std::string& name) : ITriggerArea(name) {}
+
+	void onAreaEnter(CHandle event_trigger, CHandle observer) override
+	{
+		// Activate music interaction
+		CEntity* e_owner = getEntityByName("player");
+		TCompMusicInteractor* t_mus_int = e_owner->get<TCompMusicInteractor>();
+		t_mus_int->setEnabled(true);
+
+		// Start temple music
+		EngineAudio.postMusicEvent("Music/Temple_Theme");
+	}
+
+	void onAreaExit(CHandle event_trigger, CHandle observer) override
+	{
+		// dbg("EXIT RIFT");
+	}
+};
+
+class CTriggerAreaTempleArea : public ITriggerArea {
+public:
+	CTriggerAreaTempleArea(const std::string& name) : ITriggerArea(name) {}
+
+	void onAreaEnter(CHandle event_trigger, CHandle observer) override
+	{
+		// Start ambience
+		EngineAudio.postAmbienceEvent("AMB/Temple/temple_ambience");
+
+		// Switch on temple reverb
+		EngineAudio.setGlobalRTPC("Monastery_Reverb", 1.0);
+	}
+
+	void onAreaExit(CHandle event_trigger, CHandle observer) override
+	{
+		EngineAudio.setGlobalRTPC("Monastery_Reverb", 0.0);
+	}
+};
+
+class CTriggerAreaGardenArea : public ITriggerArea {
+public:
+	CTriggerAreaGardenArea(const std::string& name) : ITriggerArea(name) {}
+
+	void onAreaEnter(CHandle event_trigger, CHandle observer) override
+	{
+		// Start ambience
+		EngineAudio.postAmbienceEvent("AMB/Temple/garden_ambience");
+	}
+
+	void onAreaExit(CHandle event_trigger, CHandle observer) override
+	{
+		// dbg("EXIT GARDEN");
+	}
+};
+
+#pragma endregion
 
 #define REGISTER_TRIGGER_AREA(AREA_NAME)  {new CTriggerArea##AREA_NAME(#AREA_NAME)},
 std::vector<ITriggerArea*> TCompGameManager::trigger_areas {
