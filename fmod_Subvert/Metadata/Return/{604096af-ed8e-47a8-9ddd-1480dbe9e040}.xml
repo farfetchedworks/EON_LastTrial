@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerReturn" id="{604096af-ed8e-47a8-9ddd-1480dbe9e040}">
+		<property name="name">
+			<value>Subtitle Reverb</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{fb67a3f1-c455-484f-bc5b-2a89375f5f77}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{3ab94f0d-c11b-458b-855a-a0d9f32bbabc}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{7c30b6da-0628-4118-80ef-3fae47b82d85}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{fb67a3f1-c455-484f-bc5b-2a89375f5f77}">
+		<relationship name="effects">
+			<destination>{d40e479e-9f79-4fe8-9f96-e81509b24608}</destination>
+			<destination>{4c9cc453-d207-46e3-b1a6-a831939401a9}</destination>
+			<destination>{b0f1be82-c31a-4246-a875-be7db5c5ae93}</destination>
+			<destination>{f26682e0-5671-4554-b943-a39ea1268ecc}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{3ab94f0d-c11b-458b-855a-a0d9f32bbabc}" />
+	<object class="MultibandEqEffect" id="{d40e479e-9f79-4fe8-9f96-e81509b24608}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="frequencyA">
+			<value>143.172394</value>
+		</property>
+		<property name="qualityA">
+			<value>0.476758599</value>
+		</property>
+	</object>
+	<object class="SFXReverbEffect" id="{4c9cc453-d207-46e3-b1a6-a831939401a9}">
+		<property name="decayTime">
+			<value>2200</value>
+		</property>
+		<property name="lateDelay">
+			<value>76</value>
+		</property>
+		<property name="HFDecayRatio">
+			<value>58</value>
+		</property>
+		<property name="diffusion">
+			<value>78.5</value>
+		</property>
+		<property name="lowShelfGain">
+			<value>-5.5</value>
+		</property>
+		<property name="highCut">
+			<value>4800</value>
+		</property>
+		<property name="earlyLateMix">
+			<value>60</value>
+		</property>
+		<property name="wetLevel">
+			<value>9</value>
+		</property>
+		<property name="dryLevel">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="MultibandEqEffect" id="{b0f1be82-c31a-4246-a875-be7db5c5ae93}">
+		<property name="filterTypeA">
+			<value>0</value>
+		</property>
+		<property name="filterTypeD">
+			<value>9</value>
+		</property>
+		<property name="frequencyD">
+			<value>1314.21655</value>
+		</property>
+		<property name="qualityD">
+			<value>0.840758622</value>
+		</property>
+		<property name="gainD">
+			<value>-8.79310417</value>
+		</property>
+	</object>
+	<object class="MixerBusFader" id="{f26682e0-5671-4554-b943-a39ea1268ecc}" />
+</objects>

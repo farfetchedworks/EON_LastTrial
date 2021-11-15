@@ -258,16 +258,6 @@ void TCompPlayerController::update(float dt)
 		}
 	}
 
-	// Custom debug
-	if (PlayerInput['Z'].getsPressed()) {
-		CEntity* player = getEntity();
-		CTransform t;
-		t.setPosition(player->getPosition() + VEC3(0, 1.7f, 0));
-		t.setRotation(QUAT(0.707f, 0, 0, 0.707f));
-		t.setScale(VEC3(5.f));
-		spawn("data/scenes/paintings.json", t);
-	}
-
 	if (is_locked_on) {
 
 		TCompTransform* c_locked_trans = h_locked_transform;

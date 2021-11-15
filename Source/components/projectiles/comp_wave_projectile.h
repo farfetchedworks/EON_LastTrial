@@ -16,6 +16,8 @@ class TCompWaveProjectile : public TCompBase {
 
 private:
 
+	bool fading = false;
+
 	float duration = 0.f;
 	float radius = 0.f;
 	float max_radius = 0.f;
@@ -23,8 +25,8 @@ private:
 	float speed_reduction = 0.f;
 
 	CHandle light_source;
-	float light_source_intensity = 0.0f;
-	float wave_intensity = 0.0f;
+	float light_source_intensity = 0.f;
+	float wave_intensity = 0.f;
 
 	CHandle h_transform;
 	CHandle currentDebuf;

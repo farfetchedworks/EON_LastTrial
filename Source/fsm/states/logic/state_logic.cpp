@@ -10,6 +10,8 @@
 
 namespace fsm
 {
+    const float framerate = 30.f;
+
     void CStateBaseLogic::loadStateProperties(const json& params)
     {
         const std::string& stateName = params["name"];
@@ -50,7 +52,6 @@ namespace fsm
         if (inFrames) {
             // Frames don't use the fraction part
             v.Floor(); 
-            float framerate = 30.f;
             v /= framerate;
         }
 
@@ -70,6 +71,12 @@ namespace fsm
         {
             float timings_duration = timings.getTime();
             float anim_duration = anim.getAnimationTime(ctx);
+
+            // skip that.. for sure it's on purpose
+            if (timings_duration * framerate > 500.f)
+            {
+                return true;
+            }
 
             if (fabs(timings_duration - anim_duration) > 0.05f) {
                 fatal("%s: Timings time (%f) of state [%s] don't match animation [%s] duration time (%f)", 

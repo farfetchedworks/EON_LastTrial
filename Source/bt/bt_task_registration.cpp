@@ -1827,16 +1827,18 @@ public:
 		TCompTransform* transform = e->get<TCompTransform>();
 		spawn("data/prefabs/black_hole_cygnus.json", *transform);
 
-		// Spawn in player direction
+		// Get Form 1 info
 		CTransform t;
 		t.fromMatrix(*transform);
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
 		t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
-		spawn("data/prefabs/cygnus_form_2.json", t);
 
 		// Destroy form 1 entity
 		ctx.getOwnerEntity().destroy();
 		CHandleManager::destroyAllPendingObjects();
+
+		// Spawn new form
+		spawn("data/prefabs/cygnus_form_2.json", t);
 
 		// Intro form 2
 		EngineLua.executeScript("CinematicCygnusF1ToF2()");
@@ -1890,8 +1892,7 @@ public:
 
 		callbacks.onStartup = [&](CBTContext& ctx, float dt)
 		{
-			CEntity* owner = ctx.getOwnerEntity();
-			TCompParent* parent = owner->get<TCompParent>();
+			TCompParent* parent = ctx.getComponent<TCompParent>();
 			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
 			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
 			CTransform& t = socket->getLocalTransform();
@@ -2090,6 +2091,9 @@ class CBTTaskCygnusSpawnClones : public IBTTask
 private:
 	float period = 1.f;
 	float clone_lifespan = 10.f;
+	float initial_hole_scale = 0.16f;
+	float max_hole_scale = 1.f;
+	float damp_speed = 6.f;
 
 public:
 	void init() override {
@@ -2107,22 +2111,43 @@ public:
 		{
 			// Spawn enemies when time is 0
 			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
-			if (dt_acum <= 0) {
-				TaskUtils::spawnCygnusForm1Clone(TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt"), clone_lifespan);
-			}
-
+			
 			// Accumulate time
 			dt_acum += dt;
+
+			// dt_acum = period -> 
+			float pct = clampf(dt_acum / period, 0.f, 1.f);
+			printFloat("PCT", pct);
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(initial_hole_scale + max_hole_scale * pct), damp_speed, dt));
+			printVEC3(t.getScale());
+
 			if (dt_acum >= period)
+			{
 				dt_acum = 0.f;
+				VEC3 pos = TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt");
+				TaskUtils::spawnCygnusForm1Clone(pos, clone_lifespan);
+			}
 
 			ctx.setNodeVariable(name, "dt_acum", dt_acum);
-
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			ctx.setNodeVariable(name, "allow_aborts", true);
+			ctx.setNodeVariable(name, "dt_acum", 0.f);
+		};
+
+		callbacks.onRecovery = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(initial_hole_scale), damp_speed, dt));
 		};
 	}
 
