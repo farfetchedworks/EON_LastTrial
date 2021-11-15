@@ -2,6 +2,7 @@
 #include "handle/handle.h"
 #include "engine.h"
 #include "entity/entity.h"
+#include "entity/entity_parser.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/gameplay/trigger_area.h"
 #include "components/gameplay/comp_trigger_area.h"
@@ -13,6 +14,7 @@
 #include "components/common/comp_hierarchy.h"
 #include "components/common/comp_collider.h"
 #include "components/common/comp_tags.h"
+#include "components/common/comp_fsm.h"
 #include "components/audio/comp_music_interactor.h"
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
@@ -143,39 +145,41 @@ public:
 
 	void onAreaEnter(CHandle event_trigger, CHandle observer) override
 	{
+		CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");
+		if (e_cygnus)
+			return;
+
+		CTransform t;
+
+		// Cygnus shrine position
 		{
-			CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");
-			if (!e_cygnus)
-				return;
-			TCompBT* c_bt = e_cygnus->get<TCompBT>();
-			assert(c_bt);
-
-			if (c_bt->isEnabled())
-				return;
-
-			c_bt->setEnabled(true);
-
-			TCompHealth* c_health = e_cygnus->get<TCompHealth>();
-			assert(c_health);
-			c_health->setHealth(c_health->getMaxHealth());
-			c_health->setRenderActive(true);
-
-			EngineLua.executeScript(_name + "Area()");
-
-			// TODO: Play Cygnus music
-			TCompGameManager* h_game_manager = GameManager->get<TCompGameManager>();
-			auto& boss_state = h_game_manager->getBossStateByName("Cygnus");
-			if (boss_state.music_event == nullptr) {
-				EngineAudio.postMusicEvent("Music/Boss_Theme");
-				boss_state.music_event = EngineAudio.getCurMusicEvent();
-			}
-			EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
-
-			// Audio: disable Eon as a music interactor, as Cygnus will be now the one who manages it
-			CEntity* e_eon = getEntityByName("player");
-			TCompMusicInteractor* h_mus_int = e_eon->get<TCompMusicInteractor>();
-			h_mus_int->setEnabled(false);
+			VHandles cShrineTags = CTagsManager::get().getAllEntitiesByTag(getID("SmegShrine"));
+			assert(cShrineTags.size() == 1);
+			t.setPosition(static_cast<CEntity*>(cShrineTags[0])->getPosition());
 		}
+
+		e_cygnus = spawn("data/prefabs/Cygnus_Form_1.json", t);
+		assert(e_cygnus);
+
+		TCompFSM* fsm = e_cygnus->get<TCompFSM>();
+		fsm->startCtx();
+
+		// Intro
+		EngineLua.executeScript("CinematicCygnusPresentation()");
+
+		// Play Cygnus music
+		TCompGameManager* h_game_manager = GameManager->get<TCompGameManager>();
+		auto& boss_state = h_game_manager->getBossStateByName("Cygnus");
+		if (boss_state.music_event == nullptr) {
+			EngineAudio.postMusicEvent("Music/Boss_Theme");
+			boss_state.music_event = EngineAudio.getCurMusicEvent();
+		}
+		EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
+
+		// Audio: disable Eon as a music interactor, as Cygnus will be now the one who manages it
+		CEntity* e_eon = getEntityByName("player");
+		TCompMusicInteractor* h_mus_int = e_eon->get<TCompMusicInteractor>();
+		h_mus_int->setEnabled(false);
 	}
 };
 #pragma endregion
