@@ -293,6 +293,9 @@ struct TMaterialExporter (
 		if mat != undefined and mat.name == "water" then (
 			exportLocalMaterial mat
 		)
+		else if mat != undefined and mat.name == "waterfall" then (
+			exportLocalMaterial mat
+		)
 		else if classof mat == StandardMaterial then (
 			exportStdMaterial mat
 		) else if classof mat == Multimaterial then (
