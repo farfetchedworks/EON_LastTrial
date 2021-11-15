@@ -5,7 +5,7 @@ static NamedValues<EPhysMatType>::TEntry physical_mat_types[] = {
   {EPhysMatType::MARBLE, "Marble"},
   {EPhysMatType::ROCK, "Rock"},
   {EPhysMatType::GRAVEL, "Gravel"},
-  {EPhysMatType::MOSS, "Moss"},
+  {EPhysMatType::GRASS, "Grass"},
   {EPhysMatType::WATER, "Water"}
 };
 
