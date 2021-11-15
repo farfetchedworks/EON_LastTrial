@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\callbacks\animation_launcher_callback.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_f1_intro.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f1_to_f2.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
     <ClCompile Include="animation\callbacks\death_callback.cpp" />
@@ -20,6 +21,7 @@
     <ClCompile Include="animation\callbacks\eon_loop_ad_ball_callback.cpp" />
     <ClCompile Include="animation\callbacks\event_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_branch_finished.cpp" />
+    <ClCompile Include="animation\callbacks\gard_intro_callback.cpp" />
     <ClCompile Include="animation\callbacks\hitstun_callback.cpp" />
     <ClCompile Include="animation\callbacks\pray_callback.cpp" />
     <ClCompile Include="animation\callbacks\turn_callback.cpp" />

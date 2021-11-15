@@ -119,13 +119,14 @@ void TCompBT::renderDebug()
 	{
 		TCompFSM* fsm = get<TCompFSM>();
 		fsm::CStateBaseLogic* currState = (fsm::CStateBaseLogic*)fsm->getCurrentState();
-		std::string frames = "";
-
-		if (currState->inStartupFrames(fsm->getCtx())) frames = "STARTUP";
-		else if (currState->inActiveFrames(fsm->getCtx())) frames = "ACTIVE";
-		else if (currState->inRecoveryFrames(fsm->getCtx())) frames = "RECOVERY";
-
-		drawText3D(pos + VEC3(0, 2.5, 0), Colors::Red, frames.c_str(), 40.f);
+		if (currState)
+		{
+			std::string frames = "";
+			if (currState->inStartupFrames(fsm->getCtx())) frames = "STARTUP";
+			else if (currState->inActiveFrames(fsm->getCtx())) frames = "ACTIVE";
+			else if (currState->inRecoveryFrames(fsm->getCtx())) frames = "RECOVERY";
+			drawText3D(pos + VEC3(0, 2.5, 0), Colors::Red, frames.c_str(), 40.f);
+		}
 	}
 
 	pos.y += 3.f;
