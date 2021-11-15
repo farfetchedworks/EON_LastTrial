@@ -73,22 +73,33 @@ void TCompWaveProjectile::update(float dt)
 	// stop expanding wave when reaching max radius
 	if (radius >= max_radius)
 	{
-		destroyWave();
-		return;
+		fading = true;
 	}
 
 	TCompLightPoint* c_light = light_source;
 
-	float blend_time = 0.5f;
-	if (current_time <= blend_time) {
-		wave_intensity = current_time;
+	if(fading)
+	{
+		wave_intensity = damp(wave_intensity, 0.f, 3.f, dt);
+		if (wave_intensity < 0.01f)
+		{
+			destroyWave();
+			return;
+		}
 	}
-	else if (current_time > duration - blend_time) {
-		wave_intensity = (duration - current_time);
-	}
+	else
+	{
+		float blend_time = 0.5f;
+		if (current_time <= blend_time) {
+			wave_intensity = current_time;
+		}
+		else if (current_time > duration - blend_time) {
+			wave_intensity = (duration - current_time);
+		}
 
-	wave_intensity /= blend_time;
-	wave_intensity = clampf(wave_intensity, 0.0f, 1.0f);
+		wave_intensity /= blend_time;
+		wave_intensity = clampf(wave_intensity, 0.0f, 1.0f);
+	}
 
 	cte_world.exposure_factor = lerp(1.f, 0.2f, wave_intensity);
 
@@ -105,10 +116,8 @@ void TCompWaveProjectile::update(float dt)
 	VHandles colliders;
 	CHandle receiver = CHandle();
 
-	physx::PxU32 flags = CModulePhysics::FilterGroup::Enemy;
+	physx::PxU32 flags = CModulePhysics::FilterGroup::None;
 
-	if (wave_caster == EWaveCaster::ENEMY)
-		flags = CModulePhysics::FilterGroup::Player;
 
 	if (EnginePhysics.overlapSphere(transform->getPosition(), radius, colliders, flags))
 	{

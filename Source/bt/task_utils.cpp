@@ -319,12 +319,14 @@ void TaskUtils::spawnParticles(const std::string& name, VEC3 position, float rad
 void TaskUtils::castAreaDelay(CEntity* e_caster, float duration, CHandle h_locked_t)
 {
 	TCompAreaDelay* h_area_delay = e_caster->get<TCompAreaDelay>();
+	assert(h_area_delay);
 	h_area_delay->startAreaDelay(h_locked_t, duration, true);
 }
 
 void TaskUtils::castWaveDelay(CEntity* e_caster, float initial_radius, float max_radius, float duration)
 {
 	TCompAreaDelay* h_area_delay = e_caster->get<TCompAreaDelay>();
+	assert(h_area_delay);
 	h_area_delay->startWaveDelay(initial_radius, max_radius, duration);
 }
 
