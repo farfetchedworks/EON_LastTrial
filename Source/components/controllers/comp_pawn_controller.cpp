@@ -3,6 +3,7 @@
 #include "engine.h"
 #include "entity/entity.h"
 #include "components/common/comp_collider.h"
+#include "components/common/comp_name.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_render.h"
 #include "components/common/comp_prefab_info.h"
@@ -17,6 +18,7 @@
 #include "entity/entity_parser.h"
 #include "modules/module_physics.h"
 #include "render/draw_primitives.h"
+#include "components/common/comp_fsm.h"
 
 DECL_OBJ_MANAGER("pawn", TCompPawnController)
 
@@ -295,24 +297,42 @@ void TCompPawnController::onHitSound(const TMsgHit& msg)
 {
 	TCompPrefabInfo* t_info = get<TCompPrefabInfo>();
 	TCompTransform* t_trans = get<TCompTransform>();
+	TCompName*		t_name	= get<TCompName>();
 
-	if (!t_info || !t_trans)
+	if (!t_trans)
 		return;
 
 	// FMOD only SLASH FLESH events, screams go separate in sync with animations
-	if (!t_info->getPrefabName()->compare("Enemy Melee Prefab")) {
-		EngineAudio.postEvent("CHA/Lancer/Lancer_Light_Hitstun", t_trans->getPosition());
+	if (t_info) {
+		if (!t_info->getPrefabName()->compare("Enemy Melee Prefab")) {
+			EngineAudio.postEvent("CHA/Lancer/Lancer_Light_Hitstun", t_trans->getPosition());
+		}
+		else if (!t_info->getPrefabName()->compare("Enemy Ranged Prefab")) {
+			EngineAudio.postEvent("CHA/Lancer/Lancer_Light_Hitstun", t_trans->getPosition());
+		}
+		else if (!t_info->getPrefabName()->compare("Gard")) {
+			EngineAudio.postEvent("CHA/Gard/Gard_Receive_Hit", t_trans->getPosition());
+		}
+		else if (!t_info->getPrefabName()->compare("Cygnus_Form_1")) {
+			EngineAudio.postEvent("CHA/Cygnus/P1/DMG/Cygnus_P1_Dmg_Light", t_trans->getPosition());
+		}
 	}
-	else if (!t_info->getPrefabName()->compare("Enemy Ranged Prefab")) {
-		EngineAudio.postEvent("CHA/Lancer/Lancer_Light_Hitstun", t_trans->getPosition());
-	}
-	else if (!t_info->getPrefabName()->compare("Gard")) {
-		EngineAudio.postEvent("CHA/Gard/Gard_Receive_Hit", t_trans->getPosition());
-	}
-	else if (!t_info->getPrefabName()->compare("Cygnus_Form_1")) {
-		EngineAudio.postEvent("CHA/Cygnus/P1/DMG/Cygnus_P1_Dmg_Light", t_trans->getPosition());
-	}
-	else if (!t_info->getPrefabName()->compare("Cygnus_Form_2")) {
-		EngineAudio.postEvent("CHA/Cygnus/P2/DMG/Cygnus_P2_Dmg_Light", t_trans->getPosition());
+	else {
+		if (!std::string(t_name->getName()).compare("Cygnus_Form_2")) {
+			TCompFSM* t_fsm = get<TCompFSM>();
+			int phase_number = std::get<int>(t_fsm->getCtx().getVariableValue("phase_number"));
+
+			switch (phase_number) {
+			case 2:
+				EngineAudio.postEvent("CHA/Cygnus/P2/DMG/Cygnus_P2_Dmg_Light", t_trans->getPosition());
+				break;
+			case 3:
+				EngineAudio.postEvent("CHA/Cygnus/P3/DMG/Cygnus_P3_Dmg_Light", t_trans->getPosition());
+				break;
+			default:
+				EngineAudio.postEvent("CHA/Cygnus/P3/DMG/Cygnus_P3_Dmg_Light", t_trans->getPosition());
+				break;
+			}
+		}
 	}
 }

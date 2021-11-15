@@ -95,18 +95,9 @@ public:
 	{
 		CEntity* e_gard = getEntityByName("Gard");
 		assert(e_gard);
-		TCompBT* c_bt_gard = e_gard->get<TCompBT>();
-		assert(c_bt_gard);
 
-		if (c_bt_gard->isEnabled())
-			return;
-
-		c_bt_gard->setEnabled(true);
-
-		TCompHealth* c_health_gard = e_gard->get<TCompHealth>();
-		assert(c_health_gard);
-		c_health_gard->setHealth(c_health_gard->getMaxHealth());
-		c_health_gard->setRenderActive(true);
+		TCompFSM* fsm = e_gard->get<TCompFSM>();
+		fsm->startCtx();
 
 		EngineLua.executeScript(_name + "Area()");
 
@@ -119,22 +110,8 @@ public:
 		}
 		EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
 
-		{
-			CEntity* player = getEntityByName("player");
-			TCompCollider* c_collider = player->get<TCompCollider>();
-			c_collider->enableBoxController();
-		}
-
-		// Cinematics??
-		// ...
-
-		VHandles lianas = CTagsManager::get().getAllEntitiesByTag("blocking_lianas");
-		for (auto h : lianas) {
-			assert(h.isValid());
-			CEntity* e = h;
-			TCompSkeleton* comp_skel = e->get<TCompSkeleton>();
-			comp_skel->resume(0.8f);
-		}
+		// Cinematics
+		EngineLua.executeScript("CinematicIntroPresentation()");
 	}
 };
 
