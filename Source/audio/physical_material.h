@@ -6,7 +6,7 @@ enum class EPhysMatType {
 	MARBLE,
 	ROCK,
 	GRAVEL,
-	MOSS,
+	GRASS,
 	WATER
 };
 
