@@ -3,6 +3,7 @@
 #include "comp_name.h"
 #include "comp_transform.h"
 #include "render/draw_primitives.h"
+#include "entity/entity_parser.h"
 
 DECL_OBJ_MANAGER("name", TCompName)
 
@@ -45,7 +46,14 @@ void TCompName::debugInMenu() {
 
 void TCompName::load(const json& j, TEntityParseContext& ctx) {
   assert(j.is_string());
-  setName(j.get<std::string>().c_str());
+  std::string name = j.get<std::string>();
+
+  // Don't spawn things with same name
+  if (!ctx.parsing_prefab && getEntityByName(name).isValid()) {
+      name += std::to_string(Random::unit());
+  }
+
+  setName(name.c_str());
 }
 
 bool isAlive(const std::string& name) {

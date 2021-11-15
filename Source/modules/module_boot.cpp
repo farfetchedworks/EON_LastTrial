@@ -26,6 +26,13 @@ bool CModuleBoot::start()
 
 bool CModuleBoot::customStart()
 {
+	// Probably no loading screen..
+	if (!jBoot.size())
+	{
+		jBoot = loadJson("data/boot.json");
+		_loadPreview = jBoot.count("preview_mode") && jBoot["preview_mode"] == true;
+	}
+	
 	return loadBoot("data/boot.json");
 }
 
@@ -138,6 +145,11 @@ bool CModuleBoot::loadPreviewBoot()
 		for (auto h : ctx.entities_loaded)
 			h.sendMsg(msg);
 	}
+
+	// mouse state
+	debugging = true;
+	CApplication::get().changeMouseState(debugging, false);
+	CApplication::get().setWndMouseVisible(true);
 
 	// don't render debug
 	Entities.clearDebugList();

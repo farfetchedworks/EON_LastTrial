@@ -29,3 +29,4 @@ level/floor/srgb/templefloor_tiled.resources
 bin/EON.exe
 bin/EON.lib
 bin/EON.exp
+libs/debug/Cal3Dd.idb

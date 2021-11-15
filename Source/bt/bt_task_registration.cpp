@@ -9,6 +9,7 @@
 #include "audio/module_audio.h"
 #include "navmesh/module_navmesh.h"
 #include "entity/entity_parser.h"
+#include "components/common/comp_render.h"
 #include "components/common/comp_name.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_parent.h"
@@ -23,6 +24,7 @@
 #include "components/ai/comp_bt.h"
 #include "components/stats/comp_health.h"
 #include "skeleton/comp_skel_lookat.h"
+#include "skeleton/comp_attached_to_bone.h"
 #include "components/projectiles/comp_cygnus_beam.h"
 
 /*
@@ -1825,16 +1827,18 @@ public:
 		TCompTransform* transform = e->get<TCompTransform>();
 		spawn("data/prefabs/black_hole_cygnus.json", *transform);
 
-		// Spawn in player direction
+		// Get Form 1 info
 		CTransform t;
 		t.fromMatrix(*transform);
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
 		t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
-		spawn("data/prefabs/cygnus_form_2.json", t);
 
 		// Destroy form 1 entity
 		ctx.getOwnerEntity().destroy();
 		CHandleManager::destroyAllPendingObjects();
+
+		// Spawn new form
+		spawn("data/prefabs/cygnus_form_2.json", t);
 
 		// Intro form 2
 		EngineLua.executeScript("CinematicCygnusF1ToF2()");
@@ -1879,39 +1883,89 @@ public:
 class CBTTaskCygnusTeleport : public IBTTask
 {
 private:
-	VEC3 target_pos;
+	float initial_hole_scale = 0.16f;
+	float max_hole_scale = 2.5f;
+	float damp_speed = 8.f;
 
 public:
 	void init() override {
 
+		callbacks.onStartup = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(max_hole_scale), damp_speed, dt));
+		};
+
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		{
+			TCompRender* render = ctx.getComponent<TCompRender>();
+			render->setEnabled(false);
+			// Stop the animation and return to Locomotion state
+			TaskUtils::stopAction(ctx.getOwnerEntity(), "cygnus_f2_heal", 0.1f);
+		};
+
+		callbacks.onActive = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3::Zero, damp_speed, dt));
+		};
+
+		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			// Set the position
 			TCompCollider* h_collider = ctx.getComponent<TCompCollider>();
-			h_collider->setFootPosition(target_pos);
+			h_collider->setFootPosition(ctx.getBlackboard()->getValue<VEC3>(string_field));
 
 			// Set the rotation to look at Eon
 			CEntity* player = getPlayer();
-			VEC3 player_pos = player->getPosition();
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			TCompTransform* h_trans_eon = player->get<TCompTransform>();
 			h_trans->setRotation(h_trans_eon->getRotation());
-
-			// Stop the animation and return to Locomotion state
-			TaskUtils::stopAction(ctx.getOwnerEntity(), "cygnus_f2_heal", 0.f);
-			ctx.setFSMVariable("is_teleporting", 0);
 		};
 
+		callbacks.onRecovery = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+
+			TCompRender* render = ctx.getComponent<TCompRender>();
+			bool render_ok = render->draw_calls[0].enabled;
+
+			if (!render_ok)
+			{
+				t.setScale(damp<VEC3>(t.getScale(), VEC3(max_hole_scale), damp_speed, dt));
+				if (VEC3::Distance(t.getScale(), VEC3(max_hole_scale)) < 0.01f)
+				{
+					TCompRender* render = ctx.getComponent<TCompRender>();
+					render->setEnabled(true);
+				}
+			}
+			else
+			{
+				t.setScale(damp<VEC3>(t.getScale(), VEC3(initial_hole_scale), damp_speed, dt));
+				if (VEC3::Distance(t.getScale(), VEC3(initial_hole_scale)) < 0.01f)
+				{
+					ctx.setFSMVariable("is_teleporting", 0);
+				}
+			}
+		};
 	}
 
 	void onEnter(CBTContext& ctx) override {
-		target_pos = ctx.getBlackboard()->getValue<VEC3>(string_field);
+		
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
 		return tickCondition(ctx, "is_teleporting", dt, false);
 	}
-
 };
 
 class CBTTaskCygnusChangePhase : public IBTTask
@@ -1921,7 +1975,7 @@ private:
 
 public:
 	void init() override {
-		phase_num = number_field[0];
+		phase_num = (int)number_field[0];
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {		
@@ -2063,6 +2117,9 @@ class CBTTaskCygnusSpawnClones : public IBTTask
 private:
 	float period = 1.f;
 	float clone_lifespan = 10.f;
+	float initial_hole_scale = 0.16f;
+	float max_hole_scale = 1.f;
+	float damp_speed = 6.f;
 
 public:
 	void init() override {
@@ -2080,22 +2137,43 @@ public:
 		{
 			// Spawn enemies when time is 0
 			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
-			if (dt_acum <= 0) {
-				TaskUtils::spawnCygnusForm1Clone(TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt"), clone_lifespan);
-			}
-
+			
 			// Accumulate time
 			dt_acum += dt;
+
+			// dt_acum = period -> 
+			float pct = clampf(dt_acum / period, 0.f, 1.f);
+			printFloat("PCT", pct);
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(initial_hole_scale + max_hole_scale * pct), damp_speed, dt));
+			printVEC3(t.getScale());
+
 			if (dt_acum >= period)
+			{
 				dt_acum = 0.f;
+				VEC3 pos = TaskUtils::getBoneWorldPosition(ctx.getOwnerEntity(), "cygnus_hole_jnt");
+				TaskUtils::spawnCygnusForm1Clone(pos, clone_lifespan);
+			}
 
 			ctx.setNodeVariable(name, "dt_acum", dt_acum);
-
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			ctx.setNodeVariable(name, "allow_aborts", true);
+			ctx.setNodeVariable(name, "dt_acum", 0.f);
+		};
+
+		callbacks.onRecovery = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(initial_hole_scale), damp_speed, dt));
 		};
 	}
 

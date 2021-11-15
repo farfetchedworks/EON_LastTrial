@@ -15,6 +15,8 @@ bool ModuleEONLoadingScreen::start()
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 
+    CApplication::get().changeMouseState(false);
+
     _timer = 2.f; // sync with title screen blend out
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
     EngineUI.activateWidget("eon_loading_screen");
@@ -71,6 +73,8 @@ void ModuleEONLoadingScreen::update(float dt)
                 params.texture = Resources.get("data/textures/ui/subvert/menu/continue.dds")->as<CTexture>();
             }
         }
+
+        CApplication::get().changeMouseState(true, false);
     }
 
     if (_ready)

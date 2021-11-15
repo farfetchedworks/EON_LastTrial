@@ -156,7 +156,19 @@ struct TMaterialExporter (
 	),
 	
 	fn exportPBRMaterial mat = (
-		local ofilename = mat.name + ".mat"
+		
+		local material_name = mat.name
+		local surface_type_name = "Gravel"
+		local tokens = filterString material_name "::"
+		local new_surface_type = tokens[2]
+		
+		if(new_surface_type != undefined) then (
+			surface_type_name = new_surface_type
+			local index = findString material_name "::"
+			material_name = tokens[1]
+		)
+		
+		local ofilename = material_name + ".mat"
 		local is_decal = isDecal mat
 		local subpath = output_path
 		if is_decal then(
@@ -167,6 +179,11 @@ struct TMaterialExporter (
 		format "Exporting material %\n" output_filename
 		fs.begin output_filename
 		fs.beginObj()
+		
+		if(new_surface_type != undefined) then (
+			fs.writeKeyValue "surface_type" surface_type_name
+			fs.writeComma()
+		)
 		
 		exportMap "albedo" mat.base_color_map "data/textures/missing.dds"
 		fs.writeComma()
@@ -274,6 +291,9 @@ struct TMaterialExporter (
 		)
 		
 		if mat != undefined and mat.name == "water" then (
+			exportLocalMaterial mat
+		)
+		else if mat != undefined and mat.name == "waterfall" then (
 			exportLocalMaterial mat
 		)
 		else if classof mat == StandardMaterial then (

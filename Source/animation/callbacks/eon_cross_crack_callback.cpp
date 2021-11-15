@@ -22,19 +22,12 @@ struct onEonCrossCrackCallback : public CAnimationCallback
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
 		// Activate music interaction
-		CEntity* e_owner = getOwnerEntity(userData);
-		TCompMusicInteractor* t_mus_int = e_owner->get<TCompMusicInteractor>();
-		t_mus_int->setEnabled(true);
+		// CEntity* e_owner = getOwnerEntity(userData);
+		// TCompMusicInteractor* t_mus_int = e_owner->get<TCompMusicInteractor>();
+		// t_mus_int->setEnabled(true);
 
 		// Start temple music
-		EngineAudio.postMusicEvent("Music/Temple_Theme");
-
-		// Start temple ambience
-		EngineAudio.postAmbienceEvent("AMB/Cave/cave_ambience");
-
-		// Activate reverbs
-		EngineAudio.setGlobalRTPC("Cave_Reverb", 0.0);
-		EngineAudio.setGlobalRTPC("Monastery_Reverb", 1.0);
+		// EngineAudio.postMusicEvent("Music/Temple_Theme");
 	}
 };
 
