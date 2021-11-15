@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="EncodableAsset" id="{3cbbfea2-afae-41f6-a485-f4aa0571dcdb}">
+		<property name="assetPath">
+			<value>CHA/Cygnus/P3/DMG/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f8b2a622-7d6e-4c03-8a9c-627e577ec451}</destination>
+		</relationship>
+	</object>
+</objects>
