@@ -45,7 +45,14 @@ void TCompName::debugInMenu() {
 
 void TCompName::load(const json& j, TEntityParseContext& ctx) {
   assert(j.is_string());
-  setName(j.get<std::string>().c_str());
+  std::string name = j.get<std::string>();
+
+  // Don't spawn things with same name
+  if (getEntityByName(name).isValid()) {
+      name += std::to_string(Random::unit());
+  }
+
+  setName(name.c_str());
 }
 
 bool isAlive(const std::string& name) {

@@ -1827,16 +1827,18 @@ public:
 		TCompTransform* transform = e->get<TCompTransform>();
 		spawn("data/prefabs/black_hole_cygnus.json", *transform);
 
-		// Spawn in player direction
+		// Get Form 1 info
 		CTransform t;
 		t.fromMatrix(*transform);
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
 		t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
-		spawn("data/prefabs/cygnus_form_2.json", t);
 
 		// Destroy form 1 entity
 		ctx.getOwnerEntity().destroy();
 		CHandleManager::destroyAllPendingObjects();
+
+		// Spawn new form
+		spawn("data/prefabs/cygnus_form_2.json", t);
 
 		// Intro form 2
 		EngineLua.executeScript("CinematicCygnusF1ToF2()");
