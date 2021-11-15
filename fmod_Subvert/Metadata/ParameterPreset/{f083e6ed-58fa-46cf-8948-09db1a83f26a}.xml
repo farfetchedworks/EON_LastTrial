@@ -22,7 +22,7 @@
 			<value>Marble</value>
 			<value>Rock</value>
 			<value>Gravel</value>
-			<value>Moss</value>
+			<value>Grass</value>
 			<value>Water</value>
 		</property>
 		<property name="initialValue">
