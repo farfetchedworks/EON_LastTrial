@@ -1953,7 +1953,7 @@ class CBTTaskCygnusBeamAttack : public IBTTask
 {
 private:
 	int damage;
-	float max_arc;
+	float dep_angle;
 	float move_speed;
 	float sphere_radius = 0.5;
 	VEC3 ray_dir;
@@ -1967,7 +1967,7 @@ public:
 	void init() override {
 		// Load generic parameters
 		damage = (int)number_field[0];
-		max_arc = number_field[1];
+		dep_angle = number_field[1];
 		move_speed = number_field[2];
 
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
@@ -1981,25 +1981,29 @@ public:
 			CEntity* e_cygnus = ctx.getOwnerEntity();
 			black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
 
+			// Get the initial beam target with a raycast
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			VEC3 cygnus_forward = h_trans->getForward();
-			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, 15.f, 0.f));
+			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, dep_angle, 0.f));
 
 			std::vector<physx::PxRaycastHit> raycastHits;
 			bool has_hit = EnginePhysics.raycast(black_hole_pos, rotated_vec, 2000.f, raycastHits, CModulePhysics::FilterGroup::Scenario, true, true);
 
 			// Get initial beam direction. The target will be the first position hit by the raycast
-			beam_target = player_pos;
-			if(has_hit)
-				beam_target = PXVEC3_TO_VEC3(raycastHits[0].position);
+			//beam_target = player_pos;
+			//if(has_hit)
+			//	beam_target = PXVEC3_TO_VEC3(raycastHits[0].position);
+
+			beam_target = TaskUtils::getBoneForward(e_cygnus, "cygnus_hole_jnt") * 2;
 
 			// Place the beam in the black hole, looking at the target
 			TCompTransform* c_trans = ctx.getComponent<TCompTransform>();
 			CTransform clone_trans;
 			clone_trans.setPosition(black_hole_pos);
-			clone_trans.lookAt(black_hole_pos, PXVEC3_TO_VEC3(raycastHits[0].position), VEC3::Up);
+			clone_trans.lookAt(black_hole_pos, beam_target, VEC3::Up);
 			e_beam = spawn("data/prefabs/cygnus_beam.json", clone_trans);
 
+			// Set beam parameters
 			TCompCygnusBeam* c_cygnusbeam = e_beam->get<TCompCygnusBeam>();
 			c_cygnusbeam->setParameters(damage);
 		};
@@ -2007,9 +2011,30 @@ public:
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
-			beam_target = VEC3(beam_target.x + 2*dt, beam_target.y, beam_target.z + 2* dt);
+			float beam_dir = ctx.getNodeVariable<float>(name, "beam_dir");
+			float delta_mov = move_speed * dt * beam_dir;
+			//beam_target = VEC3(beam_target.x + delta_mov, beam_target.y, beam_target.z + delta_mov);
+
+			//float ang_speed = 2.f;
+			delta_mov = move_speed * dt * beam_dir;
+
+			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_mov, /*delta_mov*/0.f, 0.f));
+
 			TCompTransform* c_trans = e_beam->get<TCompTransform>();
 			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
+
+			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
+			dt_acum += dt;
+			ctx.setNodeVariable(name, "dt_acum", dt_acum);
+
+			// Change the beam direction depending on the animation time
+			if (dt_acum >= 1.16f && beam_dir > 0.f) {
+				ctx.setNodeVariable(name, "beam_dir", -1.f);
+			}
+			else {
+				if (dt_acum >= 2.66f && beam_dir < 0.f)
+					ctx.setNodeVariable(name, "beam_dir", 1.f);
+			}
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
@@ -2024,6 +2049,7 @@ public:
 	// Executed on first frame
 	void onEnter(CBTContext& ctx) override {
 		ctx.setNodeVariable(name, "dt_acum", 0.f);
+		ctx.setNodeVariable(name, "beam_dir", 1.f);
 		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 
