@@ -40,7 +40,7 @@ void TCompFSM::onEntityCreated()
 {
 	_context.setOwnerEntity(CHandle(this).getOwner());
 	assert(_context.isValid());
-	startCtx();
+	_context.start();
 }
 
 void TCompFSM::startCtx()
