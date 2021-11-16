@@ -363,11 +363,19 @@ struct TSceneExporter (
 		local z_far = (inMeters (distance obj obj.Target))
 		if (z_far < 1) then ( z_far = 1.1 )
 		
-		if (getUserProp obj "pattern") != undefined then (
+		local pattern_info = getUserProp obj "pattern"
+		local pattern_tex = "data/textures/pattern_vidriera_color.dds"
+			
+		if (pattern_info != undefined) then (
 			fs.writeComma()
 			fs.writeKeyValue "use_pattern" true
 			fs.writeComma()
-			fs.writeKeyValue "pattern" "data/textures/pattern_vidriera_color.dds"
+			
+			if pattern_info == "round" then (
+				pattern_tex = "data/textures/pattern_vidriera_redonda_color.dds"
+			)
+			
+			fs.writeKeyValue "pattern" pattern_tex
 			fs.writeComma()
 			fs.writeKeyValue "ortho" true
 			fs.writeComma()
@@ -377,7 +385,7 @@ struct TSceneExporter (
 			fs.writeComma()
 			fs.writeKeyValue "ortho_height" 5
 			fs.writeComma()
-			fs.writeKeyValue "z_max" (z_far*15)
+			fs.writeKeyValue "z_max" (z_far)
 		)else (
 		
 			fs.writeComma()
