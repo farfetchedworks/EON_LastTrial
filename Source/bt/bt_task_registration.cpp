@@ -2047,12 +2047,11 @@ private:
 	int damage;
 	float dep_angle;
 	float move_speed;
-	float sphere_radius = 0.5;
-	VEC3 ray_dir;
 	float dist_to_eon;
-	VEC3 black_hole_pos;
-	float depression_arc = deg2rad(45.0f);
 	CEntity* e_beam = nullptr;
+	
+	// The beam will start from the black hole and look at a changing target
+	VEC3 black_hole_pos;
 	VEC3 beam_target;
 
 public:
@@ -2066,30 +2065,19 @@ public:
 		{
 			ctx.setNodeVariable(name, "allow_aborts", false);
 
-			// Get forward vector and distance for the beam
-			CEntity* player = getPlayer();
-			VEC3 player_pos = player->getPosition();
-
+			// Get the black hole position
 			CEntity* e_cygnus = ctx.getOwnerEntity();
 			black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
+			ctx.setNodeVariable(name, "black_hole_pos", black_hole_pos);
 
-			// Get the initial beam target with a raycast
+			// Get the initial beam target rotating the Cygnus forward with a pitch angle
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			VEC3 cygnus_forward = h_trans->getForward();
 			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, dep_angle, 0.f));
-
-			std::vector<physx::PxRaycastHit> raycastHits;
-			bool has_hit = EnginePhysics.raycast(black_hole_pos, rotated_vec, 2000.f, raycastHits, CModulePhysics::FilterGroup::Scenario, true, true);
-
-			// Get initial beam direction. The target will be the first position hit by the raycast
-			//beam_target = player_pos;
-			//if(has_hit)
-			//	beam_target = PXVEC3_TO_VEC3(raycastHits[0].position);
-
-			beam_target = TaskUtils::getBoneForward(e_cygnus, "cygnus_hole_jnt") * 2;
+			beam_target = cygnus_forward + black_hole_pos;
+			ctx.setNodeVariable(name, "beam_target", beam_target);
 
 			// Place the beam in the black hole, looking at the target
-			TCompTransform* c_trans = ctx.getComponent<TCompTransform>();
 			CTransform clone_trans;
 			clone_trans.setPosition(black_hole_pos);
 			clone_trans.lookAt(black_hole_pos, beam_target, VEC3::Up);
@@ -2103,29 +2091,32 @@ public:
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
+			// Get beam dir, target and origin from node variables
 			float beam_dir = ctx.getNodeVariable<float>(name, "beam_dir");
+			beam_target = ctx.getNodeVariable<VEC3>(name, "beam_target");
+			black_hole_pos = ctx.getNodeVariable<VEC3>(name, "black_hole_pos");
+
+			// Calculate the speed and rotation, and store the new beam target
 			float delta_mov = move_speed * dt * beam_dir;
 			//beam_target = VEC3(beam_target.x + delta_mov, beam_target.y, beam_target.z + delta_mov);
-
-			//float ang_speed = 2.f;
-			delta_mov = move_speed * dt * beam_dir;
-
 			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_mov, /*delta_mov*/0.f, 0.f));
+			ctx.setNodeVariable(name, "beam_target", beam_target);
 
+			// Rotate the beam to look at the target
 			TCompTransform* c_trans = e_beam->get<TCompTransform>();
 			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
 
+			// Change the beam direction depending on the animation time
 			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
 			dt_acum += dt;
 			ctx.setNodeVariable(name, "dt_acum", dt_acum);
 
-			// Change the beam direction depending on the animation time
-			if (dt_acum >= 1.16f && beam_dir > 0.f) {
-				ctx.setNodeVariable(name, "beam_dir", -1.f);
+			if (dt_acum >= 1.16f && beam_dir < 0.f) {
+				ctx.setNodeVariable(name, "beam_dir", 1.f);
 			}
 			else {
-				if (dt_acum >= 2.66f && beam_dir < 0.f)
-					ctx.setNodeVariable(name, "beam_dir", 1.f);
+				if (dt_acum >= 2.66f && beam_dir > 0.f)
+					ctx.setNodeVariable(name, "beam_dir", -1.f);
 			}
 		};
 
@@ -2141,8 +2132,10 @@ public:
 	// Executed on first frame
 	void onEnter(CBTContext& ctx) override {
 		ctx.setNodeVariable(name, "dt_acum", 0.f);
-		ctx.setNodeVariable(name, "beam_dir", 1.f);
+		ctx.setNodeVariable(name, "beam_dir", -1.f);
 		ctx.setNodeVariable(name, "allow_aborts", true);
+		ctx.setNodeVariable(name, "beam_target", VEC3::Zero);
+		ctx.setNodeVariable(name, "black_hole_pos", VEC3::Zero);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
