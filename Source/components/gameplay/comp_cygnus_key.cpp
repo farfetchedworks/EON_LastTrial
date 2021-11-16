@@ -177,7 +177,7 @@ void TCompCygnusKey::onAllKeysOpened()
 			VEC3::Up);
 		CameraMixer.blendCamera("camera_sculptures", 1.f, &interpolators::quadInOutInterpolator);
 		PlayerInput.blockInput();
-		EngineUI.fadeOut(0.5f);
+		EngineUI.fadeOut(1.f);
 	}
 
 	// Time reversal effect

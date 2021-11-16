@@ -65,6 +65,26 @@ namespace ui
         }
     }
 
+    void CModule::fadeWidget(const std::string& name, float time)
+    {
+        CWidget* widget = getWidget(name);
+        assert(widget);
+        if (!widget || widget->isActive()) return;
+
+        if (widget->hasEffect("Fade In")) {
+            widget->setState(EState::STATE_IN);
+        }
+
+        _activeWidgets.push_back(widget);
+        widget->setActive(true);
+
+        TFadeWidget fwidget;
+        fwidget.widget = widget;
+        fwidget.timer = time;
+
+        _fadingWidgets.push_back(fwidget);
+    }
+
     void CModule::activateWidget(const std::string& name, bool fade_in)
     {
         CWidget* widget = getWidget(name);
@@ -133,28 +153,47 @@ namespace ui
 
     void CModule::update(float delta)
     {
-        if (_modalTime > 0.f)
-        {
-            _modalTime -= delta;
-            if (_modalTime < 0.f)
-                deactivateWidget("modal_black");
-        }
+        // Cursor stuff
 
         VEC2 pos = CEngine::get().getInput(input::MENU)->getMousePosition();
         auto cursorWidget = getWidget("cursor");
         cursorWidget->setPosition(pos * getResolution());
 
         // Remove widgets to clear from active 
-        auto eraseIt = std::remove_if(begin(_activeWidgets), end(_activeWidgets), [&](CWidget * w) {
-            bool to_clear = (w->getState() == EState::STATE_CLEAR);
-            if (to_clear) {
-                w->setState(EState::STATE_NONE);
-                w->setActive(false);
-            }
-            return to_clear;
-        });
+        {
+            auto eraseIt = std::remove_if(begin(_activeWidgets), end(_activeWidgets), [&](CWidget* w) {
+                bool to_clear = (w->getState() == EState::STATE_CLEAR);
+                if (to_clear) {
+                    w->setState(EState::STATE_NONE);
+                    w->setActive(false);
+                }
+                return to_clear;
+            });
 
-        _activeWidgets.erase(eraseIt, end(_activeWidgets));
+            _activeWidgets.erase(eraseIt, end(_activeWidgets));
+        }
+        
+        // Fading widgets
+
+        {
+            for (auto& fW : _fadingWidgets)
+            {
+                fW.timer -= delta;
+
+                if (fW.timer < 0.f)
+                {
+                    deactivateWidget(fW.widget->getName());
+                }
+            }
+
+            auto eraseIt = std::remove_if(begin(_fadingWidgets), end(_fadingWidgets), [&](TFadeWidget w) {
+                return w.timer < 0.f;
+            });
+
+            _fadingWidgets.erase(eraseIt, end(_fadingWidgets));
+        }
+        
+        // Update all widgets
 
         for (CWidget* widget : _activeWidgets)
         {
@@ -325,8 +364,7 @@ namespace ui
 
     void CModule::fadeOut(float time)
     {
-        _modalTime = time;
-        activateWidget("modal_black");
+        fadeWidget("modal_black", time);
     }
 
     void CModule::renderInMenu()
@@ -380,6 +418,15 @@ namespace ui
                 for (auto& widget : _activeWidgets)
                 {
                     addWidget(widget);
+                }
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Fading Widgets"))
+            {
+                for (auto& widget : _fadingWidgets)
+                {
+                    addWidget(widget.widget);
                 }
                 ImGui::TreePop();
             }
