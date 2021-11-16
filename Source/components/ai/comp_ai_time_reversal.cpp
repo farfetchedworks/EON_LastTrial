@@ -1,16 +1,17 @@
 #include "mcv_platform.h"
-#include "components/ai/comp_ai_time_reversal.h"
 #include "engine.h"
+#include "entity/entity_parser.h"
+#include "comp_ai_time_reversal.h"
+#include "render/draw_primitives.h"
 #include "modules/module_physics.h"
 #include "audio/module_audio.h"
 #include "components/common/comp_transform.h"
-#include "entity/entity_parser.h"
 #include "components/stats/comp_health.h"
 #include "components/common/comp_hierarchy.h"
 #include "components/gameplay/comp_game_manager.h"
 #include "components/gameplay/comp_lifetime.h"
-#include "render/draw_primitives.h"
 #include "components/controllers/comp_player_controller.h"
+#include "components/render/comp_dissolve.h"
 
 DECL_OBJ_MANAGER("ai_time_reversal", TCompAITimeReversal)
 
@@ -95,7 +96,7 @@ void TCompAITimeReversal::update(float dt)
 
 bool TCompAITimeReversal::startRewinding()
 {
-    if (is_rewinding) {
+    if (is_rewinding || generated_shots != buffer_size) {
         return false;
     }
 
@@ -125,6 +126,12 @@ bool TCompAITimeReversal::startRewinding()
     lerp_target = circular_buffer[rewind_index];
 
     TCompCollider* comp_collider = h_collider;
+
+    TCompDissolveEffect* c_dissolve = get<TCompDissolveEffect>();
+    if (c_dissolve) {
+        c_dissolve->setRemoveColliders(false);
+        c_dissolve->enable(3.f);
+    }
 
     // Needed to avoid collision with environment
     EnginePhysics.setupFilteringOnAllShapesOfActor(comp_collider->actor, CModulePhysics::FilterGroup::Enemy, CModulePhysics::FilterGroup::Scenario);
@@ -165,6 +172,13 @@ void TCompAITimeReversal::stopRewinding()
           lTime->init();
       }
     }
+
+    TCompDissolveEffect* c_dissolve = get<TCompDissolveEffect>();
+    if (c_dissolve) {
+        c_dissolve->recover();
+        c_dissolve->setRemoveColliders(true);
+    }
+
 
     // Set FMOD stop parameter
     EngineAudio.setGlobalRTPC(FMOD_PARAM_END, 1);

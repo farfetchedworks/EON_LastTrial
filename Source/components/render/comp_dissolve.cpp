@@ -110,6 +110,22 @@ void TCompDissolveEffect::recover(bool propagate_childs)
 	}
 }
 
+void TCompDissolveEffect::setRemoveColliders(bool remove, bool propagate_childs)
+{
+	_removeCollider = remove;
+
+	TCompParent* c_parent = get<TCompParent>();
+	if (c_parent && propagate_childs) {
+		c_parent->forEachChild([&](CHandle h) {
+			CEntity* e = h;
+			TCompDissolveEffect* c_dissolve = e->get<TCompDissolveEffect>();
+			if (c_dissolve) {
+				c_dissolve->setRemoveColliders(remove, propagate_childs);
+			}
+		});
+	}
+}
+
 void TCompDissolveEffect::update(float dt)
 {
 	if (_waitTimer > 0.f)

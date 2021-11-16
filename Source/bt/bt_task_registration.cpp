@@ -26,6 +26,7 @@
 #include "skeleton/comp_skel_lookat.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/projectiles/comp_cygnus_beam.h"
+#include "components/controllers/comp_player_controller.h"
 
 #define PLAY_CINEMATICS false
 
@@ -1936,6 +1937,12 @@ public:
 			render->setEnabled(false);
 			// Stop the animation and return to Locomotion state
 			TaskUtils::stopAction(ctx.getOwnerEntity(), "cygnus_f2_heal", 0.1f);
+
+			// Remove lock on..
+			CEntity* e_player = getEntityByName("player");
+			TCompPlayerController* c_player_cont = e_player->get<TCompPlayerController>();
+			if (c_player_cont->is_locked_on)
+				c_player_cont->removeLockOn();
 		};
 
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
