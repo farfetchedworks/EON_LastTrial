@@ -166,7 +166,11 @@ void TCompGameManager::restartLevel()
 		else {
 			CEntity* e_player_start = v_player_start[0];
 			TCompTransform* h_start_trans = e_player_start->get<TCompTransform>();
-			e_player->setTransform(*h_start_trans, true);
+			TCompTransform* h_player_trans = e_player->get<TCompTransform>();
+
+			// only assign pos and rotation (not scale!!!)
+			e_player->setPosition(h_start_trans->getPosition(), true);
+			h_player_trans->setRotation(h_start_trans->getRotation());
 		}
 	}
 }
@@ -191,18 +195,25 @@ void TCompGameManager::respawnLevel()
 	{
 		TEntityParseContext ctx;
 		parseScene("data/scenes/eon.json", ctx);
+		TMsgAllEntitiesCreated msg;
+		for (auto& h : ctx.entities_loaded)
+			h.sendMsg(msg);
 	}
 
 	// Spawn level + Bosses
 	{
 		for (auto& b : boot) {
-
+			
 			TEntityParseContext ctx;
 			parseSceneWithTag(b, "not_persistent", ctx, [&](const std::string& name) {
 				if (isBossValid(name))
 					return !bosses_states[name].is_dead;
 				return true;
 			});
+
+			TMsgAllEntitiesCreated msg;
+			for (auto& h : ctx.entities_loaded)
+				h.sendMsg(msg);
 		}
 	}
 
