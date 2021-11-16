@@ -14,6 +14,7 @@ private:
     int total_phases        = 1;
     int first_phase_req     = 0;
     float increase_ratio    = 0.f;
+    float timer             = 0.f;
 
     std::map<int, int> phase_requirements;
 
@@ -23,13 +24,14 @@ public:
         DECL_MSG(TCompGeonsManager, TMsgEnemyDied, onEnemyDied);
     }
 
-    void onEnemyDied(const TMsgEnemyDied& msg);
+    void load(const json& j, TEntityParseContext& ctx);
+    void update(float dt);
     void renderDebug();
     void debugInMenu();
-    void load(const json& j, TEntityParseContext& ctx);
 
     int getPhase() { return phase; }
     void setPhase(int new_phase);
-    void increasePhase();
+    void increasePhase(bool only_stats = false);
     void addGeons(int geons);
+    void onEnemyDied(const TMsgEnemyDied& msg);
 };
