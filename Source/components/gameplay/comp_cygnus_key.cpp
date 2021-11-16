@@ -119,6 +119,7 @@ bool TCompCygnusKey::resolve()
 		TCompCamera* c_camera = camera->get<TCompCamera>();
 		c_camera->lookAt(transform->getPosition(), newK->getPosition() + VEC3::Up, VEC3::Up);
 		CameraMixer.blendCamera("dynamic_camera", time, &interpolators::quadInOutInterpolator);
+		PlayerInput.blockInput();
 	}
 
 	// FMOD event
@@ -163,6 +164,7 @@ void TCompCygnusKey::setActive()
 		TCompCameraFollow* c_camera_follow = camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->enable();
 		CameraMixer.blendCamera("camera_follow", 2.f, &interpolators::quadInOutInterpolator);
+		PlayerInput.unBlockInput();
 	}
 
 	_active = true;
