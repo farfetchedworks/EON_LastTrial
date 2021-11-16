@@ -56,6 +56,7 @@ struct TMsgReduceHealth {
 	int damage = 0;
 	bool hitByPlayer = false;
 	bool fromBack = false;
+	bool fall_damage = false;
 };
 
 struct TMsgRegisterWeapon {

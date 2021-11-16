@@ -137,7 +137,7 @@ bool TCompPawnController::manageFalling(float speed, float dt)
 
 	if (!is_grounded && num_misses == num_rays) {
 
-		if (c_collider->distanceToGround() > 1.25f)
+		if (c_collider->distanceToGround() > 0.5f)
 			return true;
 	}
 
