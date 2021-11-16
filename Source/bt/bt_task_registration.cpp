@@ -27,7 +27,7 @@
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/projectiles/comp_cygnus_beam.h"
 
-#define PLAY_CINEMATICS true
+#define PLAY_CINEMATICS false
 
 /*
  *	Declare and implement all tasks here
