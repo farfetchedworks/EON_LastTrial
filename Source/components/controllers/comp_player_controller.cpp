@@ -925,6 +925,13 @@ void TCompPlayerController::manageAimCamera()
 		return;
 
 	bool canAim = !is_aiming && !isAlive("Plasma_Ball");
+
+	TCompFSM* fsm = get<TCompFSM>();
+	assert(fsm);
+	fsm::CStateBaseLogic* currState = (fsm::CStateBaseLogic*)fsm->getCurrentState();
+	if (currState)
+		canAim &= currState->isBlendSpace();
+
 	if (PlayerInput["aim"].getsPressed() && canAim)
 	{
 		is_aiming = true;
