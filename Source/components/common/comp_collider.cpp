@@ -569,7 +569,7 @@ bool TCompCollider::collisionAtDistance(const VEC3& org, const VEC3& dir, float 
 	std::vector<physx::PxRaycastHit> raycastHits;
 
 	// Collision
-	bool hasHit = EnginePhysics.raycast(org, dir, maxDistance, raycastHits, layerMask, true, false);
+	bool hasHit = EnginePhysics.raycast(org, dir, maxDistance, raycastHits, layerMask, true);
 	if (hasHit) {
 		distance = raycastHits[0].distance;
 
@@ -591,7 +591,7 @@ float TCompCollider::distanceToGround()
 	physx::PxU32 layerMask = CModulePhysics::FilterGroup::Scenario;
 	std::vector<physx::PxRaycastHit> raycastHits;
 	
-	bool hasHit = EnginePhysics.raycast(base_ray_pos, -VEC3::Up, 80.0f, raycastHits, layerMask, true, true);
+	bool hasHit = EnginePhysics.raycast(base_ray_pos, -VEC3::Up, 80.0f, raycastHits, layerMask, true);
 	if (hasHit) {
 		distance = raycastHits[0].distance;
 	}

@@ -59,6 +59,7 @@ class CStateFalling : public CStateBaseLogic
                     float max_distance = 20.0f;
                     distance = std::min<float>(distance, max_distance);
                     int fall_damage = static_cast<int>(health->getMaxHealth() * (distance / max_distance));
+                    
                     {
                         EngineUI.fadeWidget("screen_damage", 2.f);
 

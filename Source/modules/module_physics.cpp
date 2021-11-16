@@ -1382,7 +1382,7 @@ bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance
 bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, VEC3& first_hit, PxU32 hitMask, bool render_debug)
 {
 	std::vector<physx::PxRaycastHit> raycastHits;
-	bool status = raycast(origin, dir, distance, raycastHits, hitMask, true);
+	bool status = raycast(origin, dir, distance, raycastHits, hitMask, true, render_debug);
 
 	// Check if there is a hit
 	if (status) {
