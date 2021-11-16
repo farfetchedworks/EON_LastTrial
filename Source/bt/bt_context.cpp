@@ -387,7 +387,10 @@ void CBTContext::removeBGDecorator(IBTDecorator* bg_deco)
 
 void CBTContext::stopAnimations()
 {
-	if (active_anim_variable != "") setFSMVariable(active_anim_variable, 0);
+	if (active_anim_variable != "") {
+		setFSMVariable(active_anim_variable, 0);
+		setFSMVariable("combo_attack_active", false);			// Because all combos have stopped and the new animations have to be stopped on exit
+	}
 }
 
 void CBTContext::stop()
