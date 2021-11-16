@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="Event" id="{3f2191ee-c55d-471a-911e-430b5cf60506}">
 		<property name="name">
-			<value>Lancer_Death</value>
+			<value>Lancer_Death_Scream</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -155,7 +155,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{e8aedcbf-8bc6-48a7-9683-278b2e687f5d}">
 		<property name="volume">
-			<value>1</value>
+			<value>-80</value>
 		</property>
 		<property name="name">
 			<value>Hit</value>
@@ -227,7 +227,7 @@
 	</object>
 	<object class="PlayPercentage" id="{6ad28389-b401-4714-87a9-092fbb22625f}">
 		<property name="percentage">
-			<value>60</value>
+			<value>94</value>
 		</property>
 		<relationship name="sound">
 			<destination>{8777c99c-b61a-459c-ae41-49f80d0375c1}</destination>
