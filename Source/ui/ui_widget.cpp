@@ -112,7 +112,7 @@ namespace ui
 
     void CWidget::updateLocalTransform()
     {
-        MAT44 pv = MAT44::CreateTranslation(-_pivot.x, -_pivot.y, 0.f);
+        MAT44 pv = MAT44::CreateTranslation(-_pivot.x * _scale.x, -_pivot.y * _scale.y, 0.f);
         MAT44 sc = MAT44::CreateScale(_scale.x, _scale.y, 1.f);
         MAT44 rt = MAT44::CreateRotationZ(_angle);
         MAT44 tr = MAT44::CreateTranslation(_position.x, _position.y, 0.f);
