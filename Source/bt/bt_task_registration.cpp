@@ -27,6 +27,8 @@
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/projectiles/comp_cygnus_beam.h"
 
+#define PLAY_CINEMATICS true
+
 /*
  *	Declare and implement all tasks here
  *	The macros at the bottom will register each of them
@@ -1813,6 +1815,7 @@ public:
 	void init() override {}
 
 	void onEnter(CBTContext& ctx) override {
+#if PLAY_CINEMATICS
 		TaskUtils::resumeAction(ctx, name);
 		ctx.setIsDying(true);
 
@@ -1842,6 +1845,42 @@ public:
 
 		// Intro form 2
 		EngineLua.executeScript("CinematicCygnusF1ToF2()");
+
+#else
+		// To avoid playing cinematics
+		TaskUtils::resumeAction(ctx, name);
+		ctx.setIsDying(true);
+
+		// Stop all forces
+		CEntity* player = getPlayer();
+		TMsgRemoveForces msgForce;
+		msgForce.byPlayer = false;
+		msgForce.force_origin = "Cygnus";
+		player->sendMsg(msgForce);
+
+		CEntity* e = ctx.getOwnerEntity();
+		TCompTransform* transform = e->get<TCompTransform>();
+
+		// Get Form 1 info
+		CTransform t;
+		t.fromMatrix(*transform);
+		float yaw = transform->getYawRotationToAimTo(player->getPosition());
+		t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
+
+		// Destroy form 1 entity
+		ctx.getOwnerEntity().destroy();
+		CHandleManager::destroyAllPendingObjects();
+
+		// Enable BT
+		CEntity* e_owner = spawn("data/prefabs/cygnus_form_2.json", t);
+		TCompBT* c_bt = e_owner->get<TCompBT>();
+		assert(c_bt);
+		c_bt->setEnabled(true);
+
+		// Show health bar
+		TCompHealth* c_health = e_owner->get<TCompHealth>();
+		c_health->setRenderActive(true);
+#endif
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
