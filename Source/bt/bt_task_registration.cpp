@@ -26,6 +26,9 @@
 #include "skeleton/comp_skel_lookat.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/projectiles/comp_cygnus_beam.h"
+#include "components/controllers/comp_player_controller.h"
+
+#define PLAY_CINEMATICS false
 
 /*
  *	Declare and implement all tasks here
@@ -1414,32 +1417,15 @@ public:
 			CEntity* player = getPlayer();
 			VEC3 player_pos = player->getPosition();
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-
 			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
+
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.5f), 8.f, dt));
 		};
 
-		//callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
-		//{
-		//	CEntity* player = getPlayer();
-		//	VEC3 player_pos = player->getPosition();
-		//	TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-
-		//	// Apply an impulse at the beginning of the active frames
-		//	TCompTransform* c_player_trans = player->get<TCompTransform>();
-		//	VEC3 force_dir = h_trans->getPosition() - c_player_trans->getPosition();
-		//	force_dir.y = 0.f;
-		//	float strength = 2.f;
-		//	force_dir.Normalize();
-
-		//	TMsgAddForce msgForce;
-		//	msgForce.force = force_dir * strength;
-		//	msgForce.h_applier = ctx.getOwnerEntity();
-		//	msgForce.byPlayer = false;
-		//	msgForce.disableGravity = true;
-		//	msgForce.force_origin = "Cygnus";
-		//	player->sendMsg(msgForce);
-		//};
-		
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
 			CEntity* player = getPlayer();
@@ -1468,6 +1454,15 @@ public:
 			// Move towards Eon		
 			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
 			TaskUtils::moveForward(ctx, move_speed, dt);
+		};
+
+		callbacks.onRecovery = [&](CBTContext& ctx, float dt)
+		{
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.16f), 8.f, dt));
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
@@ -1813,6 +1808,7 @@ public:
 	void init() override {}
 
 	void onEnter(CBTContext& ctx) override {
+#if PLAY_CINEMATICS
 		TaskUtils::resumeAction(ctx, name);
 		ctx.setIsDying(true);
 
@@ -1842,6 +1838,42 @@ public:
 
 		// Intro form 2
 		EngineLua.executeScript("CinematicCygnusF1ToF2()");
+
+#else
+		// To avoid playing cinematics
+		TaskUtils::resumeAction(ctx, name);
+		ctx.setIsDying(true);
+
+		// Stop all forces
+		CEntity* player = getPlayer();
+		TMsgRemoveForces msgForce;
+		msgForce.byPlayer = false;
+		msgForce.force_origin = "Cygnus";
+		player->sendMsg(msgForce);
+
+		CEntity* e = ctx.getOwnerEntity();
+		TCompTransform* transform = e->get<TCompTransform>();
+
+		// Get Form 1 info
+		CTransform t;
+		t.fromMatrix(*transform);
+		float yaw = transform->getYawRotationToAimTo(player->getPosition());
+		t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
+
+		// Destroy form 1 entity
+		ctx.getOwnerEntity().destroy();
+		CHandleManager::destroyAllPendingObjects();
+
+		// Enable BT
+		CEntity* e_owner = spawn("data/prefabs/cygnus_form_2.json", t);
+		TCompBT* c_bt = e_owner->get<TCompBT>();
+		assert(c_bt);
+		c_bt->setEnabled(true);
+
+		// Show health bar
+		TCompHealth* c_health = e_owner->get<TCompHealth>();
+		c_health->setRenderActive(true);
+#endif
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
@@ -1905,6 +1937,12 @@ public:
 			render->setEnabled(false);
 			// Stop the animation and return to Locomotion state
 			TaskUtils::stopAction(ctx.getOwnerEntity(), "cygnus_f2_heal", 0.1f);
+
+			// Remove lock on..
+			CEntity* e_player = getEntityByName("player");
+			TCompPlayerController* c_player_cont = e_player->get<TCompPlayerController>();
+			if (c_player_cont->is_locked_on)
+				c_player_cont->removeLockOn();
 		};
 
 		callbacks.onActive = [&](CBTContext& ctx, float dt)

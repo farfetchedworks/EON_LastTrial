@@ -27,6 +27,7 @@ public:
 	void fromLifetime(float ttl);
 	void updateObjectCte(CShaderCte<CtesObject>& cte);
 	void recover(bool propagate_childs = true);
+	void setRemoveColliders(bool remove, bool propagate_childs = true);
 	void reset();
 
 	float getDissolveTime() { return _dissolveTime; }

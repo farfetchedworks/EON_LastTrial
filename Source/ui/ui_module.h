@@ -21,6 +21,7 @@ namespace ui
         void setWidgetActive(const std::string& name, bool active);
         void activateWidget(const std::string& name, bool fade_in = true);
         void deactivateWidget(const std::string& name, bool fade_out = true);
+        void fadeWidget(const std::string& name, float time);
         CWidget* getWidget(const std::string& name);
         CWidget* getWidgetFrom(const std::string& parent_widget, const std::string& name);
 
@@ -40,7 +41,11 @@ namespace ui
     private:
         VEC2 _resolution;
         CCamera _camera;
-        float _modalTime = 0.f;
+
+        struct TFadeWidget {
+            CWidget* widget = nullptr;
+            float timer = 0.f;
+        };
 
         // test
         CImage* background = nullptr;
@@ -48,6 +53,7 @@ namespace ui
         std::map<std::string_view, CWidget*> _registeredWidgets;
         std::map<std::string_view, CWidget*> _registeredAlias;
         std::vector<CWidget*> _activeWidgets;
+        std::vector<TFadeWidget> _fadingWidgets;
         std::map<std::string, TFontParams> _registeredFonts;
 
         const CPipelineState* _pipelineCombinative = nullptr;

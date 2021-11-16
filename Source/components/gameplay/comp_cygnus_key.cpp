@@ -9,10 +9,12 @@
 #include "input/input_module.h"
 #include "lua/module_scripting.h"
 #include "skeleton/comp_skeleton.h"
+#include "components/common/comp_camera.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/common/comp_parent.h"
 #include "components/common/comp_render.h"
 #include "components/common/comp_collider.h"
+#include "components/cameras/comp_camera_follow.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
 #include "../bin/data/shaders/constants_particles.h"
 
@@ -87,8 +89,9 @@ bool TCompCygnusKey::resolve()
 	CEntity* newK = next.getOwner();
 	CEntity* owner = getEntity();
 	float distance = VEC3::Distance(newK->getPosition(), getEntity()->getPosition());
-
-	key->start(2.f + distance / 12.f);
+	float time = 2.f + distance / 12.f;
+	bool current_is_first = (getOrder() == 0);
+	key->start(time, current_is_first);
 
 	// 3. Spawn geons
 	CTransform t;
@@ -102,6 +105,23 @@ bool TCompCygnusKey::resolve()
 	cte->emitter_num_particles_per_spawn = 1800;
 	cte->updateFromCPU();
 
+	// 4. Look at next key if first
+	if (current_is_first)
+	{
+		CEntity* camera_follow = getEntityByName("camera_follow");
+		TCompCameraFollow* c_camera_follow = camera_follow->get<TCompCameraFollow>();
+		c_camera_follow->disable();
+
+		CEntity* camera = getEntityByName("dynamic_camera");
+		TCompTransform* transform = camera->get<TCompTransform>();
+		transform->setPosition(camera_follow->getPosition());
+		
+		TCompCamera* c_camera = camera->get<TCompCamera>();
+		c_camera->lookAt(transform->getPosition(), newK->getPosition() + VEC3::Up, VEC3::Up);
+		CameraMixer.blendCamera("dynamic_camera", time, &interpolators::quadInOutInterpolator);
+		PlayerInput.blockInput();
+	}
+
 	// FMOD event
 	static const char* EVENT_NAME = "ENV/General/Drop_Eons";
 	EngineAudio.postEvent(EVENT_NAME, owner);
@@ -109,9 +129,10 @@ bool TCompCygnusKey::resolve()
 	return true;
 }
 
-void TCompCygnusKey::start(float time)
+void TCompCygnusKey::start(float time, bool is_second)
 {
 	_waitTime = time;
+	_secondKey = is_second;
 }
 
 void TCompCygnusKey::setActive()
@@ -135,6 +156,16 @@ void TCompCygnusKey::setActive()
 	// Set new mask
 	TCompCollider* collider = get<TCompCollider>();
 	collider->setGroupAndMask("enemy", "all");
+
+	// Undo camera change
+	if (_secondKey)
+	{
+		CEntity* camera_follow = getEntityByName("camera_follow");
+		TCompCameraFollow* c_camera_follow = camera_follow->get<TCompCameraFollow>();
+		c_camera_follow->enable();
+		CameraMixer.blendCamera("camera_follow", 2.f, &interpolators::quadInOutInterpolator);
+		PlayerInput.unBlockInput();
+	}
 
 	_active = true;
 }
@@ -177,7 +208,7 @@ void TCompCygnusKey::onAllKeysOpened()
 			VEC3::Up);
 		CameraMixer.blendCamera("camera_sculptures", 1.f, &interpolators::quadInOutInterpolator);
 		PlayerInput.blockInput();
-		EngineUI.fadeOut(0.5f);
+		EngineUI.fadeOut(1.f);
 	}
 
 	// Time reversal effect

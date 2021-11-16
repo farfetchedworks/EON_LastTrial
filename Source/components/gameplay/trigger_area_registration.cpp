@@ -20,6 +20,8 @@
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 
+#define PLAY_CINEMATICS false
+
 #pragma region General Gameplay
 
 class CTriggerAreaDeathArea : public ITriggerArea {
@@ -122,6 +124,7 @@ public:
 
 	void onAreaEnter(CHandle event_trigger, CHandle observer) override
 	{
+#if PLAY_CINEMATICS
 		CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");
 		if (e_cygnus)
 			return;
@@ -157,6 +160,24 @@ public:
 		CEntity* e_eon = getEntityByName("player");
 		TCompMusicInteractor* h_mus_int = e_eon->get<TCompMusicInteractor>();
 		h_mus_int->setEnabled(false);
+
+#else
+		CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");
+		if (!e_cygnus)
+			return;
+		TCompBT* c_bt = e_cygnus->get<TCompBT>();
+		assert(c_bt);
+
+		if (c_bt->isEnabled())
+			return;
+
+		c_bt->setEnabled(true);
+
+		TCompHealth* c_health = e_cygnus->get<TCompHealth>();
+		assert(c_health);
+		c_health->setHealth(c_health->getMaxHealth());
+		c_health->setRenderActive(true);
+#endif
 	}
 };
 #pragma endregion

@@ -6,6 +6,7 @@
 #include "fsm/states/logic/state_logic.h"
 #include "animation/blend_animation.h"
 #include "modules/module_physics.h"
+#include "ui/ui_module.h"
 #include "components/common/comp_transform.h"
 #include "components/stats/comp_stamina.h"
 #include "components/controllers/comp_player_controller.h"
@@ -46,19 +47,21 @@ class CStateFalling : public CStateBaseLogic
         if (!controller->manageFalling(current_speed, Time.delta)) {
             
             float distance = controller->distance_to_ground;
-            if (distance >= 0.2f) {
+            if (distance > 0.5f) {
 
                 collider->stopFollowForceActor("dash");
                 controller->setFalling(false);
                 ctx.setVariableValue("is_falling", false);
                 
-                if (distance >= 3.0f) {
+                if (distance > 3.0f) {
                     TCompHealth* health = owner->get<TCompHealth>();
                     // fall damage
                     float max_distance = 20.0f;
                     distance = std::min<float>(distance, max_distance);
                     int fall_damage = static_cast<int>(health->getMaxHealth() * (distance / max_distance));
                     {
+                        EngineUI.fadeWidget("screen_damage", 2.f);
+
                         // Reduce health
                         TMsgReduceHealth hmsg;
                         hmsg.damage = fall_damage;

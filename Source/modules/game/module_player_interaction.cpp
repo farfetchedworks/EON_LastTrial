@@ -26,7 +26,7 @@ void CModulePlayerInteraction::enableUI(bool v)
 	// Don't activate/deactivate each frame..
 	if (v != lastWidgetActive) {
 
-		EngineUI.setWidgetActive("eon_message", v);
+		EngineUI.setWidgetActive("eon_interact", v);
 		lastWidgetActive = v;
 	}
 }
@@ -57,7 +57,7 @@ void CModulePlayerInteraction::checkInteractions()
 			is_ok &= c_shrine->resolve();
 
 		if (is_ok) {
-			auto w = EngineUI.getWidget("eon_message");
+			auto w = EngineUI.getWidget("eon_interact");
 
 			CEntity* e_camera = EngineRender.getActiveCamera();
 			TCompCamera* cam = e_camera->get<TCompCamera>();

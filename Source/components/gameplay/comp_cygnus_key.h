@@ -9,6 +9,7 @@ class TCompCygnusKey : public TCompBase {
 
 	int _order			= 0;
 	bool _active		= false;
+	bool _secondKey		= false;
 	float _waitTime		= -1.f;
 
 	static bool _keysOpened;
@@ -25,7 +26,7 @@ public:
 	void debugInMenu();
 	bool resolve();
 	void onAllKeysOpened();
-	void start(float time = 0.f);
+	void start(float time = 0.f, bool is_second = false);
 	void setActive();
 	int getOrder() { return _order; }
 };
