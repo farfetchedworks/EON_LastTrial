@@ -119,8 +119,10 @@ void TCompWaveProjectile::update(float dt)
 	VHandles colliders;
 	CHandle receiver = CHandle();
 
-	physx::PxU32 flags = CModulePhysics::FilterGroup::None;
+	physx::PxU32 flags = CModulePhysics::FilterGroup::Enemy;
 
+	if (wave_caster == EWaveCaster::ENEMY)
+		flags = CModulePhysics::FilterGroup::Player;
 
 	if (EnginePhysics.overlapSphere(transform->getPosition(), radius, colliders, flags))
 	{
