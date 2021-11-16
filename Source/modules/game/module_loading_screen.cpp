@@ -56,23 +56,13 @@ void ModuleEONLoadingScreen::update(float dt)
 
         ui::CWidget* w = EngineUI.getWidget("continue_btn");
         assert(w);
-        if (w) {
-            
-            // Change textures of states
-            {
-                ui::CButton* btn = static_cast<ui::CButton*>(w);
-                btn->states["default"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue.dds")->as<CTexture>();
-                btn->states["selected"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_selected.dds")->as<CTexture>();
-                btn->states["pressed"].imageParams.texture = Resources.get("data/textures/ui/subvert/menu/continue_pressed.dds")->as<CTexture>();
-            }
+        w->setVisible(true);
 
-            // Change basic texture
-            {
-                ui::CImage* img = static_cast<ui::CImage*>(w);
-                ui::TImageParams& params = img->imageParams;
-                params.texture = Resources.get("data/textures/ui/subvert/menu/continue.dds")->as<CTexture>();
-            }
-        }
+        w = EngineUI.getWidget("eon_loading_screen");
+        assert(w);
+        ui::CImage* img = static_cast<ui::CImage*>(w);
+        ui::TImageParams& params = img->imageParams;
+        params.texture = Resources.get("data/textures/ui/subvert/loading_empty.dds")->as<CTexture>();
 
         CApplication::get().changeMouseState(true, false);
     }
