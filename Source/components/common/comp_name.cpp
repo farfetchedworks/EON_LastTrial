@@ -50,7 +50,7 @@ void TCompName::load(const json& j, TEntityParseContext& ctx) {
 
   // Don't spawn things with same name
   if (!ctx.parsing_prefab && getEntityByName(name).isValid()) {
-      name += std::to_string(Random::unit());
+      //name += std::to_string(Random::unit());
   }
 
   setName(name.c_str());
