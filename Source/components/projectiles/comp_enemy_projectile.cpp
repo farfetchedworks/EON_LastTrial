@@ -28,24 +28,14 @@ void TCompEnemyProjectile::setParameters(int new_damage, bool new_from_player, V
 	TCompTransform* c_t = projectile_transform;
 
 	if (!is_homing) {
-		trail = spawn("data/particles/enemy_projectile_trail.json", *c_t);
 		front = new_target;
 	}
 	else {
-		trail = spawn("data/particles/enemy_projectile_homing_trail.json", *c_t);
 		target = getEntityByName("player");
 	}
 
-	assert(trail.isValid());
-
 	initial_scale = c_t->getScale();
 	c_t->setScale(VEC3::Zero);
-
-	CEntity* e = trail;
-	TCompBuffers* buffers = e->get<TCompBuffers>();
-	CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(buffers->getCteByName("CtesParticleSystem"));
-	cte->emitter_initial_pos = e->getPosition();
-	cte->updateFromCPU();
 }
 
 void TCompEnemyProjectile::debugInMenu()
@@ -115,15 +105,6 @@ void TCompEnemyProjectile::move(float dt)
 	TCompCollider* c_collider = projectile_collider;
 	physx::PxTransform newTransform = toPxTransform(destination_trans);
 	((physx::PxRigidDynamic*)c_collider->actor)->setGlobalPose(newTransform);
-
-	// Update trail
-	if (!trail.isValid())
-		return;
-	CEntity* e = trail;
-	TCompBuffers* buffers = e->get<TCompBuffers>();
-	CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(buffers->getCteByName("CtesParticleSystem"));
-	cte->emitter_initial_pos = destination_trans.getPosition();
-	cte->updateFromCPU();
 }
 
 // When the projectile hits something, sends a message to the player and gets destroyed
@@ -162,26 +143,6 @@ void TCompEnemyProjectile::onHitObject(const TMsgEntityOnContact& msg)
 void TCompEnemyProjectile::destroy()
 {
 	CHandle(this).getOwner().destroy();
-	
-	CEntity* e = trail;
-	// Alex: Porque podria no haber?
-	if (!e)
-		return;
-
-	// Stop the emitter
-	{
-		TCompBuffers* buffers = e->get<TCompBuffers>();
-		CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(buffers->getCteByName("CtesParticleSystem"));
-		cte->emitter_stopped = 1.f;
-		cte->updateFromCPU();
-	}
-
-	// Destroy trail in x secs
-	{
-		std::string name = e->getName();
-		std::string argument = "destroyEntity('" + name + "')";
-		EngineLua.executeScript(argument, fabsf(lifetime - current_time));
-	}
 }
 
 void TCompEnemyProjectile::onApplyAreaDelay(const TMsgApplyAreaDelay& msg)

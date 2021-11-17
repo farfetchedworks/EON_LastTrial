@@ -13,12 +13,15 @@ void TCompGodRays::load(const json& j, TEntityParseContext& ctx)
 	TCompBilateralBlur::load(j, ctx);
 
 	idx = j.value("priority", idx);
+	
+	float width = Render.getWidth() * 0.5f;
+	float height = Render.getHeight() * 0.5f;
 
 	rt_volumetric_light = new CRenderToTexture();
 	char rt_name[64];
 	sprintf(rt_name, "VolumetricLightShape_%08x", CHandle(this).asUnsigned());
-	bool is_ok = rt_volumetric_light->createRT(rt_name, static_cast<int>(Render.getWidth() * 0.5f), 
-		static_cast<int>(Render.getHeight() * 0.5f), DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_UNKNOWN);
+	bool is_ok = rt_volumetric_light->createRT(rt_name, static_cast<int>(width), 
+		static_cast<int>(height), DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_UNKNOWN);
 	assert(is_ok);
 
 	// set apply callback

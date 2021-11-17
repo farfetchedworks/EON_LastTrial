@@ -19,6 +19,18 @@ bool ModuleEONLoadingScreen::start()
 
     _timer = 2.f; // sync with title screen blend out
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
+
+    // Detect input and set respective texture
+
+    ui::CWidget* w = EngineUI.getWidget("eon_loading_screen");
+    assert(w);
+    ui::CImage* img = static_cast<ui::CImage*>(w);
+    ui::TImageParams& params = img->imageParams;
+
+    params.texture = Resources.get( PlayerInput.getPad().connected ?
+        "data/textures/ui/subvert/loading/loading_gamepad.dds" : 
+        "data/textures/ui/subvert/loading/loading_keyboard.dds" )->as<CTexture>();
+
     EngineUI.activateWidget("eon_loading_screen");
 
     _menuController.setInput(input);
@@ -62,7 +74,9 @@ void ModuleEONLoadingScreen::update(float dt)
         assert(w);
         ui::CImage* img = static_cast<ui::CImage*>(w);
         ui::TImageParams& params = img->imageParams;
-        params.texture = Resources.get("data/textures/ui/subvert/loading_empty.dds")->as<CTexture>();
+        params.texture = Resources.get(PlayerInput.getPad().connected ?
+            "data/textures/ui/subvert/loading/loading_gamepad_no_text.dds" :
+            "data/textures/ui/subvert/loading/loading_keyboard_no_text.dds")->as<CTexture>();
 
         CApplication::get().changeMouseState(true, false);
     }
