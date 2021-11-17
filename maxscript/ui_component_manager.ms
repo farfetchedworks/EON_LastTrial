@@ -29,7 +29,7 @@ utility ComponentManager "Component Manager"
 		--button btn_basic_mechanism "Basic Mechanism" align:#left
 		button btn_message_area "Message Area" align:#left
 		button btn_trigger_area "Trigger Area" align:#left
-		button btn_collapsing_rocks "Collapsing Rocks" align:#left
+		button btn_collapsing_props "Collapsing Props" align:#left
 		button btn_destructible_prop "Destructible Prop" align:#left
 		button btn_anim_laucher "Animation Launcher" align:#left
 		
@@ -236,16 +236,16 @@ utility ComponentManager "Component Manager"
 			)
 		)
 
-		-- Adds a collapsing rocks component to the current selected object
-		on btn_collapsing_rocks pressed do
+		-- Adds a collapsing props component to the current selected object
+		on btn_collapsing_props pressed do
 		(
 			try (
 				if $ == undefined then throw "You must select an object"
 				gc()
-				custAttributes.delete $ classCollapsingRocks
-				custAttributes.add $ classCollapsingRocks
+				custAttributes.delete $ classCollapsingProps
+				custAttributes.add $ classCollapsingProps
 				
-				MessageBox ("Added Collapsing Rocks")
+				MessageBox ("Added Collapsing Props")
 			)
 			catch (
 				messageBox ("Error Adding Component:\n" + getCurrentException())
