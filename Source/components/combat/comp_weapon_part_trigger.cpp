@@ -154,7 +154,10 @@ void TCompWeaponPartTrigger::spawnFloorParticles()
 	t.setPosition(newPos);
 	t.setRotation(QUAT::Identity);
 
-	CEntity* e = spawn("data/particles/eon_floor_particles.json", t);
+	bool isCave = true;
+
+	CEntity* e = spawn( isCave ? 
+		"data/particles/eon_cavefloor_particles.json" : "data/particles/eon_templefloor_particles.json", t);
 	TCompBuffers* buffers = e->get<TCompBuffers>();
 	CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte< CtesParticleSystem >*>(buffers->getCteByName("CtesParticleSystem"));
 

@@ -67,19 +67,10 @@ namespace ui
 
     void CModule::fadeWidget(const std::string& name, float time)
     {
-        CWidget* widget = getWidget(name);
-        assert(widget);
-        if (!widget || widget->isActive()) return;
-
-        if (widget->hasEffect("Fade In")) {
-            widget->setState(EState::STATE_IN);
-        }
-
-        _activeWidgets.push_back(widget);
-        widget->setActive(true);
+        activateWidget(name);
 
         TFadeWidget fwidget;
-        fwidget.widget = widget;
+        fwidget.widget = getWidget(name);
         fwidget.timer = time;
 
         _fadingWidgets.push_back(fwidget);
@@ -93,6 +84,12 @@ namespace ui
 
         if (fade_in && widget->hasEffect("Fade In")) {
             widget->setState(EState::STATE_IN);
+        }
+        else
+        {
+            // if no fade in, be sure it's 100% visible
+            TImageParams* ip = widget->getImageParams();
+            if(ip) ip->time_normalized = 1.f;
         }
         
         _activeWidgets.push_back(widget);
@@ -178,7 +175,7 @@ namespace ui
         {
             for (auto& fW : _fadingWidgets)
             {
-                fW.timer -= delta;
+                fW.timer -= Time.delta_unscaled;
 
                 if (fW.timer < 0.f)
                 {
@@ -426,7 +423,8 @@ namespace ui
             {
                 for (auto& widget : _fadingWidgets)
                 {
-                    addWidget(widget.widget);
+                    ImGui::Text("Name: %s", widget.widget->getName().c_str());
+                    ImGui::Text("ttl: %f", widget.timer);
                 }
                 ImGui::TreePop();
             }

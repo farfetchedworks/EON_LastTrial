@@ -202,7 +202,7 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 
 	PxTransform t = shape->getLocalPose();
 	VEC3 offset = PXVEC3_TO_VEC3(t.p);
-	if (ImGui::DragFloat3("Offset", &offset.x, 0.1f, 0.f, 50.f))
+	if (ImGui::DragFloat3("Offset", &offset.x, 0.01f, -20.f, 20.f))
 	{
 		t.p = VEC3_TO_PXVEC3(offset);
 		shape->setLocalPose(t);
@@ -569,7 +569,7 @@ bool TCompCollider::collisionAtDistance(const VEC3& org, const VEC3& dir, float 
 	std::vector<physx::PxRaycastHit> raycastHits;
 
 	// Collision
-	bool hasHit = EnginePhysics.raycast(org, dir, maxDistance, raycastHits, layerMask, true, false);
+	bool hasHit = EnginePhysics.raycast(org, dir, maxDistance, raycastHits, layerMask, true);
 	if (hasHit) {
 		distance = raycastHits[0].distance;
 
@@ -591,7 +591,7 @@ float TCompCollider::distanceToGround()
 	physx::PxU32 layerMask = CModulePhysics::FilterGroup::Scenario;
 	std::vector<physx::PxRaycastHit> raycastHits;
 	
-	bool hasHit = EnginePhysics.raycast(base_ray_pos, -VEC3::Up, 80.0f, raycastHits, layerMask, true, true);
+	bool hasHit = EnginePhysics.raycast(base_ray_pos, -VEC3::Up, 80.0f, raycastHits, layerMask, true);
 	if (hasHit) {
 		distance = raycastHits[0].distance;
 	}

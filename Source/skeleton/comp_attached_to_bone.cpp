@@ -103,7 +103,7 @@ void TCompAttachedToBone::applyOffset(CTransform& trans, VEC3 new_offset)
 
 void TCompAttachedToBone::debugInMenu() {
 	ImGui::Text("Bone ID(%s) = %d", bone_name.c_str(), bone_id);
-	ImGui::DragFloat3("Offset", &offset.x, 0.01f, -1.5f, 1.5f);
+	ImGui::DragFloat3("Offset", &offset.x, 0.01f, -20.f, 20.f);
 	ImGui::DragFloat3("Offset Rot", &offset_rotation.x, 0.01f, (float)-M_PI, (float)M_PI);
 	local_t.renderInMenu();
 }

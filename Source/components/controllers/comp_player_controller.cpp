@@ -223,12 +223,12 @@ void TCompPlayerController::update(float dt)
 	}
 
 	if (PlayerInput['C'].getsPressed()) {
-	    //spawnParticles("data/particles/compute_time_distortion_particles.json", transform->getPosition(), 2.f, 1);
-		spawnParticles("data/particles/splatter_blood_left.json", transform->getPosition() + transform->getForward(), 2.f, 1);
+	    //spawnParticles("data/particles/compute_time_distortion_particles.json", transform->getPosition());
+		spawnParticles("data/particles/compute_projectile_portal_particles.json", transform->getPosition() + transform->getForward() * 0.1, transform->getPosition());
 
-		//spawnParticles("data/particles/compute_levelup_particles.json", transform->getPosition(), 2.f, 1);
-		//spawnParticles("data/particles/compute_levelup_smoke_particles.json", transform->getPosition(), 2.f, 1);
-		//spawnParticles("data/particles/compute_levelup_spread_particles.json", transform->getPosition(), 2.f, 1);
+		//spawnParticles("data/particles/compute_levelup_particles.json", transform->getPosition());
+		//spawnParticles("data/particles/compute_levelup_smoke_particles.json", transform->getPosition());
+		//spawnParticles("data/particles/compute_levelup_spread_particles.json", transform->getPosition());
 	}
 
 	if (PlayerInput['B'].getsPressed()) {
@@ -925,6 +925,13 @@ void TCompPlayerController::manageAimCamera()
 		return;
 
 	bool canAim = !is_aiming && !isAlive("Plasma_Ball");
+
+	TCompFSM* fsm = get<TCompFSM>();
+	assert(fsm);
+	fsm::CStateBaseLogic* currState = (fsm::CStateBaseLogic*)fsm->getCurrentState();
+	if (currState)
+		canAim &= currState->isBlendSpace();
+
 	if (PlayerInput["aim"].getsPressed() && canAim)
 	{
 		is_aiming = true;

@@ -99,7 +99,7 @@
     <ClCompile Include="components\controllers\comp_wasd_controller.cpp" />
     <ClCompile Include="components\controllers\pawn_utils.cpp" />
     <ClCompile Include="components\gameplay\comp_basic_mechanism.cpp" />
-    <ClCompile Include="components\gameplay\comp_collapsing_rocks.cpp" />
+    <ClCompile Include="components\gameplay\comp_collapsing_props.cpp" />
     <ClCompile Include="components\gameplay\comp_destructible_prop.cpp" />
     <ClCompile Include="components\gameplay\comp_energy_wall.cpp" />
     <ClCompile Include="components\gameplay\comp_falling_rock.cpp" />
@@ -361,7 +361,7 @@
     <ClInclude Include="components\controllers\comp_rigid_animation_controller.h" />
     <ClInclude Include="components\controllers\pawn_actions.h" />
     <ClInclude Include="components\gameplay\comp_basic_mechanism.h" />
-    <ClInclude Include="components\gameplay\comp_collapsing_rocks.h" />
+    <ClInclude Include="components\gameplay\comp_collapsing_props.h" />
     <ClInclude Include="components\gameplay\comp_destructible_prop.h" />
     <ClInclude Include="components\gameplay\comp_energy_wall.h" />
     <ClInclude Include="components\gameplay\comp_falling_rock.h" />

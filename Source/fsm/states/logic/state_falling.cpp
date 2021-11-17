@@ -19,14 +19,11 @@ using namespace fsm;
 
 class CStateFalling : public CStateBaseLogic
 {
-    float distanceToGround = 0.0f;
+    const float maxFallTime = 2.f;
 
     void onFirstFrameLogic(CContext& ctx) const
     {
-        CEntity* owner = ctx.getOwnerEntity();
-        TCompCollider* collider = owner->get<TCompCollider>();
-        TCompPlayerController* controller = owner->get<TCompPlayerController>();
-        controller->distance_to_ground = collider->distanceToGround();
+        ctx.setVariableValue("fall_time", 0.f);
     }
 
     void checkFallingCondition(CContext& ctx, float dt) const
@@ -35,41 +32,30 @@ class CStateFalling : public CStateBaseLogic
         TCompPlayerController* controller = owner->get<TCompPlayerController>();
         TCompCollider* collider = owner->get<TCompCollider>();
 
-        bool is_moving = false;
-        //controller->move_dir = controller->getMoveDirection(is_moving);
-
-        // To apply gravity
+        float fallingTime = std::get<float>(ctx.getVariableValue("fall_time"));
         controller->movePhysics(VEC3::Zero, dt);
 
-        float current_speed = controller->getSpeed();
-
-        // TODO Refactoring
-        if (!controller->manageFalling(current_speed, Time.delta)) {
+        if (!controller->manageFalling(controller->getSpeed(), dt)) {
             
-            float distance = controller->distance_to_ground;
-            if (distance > 0.5f) {
+            if (fallingTime > 0.15f) {
 
                 collider->stopFollowForceActor("dash");
                 controller->setFalling(false);
                 ctx.setVariableValue("is_falling", false);
                 
-                if (distance > 3.0f) {
+                if (fallingTime > 0.4f) {
                     TCompHealth* health = owner->get<TCompHealth>();
-                    // fall damage
-                    float max_distance = 20.0f;
-                    distance = std::min<float>(distance, max_distance);
-                    int fall_damage = static_cast<int>(health->getMaxHealth() * (distance / max_distance));
-                    {
-                        EngineUI.fadeWidget("screen_damage", 2.f);
+                    int fall_damage = static_cast<int>(health->getMaxHealth() * (fallingTime / maxFallTime));
+                    EngineUI.fadeWidget("screen_damage", 2.f);
 
-                        // Reduce health
-                        TMsgReduceHealth hmsg;
-                        hmsg.damage = fall_damage;
-                        hmsg.h_striker = owner;
-                        hmsg.hitByPlayer = false;
-                        hmsg.fromBack = false;
-                        owner->sendMsg(hmsg);
-                    }
+                    printFloat("Fall time", fallingTime);
+                    printFloat("Fall damage", fall_damage);
+
+                    TMsgReduceHealth hmsg;
+                    hmsg.damage = fall_damage;
+                    hmsg.h_striker = owner;
+                    hmsg.fall_damage = true;
+                    owner->sendMsg(hmsg);
                 }
             }
             else
@@ -78,10 +64,16 @@ class CStateFalling : public CStateBaseLogic
                 ctx.setVariableValue("is_landing", false);
             }
         }
+        else
+        {
+            fallingTime += dt;
+        }
 
         if (controller->checkDashInput()) {
             controller->setDashAnim();
         }
+
+        ctx.setVariableValue("fall_time", fallingTime);
     }
 
 public:
@@ -103,15 +95,13 @@ public:
         controller->setFalling(false);
         ctx.setVariableValue("is_falling", false);
         ctx.setVariableValue("is_landing", true);
+        ctx.setVariableValue("fall_time", 0.f);
     }
 
     void onUpdate(CContext& ctx, float dt) const
     {
         anim.update(ctx, dt);
         checkFallingCondition(ctx, dt);
-        CEntity* owner = ctx.getOwnerEntity();
-        TCompCollider* collider = owner->get<TCompCollider>();
-        //dbg("%f\n", PXVEC3_TO_VEC3(((physx::PxRigidDynamic*)collider->actor)->getLinearVelocity()).y);
     }
 };
 
