@@ -160,7 +160,6 @@ bool CMaterial::createFromJson(const json& j) {
 		if (jCb.count("CtesMaterial")) {
 			gpu_ctes = comp_buffers.getCteByName("CtesMaterial");
 			from_json(jCb["CtesMaterial"], ctes);
-			setCtesDirty();
 			usesCtes = true;
 		}
 	}
@@ -172,6 +171,9 @@ bool CMaterial::createFromJson(const json& j) {
 	}
 
 	assert(gpu_ctes->size() == sizeof(CtesMaterial));
+
+	setCtesDirty();
+
 	return true;
 }
 

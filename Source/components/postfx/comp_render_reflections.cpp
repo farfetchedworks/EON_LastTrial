@@ -65,7 +65,7 @@ CTexture* TCompSSReflections::compute(CTexture* in_texture, CTexture* last_textu
 
 	prev_rt->activateRT();
 	// add to final rt
-	drawFullScreenQuad("ssr_add.pipeline", blurred);
+	drawFullScreenQuad("ssr_add.pipeline", rt_output, blurred);
 
 	return prev_rt;
 }
