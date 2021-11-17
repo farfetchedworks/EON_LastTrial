@@ -213,7 +213,7 @@ void CEngine::initInput(input::CModule* input)
 
     input->registerDevice(new input::CDeviceKeyboardWindows());
     input->registerDevice(new input::CDeviceMouseWindows(CApplication::get().getHandle()));
-    input->registerDevice(new input::CDevicePadXboxWindows(input->getId()));
+    input->registerDevice(new input::CDevicePadXboxWindows(0));
 
     input->loadMapping("data/input/mappings.json");
 }
