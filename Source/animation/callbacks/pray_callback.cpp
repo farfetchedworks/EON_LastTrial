@@ -44,7 +44,7 @@ struct onPrayCallback : public CAnimationCallback
 
 			cte->emitter_initial_pos = hole->getPosition();
 			cte->emitter_owner_position = owner->getPosition();
-			cte->emitter_num_particles_per_spawn = 1500;
+			cte->emitter_num_particles_per_spawn = 2500;
 			cte->emitter_time_between_spawns = 0.3f;
 			cte->updateFromCPU();
 
