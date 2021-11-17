@@ -15,7 +15,7 @@ bool ModuleEONLoadingScreen::start()
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 
-    CApplication::get().changeMouseState(false);
+    // CApplication::get().changeMouseState(false);
 
     _timer = 2.f; // sync with title screen blend out
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});

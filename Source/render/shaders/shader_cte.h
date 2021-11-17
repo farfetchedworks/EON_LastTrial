@@ -1,4 +1,5 @@
 #pragma once
+#include "engine.h"
 
 class CBaseShaderCte {
 
@@ -12,6 +13,8 @@ protected:
 public:
 
   void updateFromCPU(const void* new_cpu_data) {
+    if (CEngine::get().getMainThreadId() != std::this_thread::get_id())
+        return;
     assert(cte);
     Render.ctx->UpdateSubresource(cte, 0, nullptr, new_cpu_data, 0, 0);
   }

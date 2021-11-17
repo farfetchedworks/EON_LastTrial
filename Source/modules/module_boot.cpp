@@ -4,6 +4,8 @@
 #include "module_entities.h"
 #include "components/messages.h"
 
+#define USE_LOAD_THREAD
+
 extern CShaderCte<CtesWorld> cte_world;
 const int MAX_ENTRIES = 32;
 
@@ -24,6 +26,22 @@ bool CModuleBoot::start()
 	return true;
 }
 
+void CModuleBoot::update(float dt)
+{
+	if (_loadThread && _bootCompleted && !_bootReady)
+	{
+		if(_loadThread->joinable())
+			_loadThread->join();
+		_bootReady = true;
+	}
+}
+
+void BootInThread(const std::string& boot_name, CModuleBoot* instance)
+{
+	assert(instance);
+	instance->loadBoot(boot_name);
+}
+
 bool CModuleBoot::customStart()
 {
 	// Probably no loading screen..
@@ -31,9 +49,17 @@ bool CModuleBoot::customStart()
 	{
 		jBoot = loadJson("data/boot.json");
 		_loadPreview = jBoot.count("preview_mode") && jBoot["preview_mode"] == true;
+		loadBoot("data/boot.json");
+		return true;
 	}
-	
-	return loadBoot("data/boot.json");
+
+#ifdef USE_LOAD_THREAD
+	_loadThread = new tbb::tbb_thread(&BootInThread, "data/boot.json", this);
+#else
+	loadBoot("data/boot.json");
+#endif
+
+	return true;
 }
 
 bool CModuleBoot::loadScene(const std::string& p, bool preloading)
@@ -54,13 +80,14 @@ bool CModuleBoot::loadScene(const std::string& p, bool preloading)
 	return is_ok;
 }
 
-bool CModuleBoot::loadBoot(const std::string& p)
+void CModuleBoot::loadBoot(const std::string& p)
 {
 	jBoot = loadJson(p);
 
 	if (_loadPreview)
 	{
-		return loadPreviewBoot();
+		loadPreviewBoot();
+		return;
 	}
 
 	// Pre load resources
@@ -102,7 +129,8 @@ bool CModuleBoot::loadBoot(const std::string& p)
 
 	_bootCompleted = true;
 
-	return true;
+	if (!_loadThread)
+		_bootReady = true;
 }
 
 bool CModuleBoot::destroyBoot()
@@ -119,7 +147,7 @@ bool CModuleBoot::loadPreviewBoot()
 	_loadPreview = false;
 	_previewEnabled = true;
 
-	bool is_ok = loadBoot("data/scenes/3dviewer/boot.json");
+	loadBoot("data/scenes/3dviewer/boot.json");
 	cte_world.boot_in_preview = 1.f;
 
 	// load entries
@@ -153,7 +181,7 @@ bool CModuleBoot::loadPreviewBoot()
 
 	// don't render debug
 	Entities.clearDebugList();
-	return is_ok;
+	return true;
 }
 
 void CModuleBoot::renderInMenu()

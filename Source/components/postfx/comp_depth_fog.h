@@ -8,6 +8,7 @@ class CRenderToTexture;
 struct TCompDepthFog : public TCompBase
 {
 	bool  enabled = true;
+	bool  dirty_cte = true;
 	int idx = 0;
 
 	CShaderCte< CtesDepthFog > ctes;

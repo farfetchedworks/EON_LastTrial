@@ -30,6 +30,7 @@ class CEngine
 public:
   static CEngine& get();
   std::vector<input::CModule*> getInputs() { return _input; };
+  std::thread::id getMainThreadId();
 
   void init();
   void destroy();
@@ -83,6 +84,7 @@ private:
   CModulePlayerInteraction* _playerInteraction = nullptr;
   CModuleSubtitles* _subtitles = nullptr;
 
+  std::thread::id _mainThreadId;
   std::vector<input::CModule*> _input;
   ui::CModule* _ui = nullptr;
 };
@@ -108,3 +110,5 @@ extern bool debugging;
 #define Multithreading CEngine::get().getMultithreading()
 #define PlayerInteraction CEngine::get().getPlayerInteraction()
 #define Boot CEngine::get().getBoot()
+
+#define Engine CEngine::get()

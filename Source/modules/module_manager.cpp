@@ -1,5 +1,6 @@
 #include "mcv_platform.h"
 #include "engine.h"
+#include "modules/module_boot.h"
 #include "modules/module_manager.h"
 #include "input/input_module.h"
 
@@ -99,6 +100,10 @@ void CModuleManager::changeToRequestedGamestate()
 
 void CModuleManager::update(float dt)
 {
+    // Only allow main thread to update modules
+    if (CEngine::get().getMainThreadId() != std::this_thread::get_id())
+        return;
+
     PROFILE_FUNCTION("CModuleManager::update");
     changeToRequestedGamestate();
 
@@ -113,7 +118,7 @@ void CModuleManager::update(float dt)
 
     // Exit game
     // TODO: Remove this from here... show message for a double confirmation
-    if (CEngine::get().getInput(input::MENU)->getButton("exit_game").getsPressed()) {
+    if (Engine.getInput(input::MENU)->getButton("exit_game").getsPressed()) {
         CApplication::get().exit();
     }
 }

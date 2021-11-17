@@ -1,4 +1,6 @@
 #include "mcv_platform.h"
+#include "engine.h"
+#include "modules/module_boot.h"
 #include "module_entities.h"
 #include "entity/entity.h"
 #include "components/common/comp_transform.h"
@@ -76,6 +78,9 @@ void CModuleEntities::stop() {
 }
 
 void CModuleEntities::update(float delta) {
+
+	if (!Boot.ready())
+		return;
 
 	for (auto om : om_to_update) {
 		PROFILE_FUNCTION(om->getName());

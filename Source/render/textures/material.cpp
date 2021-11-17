@@ -160,18 +160,18 @@ bool CMaterial::createFromJson(const json& j) {
 		if (jCb.count("CtesMaterial")) {
 			gpu_ctes = comp_buffers.getCteByName("CtesMaterial");
 			from_json(jCb["CtesMaterial"], ctes);
+			setCtesDirty();
 			usesCtes = true;
 		}
 	}
 
-	// create by default
+	// Create by default
 	if (!usesCtes) {
 		gpu_ctes = ShaderCtesManager.createCte("CtesMaterial", j);
 		from_json(j, ctes);
 	}
 
 	assert(gpu_ctes->size() == sizeof(CtesMaterial));
-	gpu_ctes->updateFromCPU(&ctes);
 	return true;
 }
 
@@ -182,7 +182,7 @@ void CMaterial::setAlbedo(const CTexture* new_albedo) {
 
 void CMaterial::setEmissive(float value) {
 	ctes.material_emissive_factor = value;
-	gpu_ctes->updateFromCPU(&ctes);
+	setCtesDirty();
 }
 
 // Call this funcion any time a texture is hot-reloaded or for example if the background
@@ -216,6 +216,12 @@ void CMaterial::activate() const {
 
 	if (gpu_ctes) {
 		gpu_ctes->activate();
+
+		if (ctes_dirty)
+		{
+			gpu_ctes->updateFromCPU(&ctes);
+			ctes_dirty = false;
+		}
 	}
 
 	assert(TS_ALBEDO == 0);
@@ -281,7 +287,7 @@ bool CMaterial::renderInMenu() const {
 		ImGui::Text("Physical Material: %s", phys_mat->getName());
 
 	if (ImGui::DragFloat("Emissive factor", &(float&)ctes.material_emissive_factor, 0.01f, 0.f, 30.f))
-		gpu_ctes->updateFromCPU(&ctes);
+		setCtesDirty();
 
 	return false;
 }
