@@ -795,13 +795,17 @@ private:
 	float rotation_speed;
 	float range;
 	int damage;
+	int combo_prob = 20;
+
+	int num_regular_hits = 2;						// It will have only two regular hits
+	int max_combo_hits = 3;							// It will perform maximum 3 hits
 
 public:
 	void init() override {
 		// Load generic parameters
 		move_speed = number_field[0];
 		rotation_speed = number_field[1];
-		range = number_field[2];
+		combo_prob = number_field[2];
 		damage = (int)getAdjustedParameter(TCompGameManager::EParameterDDA::DAMAGE, number_field[3]);
 
 		// Set animation callbacks
@@ -845,7 +849,25 @@ public:
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
-		{
+		{		
+			// Check if it can perform another hit
+			int current_hits = ctx.getNodeVariable<int>(name, "current_hits");
+			bool continue_combo = (current_hits < max_combo_hits) && (rand() % 100 < combo_prob);
+					
+			// If the combo continues, cancel the current animation and get the next attack to be executed
+			if (continue_combo) {
+			
+				ctx.setFSMVariable("combo_attack_active", true);
+				ctx.setNodeVariable(name, "current_hits", ++current_hits);						// Always increment the amount of hits struck
+					
+				int next_hit = 1 + std::get<int>(ctx.getFSMVariable("is_thrust_attacking")) % num_regular_hits;
+				ctx.setFSMVariable("is_thrust_attacking", next_hit);
+			}
+			else {
+				// If the combo does not continue, inactive the combo so that the variable can be reset in the FSM
+				ctx.setFSMVariable("combo_attack_active", false);
+			}
+
 			TCompAIControllerBase* controller = ctx.getComponent<TCompAIControllerBase>();
 			controller->setWeaponStatusAndDamage(false);
 			controller->setWeaponPartStatus(false);
@@ -858,11 +880,24 @@ public:
 		ctx.setNodeVariable(name, "allow_aborts", true);
 		ctx.setNodeVariable(name, "pause_animation", false);
 		ctx.setNodeVariable(name, "resume_time", Random::range(0.4f, 0.8f));
+
+		// Initialize the amount of hits struck
+		ctx.setNodeVariable(name, "current_hits", 1);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
 		TaskUtils::resumeActionAt(ctx, name, ctx.getNodeVariable<float>(name, "resume_time"), dt);
-		return tickCondition(ctx, "is_thrust_attacking", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+		EBTNodeResult result = tickCondition(ctx, "is_thrust_attacking", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
+
+		// If the task has finished, set the variables to -1 for another execution
+		if (result == EBTNodeResult::SUCCEEDED)
+			cleanTask(ctx);
+
+		return result;
+	}
+
+	void cleanTask(CBTContext& ctx) override {
+		ctx.setFSMVariable("is_thrust_attacking", -1);
 	}
 };
 
