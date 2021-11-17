@@ -202,7 +202,7 @@ void TCompCollider::debugInMenuShape(physx::PxShape* shape, physx::PxGeometryTyp
 
 	PxTransform t = shape->getLocalPose();
 	VEC3 offset = PXVEC3_TO_VEC3(t.p);
-	if (ImGui::DragFloat3("Offset", &offset.x, 0.1f, 0.f, 50.f))
+	if (ImGui::DragFloat3("Offset", &offset.x, 0.01f, -20.f, 20.f))
 	{
 		t.p = VEC3_TO_PXVEC3(offset);
 		shape->setLocalPose(t);
