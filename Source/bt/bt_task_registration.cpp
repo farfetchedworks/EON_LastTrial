@@ -844,7 +844,7 @@ public:
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
 
-			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
+			//TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
 			TaskUtils::moveForward(ctx, move_speed * move_speed_factor, dt);
 		};
 
