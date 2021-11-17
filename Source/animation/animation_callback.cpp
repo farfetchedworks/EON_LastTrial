@@ -10,6 +10,14 @@ CHandle CAnimationCallback::getOwnerEntity(void* userData)
 	return h_owner;
 }
 
+CalAnimation::State CAnimationCallback::getState(CalModel* model, CalCoreAnimation* animation)
+{
+	auto mixer = model->getMixer();
+	auto anim = mixer->getActionAnim(animation->getName());
+	if (anim) return anim->getState();
+	return CalAnimation::STATE_NONE;
+}
+
 void CAnimationCallback::endCallback(CalCoreAnimation* anim)
 {
 	if (!anim)

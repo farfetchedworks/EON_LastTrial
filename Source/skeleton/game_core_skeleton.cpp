@@ -392,6 +392,18 @@ bool CGameCoreSkeleton::renderInMenu() const {
   CGameCoreSkeleton* ncthis = (CGameCoreSkeleton*)this;
   auto* core_skel = ncthis->getCoreSkeleton();
 
+  if (ImGui::TreeNode("Animations..."))
+  {
+	  for (int i = 0; i < getCoreAnimationCount(); ++i)
+	  {
+		  const CalCoreAnimation* anim = getCoreAnimation(i);
+		  ImGui::Text("Name: %s", anim->getName().c_str());
+		  ImGui::Text("Num Cb: %d", anim->m_listCallbacks.size());
+	  }
+	  
+	  ImGui::TreePop();
+  }
+
   if (ImGui::TreeNode("Hierarchy Bones..."))
   {
     auto& core_bones = core_skel->getVectorRootCoreBoneId();

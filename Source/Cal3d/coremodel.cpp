@@ -172,7 +172,7 @@ bool CalCoreModel::createCoreMaterialThread(int coreMaterialThreadId)
   *         \li \b 0 if an error happend
   *****************************************************************************/
 
-CalCoreAnimation *CalCoreModel::getCoreAnimation(int coreAnimationId)
+CalCoreAnimation *CalCoreModel::getCoreAnimation(int coreAnimationId) const
 {
   if((coreAnimationId < 0) || (coreAnimationId >= (int)m_vectorCoreAnimation.size()))
   {
@@ -215,7 +215,7 @@ CalCoreMorphAnimation *CalCoreModel::getCoreMorphAnimation(int coreMorphAnimatio
   * @return The number of core animations.
   *****************************************************************************/
 
-int CalCoreModel::getCoreAnimationCount()
+int CalCoreModel::getCoreAnimationCount() const
 {
   return (int)m_vectorCoreAnimation.size();
 }

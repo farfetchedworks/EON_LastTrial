@@ -35,8 +35,8 @@ public:
 
   // animations
   int addCoreAnimation(CalCoreAnimation *pCoreAnimation);
-  CalCoreAnimation *getCoreAnimation(int coreAnimationId);
-  int getCoreAnimationCount();
+  CalCoreAnimation *getCoreAnimation(int coreAnimationId) const;
+  int getCoreAnimationCount() const;
   int loadCoreAnimation(const std::string& strFilename);
   int loadCoreAnimation(const std::string& strFilename, const std::string& strAnimationName);
   int unloadCoreAnimation(const std::string& name);
