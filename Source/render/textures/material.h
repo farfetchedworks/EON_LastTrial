@@ -36,12 +36,14 @@ class CMaterial : public IResource {
   bool  uses_skin = false;
   bool  render_emissive = true;
   bool  render_baked_ao = true;
+  mutable bool ctes_dirty = false;
 
   // Optimization for dx11
   ID3D11ShaderResourceView* shader_resource_views[TS_NUM_SLOTS_PER_MATERIAL];
 
   void cacheSRVS();
   void activateTextures(int slot_base) const;
+  void setCtesDirty() const { ctes_dirty = true; };
 
 public:
 

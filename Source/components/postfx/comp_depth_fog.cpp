@@ -25,7 +25,6 @@ void TCompDepthFog::load(const json& j, TEntityParseContext& ctx)
 	ctes.fog_color = loadVEC3(j, "color");
 	ctes.fog_factor_decay = j.value("decay", 0.f);
 	ctes.fog_factor_exponent = j.value("exponent", 0.f);
-	ctes.updateFromCPU();
 
 	rt_fog = new CRenderToTexture();
 	char rt_name[64];
@@ -52,6 +51,10 @@ CTexture* TCompDepthFog::renderFog(CTexture* in_texture, CTexture* last_texture)
 		return in_texture;
 
 	ctes.activate();
+	if (dirty_cte) {
+		ctes.updateFromCPU();
+		dirty_cte = false;
+	}
 
 	rt_fog->clear(VEC4::Zero);
 	rt_fog->activateRT();
@@ -62,13 +65,9 @@ CTexture* TCompDepthFog::renderFog(CTexture* in_texture, CTexture* last_texture)
 
 void TCompDepthFog::debugInMenu() {
 	ImGui::Checkbox("Enabled", &enabled);
-	bool changed = ImGui::DragFloat("Fog Decay", &ctes.fog_factor_decay, 1.f, 0.f, 150.0f);
-	changed |= ImGui::DragFloat("Fog Exponent", &ctes.fog_factor_exponent, 0.1f, 1.f, 10.0f);
-	changed |= ImGui::ColorEdit4("Fog Color", &ctes.fog_color.x);
-
-	if (changed) {
-		ctes.updateFromCPU();
-	}
+	dirty_cte = ImGui::DragFloat("Fog Decay", &ctes.fog_factor_decay, 1.f, 0.f, 150.0f);
+	dirty_cte |= ImGui::DragFloat("Fog Exponent", &ctes.fog_factor_exponent, 0.1f, 1.f, 10.0f);
+	dirty_cte |= ImGui::ColorEdit4("Fog Color", &ctes.fog_color.x);
 }
 
 void TCompDepthFog::onRender(const TMsgRenderPostFX& msg)

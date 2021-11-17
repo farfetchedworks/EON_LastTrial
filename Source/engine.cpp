@@ -75,6 +75,9 @@ void CEngine::registerResourceTypes()
 void CEngine::init()
 {
   PROFILE_FUNCTION("Engine::init");
+
+  _mainThreadId = std::this_thread::get_id();
+
   static ModuleEONSplashScreen splash_screen_module("eon_splash_screen");
   static ModuleEONLoadingScreen loading_screen_module("eon_loading_screen");
   static ModuleEONMainMenu mainmenu_module("eon_main_menu");
@@ -216,4 +219,9 @@ void CEngine::initInput(input::CModule* input)
     input->registerDevice(new input::CDevicePadXboxWindows(0));
 
     input->loadMapping("data/input/mappings.json");
+}
+
+std::thread::id CEngine::getMainThreadId()
+{
+    return _mainThreadId;
 }

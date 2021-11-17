@@ -1,5 +1,7 @@
 #include "mcv_platform.h"
 #include "module_physics.h"
+#include "engine.h"
+#include "modules/module_boot.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_tags.h"
 #include "components/common/comp_render.h"
@@ -801,6 +803,10 @@ void CModulePhysics::stop()
 }
 
 void CModulePhysics::update(float dt) {	
+
+	if (!Boot.ready())
+		return;
+
 	gScene->simulate(dt);
 	gScene->fetchResults(true);
 
