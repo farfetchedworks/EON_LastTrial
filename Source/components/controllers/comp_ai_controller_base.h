@@ -37,6 +37,7 @@ public:
 
     void rotate(const QUAT delta_rotation);
     void rotate(const float yaw, const float pitch = 0, const float roll = 0);
+    void setTargetRotation(QUAT new_target_rot) { _targetRotation = new_target_rot; }
 
     // Called from the BT to initialize variables such as waypoints and the ability to observe or patrol
     void initProperties();              
