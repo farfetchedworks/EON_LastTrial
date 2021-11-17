@@ -25,7 +25,6 @@ private:
 	CHandle projectile_transform;
 	CHandle projectile_collider;
 	CHandle target;											// Target of the projectile when chasing the player
-	CHandle trail;
 
 	VEC3 front;
 	VEC3 initial_scale;
