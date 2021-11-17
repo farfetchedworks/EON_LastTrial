@@ -967,6 +967,12 @@ public:
 			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
 		};
 
+		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		{
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			spawnParticles("data/particles/compute_projectile_portal_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.3, h_trans->getPosition());
+		};
+
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();

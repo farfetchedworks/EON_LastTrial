@@ -183,7 +183,7 @@ bool isPointInRectangle(VEC2 point, VEC2 size, VEC2 pos)
         && pointLocal.x <= 0.f + size.x && pointLocal.y <= 0.f + size.y;
 }
 
-void spawnParticles(const std::string& name, VEC3 position, float radius, int iterations, int num_particles)
+void spawnParticles(const std::string& name, VEC3 position, VEC3 owner_position, float radius, int iterations, int num_particles)
 {
     for (int i = 0; i < iterations; ++i) {
 
@@ -200,6 +200,7 @@ void spawnParticles(const std::string& name, VEC3 position, float radius, int it
             CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(buffers->getCteByName("CtesParticleSystem"));
             cte->emitter_radius = radius;
             cte->emitter_initial_pos = position;
+            cte->emitter_owner_position = owner_position;
 
             if (num_particles != -1)
                 cte->emitter_num_particles_per_spawn = num_particles;

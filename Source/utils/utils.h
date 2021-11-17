@@ -24,7 +24,7 @@ uint32_t getID(const char* txt);
 
 bool fileExists( const char* name );
 
-void spawnParticles(const std::string& name, VEC3 position, float radius, int iterations = 1, int num_particles = -1);
+void spawnParticles(const std::string& name, VEC3 position, VEC3 owner_position, float radius = 1, int iterations = 1, int num_particles = -1);
 
 float expImpulse(float x, float k);
 
