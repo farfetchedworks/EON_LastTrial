@@ -7,7 +7,7 @@
 #include <bitset>
 
 struct TCompCulling : public TCompBase {
-  static const size_t nBits = 8192;
+  static const size_t nBits = 16384;
   typedef std::bitset<nBits> TCullingBits;
   TCullingBits bits;
 
