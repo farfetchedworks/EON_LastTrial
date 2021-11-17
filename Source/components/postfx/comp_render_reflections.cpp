@@ -15,10 +15,14 @@ void TCompSSReflections::load(const json& j, TEntityParseContext& ctx) {
 	enabled = j.value("enabled", enabled);
 	idx = j.value("priority", idx);
 
+	float width = Render.getWidth() * 0.5f;
+	float height = Render.getHeight() * 0.5f;
+
 	rt_output = new CRenderToTexture;
 	char rt_name[64];
 	sprintf(rt_name, "SSR_%08x", CHandle(this).asUnsigned());
-	bool is_ok = rt_output->createRT(rt_name, Render.getWidth(), Render.getHeight(), DXGI_FORMAT_R16G16B16A16_FLOAT);
+	bool is_ok = rt_output->createRT(rt_name, static_cast<int>(width),
+		static_cast<int>(height), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	assert(is_ok);
 
 	// set apply callback
