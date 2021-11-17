@@ -1977,9 +1977,8 @@ public:
 				target_rot = c_trans_target->getRotation();
 			}
 			else {
+				// Get the rotation to look at Eon and the position behind or near Eon
 				target_pos = ctx.getBlackboard()->getValue<VEC3>(string_field);
-				
-				// Get the rotation to look at Eon
 				CEntity* player = getPlayer();
 				TCompTransform* h_trans_eon = player->get<TCompTransform>();
 				target_rot = h_trans_eon->getRotation();
@@ -1988,9 +1987,11 @@ public:
 			// Set the position
 			TCompCollider* h_collider = ctx.getComponent<TCompCollider>();
 			h_collider->setFootPosition(target_pos);
-
+			
 			// Set the rotation
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			TCompAIControllerBase* h_aicontroller = ctx.getComponent<TCompAIControllerBase>();
+			h_aicontroller->setTargetRotation(target_rot);			// To avoid the rotation applied by the AI Controller
 			h_trans->setRotation(target_rot);
 		};
 
