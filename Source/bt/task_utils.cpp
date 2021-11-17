@@ -165,7 +165,7 @@ void TaskUtils::spawnProjectile(const VEC3 shoot_orig, const VEC3 shoot_target, 
 
 	}
 	else {
-		e_projectile = spawn("data/prefabs/enemy_projectile_homing.json", projectile_transform);
+		e_projectile = spawn("data/prefabs/plasma_ball_homing.json", projectile_transform);
 	}
 	// Set the damage to ranged_attack_dmg
 	TCompEnemyProjectile* c_enemyproj = e_projectile->get<TCompEnemyProjectile>();
