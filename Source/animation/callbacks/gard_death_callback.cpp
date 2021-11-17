@@ -73,7 +73,7 @@ struct onGardDeathCallback : public CAnimationCallback
 		// Spawn floor particles and geons
 		{
 			VEC3 spawnPos = e_owner->getPosition() + e_owner->getForward() * 3;
-			spawnParticles("data/particles/gard_floor_particles.json", spawnPos, 2.f);
+			spawnParticles("data/particles/gard_floor_particles.json", spawnPos, spawnPos, 2.f);
 			PawnUtils::spawnGeons(spawnPos, e_owner);
 		}
 

@@ -157,7 +157,7 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
             }
 
             if(particlesName.length())
-                spawnParticles(particlesName, tPos, 1);
+                spawnParticles(particlesName, tPos, tPos);
         }
     }
 }

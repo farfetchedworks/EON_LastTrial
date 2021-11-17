@@ -967,6 +967,12 @@ public:
 			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
 		};
 
+		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
+		{
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			spawnParticles("data/particles/compute_projectile_portal_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.3, h_trans->getPosition());
+		};
+
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
@@ -1919,8 +1925,12 @@ private:
 	float max_hole_scale = 2.5f;
 	float damp_speed = 8.f;
 
+	bool teleport_to_entity = false;
+
 public:
 	void init() override {
+
+		teleport_to_entity = bool_field;
 
 		callbacks.onStartup = [&](CBTContext& ctx, float dt)
 		{
@@ -1956,15 +1966,32 @@ public:
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
+			VEC3 target_pos;
+			QUAT target_rot;
+
+			// Get the position of the entity or the one stored in the BB key according to the player
+			if (teleport_to_entity) {
+				CEntity* e_target = getEntityByName(string_field);
+				TCompTransform* c_trans_target = e_target->get<TCompTransform>();
+				target_pos = c_trans_target->getPosition();
+				target_rot = c_trans_target->getRotation();
+			}
+			else {
+				target_pos = ctx.getBlackboard()->getValue<VEC3>(string_field);
+				
+				// Get the rotation to look at Eon
+				CEntity* player = getPlayer();
+				TCompTransform* h_trans_eon = player->get<TCompTransform>();
+				target_rot = h_trans_eon->getRotation();
+			}
+			
 			// Set the position
 			TCompCollider* h_collider = ctx.getComponent<TCompCollider>();
-			h_collider->setFootPosition(ctx.getBlackboard()->getValue<VEC3>(string_field));
+			h_collider->setFootPosition(target_pos);
 
-			// Set the rotation to look at Eon
-			CEntity* player = getPlayer();
+			// Set the rotation
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			TCompTransform* h_trans_eon = player->get<TCompTransform>();
-			h_trans->setRotation(h_trans_eon->getRotation());
+			h_trans->setRotation(target_rot);
 		};
 
 		callbacks.onRecovery = [&](CBTContext& ctx, float dt)
@@ -2045,7 +2072,7 @@ class CBTTaskCygnusBeamAttack : public IBTTask
 {
 private:
 	int damage;
-	float dep_angle;
+	float max_dep_angle;
 	float move_speed;
 	float dist_to_eon;
 	CEntity* e_beam = nullptr;
@@ -2058,7 +2085,7 @@ public:
 	void init() override {
 		// Load generic parameters
 		damage = (int)number_field[0];
-		dep_angle = number_field[1];
+		max_dep_angle = deg2rad(number_field[1]);			// Change the depression angle to radian
 		move_speed = number_field[2];
 
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
@@ -2073,8 +2100,8 @@ public:
 			// Get the initial beam target rotating the Cygnus forward with a pitch angle
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			VEC3 cygnus_forward = h_trans->getForward();
-			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, dep_angle, 0.f));
-			beam_target = cygnus_forward + black_hole_pos;
+			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, (-1)*max_dep_angle, 0.f));
+			beam_target = rotated_vec + black_hole_pos;
 			ctx.setNodeVariable(name, "beam_target", beam_target);
 
 			// Place the beam in the black hole, looking at the target
@@ -2096,10 +2123,14 @@ public:
 			beam_target = ctx.getNodeVariable<VEC3>(name, "beam_target");
 			black_hole_pos = ctx.getNodeVariable<VEC3>(name, "black_hole_pos");
 
+			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
+			float dep_angle = ctx.getNodeVariable<float>(name, "accum_angle");
+			dep_angle = lerp(dep_angle, max_dep_angle, dt_acum/3.66f);
+			ctx.setNodeVariable(name, "accum_angle", dep_angle);
+
 			// Calculate the speed and rotation, and store the new beam target
-			float delta_mov = move_speed * dt * beam_dir;
-			//beam_target = VEC3(beam_target.x + delta_mov, beam_target.y, beam_target.z + delta_mov);
-			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_mov, /*delta_mov*/0.f, 0.f));
+			float delta_mov = deg2rad(move_speed) * dt * beam_dir;
+			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_mov, 0.f, 0.f));
 			ctx.setNodeVariable(name, "beam_target", beam_target);
 
 			// Rotate the beam to look at the target
@@ -2107,7 +2138,6 @@ public:
 			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
 
 			// Change the beam direction depending on the animation time
-			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
 			dt_acum += dt;
 			ctx.setNodeVariable(name, "dt_acum", dt_acum);
 
@@ -2136,6 +2166,7 @@ public:
 		ctx.setNodeVariable(name, "allow_aborts", true);
 		ctx.setNodeVariable(name, "beam_target", VEC3::Zero);
 		ctx.setNodeVariable(name, "black_hole_pos", VEC3::Zero);
+		ctx.setNodeVariable(name, "accum_angle", 0.f);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {

@@ -116,6 +116,13 @@ void TCompHealth::onReduceHealth(const TMsgReduceHealth& msg)
     dbg("Damage dealt: %d\n", damage);
     reduceHealth(damage);
 
+    // If health reduced on player
+    if (!msg.hitByPlayer && !msg.fall_damage) {
+        TCompTransform* c_trans = get<TCompTransform>();
+        VEC3 position = c_trans->getPosition() + VEC3(0, 1.25f, 0);
+        spawnParticles("data/particles/splatter_blood_front.json", position, position);
+    }
+
     debugTimer = 0.f;
     elapsedHitTime = 0.f;
 
