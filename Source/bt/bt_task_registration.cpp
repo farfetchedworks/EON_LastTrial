@@ -2100,8 +2100,8 @@ public:
 			// Get the initial beam target rotating the Cygnus forward with a pitch angle
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			VEC3 cygnus_forward = h_trans->getForward();
-			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, (-1)*max_dep_angle, 0.f));
-			beam_target = rotated_vec + black_hole_pos;
+			//VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, max_dep_angle, 0.f));
+			beam_target = cygnus_forward + black_hole_pos;
 			ctx.setNodeVariable(name, "beam_target", beam_target);
 
 			// Place the beam in the black hole, looking at the target
@@ -2123,14 +2123,11 @@ public:
 			beam_target = ctx.getNodeVariable<VEC3>(name, "beam_target");
 			black_hole_pos = ctx.getNodeVariable<VEC3>(name, "black_hole_pos");
 
-			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
-			float dep_angle = ctx.getNodeVariable<float>(name, "accum_angle");
-			dep_angle = lerp(dep_angle, max_dep_angle, dt_acum/3.66f);
-			ctx.setNodeVariable(name, "accum_angle", dep_angle);
-
 			// Calculate the speed and rotation, and store the new beam target
-			float delta_mov = deg2rad(move_speed) * dt * beam_dir;
-			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_mov, 0.f, 0.f));
+			float delta_yaw = deg2rad(move_speed) * dt * beam_dir;
+			float delta_pitch = max_dep_angle * dt / 10.f;
+
+			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_yaw, delta_pitch, 0.f));
 			ctx.setNodeVariable(name, "beam_target", beam_target);
 
 			// Rotate the beam to look at the target
@@ -2138,10 +2135,11 @@ public:
 			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
 
 			// Change the beam direction depending on the animation time
+			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
 			dt_acum += dt;
 			ctx.setNodeVariable(name, "dt_acum", dt_acum);
 
-			if (dt_acum >= 1.16f && beam_dir < 0.f) {
+			if (dt_acum >= 1.16f && dt_acum < 2.66f && beam_dir < 0.f) {
 				ctx.setNodeVariable(name, "beam_dir", 1.f);
 			}
 			else {
@@ -2166,7 +2164,6 @@ public:
 		ctx.setNodeVariable(name, "allow_aborts", true);
 		ctx.setNodeVariable(name, "beam_target", VEC3::Zero);
 		ctx.setNodeVariable(name, "black_hole_pos", VEC3::Zero);
-		ctx.setNodeVariable(name, "accum_angle", 0.f);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
