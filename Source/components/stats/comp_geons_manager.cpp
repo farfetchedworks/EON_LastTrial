@@ -93,9 +93,9 @@ void TCompGeonsManager::increasePhase(bool only_stats)
 	if (!only_stats)
 	{
 		TCompTransform* c_trans = get<TCompTransform>();
-		spawnParticles("data/particles/compute_levelup_particles.json", c_trans->getPosition(), 2.f, 1);
-		spawnParticles("data/particles/compute_levelup_smoke_particles.json", c_trans->getPosition(), 2.f, 1);
-		spawnParticles("data/particles/compute_levelup_spread_particles.json", c_trans->getPosition(), 2.f, 1);
+		//spawnParticles("data/particles/compute_levelup_particles.json", c_trans->getPosition(), 2.f, 1);
+		spawnParticles("data/particles/compute_levelup_smoke_particles.json", c_trans->getPosition(), c_trans->getPosition());
+		spawnParticles("data/particles/compute_levelup_spread_particles.json", c_trans->getPosition(), c_trans->getPosition());
 		EngineUI.activateWidget("phase_up");
 		timer = 3.f;
 	}
