@@ -21,14 +21,25 @@
 #include "components/common/comp_tags.h"
 #include "components/render/comp_irradiance_cache.h"
 #include "components/gameplay/comp_game_manager.h"
+#include "components/ai/comp_bt.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
+#include "ui/widgets/ui_image.h"
 
 extern CShaderCte<CtesWorld> cte_world;
 bool debugging = false;
 
 bool ModuleEONGameplay::start()
 {
+	input = CEngine::get().getInput(input::MENU);
+	assert(input);
+
+	_menuController.setInput(input);
+	_menuController.bind("resume_btn", std::bind(&ModuleEONGameplay::onResume, this));
+	_menuController.bind("exit_btn", std::bind(&ModuleEONGameplay::onExit, this));
+	_menuController.reset();
+	_menuController.selectOption(0);
+
 	// set initial mouse state
 	debugging = false;
 	CApplication::get().changeMouseState(debugging, false);
@@ -151,6 +162,15 @@ void ModuleEONGameplay::update(float dt)
 		}
 	}
 
+	if (input->getButton("pause_game").getsPressed()) {
+		togglePause();
+	}
+
+	if (paused)
+	{
+		_menuController.update(Time.delta_unscaled);
+	}
+
 	CEntity* e_camera = EngineRender.getActiveCamera();
 	if (!e_camera)
 	{
@@ -167,4 +187,47 @@ void ModuleEONGameplay::update(float dt)
 	}
 
 	activateObject(MAT44::Identity);
+}
+
+void ModuleEONGameplay::togglePause()
+{
+	paused = !paused;
+
+	if (paused)
+	{
+		// Enable corresponding layout
+		ui::CWidget* w = EngineUI.getWidget("eon_pause");
+		assert(w);
+		ui::CImage* img = static_cast<ui::CImage*>(w);
+		ui::TImageParams& params = img->imageParams;
+		params.texture = Resources.get(PlayerInput.getPad().connected ?
+			"data/textures/ui/subvert/pause/pause_gamepad.dds" :
+			"data/textures/ui/subvert/pause/pause_keyboard.dds")->as<CTexture>();
+		EngineUI.activateWidget("eon_pause");
+
+		PlayerInput.blockInput();
+		TCompBT::UPDATE_ENABLED = false;
+
+		debugging = true;
+		CApplication::get().changeMouseState(debugging, false);
+	}
+	else
+	{
+		EngineUI.deactivateWidget("eon_pause");
+		PlayerInput.unBlockInput();
+		TCompBT::UPDATE_ENABLED = true;
+
+		debugging = false;
+		CApplication::get().changeMouseState(debugging);
+	}
+}
+
+void ModuleEONGameplay::onResume()
+{
+	togglePause();
+}
+
+void ModuleEONGameplay::onExit()
+{
+	CApplication::get().exit();
 }

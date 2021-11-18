@@ -21,7 +21,7 @@ bool ModuleEONMainMenu::start()
     _menuController.setInput(input);
     _menuController.bind("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
     _menuController.bind("settings_btn", std::bind(&ModuleEONMainMenu::onSettings, this));
-    _menuController.bind("exit_btn", std::bind(&ModuleEONMainMenu::onExit, this));
+    _menuController.bind("exit_btn_menu", std::bind(&ModuleEONMainMenu::onExit, this));
 
     _menuController.reset();
     _menuController.selectOption(0);

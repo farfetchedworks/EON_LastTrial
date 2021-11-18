@@ -327,7 +327,7 @@ void CRenderModule::onFileChanged(const std::string& filename) {
 void CRenderModule::activateMainCamera() {
 	CEntity* e_camera = CEngine::get().getRender().getActiveCamera();
 	if (!e_camera) {
-		e_camera = getEntityByName("camera");
+		e_camera = getEntityByName("camera_follow");
 	}
 	if (e_camera) {
 		assert(e_camera);
