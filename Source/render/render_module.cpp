@@ -327,7 +327,7 @@ void CRenderModule::onFileChanged(const std::string& filename) {
 void CRenderModule::activateMainCamera() {
 	CEntity* e_camera = CEngine::get().getRender().getActiveCamera();
 	if (!e_camera) {
-		e_camera = getEntityByName("camera_follow");
+		e_camera = getEntityByName("camera_mixed");
 	}
 	if (e_camera) {
 		assert(e_camera);
@@ -509,6 +509,7 @@ void CRenderModule::generateFrame()
 		modules.renderInMenu();
 	}
 
+	activateMainCamera();
 	ImGuiEndFrame();
 	Render.swapFrames();
 }

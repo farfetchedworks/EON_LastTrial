@@ -7,6 +7,7 @@
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
 #include "fmod_studio.hpp"
+#include "audio/module_audio.h"
 
 bool ModuleEONMainMenu::start()
 {
@@ -36,8 +37,6 @@ bool ModuleEONMainMenu::start()
 void ModuleEONMainMenu::stop()
 {
     EngineUI.deactivateWidget("eon_main_menu");
-    EngineAudio.stopCurMusicEvent();
-    EngineAudio.unloadBank("OutOfGame.bank");
 }
 
 void ModuleEONMainMenu::update(float dt)

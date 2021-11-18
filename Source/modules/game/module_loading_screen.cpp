@@ -9,6 +9,8 @@
 #include "ui/ui_widget.h"
 #include "ui/widgets/ui_image.h"
 #include "ui/widgets/ui_button.h"
+#include "fmod_studio.hpp"
+#include "audio/module_audio.h"
 
 bool ModuleEONLoadingScreen::start()
 {
@@ -41,6 +43,8 @@ bool ModuleEONLoadingScreen::start()
 void ModuleEONLoadingScreen::stop()
 {
     EngineUI.deactivateWidget("eon_loading_screen");
+    EngineAudio.stopCurMusicEvent();
+    EngineAudio.unloadBank("OutOfGame.bank");
 }
 
 void ModuleEONLoadingScreen::update(float dt)
