@@ -193,7 +193,6 @@ void CModuleAudio::update(float dt)
 
 void CModuleAudio::renderInMenu()
 {
-
 }
 
 bool CModuleAudio::loadBank(const std::string& bank_name)

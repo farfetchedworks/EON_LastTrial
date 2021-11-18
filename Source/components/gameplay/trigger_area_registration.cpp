@@ -346,7 +346,7 @@ public:
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
 	{
-		// dbg("EXIT GARDEN");
+		EngineAudio.postAmbienceEvent("AMB/Temple/temple_ambience");
 	}
 };
 
