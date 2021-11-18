@@ -21,13 +21,6 @@ struct onEonCrossCrackCallback : public CAnimationCallback
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
-		// Activate music interaction
-		// CEntity* e_owner = getOwnerEntity(userData);
-		// TCompMusicInteractor* t_mus_int = e_owner->get<TCompMusicInteractor>();
-		// t_mus_int->setEnabled(true);
-
-		// Start temple music
-		// EngineAudio.postMusicEvent("Music/Temple_Theme");
 	}
 };
 

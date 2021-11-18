@@ -305,7 +305,8 @@ public:
 		t_mus_int->setEnabled(true);
 
 		// Start temple music
-		EngineAudio.postMusicEvent("Music/Temple_Theme");
+		EngineAudio.postMusicEvent("Music/Enter_Rift_Theme");
+		EngineLua.executeScript("fmodPostMusicEvent(\"Music/Temple_Theme\")", 11.f);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
