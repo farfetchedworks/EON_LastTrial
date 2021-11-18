@@ -31,9 +31,10 @@ class CStateFalling : public CStateBaseLogic
         CEntity* owner = ctx.getOwnerEntity();
         TCompPlayerController* controller = owner->get<TCompPlayerController>();
         TCompCollider* collider = owner->get<TCompCollider>();
+        TCompTransform* trans = owner->get<TCompTransform>();
 
         float fallingTime = std::get<float>(ctx.getVariableValue("fall_time"));
-        controller->movePhysics(VEC3::Zero, dt);
+        controller->movePhysics(trans->getForward() * 2.f * dt, dt);
 
         if (!controller->manageFalling(controller->getSpeed(), dt)) {
             
