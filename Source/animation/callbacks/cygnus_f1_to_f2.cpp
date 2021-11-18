@@ -20,6 +20,7 @@ struct onCygnusF1ToF2 : public CAnimationCallback
 		if (first_update) {
 			first_update = false;
 			EngineAudio.postEvent("CHA/Cygnus/P1/AT/Cygnus_P1_To_P2", CHandle(getOwnerEntity(userData)));
+			EngineAudio.setMusicRTPC("Cygnus_Phase", 2, true);
 		}
 
 		// Nothing [0-4.35]
