@@ -19,7 +19,6 @@ private:
 	bool _ready = false;
 	float _timer = 0.f;
 	float _discSpeed = 1.f;
-	float _discTimer = 0.f;
 	input::CModule* input = nullptr;
 	ui::CMenuController _menuController;
 

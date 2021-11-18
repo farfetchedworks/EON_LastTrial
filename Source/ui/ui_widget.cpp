@@ -49,11 +49,15 @@ namespace ui
 
         for (auto& child : _children)
         {
-            if (skip && child->_alwaysRender)
+            if (skip)
             {
-                // Render, but sync fade in/out
-                child->updateTimeFromParent(this);
-                child->renderRecursive();
+                if (child->_alwaysRender)
+                {
+                    // Render, but sync fade in/out
+                    child->updateTimeFromParent(this);
+                    child->renderRecursive();
+                }
+                // else do nothing
             }
             else
                 child->renderRecursive();

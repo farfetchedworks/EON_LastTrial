@@ -15,9 +15,6 @@ bool ModuleEONLoadingScreen::start()
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 
-    // CApplication::get().changeMouseState(false);
-
-    _discTimer = 0.f;
     _discSpeed = 1.f;
     _timer = 2.f; // sync with title screen blend out
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
@@ -32,7 +29,6 @@ bool ModuleEONLoadingScreen::start()
     params.texture = Resources.get( PlayerInput.getPad().connected ?
         "data/textures/ui/subvert/loading/loading_gamepad.dds" : 
         "data/textures/ui/subvert/loading/loading_keyboard.dds" )->as<CTexture>();
-
     EngineUI.activateWidget("eon_loading_screen");
 
     _menuController.setInput(input);
@@ -50,7 +46,6 @@ void ModuleEONLoadingScreen::stop()
 void ModuleEONLoadingScreen::update(float dt)
 {
     _timer -= dt;
-    // _discTimer += dt;
 
     ui::CWidget* w = EngineUI.getWidget("disc");
     assert(w);
