@@ -20,7 +20,7 @@
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 
-#define PLAY_CINEMATICS false
+#define PLAY_CINEMATICS true
 
 #pragma region General Gameplay
 
