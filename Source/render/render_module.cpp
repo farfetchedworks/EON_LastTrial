@@ -502,12 +502,10 @@ void CRenderModule::generateFrame()
 	// Any tool inside the engine wants to render imgui
 	if (boot.inGame() && !RENDER_IMGUI) {
 #ifdef _DEBUG
-		activateMainCamera();
 		modules.renderInMenu();
 #endif
 	}
 	else {
-		activateMainCamera();
 		modules.renderInMenu();
 	}
 
