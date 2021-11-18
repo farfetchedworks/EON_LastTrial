@@ -157,7 +157,7 @@
 	</object>
 	<object class="NamedMarker" id="{314a12c5-f70a-4e46-8b78-8a88cd33a39f}">
 		<property name="position">
-			<value>0.70000000000000007</value>
+			<value>4</value>
 		</property>
 		<property name="name">
 			<value>Start</value>
@@ -293,7 +293,7 @@
 	</object>
 	<object class="AutomationPoint" id="{e7e3a8ce-0991-4e9c-ab2a-16a1fd144c43}">
 		<property name="position">
-			<value>0.70000000000000007</value>
+			<value>4</value>
 		</property>
 		<property name="value">
 			<value>1</value>

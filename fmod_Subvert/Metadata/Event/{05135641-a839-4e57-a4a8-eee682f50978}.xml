@@ -132,7 +132,7 @@
 			<value>60</value>
 		</property>
 		<property name="volume">
-			<value>10</value>
+			<value>7.5</value>
 		</property>
 		<relationship name="fadeInCurve">
 			<destination>{ffbe9ecb-f718-437d-ad5f-c9d967c9f815}</destination>
@@ -160,7 +160,7 @@
 	</object>
 	<object class="NamedMarker" id="{5a85260b-c837-4821-81f3-e033b61959bb}">
 		<property name="position">
-			<value>0.70000000000000007</value>
+			<value>4</value>
 		</property>
 		<property name="name">
 			<value>Start</value>
@@ -296,7 +296,7 @@
 	</object>
 	<object class="AutomationPoint" id="{09ec62de-926c-4d82-9734-e26ce5a44c10}">
 		<property name="position">
-			<value>0.70000000000000007</value>
+			<value>4</value>
 		</property>
 		<property name="value">
 			<value>1</value>

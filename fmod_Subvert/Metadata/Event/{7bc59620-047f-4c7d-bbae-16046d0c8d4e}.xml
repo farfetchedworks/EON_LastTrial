@@ -113,7 +113,7 @@
 	<object class="MixerBusPanner" id="{731ce303-190e-4d48-9f49-2762d1aceec1}" />
 	<object class="SingleSound" id="{d907e294-fd73-47a0-9639-88bd3c9b74ee}">
 		<property name="length">
-			<value>82</value>
+			<value>80</value>
 		</property>
 		<property name="timelockedOffset">
 			<value>2</value>
@@ -157,7 +157,7 @@
 	</object>
 	<object class="NamedMarker" id="{e26c45bb-751f-47f1-b7c7-9bace4a82027}">
 		<property name="position">
-			<value>1</value>
+			<value>4</value>
 		</property>
 		<property name="name">
 			<value>Start</value>
@@ -254,7 +254,7 @@
 	</object>
 	<object class="AutomationPoint" id="{d7724997-a268-4615-8a20-e0aa6a8a273d}">
 		<property name="position">
-			<value>1</value>
+			<value>4</value>
 		</property>
 		<property name="value">
 			<value>1</value>
