@@ -1,6 +1,7 @@
 #include "mcv_platform.h"
 #include "ui/ui_widget.h"
 #include "ui/ui_effect.h"
+#include "ui/ui_params.h"
 #include "render/draw_primitives.h"
 
 namespace ui
@@ -44,12 +45,18 @@ namespace ui
         render();
 
         // Don't render children until we have a complete blend effect 
-        if (getState() != EState::STATE_NONE)
-            return;
+        bool skip = getState() != EState::STATE_NONE;
 
         for (auto& child : _children)
         {
-            child->renderRecursive();
+            if (skip && child->_alwaysRender)
+            {
+                // Render, but sync fade in/out
+                child->updateTimeFromParent(this);
+                child->renderRecursive();
+            }
+            else
+                child->renderRecursive();
         }
     }
 
@@ -166,6 +173,15 @@ namespace ui
         updateSize();
         updateWorldTransform();
         updateChildren();
+    }
+
+    void CWidget::updateTimeFromParent(CWidget* parent)
+    {
+        TImageParams* tChild = getImageParams();
+        assert(tChild);
+        TImageParams* tParent = parent->getImageParams();
+        assert(tParent);
+        tChild->time_normalized = tParent->time_normalized;
     }
 
     void CWidget::addChild(CWidget* widget)

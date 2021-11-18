@@ -216,6 +216,7 @@ namespace ui
             params.setPosition(loadVEC2(jData, "position", VEC2::Zero));
             params.setAngle(deg2rad(jData.value("angle", 0.f)));
             params.setScale(loadVEC2(jData, "scale", VEC2::One));
+            params.setAlwaysRender(jData.value("always_render", false));
 
             if (jData.count("size") > 0)
             {

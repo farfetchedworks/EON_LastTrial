@@ -17,6 +17,8 @@ bool ModuleEONLoadingScreen::start()
 
     // CApplication::get().changeMouseState(false);
 
+    _discTimer = 0.f;
+    _discSpeed = 1.f;
     _timer = 2.f; // sync with title screen blend out
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
 
@@ -48,6 +50,12 @@ void ModuleEONLoadingScreen::stop()
 void ModuleEONLoadingScreen::update(float dt)
 {
     _timer -= dt;
+    // _discTimer += dt;
+
+    ui::CWidget* w = EngineUI.getWidget("disc");
+    assert(w);
+    _discSpeed = damp(_discSpeed, _ready ? 0.f : 1.f, 2.f, dt);
+    w->setAngle(w->getAngle() + dt * _discSpeed);
 
     if (!_loaded && _timer < 0.f)
     {
