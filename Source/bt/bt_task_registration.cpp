@@ -1677,6 +1677,9 @@ public:
 			TCompEmissiveMod* mod = owner->get<TCompEmissiveMod>();
 			if(mod)
 				mod->blendIn();
+
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			spawnParticles("data/particles/compute_cygnus_spread_particles.json", h_trans->getPosition() + h_trans->getRight() * 0.1, h_trans->getPosition(), 2.f);
 		}
 	}
 
@@ -2405,6 +2408,8 @@ public:
 		ctx.setIsDying(true);
 		TaskUtils::resumeAction(ctx, name);
 		TaskUtils::dissolveAt(ctx, 20.f, 0.5f);
+
+
 
 		CEntity* owner = ctx.getOwnerEntity();
 		// Change group to avoid new hits (blood, etc)

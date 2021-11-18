@@ -123,7 +123,7 @@ void TCompAreaDelayProjectile::destroyAreaDelay()
 	VHandles objects_in_area_delay;
 	TCompCollider* comp_collider = get<TCompCollider>();
 
-	physx::PxU32 layer_mask = CModulePhysics::FilterGroup::Enemy | CModulePhysics::FilterGroup::Projectile | CModulePhysics::FilterGroup::Door | CModulePhysics::FilterGroup::Player;
+	physx::PxU32 layer_mask = CModulePhysics::FilterGroup::InvisibleWall | CModulePhysics::FilterGroup::Enemy | CModulePhysics::FilterGroup::Projectile | CModulePhysics::FilterGroup::Door | CModulePhysics::FilterGroup::Player;
 	
 	if (EnginePhysics.overlapSphere(comp_transform->getPosition(), radius, objects_in_area_delay, layer_mask)) {
 		for (CHandle collider_handle : objects_in_area_delay) {
