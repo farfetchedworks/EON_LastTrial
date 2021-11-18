@@ -150,6 +150,22 @@ bool CModuleAudio::start()
 	loadBank("Master.bank");
 	loadBank("Master.strings.bank");
 
+	// And honestly we can load everything from the beginning soundbanks are not too big rn
+	loadBank("AMB_General.bank");
+	loadBank("Cave.bank");
+	loadBank("Monastery.bank");
+
+	loadBank("Cygnus.bank");
+	loadBank("Eon.bank");
+	loadBank("Gard.bank");
+	loadBank("NonBossEnemies.bank");
+
+	loadBank("InGame.bank");
+	loadBank("OutOfGame.bank");
+
+	loadBank("UI.bank");
+	loadBank("VO.bank");
+
 	assert(is_ok == FMOD_RESULT::FMOD_OK); // all ok
 	return is_ok == FMOD_RESULT::FMOD_OK;
 }
