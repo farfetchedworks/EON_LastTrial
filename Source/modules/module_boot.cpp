@@ -106,12 +106,6 @@ void CModuleBoot::loadBoot(const std::string& p)
 
 		ctxs.clear();
 		CHandleManager::destroyAllPendingObjects();
-
-		// TODO: Remove GPU Instances
-		{
-
-		}
-
 		_preloadingResources = false;
 	}
 
@@ -120,12 +114,12 @@ void CModuleBoot::loadBoot(const std::string& p)
 		loadScene(p);
 
 	// We have finish parsing all the components of the entity
-	for (auto ctx : ctxs)
-	{
-		TMsgAllEntitiesCreated msg;
-		for (auto h : ctx.entities_loaded)
-			h.sendMsg(msg);
-	}
+		for (auto ctx : ctxs)
+		{
+			TMsgAllEntitiesCreated msg;
+			for (auto h : ctx.entities_loaded)
+				h.sendMsg(msg);
+		}
 
 	_bootCompleted = true;
 
