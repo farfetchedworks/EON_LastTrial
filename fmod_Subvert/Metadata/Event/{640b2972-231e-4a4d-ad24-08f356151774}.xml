@@ -5,7 +5,7 @@
 			<value>Eon_Charge_Attack</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{1cb8dcac-b59a-4239-ab8a-afd3947c23d2}</destination>

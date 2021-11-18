@@ -26,14 +26,17 @@
 		</relationship>
 	</object>
 	<object class="SpatialiserEffect" id="{d0f95ca2-334d-446e-aefd-34995fe12dae}">
+		<property name="minimumDistance">
+			<value>1.60000002</value>
+		</property>
 		<property name="maximumDistance">
-			<value>35</value>
+			<value>45</value>
 		</property>
 		<property name="extentMode">
 			<value>1</value>
 		</property>
 		<property name="soundSize">
-			<value>42</value>
+			<value>24</value>
 		</property>
 	</object>
 	<object class="Automator" id="{3fcba0cc-194e-41f7-a306-ff87cb8ea114}">

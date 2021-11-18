@@ -306,7 +306,7 @@ public:
 
 		// Start temple music
 		EngineAudio.postMusicEvent("Music/Enter_Rift_Theme");
-		EngineLua.executeScript("fmodPostMusicEvent(\"Music/Temple_Theme\")", 11.f);
+		EngineLua.executeScript("fmodPostMusicEvent(\"Music/Temple_Theme\")", 9.5f);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override

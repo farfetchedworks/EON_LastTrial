@@ -5,7 +5,7 @@
 			<value>Eon_FS</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{8583e5a8-b064-4ded-846f-00a003b4677d}</destination>

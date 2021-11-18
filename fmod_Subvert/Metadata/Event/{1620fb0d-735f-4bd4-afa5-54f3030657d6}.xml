@@ -5,7 +5,7 @@
 			<value>Eon_Dash</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{1cb8dcac-b59a-4239-ab8a-afd3947c23d2}</destination>
@@ -81,7 +81,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{74afea32-72e7-4168-a4f4-4e270a447f3a}">
 		<property name="volume">
-			<value>-1</value>
+			<value>-2.5</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{b6ac4a6b-ecd4-4443-a9c2-febd1f63cfc1}</destination>
