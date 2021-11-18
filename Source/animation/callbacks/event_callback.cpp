@@ -88,6 +88,10 @@ void EventCallback::AnimationUpdate(float anim_time, CalModel* model, CalCoreAni
 
 void EventCallback::AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 {
+	// Don't reset timestamps in locked animations
+	if (getState(model, animation) == CalAnimation::STATE_STOPPED)
+		return;
+
 	for (auto& ts : timestamps)
 		ts.fired = false;
 }

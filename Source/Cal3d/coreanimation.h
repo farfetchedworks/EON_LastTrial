@@ -52,10 +52,9 @@ public:
   };
 
   std::vector<CallbackRecord>& getCallbackList() { return m_listCallbacks; }
+  std::vector<CallbackRecord> m_listCallbacks;
 
 private:
-
-  std::vector<CallbackRecord> m_listCallbacks;
 
   float m_duration;
   std::list<CalCoreTrack *> m_listCoreTrack;

@@ -43,7 +43,9 @@ namespace ui
         void setVisible(bool visible) { _visible = visible; }
         void setState(EState s) { _state = s; }
         void setPriority(int p) { _priority = p; }
+        void setAlwaysRender(bool v) { _alwaysRender = v; }
 
+        float getAngle() const { return _angle; }
         const VEC2& getScale() const { return _scale; }
         VEC2& getPosition() { return _position; };
         VEC2& getSize() { return _localSize; };
@@ -60,6 +62,7 @@ namespace ui
         void updateSize();
         void updateChildren();
         void updateFromParent();
+        void updateTimeFromParent(CWidget* parent);
 
         void addChild(CWidget* widget);
         void removeChild(CWidget* widget);
@@ -81,6 +84,7 @@ namespace ui
         VEC2 _worldSize = VEC2::Zero;
         bool _active = false;
         bool _visible = true;
+        bool _alwaysRender = false;
         int _priority = 1;
 
         EState _state = EState::STATE_NONE;

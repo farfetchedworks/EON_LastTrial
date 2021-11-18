@@ -1387,6 +1387,9 @@ public:
 			CEntity* outputCamera = getEntityByName("camera_mixed");
 			TCompCameraShake* shaker = outputCamera->get<TCompCameraShake>();
 			shaker->stop(0.1f);
+
+			// Cinematics
+			EngineLua.executeScript("CinematicGardDeath()");
 		};
 	}
 

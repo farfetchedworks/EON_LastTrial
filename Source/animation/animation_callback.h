@@ -7,6 +7,7 @@ class CHandle;
 struct CAnimationCallback : public CalAnimationCallback
 {
     CHandle getOwnerEntity(void* userData);
+    CalAnimation::State getState(CalModel* model, CalCoreAnimation* animation);
     void endCallback(CalCoreAnimation* anim);
 };
 

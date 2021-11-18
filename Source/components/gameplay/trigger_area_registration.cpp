@@ -113,7 +113,7 @@ public:
 		EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
 
 		// Cinematics
-		EngineLua.executeScript("CinematicIntroPresentation()");
+		EngineLua.executeScript("CinematicGardPresentation()");
 	}
 };
 
@@ -124,6 +124,20 @@ public:
 
 	void onAreaEnter(CHandle event_trigger, CHandle observer) override
 	{
+		// Play Cygnus music
+		TCompGameManager* h_game_manager = GameManager->get<TCompGameManager>();
+		auto& boss_state = h_game_manager->getBossStateByName("Cygnus");
+		if (boss_state.music_event == nullptr) {
+			EngineAudio.postMusicEvent("Music/Cygnus_Theme");
+			boss_state.music_event = EngineAudio.getCurMusicEvent();
+		}
+		EngineAudio.setMusicRTPC("Cygnus_Phase", 1, true);
+
+		// Audio: disable Eon as a music interactor, as Cygnus will be now the one who manages it
+		CEntity* e_eon = getEntityByName("player");
+		TCompMusicInteractor* h_mus_int = e_eon->get<TCompMusicInteractor>();
+		h_mus_int->setEnabled(false);
+
 #if PLAY_CINEMATICS
 		CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");
 		if (e_cygnus)
