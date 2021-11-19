@@ -284,6 +284,7 @@
     <ClCompile Include="windows\application.cpp" />
     <ClCompile Include="animation\callbacks\gard_intro_callback.cpp" />
     <ClCompile Include="components\gameplay\comp_collapsing_props.cpp" />
+    <ClCompile Include="entity\entity_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\callbacks\event_callback.h" />
@@ -583,6 +584,7 @@
     <ClInclude Include="utils\utils.h" />
     <ClInclude Include="windows\application.h" />
     <ClInclude Include="components\gameplay\comp_collapsing_props.h" />
+    <ClInclude Include="entity\entity_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
