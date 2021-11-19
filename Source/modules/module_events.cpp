@@ -227,7 +227,7 @@ void CModuleEventSystem::registerGlobalEvents()
 		CEntity* owner = t;
 		assert(owner);
 		TCompTransform* c_trans = owner->get<TCompTransform>();
-		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6, c_trans->getPosition());
+		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
 	});
 }
 

@@ -9,6 +9,7 @@
 #include "entity/entity_parser.h"
 #include "render/render_module.h"
 #include "modules/module_events.h"
+#include "components/controllers/comp_pawn_controller.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_collider.h"
@@ -392,9 +393,8 @@ void TCompGameManager::onEonHasDied(const TMsgEonHasDied& msg)
 
 	notifyEonDeath(true);
 
-	// Allow revival
-	TMsgEonRevive msgEonRevive;
-	player->sendMsg(msgEonRevive);
+	TCompPawnController* pawn = player->get<TCompPawnController>();
+	pawn->resetSpeedMultiplier();
 
 	// Remove motion blur if needed (slow debuff)
 	CEntity* camera = getEntityByName("camera_mixed");
@@ -403,6 +403,10 @@ void TCompGameManager::onEonHasDied(const TMsgEonHasDied& msg)
 	if (c_motion_blur && c_motion_blur->isEnabled()) {
 		c_motion_blur->disable();
 	}
+
+	// Allow revival
+	TMsgEonRevive msgEonRevive;
+	player->sendMsg(msgEonRevive);
 
 	// FMOD event
 	EngineAudio.setGlobalRTPC("Eon_Dead", 1.f);
