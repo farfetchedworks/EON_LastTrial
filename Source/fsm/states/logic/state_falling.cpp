@@ -48,14 +48,10 @@ class CStateFalling : public CStateBaseLogic
                     TCompHealth* health = owner->get<TCompHealth>();
                     int fall_damage = static_cast<int>(health->getMaxHealth() * (fallingTime / maxFallTime));
                     EngineUI.fadeWidget("screen_damage", 2.f);
-
-                    printFloat("Fall time", fallingTime);
-                    printFloat("Fall damage", fall_damage);
-
                     TMsgReduceHealth hmsg;
                     hmsg.damage = fall_damage;
                     hmsg.h_striker = owner;
-                    hmsg.fall_damage = true;
+                    hmsg.skip_blood = true;
                     owner->sendMsg(hmsg);
                 }
             }

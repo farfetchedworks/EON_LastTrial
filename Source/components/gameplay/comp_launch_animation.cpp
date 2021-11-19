@@ -27,6 +27,13 @@ void TCompLaunchAnimation::load(const json& j, TEntityParseContext& ctx)
 	acceptance_dist = jItem.value("acceptance_dist", 0.f);
 	offset = loadVEC3(jItem, "offset");
 
+	if (jItem.count("use_limits") > 0)
+	{
+		useLimits = true;
+		Xlimits = loadVEC2(jItem, "x_limits");
+		Zlimits = loadVEC2(jItem, "z_limits");
+	}
+
 	assert(jItem.count("transform"));
 	finalPose.fromJson(jItem["transform"]);
 }
@@ -56,6 +63,9 @@ void TCompLaunchAnimation::update(float dt)
 void TCompLaunchAnimation::debugInMenu()
 {
 	ImGui::DragFloat("Acc. Distance", &acceptance_dist, 0.01f, 0.1f, 10.f);
+	ImGui::DragFloat3("Offset", &offset.x, 0.01f, -10.f, 10.f);
+	ImGui::DragFloat2("X limits", &Xlimits.x, 0.01f, -10.f, 10.f);
+	ImGui::DragFloat2("Z limits", &Zlimits.x, 0.01f, -10.f, 10.f);
 }
 
 void TCompLaunchAnimation::renderDebug()
@@ -73,15 +83,29 @@ bool TCompLaunchAnimation::resolve()
 	TCompTransform* transform = get<TCompTransform>();
 	TCompTransform* player_transform = player->get<TCompTransform>();
 
+	// target is in front?
 	VHandles colliders;
-	bool in_front = EnginePhysics.raycast(player_transform->getPosition(),
-		player_transform->getForward(), acceptance_dist, colliders, CModulePhysics::FilterGroup::Interactable);
+	bool is_ok = EnginePhysics.raycast(player_transform->getPosition(),
+		player_transform->getForward(), 1.f, colliders, CModulePhysics::FilterGroup::Interactable);
 
-	in_front &= player_transform->getForward().Dot(transform->getForward()) < 0.f;
+	is_ok &= player_transform->getForward().Dot(transform->getForward()) < 0.f;
 
 	VEC3 pos = transform->getPosition() + offset;
-	float dist = VEC3::Distance(pos, player_transform->getPosition());
-	return in_front && dist < acceptance_dist;
+	VEC3 playerPos = player_transform->getPosition();
+
+	if (useLimits)
+	{
+		is_ok &= playerPos.x > Xlimits.x && playerPos.x < Xlimits.y;
+		is_ok &= playerPos.z > Zlimits.x && playerPos.z < Zlimits.y;
+	}
+	else
+	{
+		// float dist = VEC2::Distance(VEC2(pos.x, pos.z), VEC2(playerPos.x, playerPos.z));
+		float dist = VEC3::Distance(pos, playerPos);
+		is_ok &= dist < acceptance_dist;
+	}
+	
+	return is_ok;
 }
 
 void TCompLaunchAnimation::launch()

@@ -53,3 +53,4 @@ using json = nlohmann::json;
 #include "resources/resources.h"
 #include "render/render.h"
 #include "handle/handle.h"
+#include "entity/entity_utils.h"

@@ -10,6 +10,7 @@
 #include "components/common/comp_hierarchy.h"
 #include "components/common/comp_fsm.h"
 #include "components/common/comp_updates_physics.h"
+#include "components/gameplay/comp_game_manager.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "entity/entity_parser.h"
 #include "audio/module_audio.h"
@@ -154,7 +155,8 @@ void TCompWeaponPartTrigger::spawnFloorParticles()
 	t.setPosition(newPos);
 	t.setRotation(QUAT::Identity);
 
-	bool isCave = true;
+	TCompGameManager* gm = GameManager->get<TCompGameManager>();
+	bool isCave = gm->getPlayerLocation() == eLOCATION::CAVE;
 
 	CEntity* e = spawn( isCave ? 
 		"data/particles/eon_cavefloor_particles.json" : "data/particles/eon_templefloor_particles.json", t);

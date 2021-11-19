@@ -35,7 +35,8 @@ struct TMsgEnemyDied {
 enum class EHIT_TYPE {
 	DEFAULT,
 	SWEEP,
-	SMASH
+	SMASH,
+	GARD_BRANCH
 };
 
 struct TMsgHit {
@@ -56,7 +57,7 @@ struct TMsgReduceHealth {
 	int damage = 0;
 	bool hitByPlayer = false;
 	bool fromBack = false;
-	bool fall_damage = false;
+	bool skip_blood = false;
 };
 
 struct TMsgRegisterWeapon {

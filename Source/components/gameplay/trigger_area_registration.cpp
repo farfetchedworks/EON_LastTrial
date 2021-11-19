@@ -99,6 +99,10 @@ public:
 		assert(e_gard);
 
 		TCompFSM* fsm = e_gard->get<TCompFSM>();
+
+		if (fsm->getCtx().isEnabled())
+			return;
+
 		fsm->startCtx();
 
 		EngineLua.executeScript(_name + "Area()");
@@ -270,6 +274,10 @@ public:
 
 		// Switch on cave reverb
 		EngineAudio.setGlobalRTPC("Cave_Reverb", 1.0);
+
+		// Set new location
+		TCompGameManager* gm = GameManager->get<TCompGameManager>();
+		gm->setPlayerLocation(eLOCATION::CAVE);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
@@ -293,6 +301,10 @@ public:
 		// Start temple music
 		EngineAudio.postMusicEvent("Music/Enter_Rift_Theme");
 		EngineLua.executeScript("fmodPostMusicEvent(\"Music/Temple_Theme\")", 9.5f);
+
+		// Set new location
+		TCompGameManager* gm = GameManager->get<TCompGameManager>();
+		gm->setPlayerLocation(eLOCATION::RIFT);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
@@ -312,6 +324,10 @@ public:
 
 		// Switch on temple reverb
 		EngineAudio.setGlobalRTPC("Monastery_Reverb", 1.0);
+
+		// Set new location
+		TCompGameManager* gm = GameManager->get<TCompGameManager>();
+		gm->setPlayerLocation(eLOCATION::TEMPLE);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
@@ -328,6 +344,10 @@ public:
 	{
 		// Start ambience
 		EngineAudio.postAmbienceEvent("AMB/Temple/garden_ambience");
+
+		// Set new location
+		TCompGameManager* gm = GameManager->get<TCompGameManager>();
+		gm->setPlayerLocation(eLOCATION::GARDEN);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override

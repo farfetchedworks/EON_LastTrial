@@ -291,6 +291,7 @@
     <ClCompile Include="ui\widgets\ui_text.cpp" />
     <ClCompile Include="ui\widgets\ui_video.cpp" />
     <ClCompile Include="utils\cache_manager.cpp" />
+    <ClCompile Include="entity\entity_utils.cpp" />
     <ClCompile Include="utils\murmur3\murmur3.cpp" />
     <ClCompile Include="utils\resource_json.cpp" />
     <ClCompile Include="utils\utils.cpp" />
@@ -583,6 +584,7 @@
     <ClInclude Include="utils\data_provider.h" />
     <ClInclude Include="utils\data_saver.h" />
     <ClInclude Include="utils\directory_watcher.h" />
+    <ClInclude Include="entity\entity_utils.h" />
     <ClInclude Include="utils\file_context.h" />
     <ClInclude Include="utils\json.hpp" />
     <ClInclude Include="utils\murmur3\murmur3.h" />

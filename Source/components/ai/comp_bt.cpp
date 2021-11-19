@@ -170,6 +170,11 @@ void TCompBT::onHit(const TMsgHit& msg)
 
 			int cur_hits = bt_context->getBlackboard()->getValue<int>("processHit");
 			bt_context->getBlackboard()->setValue("processHit", ++cur_hits);
+
+			if (msg.fromBack) {
+				if(bt_context->getBlackboard()->hasKey("isHitstunBack"))
+					bt_context->getBlackboard()->setValue("isHitstunBack", true);
+			}
 		}
 	//}
 

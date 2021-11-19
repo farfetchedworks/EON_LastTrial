@@ -116,11 +116,16 @@ void CModuleManager::update(float dt)
         }
     }
 
-    // Exit game
-    // TODO: Remove this from here... show message for a double confirmation
+    // Exit game shortcut (ESC + Space)
     if (Engine.getInput(input::MENU)->getButton("exit_game").getsPressed()) {
         CApplication::get().exit();
     }
+
+#ifdef DEBUG
+    if (Engine.getInput(input::MENU)->getButton("pause_game").getsPressed()) {
+        CApplication::get().exit();
+    }
+#endif // DEBUG
 }
 
 void CModuleManager::render()
