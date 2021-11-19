@@ -40,6 +40,7 @@
     <ClCompile Include="components\gameplay\comp_aether.cpp" />
     <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
     <ClCompile Include="components\gameplay\comp_launch_animation.cpp" />
+    <ClCompile Include="components\gameplay\comp_npc.cpp" />
     <ClCompile Include="components\gameplay\trigger_area.cpp" />
     <ClCompile Include="components\particles\comp_follow_target.cpp" />
     <ClCompile Include="components\postfx\comp_depth_fog.cpp" />
@@ -311,6 +312,7 @@
     <ClInclude Include="components\gameplay\comp_aether.h" />
     <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
     <ClInclude Include="components\gameplay\comp_launch_animation.h" />
+    <ClInclude Include="components\gameplay\comp_npc.h" />
     <ClInclude Include="components\particles\comp_follow_target.h" />
     <ClInclude Include="components\postfx\comp_depth_fog.h" />
     <ClInclude Include="components\postfx\comp_motion_blur.h" />

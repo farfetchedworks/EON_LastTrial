@@ -271,6 +271,10 @@ struct TMsgDeactivateMsgArea {
   DECL_MSG_ID();
 };
 
+struct TMsgStopCaption {
+	DECL_MSG_ID();
+};
+
 struct TMsgCameraCreated {
 	DECL_MSG_ID();
 	std::string name;

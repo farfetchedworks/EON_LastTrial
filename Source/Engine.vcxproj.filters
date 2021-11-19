@@ -286,6 +286,7 @@
     <ClCompile Include="entity\entity_utils.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_death_callback.cpp" />
     <ClCompile Include="components\gameplay\comp_aether.cpp" />
+    <ClCompile Include="components\gameplay\comp_npc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\callbacks\event_callback.h" />
@@ -587,6 +588,7 @@
     <ClInclude Include="components\gameplay\comp_collapsing_props.h" />
     <ClInclude Include="entity\entity_utils.h" />
     <ClInclude Include="components\gameplay\comp_aether.h" />
+    <ClInclude Include="components\gameplay\comp_npc.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
