@@ -161,11 +161,12 @@ void CModuleEventSystem::registerGlobalEvents()
 		{
 			CEntity* child = h;
 			TCompAttachedToBone* socket = child->get<TCompAttachedToBone>();
+			if (!socket)
+				continue;
 			socket->detach();
 			TCompRigidAnimationController * controller = child->get<TCompRigidAnimationController>();
-			if (!controller)
-				continue;
-			controller->start();
+			if (controller)
+				controller->start();
 		}
 	});
 
@@ -179,11 +180,12 @@ void CModuleEventSystem::registerGlobalEvents()
 		{
 			CEntity* child = h;
 			TCompAttachedToBone* socket = child->get<TCompAttachedToBone>();
+			if (!socket)
+				continue;
 			socket->attach();
 			TCompRigidAnimationController* controller = child->get<TCompRigidAnimationController>();
-			if (!controller)
-				continue;
-			controller->stop();
+			if (controller)
+				controller->stop();
 		}
 	});
 
