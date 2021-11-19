@@ -93,8 +93,7 @@ namespace LogicManager
 		c_camera_follow->disable();
 
 		CEntity* e_cinematic_camera = getEntityByName("camera_cinematic");
-		e_cinematic_camera->setPosition(e_target->getPosition());
-
+		assert(e_cinematic_camera);
 		TCompRigidAnimationController* controller = e_cinematic_camera->get<TCompRigidAnimationController>();
 		controller->setTarget(target_name);
 		controller->setAnimation("data/animations/" + animation_filename);

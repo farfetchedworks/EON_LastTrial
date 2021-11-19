@@ -99,6 +99,7 @@ struct TCompRigidAnimationController : public TCompBase
 
 	void load(const json& j, TEntityParseContext& ctx);
 	void debugInMenu();
+	void renderDebug();
 	void start();
 	void stop();
 	void update(float delta_time);

@@ -1,5 +1,6 @@
 #include "mcv_platform.h"
 #include "engine.h"
+#include "render/draw_primitives.h"
 #include "comp_rigid_animation_controller.h"
 #include "components/common/comp_name.h"
 #include "components/common/comp_hierarchy.h"
@@ -162,38 +163,49 @@ void TCompRigidAnimationController::update(float delta_time)
 		}
 	}
 
-	if (cinematic_animation && cinematic_target.isValid()) {
+	if (!cinematic_animation)
+		return;
 
-		TCompTransform* c_target = get<TCompTransform>();
-		assert(c_target);
+	// From here, manage cinematic animations
+	TCompTransform* cam_transform = get<TCompTransform>();
+	assert(cam_transform);
+
+	VEC3 eye = cam_transform->getPosition();
+	VEC3 target;
+
+	if (cinematic_target_bone.size()) {
+
 		CEntity* e = cinematic_target;
 		TCompTransform* target_transform = e->get<TCompTransform>();
-		VEC3 target_pos = e->getPosition();
-
-		if (cinematic_target_bone.size()) {
-			target_pos = TaskUtils::getBoneWorldPosition(e, cinematic_target_bone);
-		}
-
-		VEC3 position = c_target->getPosition();
-
-		// Don't leave the scenario
-		{
-			VEC3 rayDir = position - target_pos;
-			float dist_to_player = rayDir.Length();
-			rayDir.Normalize();
-			physx::PxU32 layerMask = CModulePhysics::FilterGroup::Scenario;
-			std::vector<physx::PxSweepHit> sweepHits;
-			physx::PxTransform trans(VEC3_TO_PXVEC3(target_pos));
-			float sphere_radius = 0.1f; // Should be equal to camera's z near
-			physx::PxSphereGeometry geometry = { sphere_radius };
-			bool hasHit = EnginePhysics.sweep(trans, rayDir, dist_to_player, geometry, sweepHits, layerMask, true, false);
-			if (hasHit) {
-				position = PXVEC3_TO_VEC3(sweepHits[0].position) + PXVEC3_TO_VEC3(sweepHits[0].normal) * sphere_radius;
-			}
-		}
-
-		c_target->lookAt(position, target_pos, VEC3::Up);
+		target = TaskUtils::getBoneWorldPosition(e, cinematic_target_bone);
 	}
+	else
+	{
+		CTransform t;
+		t.fromMatrix(*cam_transform);
+		QUAT q = QUAT::CreateFromRotationMatrix(MAT44::CreateRotationX(deg2rad(-90.f)));
+		t.setRotation(QUAT::Concatenate(t.getRotation(), q));
+		eye = t.getPosition();
+		target = t.getPosition() - t.getForward();
+	}
+
+	// Don't leave the scenario
+	{
+		VEC3 rayDir = eye - target;
+		float dist_to_player = rayDir.Length();
+		rayDir.Normalize();
+		physx::PxU32 layerMask = CModulePhysics::FilterGroup::Scenario;
+		std::vector<physx::PxSweepHit> sweepHits;
+		physx::PxTransform trans(VEC3_TO_PXVEC3(target));
+		float sphere_radius = 0.1f; // Should be equal to camera's z near
+		physx::PxSphereGeometry geometry = { sphere_radius };
+		bool hasHit = EnginePhysics.sweep(trans, rayDir, dist_to_player, geometry, sweepHits, layerMask, true, false);
+		if (hasHit) {
+			eye = PXVEC3_TO_VEC3(sweepHits[0].position) + PXVEC3_TO_VEC3(sweepHits[0].normal) * sphere_radius;
+		}
+	}
+
+	cam_transform->lookAt(eye, target, VEC3::Up);
 }
 
 void TCompRigidAnimationController::assignTracksToSceneObjects()
@@ -335,6 +347,16 @@ void TCompRigidAnimationController::onEndOfAnimation()
 			EngineLua.executeScript("stopCinematic(1.0)");
 		}
 	}
+}
+
+void TCompRigidAnimationController::renderDebug()
+{
+	TCompTransform* transform = get<TCompTransform>();
+	CTransform t;
+	t.fromMatrix(*transform);
+	QUAT q = QUAT::CreateFromRotationMatrix(MAT44::CreateRotationX(deg2rad(-90.f)));
+	t.setRotation(QUAT::Concatenate(t.getRotation(), q));
+	drawLine(t.getPosition(), t.getPosition() - t.getForward(), Colors::Blue);
 }
 
 void TCompRigidAnimationController::debugInMenu()
