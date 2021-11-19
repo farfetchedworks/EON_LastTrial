@@ -114,11 +114,8 @@ bool TCompCygnusKey::resolve()
 
 		CEntity* camera = getEntityByName("dynamic_camera");
 		TCompTransform* transform = camera->get<TCompTransform>();
-		transform->setPosition(camera_follow->getPosition());
-		
-		TCompCamera* c_camera = camera->get<TCompCamera>();
-		c_camera->lookAt(transform->getPosition(), newK->getPosition() + VEC3::Up, VEC3::Up);
-		CameraMixer.blendCamera("dynamic_camera", time, &interpolators::quadInOutInterpolator);
+		transform->lookAt(camera_follow->getPosition(), newK->getPosition(), VEC3::Up);
+		CameraMixer.blendCamera("dynamic_camera", time, & interpolators::quadInOutInterpolator);
 		PlayerInput.blockInput();
 	}
 
@@ -160,11 +157,7 @@ void TCompCygnusKey::setActive()
 	// Undo camera change
 	if (_secondKey)
 	{
-		CEntity* camera_follow = getEntityByName("camera_follow");
-		TCompCameraFollow* c_camera_follow = camera_follow->get<TCompCameraFollow>();
-		c_camera_follow->enable();
-		CameraMixer.blendCamera("camera_follow", 2.f, &interpolators::quadInOutInterpolator);
-		PlayerInput.unBlockInput();
+		EngineLua.executeScript("dispatchEvent('Gameplay/Eon/removeDynamicCamera')", 1.5f);
 	}
 
 	_active = true;

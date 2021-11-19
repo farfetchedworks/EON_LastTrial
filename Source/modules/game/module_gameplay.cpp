@@ -163,9 +163,11 @@ void ModuleEONGameplay::update(float dt)
 		}
 	}
 
+#ifndef DEBUG
 	if (input->getButton("pause_game").getsPressed()) {
 		togglePause();
 	}
+#endif // DEBUG
 
 	if (paused)
 	{
