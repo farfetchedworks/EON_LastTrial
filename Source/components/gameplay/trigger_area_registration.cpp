@@ -99,6 +99,10 @@ public:
 		assert(e_gard);
 
 		TCompFSM* fsm = e_gard->get<TCompFSM>();
+
+		if (fsm->getCtx().isEnabled())
+			return;
+
 		fsm->startCtx();
 
 		EngineLua.executeScript(_name + "Area()");

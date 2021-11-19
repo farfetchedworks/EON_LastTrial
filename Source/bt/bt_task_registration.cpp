@@ -805,7 +805,7 @@ public:
 		// Load generic parameters
 		move_speed = number_field[0];
 		rotation_speed = number_field[1];
-		combo_prob = number_field[2];
+		combo_prob = (int)number_field[2];
 		damage = (int)getAdjustedParameter(TCompGameManager::EParameterDDA::DAMAGE, number_field[3]);
 
 		// Set animation callbacks
@@ -1005,7 +1005,7 @@ public:
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
 		{
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			spawnParticles("data/particles/compute_projectile_portal_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.4, h_trans->getPosition());
+			spawnParticles("data/particles/compute_projectile_portal_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.4f, h_trans->getPosition());
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
@@ -1679,7 +1679,7 @@ public:
 				mod->blendIn();
 
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			spawnParticles("data/particles/compute_cygnus_spread_particles.json", h_trans->getPosition() + h_trans->getRight() * 0.1, h_trans->getPosition(), 2.f);
+			spawnParticles("data/particles/compute_cygnus_spread_particles.json", h_trans->getPosition() + h_trans->getRight() * 0.1f, h_trans->getPosition(), 2.f);
 		}
 	}
 

@@ -102,7 +102,7 @@ bool TCompCygnusKey::resolve()
 
 	cte->emitter_initial_pos = owner->getPosition();
 	cte->emitter_owner_position = static_cast<CEntity*>(next.getOwner())->getPosition();
-	cte->emitter_num_particles_per_spawn = 1800;
+	cte->emitter_num_particles_per_spawn = 3000;
 	cte->updateFromCPU();
 
 	// 4. Look at next key if first

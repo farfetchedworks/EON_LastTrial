@@ -202,9 +202,9 @@ void CModuleEventSystem::registerGlobalEvents()
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {
-		CameraMixer.blendCamera("camera_follow", 1.5f, &interpolators::quadInOutInterpolator);
+		CameraMixer.blendCamera("camera_follow", 1.f, &interpolators::quadInOutInterpolator);
 		PlayerInput.unBlockInput();
-		EngineUI.fadeOut(1.f);
+		EngineUI.fadeOut(1.5f);
 
 		CEntity* owner = getEntityByName("player");
 		assert(owner);

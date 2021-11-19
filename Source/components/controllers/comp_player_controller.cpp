@@ -224,7 +224,7 @@ void TCompPlayerController::update(float dt)
 
 	if (PlayerInput['C'].getsPressed()) {
 	    //spawnParticles("data/particles/compute_time_distortion_particles.json", transform->getPosition());
-		spawnParticles("data/particles/compute_projectile_portal_particles.json", transform->getPosition() + transform->getForward() * 0.1, transform->getPosition());
+		spawnParticles("data/particles/compute_projectile_portal_particles.json", transform->getPosition() + transform->getForward() * 0.1f, transform->getPosition());
 
 		//spawnParticles("data/particles/compute_levelup_particles.json", transform->getPosition());
 		//spawnParticles("data/particles/compute_levelup_smoke_particles.json", transform->getPosition());
@@ -584,7 +584,8 @@ void TCompPlayerController::move(float dt)
 		}
 	}
 
-	if (!is_sprint_attack && !is_falling && manageFalling(current_speed, dt)) {
+	bool isPlayingState = CEngine::get().getModuleManager().inGamestate("playing");
+	if (isPlayingState && !is_sprint_attack && !is_falling && manageFalling(current_speed, dt)) {
 		is_falling = true;
 		setVariable("is_falling", true);
 	}
