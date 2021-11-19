@@ -10,7 +10,7 @@ DECL_OBJ_MANAGER("music_interactor", TCompMusicInteractor)
 
 void TCompMusicInteractor::load(const json& j, TEntityParseContext& ctx)
 {
-	float min_monk_distance = j.value("min_monk_distance", 15.f);
+	float min_monk_distance = j.value("min_monk_distance", 8.f);
 	min_monk_distance_SQ = powf(min_monk_distance, 2.f);
 
 	min_HP = j.value("min_HP", min_HP);

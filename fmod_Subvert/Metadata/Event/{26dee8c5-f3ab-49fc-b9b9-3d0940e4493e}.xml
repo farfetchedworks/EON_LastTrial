@@ -220,7 +220,7 @@
 			<value>2.8235294117647061</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="TransitionSourceSound" id="{35ba2ded-aafb-42a7-9b36-87302fecccad}">
@@ -250,7 +250,7 @@
 			<value>228.70588235294119</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{b8905a58-2839-4f4c-bad3-e8fff55d485e}">
@@ -267,7 +267,7 @@
 			<destination>{9c66daf3-4b9c-4a5b-9846-ae3b09239ddc}</destination>
 		</relationship>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{4462883f-90d3-41ee-9b67-c78056e6e8e8}">
@@ -281,7 +281,7 @@
 			<value>104.47058823529413</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{f7291d6f-6689-45ab-8506-163548bb0d02}">
@@ -295,7 +295,7 @@
 			<value>231.52941176470588</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{49862a4e-9863-4328-8383-a984c562d3c3}">
@@ -309,7 +309,7 @@
 			<value>231.52941176470588</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{234faf86-32c9-46d9-abd4-efbf950e796b}">
@@ -323,7 +323,7 @@
 			<value>378.35294117647061</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="TransitionSourceSound" id="{5a51a3d8-3035-488e-8386-b4476a233caf}">
@@ -412,7 +412,7 @@
 			<value>214.58823529411765</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{f00d3727-e0b0-4a65-8ed8-56b75b716716}">
@@ -426,7 +426,7 @@
 			<value>378.35294117647061</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{83a8c2b6-317a-47aa-a1cd-8b1297e9475e}</destination>
+			<destination>{b170fc3e-8a3c-4508-a77f-3ecf9635aec8}</destination>
 		</relationship>
 	</object>
 	<object class="TransitionSourceSound" id="{e9b810e1-32b8-4fe6-9798-07dbe8927b16}">
@@ -612,7 +612,7 @@
 			<value>220.23529411764702</value>
 		</property>
 		<property name="quantizationInterval">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{057f1dfa-c75d-4ed6-b6b7-b8669278920d}</destination>
@@ -974,7 +974,7 @@
 			<value>1</value>
 		</property>
 		<property name="curveShape">
-			<value>0.111194938</value>
+			<value>1</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{9492fe5f-1dcd-4a7f-a9ea-fea0a266316f}">

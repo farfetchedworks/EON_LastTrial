@@ -58,13 +58,13 @@
 	</object>
 	<object class="CompressorEffect" id="{967721ac-e37e-4bb0-8297-f08cf551f36f}">
 		<property name="threshold">
-			<value>-10</value>
+			<value>-12</value>
 		</property>
 		<property name="ratio">
-			<value>4</value>
+			<value>6</value>
 		</property>
 		<property name="attackTime">
-			<value>30</value>
+			<value>4.4000001</value>
 		</property>
 		<property name="releaseTime">
 			<value>100</value>
