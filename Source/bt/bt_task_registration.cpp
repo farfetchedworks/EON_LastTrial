@@ -2402,26 +2402,8 @@ public:
 	void init() override {}
 
 	void onEnter(CBTContext& ctx) override {
-		//TaskUtils::resumeAction(ctx, name);
 		ctx.setIsDying(true);
-
-		//CEntity* player = getPlayer();
-		//CEntity* e = ctx.getOwnerEntity();
-		//TCompTransform* transform = e->get<TCompTransform>();
-		//spawn("data/prefabs/black_hole_cygnus.json", *transform);
-
-		// Get Form 1 info
-		//CTransform t;
-		//t.fromMatrix(*transform);
-		//float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		//t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
-
-		// Destroy form 1 entity
-		//ctx.getOwnerEntity().destroy();
-		//CHandleManager::destroyAllPendingObjects();
-
-		// Intro form 2
-		//EngineLua.executeScript("CinematicCygnusF1ToF2()");
+		EngineLua.executeScript("CinematicCygnusDeath()");
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
