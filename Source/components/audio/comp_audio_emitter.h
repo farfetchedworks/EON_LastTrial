@@ -16,6 +16,8 @@ private:
 	std::string bank_name;
 	FMOD::Studio::EventInstance* event_inst;
 
+	bool static_inst = false;
+
 public:
 
 	~TCompAudioEmitter();

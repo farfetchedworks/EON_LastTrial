@@ -10,6 +10,7 @@ void TCompAudioEmitter::load(const json& j, TEntityParseContext& ctx)
 {
 	event_name = j.value("fmod_event", std::string());
 	bank_name = j.value("fmod_bank", std::string());
+	static_inst = j.value("static", false);
 }
 
 TCompAudioEmitter::~TCompAudioEmitter()
@@ -37,7 +38,7 @@ void TCompAudioEmitter::onEntityCreated()
 void TCompAudioEmitter::update(float dt)
 {
 	// Update emitter world position
-	if (event_inst == nullptr)
+	if (event_inst == nullptr || static_inst)
 		return;
 
 	TCompTransform* t = h_cache_transform;
