@@ -340,16 +340,6 @@ void TCompRigidAnimationController::onEndOfAnimation()
 	}
 }
 
-void TCompRigidAnimationController::renderDebug()
-{
-	TCompTransform* transform = get<TCompTransform>();
-	CTransform t;
-	t.fromMatrix(*transform);
-	QUAT q = QUAT::CreateFromRotationMatrix(MAT44::CreateRotationX(deg2rad(-90.f)));
-	t.setRotation(QUAT::Concatenate(t.getRotation(), q));
-	drawLine(t.getPosition(), t.getPosition() - t.getForward(), Colors::Blue);
-}
-
 void TCompRigidAnimationController::debugInMenu()
 {
 	if (ImGui::DragFloat("Current Time", &curr_time, 0.01f, animation_data->header.min_time, animation_data->header.max_time))

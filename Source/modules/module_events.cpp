@@ -222,6 +222,13 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTimeReversal* c_time_reversal = owner->get<TCompTimeReversal>();
 		c_time_reversal->renderEffect(false);
 	});
+
+	EventSystem.registerEventCallback("Gameplay/runParticles", [](CHandle t, CHandle o) {
+		CEntity* owner = t;
+		assert(owner);
+		TCompTransform* c_trans = owner->get<TCompTransform>();
+		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6, c_trans->getPosition());
+	});
 }
 
 void CModuleEventSystem::renderInMenu()
