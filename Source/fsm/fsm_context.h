@@ -42,6 +42,7 @@ namespace fsm
         CVariable* getVariable(const std::string& name);
         void forceState(const std::string& state_name, float time_start);
         bool isValid();
+        bool isEnabled() { return _enabled; };
 
         void renderInMenu();
 
