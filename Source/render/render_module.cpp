@@ -499,6 +499,8 @@ void CRenderModule::generateFrame()
 
 	CModuleBoot& boot = CEngine::get().getBoot();
 
+	activateMainCamera();
+
 	// Any tool inside the engine wants to render imgui
 	if (boot.inGame() && !RENDER_IMGUI) {
 #ifdef _DEBUG
@@ -509,7 +511,6 @@ void CRenderModule::generateFrame()
 		modules.renderInMenu();
 	}
 
-	activateMainCamera();
 	ImGuiEndFrame();
 	Render.swapFrames();
 }
