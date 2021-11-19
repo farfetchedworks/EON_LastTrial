@@ -131,10 +131,11 @@ public:
 		// Play Cygnus music
 		TCompGameManager* h_game_manager = GameManager->get<TCompGameManager>();
 		auto& boss_state = h_game_manager->getBossStateByName("Cygnus");
-		if (boss_state.music_event == nullptr) {
-			EngineAudio.postMusicEvent("Music/Cygnus_Theme");
-			boss_state.music_event = EngineAudio.getCurMusicEvent();
-		}
+		if (boss_state.music_event != nullptr)
+			return;
+
+		EngineAudio.postMusicEvent("Music/Cygnus_Theme");
+		boss_state.music_event = EngineAudio.getCurMusicEvent();
 		EngineAudio.setMusicRTPC("Cygnus_Phase", 1, true);
 
 		// Audio: disable Eon as a music interactor, as Cygnus will be now the one who manages it
@@ -305,6 +306,9 @@ public:
 		// Set new location
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
 		gm->setPlayerLocation(eLOCATION::RIFT);
+
+		// Inform the game manager that Eon has entered the rift at least once, music purposes
+		gm->setHasEnteredRiftOnce(true);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
@@ -328,6 +332,16 @@ public:
 		// Set new location
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
 		gm->setPlayerLocation(eLOCATION::TEMPLE);
+
+		// If Eon already entered the rift for the 1st time (therefore he died at some point), play music
+		if (gm->getHasHasEnteredRiftOnce()) {
+			// Activate music interaction
+			CEntity* e_owner = getEntityByName("player");
+			TCompMusicInteractor* t_mus_int = e_owner->get<TCompMusicInteractor>();
+			t_mus_int->setEnabled(true);
+
+			EngineAudio.postMusicEvent("Music/Temple_Theme");
+		}
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override

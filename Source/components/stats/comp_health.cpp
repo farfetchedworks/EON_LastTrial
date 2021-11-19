@@ -155,11 +155,9 @@ void TCompHealth::onReduceHealth(const TMsgReduceHealth& msg)
         CEntity* e_owner = CHandle(this).getOwner();
         TCompBT* c_bt = e_owner->get<TCompBT>();
         //c_bt->getContext()->setCurrentNode(nullptr);
-        c_bt->getContext()->reset();
 
-        // Send a message to the player that he has been untargeted, for music-interaction purposes
-        TMsgUntarget msg_untarget;
-        e_player->sendMsg(msg_untarget);
+        // Reset BT context
+        c_bt->getContext()->reset();
     }
     // Manage EON death
     else

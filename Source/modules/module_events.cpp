@@ -7,6 +7,7 @@
 #include "modules/game/module_player_interaction.h"
 #include "modules/module_camera_mixer.h"
 #include "skeleton/comp_attached_to_bone.h"
+#include "components/ai/comp_bt.h"
 #include "components/common/comp_parent.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
@@ -208,6 +209,7 @@ void CModuleEventSystem::registerGlobalEvents()
 		c_camera_follow->enable();
 		CameraMixer.blendCamera("camera_follow", 2.f, &interpolators::quadInOutInterpolator);
 		PlayerInput.unBlockInput();
+		TCompBT::UPDATE_ENABLED = true;
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {
