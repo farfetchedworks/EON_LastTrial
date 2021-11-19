@@ -21,6 +21,7 @@ private:
     int num_enemies = 0;
 
     float acceptance_dist = 0.f;
+    VEC3 offset = VEC3::Zero;
 
 public:
 
@@ -34,6 +35,7 @@ public:
     bool isActive() { return active; }
     bool canPray() { return num_enemies == 0; }
     const PrayPos& getPrayPos() { return pray_pos; }
+    VEC3 getOffset() { return offset; }
 
     void onPray(const TMsgShrinePray& msg);
     void onEnemyEnter(const TMsgEnemyEnter& msg);

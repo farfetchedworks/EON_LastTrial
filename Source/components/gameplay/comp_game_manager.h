@@ -18,6 +18,13 @@ struct SBossState {
 	FMOD::Studio::EventInstance* music_event = nullptr;
 };
 
+enum class eLOCATION{
+	CAVE = 0,
+	TEMPLE,
+	RIFT,
+	GARDEN
+};
+
 class TCompGameManager : public TCompBase {
 
 	DECL_SIBLING_ACCESS();
@@ -81,7 +88,7 @@ private:
 	std::map<std::string, SBossState> bosses_states;								// manage bosses states
 
 	bool is_in_cinematic = false;
-	bool is_gard_killed = false;
+	eLOCATION player_location = eLOCATION::CAVE;
 
 	// For Dynamic Difficulty Adjustment
 	int max_deaths_easy = 10;
@@ -100,6 +107,7 @@ public:
 	void onUnregisterGameEvent(const TMsgUnregEvent& msg);
 	void onBossDead(const TMsgBossDead& msg);
 
+	void setPlayerLocation(eLOCATION location) { player_location = location; }
 	void setIsInCinematic(bool value);
 	bool isInCinematic();
 
@@ -127,10 +135,11 @@ public:
 
 	bool isGardKilled();
 
-	bool          isEonDied() { return eonHasDied; };
-	float         getTimeScaleFactor() { return 1.0f; };
-	ETimeStatus   getTimeStatus() { return time_status; };
-	CHandle       getLastUsedCamera() { return _lastUsedCamera; };
+	bool		isEonDied() { return eonHasDied; };
+	float		getTimeScaleFactor() { return 1.0f; };
+	ETimeStatus	getTimeStatus() { return time_status; };
+	CHandle		getLastUsedCamera() { return _lastUsedCamera; };
+	eLOCATION	getPlayerLocation() { return player_location; }
 
 	bool		  isBossValid(const std::string& name);
 	SBossState&   getBossStateByName(const std::string& name);
