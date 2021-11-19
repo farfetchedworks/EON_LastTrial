@@ -115,7 +115,7 @@ bool TaskUtils::canSeePlayer(TCompTransform* my_trans, TCompTransform* player_tr
 	raycast_origin.y += 1;
 	float distance = 200.f;
 
-	physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy ^ CModulePhysics::FilterGroup::InvisibleWall;
+	physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy ^ CModulePhysics::FilterGroup::InvisibleWall ^ CModulePhysics::FilterGroup::Trigger ^ CModulePhysics::FilterGroup::EffectArea;
 
 	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, true);
 	if (is_ok) {
@@ -140,7 +140,7 @@ bool TaskUtils::hasObstaclesToEon(TCompTransform* my_trans, TCompTransform* play
 	raycast_origin.y += 1;
 	float distance = 200.f;
 
-	physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy;
+	physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy ^ CModulePhysics::FilterGroup::Trigger ^ CModulePhysics::FilterGroup::EffectArea;
 
 	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, true);
 	if (is_ok) {
