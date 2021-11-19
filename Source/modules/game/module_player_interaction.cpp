@@ -64,6 +64,12 @@ void CModulePlayerInteraction::checkInteractions()
 
 			// Set 3D position: interactable pos at player's height + 1.5
 			VEC3 posUI = e_interactable->getPosition();
+
+			if (c_animation)
+				posUI += c_animation->getOffset();
+			else if (c_shrine)
+				posUI += c_shrine->getOffset();
+
 			posUI.y = c_transform->getPosition().y + 1.5f;
 			w->setPosition(cam->project(posUI, EngineUI.getResolution()));
 

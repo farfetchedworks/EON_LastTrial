@@ -23,6 +23,7 @@ void TCompShrine::load(const json& j, TEntityParseContext& ctx)
 	const json& jData = launchers->getJson();
 	const json& jItem = jData["is_praying"];
 	acceptance_dist = jItem.value("acceptance_dist", 0.f);
+	offset = loadVEC3(jItem, "offset");
 }
 
 void TCompShrine::onEntityCreated()
@@ -69,7 +70,7 @@ bool TCompShrine::resolve()
 
 	is_ok &= player_transform->getForward().Dot(transform->getForward()) < 0.f;
 
-	VEC3 pos = transform->getPosition();
+	VEC3 pos = transform->getPosition() + offset;
 	float dist = VEC3::Distance(pos, player_transform->getPosition());
 	is_ok &= (dist < acceptance_dist);
 
