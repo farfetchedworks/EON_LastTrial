@@ -2400,8 +2400,11 @@ public:
 
 		bool isStrongHitstun = ctx.getBlackboard()->getValue<bool>("strongDamage");
 
+		if (ctx.getBlackboard()->hasKey("isHitstunBack") && ctx.getBlackboard()->getValue<bool>("isHitstunBack")) {
+			res = tickCondition(ctx, "is_hitstunned_back", dt);
+		}
 		// If there was a strong hit, play the animation and restore the value of "strongDamage" to false when it finishes
-		if (isStrongHitstun) {
+		else if (isStrongHitstun) {
 			res = tickCondition(ctx, "is_hitstunned_strong", dt); 
 			if (res == EBTNodeResult::SUCCEEDED)
 				ctx.getBlackboard()->setValue("strongDamage", false);
