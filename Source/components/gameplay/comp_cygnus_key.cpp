@@ -113,10 +113,10 @@ bool TCompCygnusKey::resolve()
 		TCompCameraFollow* c_camera_follow = camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->disable();
 
-		CEntity* camera = getEntityByName("dynamic_camera");
+		CEntity* camera = getEntityByName("camera_dynamic");
 		TCompTransform* transform = camera->get<TCompTransform>();
 		transform->lookAt(camera_follow->getPosition(), newK->getPosition(), VEC3::Up);
-		CameraMixer.blendCamera("dynamic_camera", time, & interpolators::quadInOutInterpolator);
+		CameraMixer.blendCamera("camera_dynamic", time, & interpolators::quadInOutInterpolator);
 		PlayerInput.blockInput();
 		TCompBT::UPDATE_ENABLED = false;
 	}
