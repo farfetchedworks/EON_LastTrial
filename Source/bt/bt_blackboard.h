@@ -33,6 +33,8 @@ public:
 	// Checks if the value is correctly set
 	bool isValid(const std::string& key_name) { return bb_keys[key_name].is_set; }
 
+	bool hasKey(const std::string& key_name) { return bb_keys.find(key_name) != bb_keys.end(); }
+
 	void setContext(CBTContext* context) { bt_context = context; }
 
 	void renderInMenu();

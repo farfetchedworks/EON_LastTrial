@@ -126,9 +126,13 @@ bool CGPUBuffer::create(const json& j) {
 }
 
 void CGPUBuffer::destroy() {
-	SAFE_RELEASE(buffer);
-	SAFE_RELEASE(srv);
-	SAFE_RELEASE(uav);
+  SAFE_RELEASE(buffer);
+  SAFE_RELEASE(srv);
+  SAFE_RELEASE(uav);
+
+  // Force memory deletion
+  std::vector<uint8_t> temp;
+  cpu_data.swap(temp);
 }
 
 // This is a very slow operation!!!!

@@ -27,6 +27,8 @@
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/projectiles/comp_cygnus_beam.h"
 #include "components/controllers/comp_player_controller.h"
+#include "components/common/comp_buffers.h"
+#include "../bin/data/shaders/constants_particles.h"
 
 #define PLAY_CINEMATICS true
 
@@ -2117,10 +2119,10 @@ private:
 	float max_dep_angle;
 	float move_speed;
 	float dist_to_eon;
-	CEntity* e_beam = nullptr;
+	CHandle h_beam;
+	CHandle h_attract_particles;
 	
 	// The beam will start from the black hole and look at a changing target
-	VEC3 black_hole_pos;
 	VEC3 beam_target;
 
 public:
@@ -2130,29 +2132,54 @@ public:
 		max_dep_angle = deg2rad(number_field[1]);			// Change the depression angle to radian
 		move_speed = number_field[2];
 
+		callbacks.onFirstFrame = [&](CBTContext& ctx, float dt)
+		{
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			CEntity* e_cygnus = ctx.getOwnerEntity();
+			VEC3 hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
+			h_attract_particles = spawnParticles("data/particles/compute_cygnus_ray_base_absorb_particles.json", hole_pos, hole_pos);
+		};
+
+		callbacks.onStartup = [&](CBTContext& ctx, float dt)
+		{
+			// Get the black hole position
+			CEntity* e_cygnus = ctx.getOwnerEntity();
+			VEC3 black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
+
+			if (!h_attract_particles.isValid()) {
+				return;
+			}
+
+			CEntity* e_attract_particles = h_attract_particles;
+			TCompBuffers* c_buff = e_attract_particles->get<TCompBuffers>();
+			CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(c_buff->getCteByName("CtesParticleSystem"));
+			cte->emitter_initial_pos = black_hole_pos;
+			cte->updateFromCPU();
+		};
+
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
 		{
 			ctx.setNodeVariable(name, "allow_aborts", false);
 
 			// Get the black hole position
 			CEntity* e_cygnus = ctx.getOwnerEntity();
-			black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
-			ctx.setNodeVariable(name, "black_hole_pos", black_hole_pos);
+			VEC3 black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
 
 			// Get the initial beam target rotating the Cygnus forward with a pitch angle
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
 			VEC3 cygnus_forward = h_trans->getForward();
-			//VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromYawPitchRoll(0.f, max_dep_angle, 0.f));
-			beam_target = cygnus_forward + black_hole_pos;
+			VEC3 rotated_vec = DirectX::XMVector3Rotate(cygnus_forward, QUAT::CreateFromAxisAngle(VEC3(0.0f, 1.0f, 0.0f), max_dep_angle * 2));
+			beam_target = rotated_vec + black_hole_pos;
 			ctx.setNodeVariable(name, "beam_target", beam_target);
 
 			// Place the beam in the black hole, looking at the target
 			CTransform clone_trans;
 			clone_trans.setPosition(black_hole_pos);
 			clone_trans.lookAt(black_hole_pos, beam_target, VEC3::Up);
-			e_beam = spawn("data/prefabs/cygnus_beam.json", clone_trans);
+			h_beam = spawn("data/prefabs/cygnus_beam.json", clone_trans);
 
 			// Set beam parameters
+			CEntity* e_beam = h_beam;
 			TCompCygnusBeam* c_cygnusbeam = e_beam->get<TCompCygnusBeam>();
 			c_cygnusbeam->setParameters(damage);
 		};
@@ -2160,40 +2187,72 @@ public:
 		// Set animation callbacks
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
+			// Get the black hole position
+			CEntity* e_cygnus = ctx.getOwnerEntity();
+			VEC3 black_hole_pos = TaskUtils::getBoneWorldPosition(e_cygnus, "cygnus_hole_jnt");
+
+			if (h_attract_particles.isValid()) {
+				CEntity* e_attract_particles = h_attract_particles;
+				TCompBuffers* c_buff = e_attract_particles->get<TCompBuffers>();
+				CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(c_buff->getCteByName("CtesParticleSystem"));
+				cte->emitter_initial_pos = black_hole_pos;
+				cte->updateFromCPU();
+			}
+
 			// Get beam dir, target and origin from node variables
 			float beam_dir = ctx.getNodeVariable<float>(name, "beam_dir");
 			beam_target = ctx.getNodeVariable<VEC3>(name, "beam_target");
-			black_hole_pos = ctx.getNodeVariable<VEC3>(name, "black_hole_pos");
-
-			// Calculate the speed and rotation, and store the new beam target
-			float delta_yaw = deg2rad(move_speed) * dt * beam_dir;
-			float delta_pitch = max_dep_angle * dt / 10.f;
-
-			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_yaw, delta_pitch, 0.f));
-			ctx.setNodeVariable(name, "beam_target", beam_target);
-
-			// Rotate the beam to look at the target
-			TCompTransform* c_trans = e_beam->get<TCompTransform>();
-			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
 
 			// Change the beam direction depending on the animation time
 			float dt_acum = ctx.getNodeVariable<float>(name, "dt_acum");
 			dt_acum += dt;
 			ctx.setNodeVariable(name, "dt_acum", dt_acum);
 
-			if (dt_acum >= 1.16f && dt_acum < 2.66f && beam_dir < 0.f) {
+			float speed_smooth = 0.0f;
+			if (dt_acum < 1.16f) {
+				speed_smooth = move_speed * interpolators::cubicInOut(0.0, 1.0, dt_acum / 1.16f);
+			} else
+			if (dt_acum >= 1.16f && dt_acum < 2.66f) {
 				ctx.setNodeVariable(name, "beam_dir", 1.f);
+				speed_smooth = move_speed * interpolators::cubicInOut(0.0, 1.0, (dt_acum - 1.16f) / (2.66f - 1.16f));
+
+			} else
+			if (dt_acum >= 2.66f) {
+				ctx.setNodeVariable(name, "beam_dir", -1.f);
+				speed_smooth = move_speed * interpolators::cubicInOut(0.0, 1.0, (dt_acum - 2.66f) / (3.0f - 2.66f));
 			}
-			else {
-				if (dt_acum >= 2.66f && beam_dir > 0.f)
-					ctx.setNodeVariable(name, "beam_dir", -1.f);
+
+			// Calculate the speed and rotation, and store the new beam target
+
+			float delta_yaw = deg2rad(speed_smooth * 3) * dt * beam_dir;
+			float delta_pitch = max_dep_angle * dt * 0.25f;
+
+			beam_target = DirectX::XMVector3Rotate(beam_target, QUAT::CreateFromYawPitchRoll(delta_yaw, delta_pitch, 0.f));
+
+			ctx.setNodeVariable(name, "beam_target", beam_target);
+
+			// Rotate the beam to look at the target
+			CEntity* e_beam = h_beam;
+			TCompTransform* c_trans = e_beam->get<TCompTransform>();
+			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
+			c_trans->setScale(c_trans->getScale() - 0.1 * VEC3(dt, dt, 0));
+
+			VEC3 raydir = (beam_target - black_hole_pos);
+			raydir.Normalize();
+
+			std::vector<physx::PxRaycastHit> raycastHits;
+			if (EnginePhysics.raycast(black_hole_pos + raydir, raydir, 20.0f, raycastHits, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Characters, true, true)) {
+				VEC3 coll_pos = PXVEC3_TO_VEC3(raycastHits.front().position);
+				VEC3 coll_normal = PXVEC3_TO_VEC3(raycastHits.front().normal);
+				coll_normal.Normalize();
+				spawnParticles("data/particles/compute_cygnus_ray_particles.json", coll_pos + coll_normal * 0.1, coll_pos);
 			}
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
 			// Destroy the beam after the animation has ended
-			e_beam->destroy();
+			h_beam.destroy();
 
 			ctx.setNodeVariable(name, "allow_aborts", true);
 		};
@@ -2400,8 +2459,11 @@ public:
 
 		bool isStrongHitstun = ctx.getBlackboard()->getValue<bool>("strongDamage");
 
+		if (ctx.getBlackboard()->hasKey("isHitstunBack") && ctx.getBlackboard()->getValue<bool>("isHitstunBack")) {
+			res = tickCondition(ctx, "is_hitstunned_back", dt);
+		}
 		// If there was a strong hit, play the animation and restore the value of "strongDamage" to false when it finishes
-		if (isStrongHitstun) {
+		else if (isStrongHitstun) {
 			res = tickCondition(ctx, "is_hitstunned_strong", dt); 
 			if (res == EBTNodeResult::SUCCEEDED)
 				ctx.getBlackboard()->setValue("strongDamage", false);
