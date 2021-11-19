@@ -229,7 +229,7 @@ void TCompWeaponPartTrigger::onTriggerEnter(const TMsgEntityTriggerEnter& msg)
 	CEntity* flash = spawn("data/prefabs/flash_light.json", t);
 	static unsigned int flashes = 0;
 	flash->setName((std::string(flash->getName()) + std::to_string(flashes++)).c_str());
-	EngineLua.executeScript("destroyEntity('" + std::string(flash->getName()) + "')", 0.05f);
+	EngineLua.executeScript("destroyEntity('" + std::string(flash->getName()) + "')", 0.1f);
 
 	// FMOD event
 	EngineAudio.postEvent("CHA/Eon/AT/Eon_Hit_Env", CHandle(this).getOwner());
