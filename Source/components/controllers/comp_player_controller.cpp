@@ -584,7 +584,8 @@ void TCompPlayerController::move(float dt)
 		}
 	}
 
-	if (!is_sprint_attack && !is_falling && manageFalling(current_speed, dt)) {
+	bool isPlayingState = CEngine::get().getModuleManager().inGamestate("playing");
+	if (isPlayingState && !is_sprint_attack && !is_falling && manageFalling(current_speed, dt)) {
 		is_falling = true;
 		setVariable("is_falling", true);
 	}
