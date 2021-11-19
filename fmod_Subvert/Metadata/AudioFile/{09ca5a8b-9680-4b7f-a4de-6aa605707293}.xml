@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{09ca5a8b-9680-4b7f-a4de-6aa605707293}">
+		<property name="assetPath">
+			<value>CHA/Cygnus/P3/AT/f3_regular_attack2 (without voice).wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.5</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f8b2a622-7d6e-4c03-8a9c-627e577ec451}</destination>
+		</relationship>
+	</object>
+</objects>

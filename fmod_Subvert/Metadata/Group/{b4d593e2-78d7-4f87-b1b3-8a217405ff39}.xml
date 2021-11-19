@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerGroup" id="{b4d593e2-78d7-4f87-b1b3-8a217405ff39}">
+		<property name="volume">
+			<value>-9</value>
+		</property>
+		<property name="name">
+			<value>CHA_Cygnus_CIN</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{c833ccf6-f18c-4eab-aa2e-732326911235}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{cce86ada-7f3b-42c6-856d-bef1e828da61}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{0d56096f-92da-47c4-85d0-6e69f1dc159b}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{c833ccf6-f18c-4eab-aa2e-732326911235}">
+		<relationship name="effects">
+			<destination>{f2161171-5e21-46ec-9159-669904a83544}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{cce86ada-7f3b-42c6-856d-bef1e828da61}" />
+	<object class="MixerBusFader" id="{f2161171-5e21-46ec-9159-669904a83544}" />
+</objects>
