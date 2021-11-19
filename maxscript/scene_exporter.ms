@@ -365,6 +365,7 @@ struct TSceneExporter (
 		
 		local pattern_info = getUserProp obj "pattern"
 		local pattern_tex = "data/textures/pattern_vidriera_color.dds"
+		local is_ortho = true
 			
 		if (pattern_info != undefined) then (
 			fs.writeComma()
@@ -373,11 +374,12 @@ struct TSceneExporter (
 			
 			if pattern_info == "round" then (
 				pattern_tex = "data/textures/pattern_vidriera_redonda_color.dds"
+				is_ortho = false
 			)
 			
 			fs.writeKeyValue "pattern" pattern_tex
 			fs.writeComma()
-			fs.writeKeyValue "ortho" true
+			fs.writeKeyValue "ortho" is_ortho
 			fs.writeComma()
 			fs.writeKeyValue "ortho_centered" true
 			fs.writeComma()

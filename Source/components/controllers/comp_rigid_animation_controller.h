@@ -95,6 +95,7 @@ struct TCompRigidAnimationController : public TCompBase
 
 	CHandle				  cinematic_target;
 	bool                  cinematic_animation = false;
+	bool                  static_animation = false;
 	std::string			  cinematic_target_bone;
 
 	void load(const json& j, TEntityParseContext& ctx);
@@ -109,8 +110,9 @@ struct TCompRigidAnimationController : public TCompBase
 
 	void setTarget(const std::string& target_name);
 	void setAnimation(const std::string& animation_name);
-	void setTargetBone(const std::string& bone_name);
-	void setSpeed(float speed);
+	void setTargetBone(const std::string& bone_name) { cinematic_target_bone = bone_name; };
+	void setSpeed(float speed) { speed_factor = speed; };
+	void setStatic(bool is_static) { static_animation = is_static; };
 
 	bool hasTracks() { return tracks.size() > 0; }
 	float getAnimationTime();

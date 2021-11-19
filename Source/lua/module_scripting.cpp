@@ -84,6 +84,7 @@ void CModuleScripting::bindLua()
 	lua_state.set("dbg", &LogicManager::ldbg);
 	lua_state.set("startCinematic", &LogicManager::startCinematic);
 	lua_state.set("startCinematicAnimation", &LogicManager::startCinematicAnimation);
+	lua_state.set("startStaticCinematicAnimation", &LogicManager::startStaticCinematicAnimation);
 	lua_state.set("stopCinematic", &LogicManager::stopCinematic);
 	lua_state.set("setCinematicCurve", &LogicManager::setCinematicCurve);
 	lua_state.set("setCinematicTarget", &LogicManager::setCinematicTarget);
