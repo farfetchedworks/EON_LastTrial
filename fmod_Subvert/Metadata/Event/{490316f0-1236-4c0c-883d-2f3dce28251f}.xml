@@ -80,6 +80,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{f3b7f472-25ac-4642-9b7c-a73aaae0fe2e}">
+		<property name="volume">
+			<value>-0.5</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{16879274-f6ff-44d2-9a68-351946d212c2}</destination>
 		</relationship>
@@ -117,12 +120,16 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{16879274-f6ff-44d2-9a68-351946d212c2}">
 		<relationship name="effects">
+			<destination>{320cdf80-7094-4e44-87ce-ff2afa78a856}</destination>
 			<destination>{54cf1ee8-790c-4010-9ee9-7044cd674fb3}</destination>
 			<destination>{02b2643d-e8a7-4ffc-8642-6e41528aff01}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{9294d8b9-1c86-4107-bdcc-503572fdfc78}" />
 	<object class="SingleSound" id="{26f8a325-ef43-4db0-8c3a-9df6ea084f22}">
+		<property name="volume">
+			<value>-2.5</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{6aa84ade-e31a-4a50-810f-bfa29aedd61b}</destination>
 		</relationship>
@@ -134,6 +141,20 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{fff12f8b-aaf9-4dd4-b9bc-eb7871aad75d}" />
+	<object class="CompressorEffect" id="{320cdf80-7094-4e44-87ce-ff2afa78a856}">
+		<property name="threshold">
+			<value>-9</value>
+		</property>
+		<property name="ratio">
+			<value>4</value>
+		</property>
+		<property name="attackTime">
+			<value>64</value>
+		</property>
+		<property name="releaseTime">
+			<value>220</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{54cf1ee8-790c-4010-9ee9-7044cd674fb3}" />
 	<object class="ProxyEffect" id="{02b2643d-e8a7-4ffc-8642-6e41528aff01}">
 		<property name="inputFormat">
