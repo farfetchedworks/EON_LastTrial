@@ -77,7 +77,7 @@ namespace LogicManager
 		CameraMixer.blendCamera("camera_cinematic", lerp_time, &interpolators::cubicInOutInterpolator);
 	}
 
-	void startCinematicAnimation(const std::string& animation_filename, const std::string& target_name, float speed, float lerp_time, const std::string& bone_name)
+	void startCinematicAnimation(const std::string& animation_filename, const std::string& target_name, float speed, float lerp_time, bool is_static, const std::string& bone_name)
 	{
 		assert(!animation_filename.empty());
 		CEntity* e_target = getEntityByName(target_name);
@@ -95,10 +95,37 @@ namespace LogicManager
 		CEntity* e_cinematic_camera = getEntityByName("camera_cinematic");
 		assert(e_cinematic_camera);
 		TCompRigidAnimationController* controller = e_cinematic_camera->get<TCompRigidAnimationController>();
+		assert(controller);
 		controller->setTarget(target_name);
 		controller->setAnimation("data/animations/" + animation_filename);
 		controller->setTargetBone(bone_name);
+		controller->setStatic(is_static);
 		controller->setSpeed(speed);
+		controller->start();
+
+		CameraMixer.blendCamera("camera_cinematic", lerp_time, &interpolators::cubicInOutInterpolator);
+	}
+
+	void startStaticCinematicAnimation(const std::string& animation_filename, float speed, float lerp_time)
+	{
+		assert(!animation_filename.empty());
+
+		TCompGameManager* c_gm = GameManager->get<TCompGameManager>();
+		c_gm->setIsInCinematic(true);
+
+		CEntity* e_camera_follow = getEntityByName("camera_follow");
+		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
+		c_camera_follow->disable();
+
+		CEntity* e_cinematic_camera = getEntityByName("camera_cinematic");
+		assert(e_cinematic_camera);
+		TCompRigidAnimationController* controller = e_cinematic_camera->get<TCompRigidAnimationController>();
+		assert(controller);
+		controller->setTarget("");
+		controller->setStatic(true);
+		controller->setTargetBone("");
+		controller->setSpeed(speed);
+		controller->setAnimation("data/animations/" + animation_filename);
 		controller->start();
 
 		CameraMixer.blendCamera("camera_cinematic", lerp_time, &interpolators::cubicInOutInterpolator);

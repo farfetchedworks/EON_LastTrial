@@ -50,6 +50,7 @@ void TCompRigidAnimationController::load(const json& j, TEntityParseContext& ctx
 	autoplay = j.value("autoplay", autoplay);
 	animate_prefabs = j.value("animate_prefabs", animate_prefabs);
 	cinematic_animation = j.value("cinematic_animation", cinematic_animation);
+	static_animation = j.value("static_animation", static_animation);
 	reverse = j.value("reverse", reverse);
 }
 
@@ -93,16 +94,6 @@ float TCompRigidAnimationController::getAnimationTime()
 		return 0.f;
 
 	return std::max(animation_data->header.max_time - animation_data->header.min_time, 0.f) / speed_factor;
-}
-
-void TCompRigidAnimationController::setTargetBone(const std::string& bone_name)
-{
-	cinematic_target_bone = bone_name;
-}
-
-void TCompRigidAnimationController::setSpeed(float speed)
-{
-	speed_factor = speed;
 }
 
 void TCompRigidAnimationController::start()
@@ -281,7 +272,7 @@ void TCompRigidAnimationController::assignTracksToSceneObjects()
 				TCompTransform* transform = e_obj->get<TCompTransform>();
 				o.handle = transform;
 
-				if (cinematic_animation) {
+				if (cinematic_animation && !static_animation) {
 					assert(cinematic_target.isValid());
 					CEntity* target = cinematic_target;
 					TCompTransform* t_transform = target->get<TCompTransform>();

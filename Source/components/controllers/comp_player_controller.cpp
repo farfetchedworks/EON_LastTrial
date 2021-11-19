@@ -223,12 +223,8 @@ void TCompPlayerController::update(float dt)
 	}
 
 	if (PlayerInput['C'].getsPressed()) {
-	    //spawnParticles("data/particles/compute_time_distortion_particles.json", transform->getPosition());
-		spawnParticles("data/particles/compute_projectile_portal_particles.json", transform->getPosition() + transform->getForward() * 0.1f, transform->getPosition());
 
-		//spawnParticles("data/particles/compute_levelup_particles.json", transform->getPosition());
-		//spawnParticles("data/particles/compute_levelup_smoke_particles.json", transform->getPosition());
-		//spawnParticles("data/particles/compute_levelup_spread_particles.json", transform->getPosition());
+		EngineLua.executeScript("CinematicEonIntro()");
 	}
 
 	if (PlayerInput['B'].getsPressed()) {
