@@ -9,6 +9,7 @@
 #include "input/input_module.h"
 #include "lua/module_scripting.h"
 #include "skeleton/comp_skeleton.h"
+#include "components/ai/comp_bt.h"
 #include "components/common/comp_camera.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/common/comp_parent.h"
@@ -117,6 +118,7 @@ bool TCompCygnusKey::resolve()
 		transform->lookAt(camera_follow->getPosition(), newK->getPosition(), VEC3::Up);
 		CameraMixer.blendCamera("dynamic_camera", time, & interpolators::quadInOutInterpolator);
 		PlayerInput.blockInput();
+		TCompBT::UPDATE_ENABLED = false;
 	}
 
 	// FMOD event

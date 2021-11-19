@@ -131,10 +131,11 @@ public:
 		// Play Cygnus music
 		TCompGameManager* h_game_manager = GameManager->get<TCompGameManager>();
 		auto& boss_state = h_game_manager->getBossStateByName("Cygnus");
-		if (boss_state.music_event == nullptr) {
-			EngineAudio.postMusicEvent("Music/Cygnus_Theme");
-			boss_state.music_event = EngineAudio.getCurMusicEvent();
-		}
+		if (boss_state.music_event != nullptr)
+			return;
+
+		EngineAudio.postMusicEvent("Music/Cygnus_Theme");
+		boss_state.music_event = EngineAudio.getCurMusicEvent();
 		EngineAudio.setMusicRTPC("Cygnus_Phase", 1, true);
 
 		// Audio: disable Eon as a music interactor, as Cygnus will be now the one who manages it
