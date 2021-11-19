@@ -117,7 +117,7 @@ void TCompHealth::onReduceHealth(const TMsgReduceHealth& msg)
     reduceHealth(damage);
 
     // If health reduced on player
-    if (!msg.hitByPlayer && !msg.fall_damage) {
+    if (!msg.hitByPlayer && !msg.skip_blood) {
         TCompTransform* c_trans = get<TCompTransform>();
         VEC3 position = c_trans->getPosition() + VEC3(0, 1.25f, 0);
         spawnParticles("data/particles/splatter_blood_front.json", position, position);

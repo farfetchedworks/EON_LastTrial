@@ -51,7 +51,7 @@ class CStateFalling : public CStateBaseLogic
                     TMsgReduceHealth hmsg;
                     hmsg.damage = fall_damage;
                     hmsg.h_striker = owner;
-                    hmsg.fall_damage = true;
+                    hmsg.skip_blood = true;
                     owner->sendMsg(hmsg);
                 }
             }

@@ -1432,6 +1432,7 @@ void TCompPlayerController::onHit(const TMsgHit& msg)
 		hmsg.h_striker = msg.h_striker;
 		hmsg.hitByPlayer = msg.hitByPlayer;
 		hmsg.fromBack = msg.fromBack;
+		hmsg.skip_blood = msg.hitType == EHIT_TYPE::GARD_BRANCH;
 		getEntity()->sendMsg(hmsg);
 
 		// Disable Aim mode

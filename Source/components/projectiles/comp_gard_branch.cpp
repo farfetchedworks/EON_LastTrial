@@ -80,6 +80,7 @@ void TCompGardBranch::onHitObject(const TMsgEntityTriggerEnter& msg)
 	msgHit.position = c_branch_trans->getPosition();
 	msgHit.forward = c_branch_trans->getForward();
 	msgHit.damage = damage;
+	msgHit.hitType = EHIT_TYPE::GARD_BRANCH;
 	e_object_hit->sendMsg(msgHit);
 
 	// Apply a pushback force
