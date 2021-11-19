@@ -31,9 +31,10 @@ class CStateFalling : public CStateBaseLogic
         CEntity* owner = ctx.getOwnerEntity();
         TCompPlayerController* controller = owner->get<TCompPlayerController>();
         TCompCollider* collider = owner->get<TCompCollider>();
+        TCompTransform* trans = owner->get<TCompTransform>();
 
         float fallingTime = std::get<float>(ctx.getVariableValue("fall_time"));
-        controller->movePhysics(VEC3::Zero, dt);
+        controller->movePhysics(trans->getForward() * 2.f * dt, dt);
 
         if (!controller->manageFalling(controller->getSpeed(), dt)) {
             
@@ -47,10 +48,6 @@ class CStateFalling : public CStateBaseLogic
                     TCompHealth* health = owner->get<TCompHealth>();
                     int fall_damage = static_cast<int>(health->getMaxHealth() * (fallingTime / maxFallTime));
                     EngineUI.fadeWidget("screen_damage", 2.f);
-
-                    printFloat("Fall time", fallingTime);
-                    printFloat("Fall damage", fall_damage);
-
                     TMsgReduceHealth hmsg;
                     hmsg.damage = fall_damage;
                     hmsg.h_striker = owner;

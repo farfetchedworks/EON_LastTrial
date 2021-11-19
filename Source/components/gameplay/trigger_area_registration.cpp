@@ -20,7 +20,7 @@
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 
-#define PLAY_CINEMATICS false
+#define PLAY_CINEMATICS true
 
 #pragma region General Gameplay
 
@@ -99,6 +99,10 @@ public:
 		assert(e_gard);
 
 		TCompFSM* fsm = e_gard->get<TCompFSM>();
+
+		if (fsm->getCtx().isEnabled())
+			return;
+
 		fsm->startCtx();
 
 		EngineLua.executeScript(_name + "Area()");
@@ -160,20 +164,6 @@ public:
 
 		// Intro
 		EngineLua.executeScript("CinematicCygnusPresentation()");
-
-		// Play Cygnus music
-		TCompGameManager* h_game_manager = GameManager->get<TCompGameManager>();
-		auto& boss_state = h_game_manager->getBossStateByName("Cygnus");
-		if (boss_state.music_event == nullptr) {
-			EngineAudio.postMusicEvent("Music/Boss_Theme");
-			boss_state.music_event = EngineAudio.getCurMusicEvent();
-		}
-		EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
-
-		// Audio: disable Eon as a music interactor, as Cygnus will be now the one who manages it
-		CEntity* e_eon = getEntityByName("player");
-		TCompMusicInteractor* h_mus_int = e_eon->get<TCompMusicInteractor>();
-		h_mus_int->setEnabled(false);
 
 #else
 		CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");
@@ -305,7 +295,8 @@ public:
 		t_mus_int->setEnabled(true);
 
 		// Start temple music
-		EngineAudio.postMusicEvent("Music/Temple_Theme");
+		EngineAudio.postMusicEvent("Music/Enter_Rift_Theme");
+		EngineLua.executeScript("fmodPostMusicEvent(\"Music/Temple_Theme\")", 9.5f);
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
@@ -345,7 +336,7 @@ public:
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
 	{
-		// dbg("EXIT GARDEN");
+		EngineAudio.postAmbienceEvent("AMB/Temple/temple_ambience");
 	}
 };
 

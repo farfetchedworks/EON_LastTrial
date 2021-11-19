@@ -1,19 +1,20 @@
 #include "mcv_platform.h"
 #include "engine.h"
 #include "module_events.h"
+#include "ui/ui_module.h"
 #include "components/messages.h"
 #include "input/input_module.h"
 #include "modules/game/module_player_interaction.h"
 #include "modules/module_camera_mixer.h"
-#include "ui/ui_module.h"
-#include "components/abilities/comp_area_delay.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/common/comp_parent.h"
+#include "components/cameras/comp_camera_follow.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
 #include "components/controllers/comp_player_controller.h"
 #include "components/controllers/pawn_utils.h"
 #include "components/gameplay/comp_game_manager.h"
 #include "components/gameplay/comp_shrine.h"
+#include "components/abilities/comp_area_delay.h"
 #include "components/abilities/comp_time_reversal.h"
 
 extern CShaderCte<CtesWorld> cte_world;
@@ -201,10 +202,18 @@ void CModuleEventSystem::registerGlobalEvents()
 		PlayerInteraction.setActive(false);
 	});
 
-	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {
-		CameraMixer.blendCamera("camera_follow", 1.5f, &interpolators::quadInOutInterpolator);
+	EventSystem.registerEventCallback("Gameplay/Eon/removeDynamicCamera", [](CHandle t, CHandle o) {
+		CEntity* camera_follow = getEntityByName("camera_follow");
+		TCompCameraFollow* c_camera_follow = camera_follow->get<TCompCameraFollow>();
+		c_camera_follow->enable();
+		CameraMixer.blendCamera("camera_follow", 2.f, &interpolators::quadInOutInterpolator);
 		PlayerInput.unBlockInput();
-		EngineUI.fadeOut(1.f);
+	});
+
+	EventSystem.registerEventCallback("Gameplay/Eon/openCygnusPath", [](CHandle t, CHandle o) {
+		CameraMixer.blendCamera("camera_follow", 1.f, &interpolators::quadInOutInterpolator);
+		PlayerInput.unBlockInput();
+		EngineUI.fadeOut(1.5f);
 
 		CEntity* owner = getEntityByName("player");
 		assert(owner);

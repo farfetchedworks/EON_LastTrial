@@ -9,15 +9,14 @@
 #include "ui/ui_widget.h"
 #include "ui/widgets/ui_image.h"
 #include "ui/widgets/ui_button.h"
+#include "fmod_studio.hpp"
+#include "audio/module_audio.h"
 
 bool ModuleEONLoadingScreen::start()
 {
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 
-    // CApplication::get().changeMouseState(false);
-
-    _discTimer = 0.f;
     _discSpeed = 1.f;
     _timer = 2.f; // sync with title screen blend out
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
@@ -32,7 +31,6 @@ bool ModuleEONLoadingScreen::start()
     params.texture = Resources.get( PlayerInput.getPad().connected ?
         "data/textures/ui/subvert/loading/loading_gamepad.dds" : 
         "data/textures/ui/subvert/loading/loading_keyboard.dds" )->as<CTexture>();
-
     EngineUI.activateWidget("eon_loading_screen");
 
     _menuController.setInput(input);
@@ -45,12 +43,13 @@ bool ModuleEONLoadingScreen::start()
 void ModuleEONLoadingScreen::stop()
 {
     EngineUI.deactivateWidget("eon_loading_screen");
+    EngineAudio.stopCurMusicEvent();
+    EngineAudio.unloadBank("OutOfGame.bank");
 }
 
 void ModuleEONLoadingScreen::update(float dt)
 {
     _timer -= dt;
-    // _discTimer += dt;
 
     ui::CWidget* w = EngineUI.getWidget("disc");
     assert(w);

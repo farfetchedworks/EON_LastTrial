@@ -192,6 +192,9 @@ void TCompGameManager::respawnLevel()
 
 	CHandleManager::destroyAllPendingObjects();
 
+	// FMOD stop all music
+	EngineAudio.stopCurMusicEvent();
+
 	{
 		TEntityParseContext ctx;
 		parseScene("data/scenes/eon.json", ctx);

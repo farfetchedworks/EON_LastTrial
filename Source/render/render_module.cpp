@@ -327,7 +327,7 @@ void CRenderModule::onFileChanged(const std::string& filename) {
 void CRenderModule::activateMainCamera() {
 	CEntity* e_camera = CEngine::get().getRender().getActiveCamera();
 	if (!e_camera) {
-		e_camera = getEntityByName("camera");
+		e_camera = getEntityByName("camera_mixed");
 	}
 	if (e_camera) {
 		assert(e_camera);
@@ -499,15 +499,15 @@ void CRenderModule::generateFrame()
 
 	CModuleBoot& boot = CEngine::get().getBoot();
 
+	activateMainCamera();
+
 	// Any tool inside the engine wants to render imgui
 	if (boot.inGame() && !RENDER_IMGUI) {
 #ifdef _DEBUG
-		activateMainCamera();
 		modules.renderInMenu();
 #endif
 	}
 	else {
-		activateMainCamera();
 		modules.renderInMenu();
 	}
 

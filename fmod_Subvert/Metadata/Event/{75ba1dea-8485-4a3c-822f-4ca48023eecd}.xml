@@ -5,7 +5,7 @@
 			<value>Eon_Receive_DMG</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{bf4b8580-04c2-4c77-a533-27cb5de88683}</destination>
@@ -127,6 +127,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{1be81f8e-7aec-4e64-b375-e0ff67010b9b}">
+		<property name="volume">
+			<value>-5</value>
+		</property>
 		<property name="name">
 			<value>Scream</value>
 		</property>

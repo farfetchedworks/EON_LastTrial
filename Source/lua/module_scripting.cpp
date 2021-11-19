@@ -136,6 +136,10 @@ void CModuleScripting::bindLua()
 		EngineAudio.postFloorEvent(ev_name, actor);
 	});
 
+	lua_state.set("fmodPostMusicEvent", [](const std::string& ev_name) {
+		EngineAudio.postMusicEvent(ev_name);
+	});
+
 	lua_state.set("fmodLoadBank", [](const std::string& bank_name) {
 		EngineAudio.loadBank(bank_name);
 	});

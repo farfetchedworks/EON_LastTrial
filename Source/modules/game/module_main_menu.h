@@ -1,7 +1,6 @@
 #pragma once
 #include "modules/module.h"
 #include "ui/controllers/ui_menu_controller.h"
-#include "audio/module_audio.h"
 
 namespace input { class CModule; }
 

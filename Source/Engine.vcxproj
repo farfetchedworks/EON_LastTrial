@@ -17,7 +17,6 @@
     <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
     <ClCompile Include="animation\callbacks\death_callback.cpp" />
     <ClCompile Include="animation\callbacks\enemy_death_callback.cpp" />
-    <ClCompile Include="animation\callbacks\eon_cross_crack_callback.cpp" />
     <ClCompile Include="animation\callbacks\eon_loop_ad_ball_callback.cpp" />
     <ClCompile Include="animation\callbacks\event_callback.cpp" />
     <ClCompile Include="animation\callbacks\gard_branch_finished.cpp" />

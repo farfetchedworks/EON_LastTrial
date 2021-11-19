@@ -32,6 +32,7 @@ public:
   bool                      is_indirect = false;
   std::string               name;
   std::string               data_type_name;
+  json						jData;
 
   bool debugInMenu();
 };

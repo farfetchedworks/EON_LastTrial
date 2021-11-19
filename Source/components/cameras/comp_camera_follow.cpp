@@ -93,12 +93,6 @@ void TCompCameraFollow::debugInMenu()
 
 void TCompCameraFollow::renderDebug()
 {
-    // lock on
-    const TMixedCamera& camera = CameraMixer.getCameraByName("camera_follow");
-    if (!enabled || camera.weight != 1.f) {
-        return;
-    }
-
     drawCircle3D(lock_target, Colors::White, 4.f);
 }
 

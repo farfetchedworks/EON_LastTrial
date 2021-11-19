@@ -30,7 +30,7 @@
 #include "components/common/comp_buffers.h"
 #include "../bin/data/shaders/constants_particles.h"
 
-#define PLAY_CINEMATICS false
+#define PLAY_CINEMATICS true
 
 /*
  *	Declare and implement all tasks here
@@ -807,7 +807,7 @@ public:
 		// Load generic parameters
 		move_speed = number_field[0];
 		rotation_speed = number_field[1];
-		combo_prob = number_field[2];
+		combo_prob = (int)number_field[2];
 		damage = (int)getAdjustedParameter(TCompGameManager::EParameterDDA::DAMAGE, number_field[3]);
 
 		// Set animation callbacks
@@ -1007,7 +1007,7 @@ public:
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
 		{
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			spawnParticles("data/particles/compute_projectile_portal_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.4, h_trans->getPosition());
+			spawnParticles("data/particles/compute_projectile_portal_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.4f, h_trans->getPosition());
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
@@ -1681,7 +1681,7 @@ public:
 				mod->blendIn();
 
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			spawnParticles("data/particles/compute_cygnus_spread_particles.json", h_trans->getPosition() + h_trans->getRight() * 0.1, h_trans->getPosition(), 2.f);
+			spawnParticles("data/particles/compute_cygnus_spread_particles.json", h_trans->getPosition() + h_trans->getRight() * 0.1f, h_trans->getPosition(), 2.f);
 		}
 	}
 
@@ -2372,6 +2372,39 @@ public:
 	}
 };
 
+class CBTTaskCygnusFinalDeath : public IBTTask
+{
+public:
+	void init() override {}
+
+	void onEnter(CBTContext& ctx) override {
+		//TaskUtils::resumeAction(ctx, name);
+		ctx.setIsDying(true);
+
+		//CEntity* player = getPlayer();
+		//CEntity* e = ctx.getOwnerEntity();
+		//TCompTransform* transform = e->get<TCompTransform>();
+		//spawn("data/prefabs/black_hole_cygnus.json", *transform);
+
+		// Get Form 1 info
+		//CTransform t;
+		//t.fromMatrix(*transform);
+		//float yaw = transform->getYawRotationToAimTo(player->getPosition());
+		//t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
+
+		// Destroy form 1 entity
+		//ctx.getOwnerEntity().destroy();
+		//CHandleManager::destroyAllPendingObjects();
+
+		// Intro form 2
+		//EngineLua.executeScript("CinematicCygnusF1ToF2()");
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
+		return tickCondition(ctx, "is_dead", dt);
+	}
+};
+
 #pragma endregion
 
 #pragma region General Enemies Tasks
@@ -2426,8 +2459,11 @@ public:
 
 		bool isStrongHitstun = ctx.getBlackboard()->getValue<bool>("strongDamage");
 
+		if (ctx.getBlackboard()->hasKey("isHitstunBack") && ctx.getBlackboard()->getValue<bool>("isHitstunBack")) {
+			res = tickCondition(ctx, "is_hitstunned_back", dt);
+		}
 		// If there was a strong hit, play the animation and restore the value of "strongDamage" to false when it finishes
-		if (isStrongHitstun) {
+		else if (isStrongHitstun) {
 			res = tickCondition(ctx, "is_hitstunned_strong", dt); 
 			if (res == EBTNodeResult::SUCCEEDED)
 				ctx.getBlackboard()->setValue("strongDamage", false);
