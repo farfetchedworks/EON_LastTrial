@@ -38,6 +38,7 @@ public:
 	void setEnabled(bool new_status) { is_enabled = new_status; }
 
 	void setIsDying(const bool val) { is_dying = val; }
+	void setHasEonTargeted(const bool val) { has_eon_targeted = val; }
 	
 	// get/set the current node or current secondary node
 	CBTNode* getCurrentNode(bool in_secondary_tree = false);
@@ -46,6 +47,7 @@ public:
 	bool canBeCancelledOnHit() const;
 	bool canBeCancelledOnDecision() const;
 	bool isDying() const;
+	bool getHasEonTargeted() const { return has_eon_targeted; }
 
 	// called by a node when it has finished
 	void onChildFinished(CBTNode* child_node, float dt, EBTNodeResult child_result);
@@ -145,6 +147,7 @@ private:
 	bool can_abort = true;																							// set to false when an animation is being executed and the tree cannot abort
 
 	bool is_dying = false;	// Checked when enemy enters a death state, used to avoid camera from locking onto dead enemies
+	bool has_eon_targeted = false; // Checked for music interaction purposes, set when Eon is detected (service)
 
 	// Removes all the decorators in the observers vector that are children of the node
 	void cleanUpNodeObservers(CBTNode* node);

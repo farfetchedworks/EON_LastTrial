@@ -128,7 +128,7 @@
 	<object class="MixerBusPanner" id="{9294d8b9-1c86-4107-bdcc-503572fdfc78}" />
 	<object class="SingleSound" id="{26f8a325-ef43-4db0-8c3a-9df6ea084f22}">
 		<property name="volume">
-			<value>-2.5</value>
+			<value>-3</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{6aa84ade-e31a-4a50-810f-bfa29aedd61b}</destination>
@@ -143,7 +143,7 @@
 	<object class="MixerBusPanner" id="{fff12f8b-aaf9-4dd4-b9bc-eb7871aad75d}" />
 	<object class="CompressorEffect" id="{320cdf80-7094-4e44-87ce-ff2afa78a856}">
 		<property name="threshold">
-			<value>-9</value>
+			<value>-10.5</value>
 		</property>
 		<property name="ratio">
 			<value>4</value>

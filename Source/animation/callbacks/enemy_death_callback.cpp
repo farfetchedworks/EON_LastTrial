@@ -12,6 +12,7 @@
 #include "components/particles/comp_follow_target.h"
 #include "components/stats/comp_geons_drop.h"
 #include "components/controllers/pawn_utils.h"
+#include "components/ai/comp_bt.h"
 
 struct onEnemyDeathCallback : public CAnimationCallback
 {
@@ -37,6 +38,14 @@ struct onEnemyDeathCallback : public CAnimationCallback
 
 		// sync with dissolve time
 		EngineLua.executeScript(argument, 20.f);
+
+		TCompBT* c_bt = e_owner->get<TCompBT>();
+		// Send a message to the player that he has been untargeted, for music-interaction purposes
+		if (c_bt->getContext()->getHasEonTargeted()) {
+			TMsgUntarget msg_untarget;
+			CEntity* e_player = getEntityByName("player");
+			e_player->sendMsg(msg_untarget);
+		}
 	}
 };
 
