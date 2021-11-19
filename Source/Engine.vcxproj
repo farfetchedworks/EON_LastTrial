@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\callbacks\animation_launcher_callback.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f1_intro.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f1_to_f2.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="components\audio\comp_audio_emitter.cpp" />
     <ClCompile Include="components\audio\comp_music_interactor.cpp" />
     <ClCompile Include="components\common\comp_prefab_info.cpp" />
+    <ClCompile Include="components\gameplay\comp_aether.cpp" />
     <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
     <ClCompile Include="components\gameplay\comp_launch_animation.cpp" />
     <ClCompile Include="components\gameplay\trigger_area.cpp" />
@@ -306,6 +308,7 @@
     <ClInclude Include="components\audio\comp_audio_emitter.h" />
     <ClInclude Include="components\audio\comp_music_interactor.h" />
     <ClInclude Include="components\common\comp_prefab_info.h" />
+    <ClInclude Include="components\gameplay\comp_aether.h" />
     <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
     <ClInclude Include="components\gameplay\comp_launch_animation.h" />
     <ClInclude Include="components\particles\comp_follow_target.h" />

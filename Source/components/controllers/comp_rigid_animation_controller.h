@@ -91,6 +91,7 @@ struct TCompRigidAnimationController : public TCompBase
 	bool                  autoplay = false;
 	bool                  animate_prefabs = false;
 	bool                  dynamic = false;
+	bool                  attached = false;
 	int					  frame_start = 0;
 
 	CHandle				  cinematic_target;
