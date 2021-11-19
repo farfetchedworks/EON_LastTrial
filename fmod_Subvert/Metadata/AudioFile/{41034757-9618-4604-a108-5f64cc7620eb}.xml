@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{41034757-9618-4604-a108-5f64cc7620eb}">
+		<property name="assetPath">
+			<value>CHA/Cygnus/P3/FS/f3_walk1.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.625</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f8b2a622-7d6e-4c03-8a9c-627e577ec451}</destination>
+		</relationship>
+	</object>
+</objects>
