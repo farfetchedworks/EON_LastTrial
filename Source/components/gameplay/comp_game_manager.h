@@ -89,6 +89,7 @@ private:
 
 	bool is_in_cinematic = false;
 	eLOCATION player_location = eLOCATION::CAVE;
+	bool has_entered_rift_once = false;
 
 	// For Dynamic Difficulty Adjustment
 	int max_deaths_easy = 10;
@@ -108,6 +109,7 @@ public:
 	void onBossDead(const TMsgBossDead& msg);
 
 	void setPlayerLocation(eLOCATION location) { player_location = location; }
+	void setHasEnteredRiftOnce(const bool val) { has_entered_rift_once = val; }
 	void setIsInCinematic(bool value);
 	bool isInCinematic();
 
@@ -135,11 +137,12 @@ public:
 
 	bool isGardKilled();
 
-	bool		isEonDied() { return eonHasDied; };
-	float		getTimeScaleFactor() { return 1.0f; };
-	ETimeStatus	getTimeStatus() { return time_status; };
-	CHandle		getLastUsedCamera() { return _lastUsedCamera; };
-	eLOCATION	getPlayerLocation() { return player_location; }
+	bool		isEonDied() const { return eonHasDied; };
+	float		getTimeScaleFactor() const { return 1.0f; };
+	ETimeStatus	getTimeStatus() const { return time_status; };
+	CHandle		getLastUsedCamera() const { return _lastUsedCamera; };
+	eLOCATION	getPlayerLocation() const { return player_location; }
+	bool		getHasHasEnteredRiftOnce() const { return has_entered_rift_once; }
 
 	bool		  isBossValid(const std::string& name);
 	SBossState&   getBossStateByName(const std::string& name);

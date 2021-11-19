@@ -89,6 +89,7 @@ public:
 
 					if (detected || has_heard) {
 						ctx.getBlackboard()->setValue<bool>(bb_keyname_is_detected, true);
+						ctx.setHasEonTargeted(true);
 
 						// Send a message to the player that he has been detected -targeted-, for music-interaction purposes
 						TMsgTarget h_msg;
@@ -101,6 +102,7 @@ public:
 			// If the player is far away and player was already detected, set the key name to false
 			if (player_was_detected) {
 				ctx.getBlackboard()->setValue<bool>(bb_keyname_is_detected, false);
+				ctx.setHasEonTargeted(false);
 
 				// Send a message to the player that he has been untargeted, for music-interaction purposes
 				TMsgUntarget h_msg;
