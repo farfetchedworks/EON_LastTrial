@@ -28,7 +28,7 @@
 #include "components/projectiles/comp_cygnus_beam.h"
 #include "components/controllers/comp_player_controller.h"
 
-#define PLAY_CINEMATICS false
+#define PLAY_CINEMATICS true
 
 /*
  *	Declare and implement all tasks here

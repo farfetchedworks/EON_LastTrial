@@ -150,6 +150,22 @@ bool CModuleAudio::start()
 	loadBank("Master.bank");
 	loadBank("Master.strings.bank");
 
+	// And honestly we can load everything from the beginning soundbanks are not too big rn
+	loadBank("AMB_General.bank");
+	loadBank("Cave.bank");
+	loadBank("Monastery.bank");
+
+	loadBank("Cygnus.bank");
+	loadBank("Eon.bank");
+	loadBank("Gard.bank");
+	loadBank("NonBossEnemies.bank");
+
+	loadBank("InGame.bank");
+	loadBank("OutOfGame.bank");
+
+	loadBank("UI.bank");
+	loadBank("VO.bank");
+
 	assert(is_ok == FMOD_RESULT::FMOD_OK); // all ok
 	return is_ok == FMOD_RESULT::FMOD_OK;
 }
@@ -193,7 +209,6 @@ void CModuleAudio::update(float dt)
 
 void CModuleAudio::renderInMenu()
 {
-
 }
 
 bool CModuleAudio::loadBank(const std::string& bank_name)
@@ -360,8 +375,23 @@ void stopAndRelease(FMOD::Studio::EventInstance* ev_inst)
 	ev_inst->release();
 }
 
+bool areNamesEqual(const std::string& new_event_name, FMOD::Studio::EventInstance* cur_event)
+{
+	FMOD::Studio::EventDescription* cur_ev_descr;
+	cur_event->getDescription(&cur_ev_descr);
+	char cur_ev_name[256];
+	int  cur_ev_size;
+	cur_ev_descr->getPath(cur_ev_name, 256, &cur_ev_size);
+
+	return std::string(cur_ev_name).compare(EVENT_PREFIX + new_event_name) == 0;
+}
+
 void CModuleAudio::postMusicEvent(const std::string& event_name)
 {
+	// Check that current event is not the same as posted
+	if (areNamesEqual(event_name, cur_mus_event))
+		return;
+
 	stopAndRelease(cur_mus_event);
 	cur_mus_event = post2DEventGetInst(event_name);
 }
@@ -384,6 +414,10 @@ void CModuleAudio::stopCurMusicEvent()
 
 void CModuleAudio::postAmbienceEvent(const std::string& event_name)
 {
+	// Check that current event is not the same as posted
+	if (areNamesEqual(event_name, cur_amb_event))
+		return;
+
 	stopAndRelease(cur_amb_event);
 	cur_amb_event = post2DEventGetInst(event_name);
 }

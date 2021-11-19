@@ -5,7 +5,7 @@
 			<value>Eon_Dash</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{1cb8dcac-b59a-4239-ab8a-afd3947c23d2}</destination>
@@ -81,7 +81,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{74afea32-72e7-4168-a4f4-4e270a447f3a}">
 		<property name="volume">
-			<value>-1</value>
+			<value>-2.5</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{b6ac4a6b-ecd4-4443-a9c2-febd1f63cfc1}</destination>
@@ -152,6 +152,9 @@
 	</object>
 	<object class="MixerBusPanner" id="{3bda1615-c85b-4810-a489-7fd48a55fc80}" />
 	<object class="SingleSound" id="{b9df837d-b914-435a-a076-4c126ccd8593}">
+		<property name="volume">
+			<value>-2.5</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{599ef3e2-18e1-4ad7-9181-a1e9af235f29}</destination>
 			<destination>{3db4eb81-790d-479a-a9ba-4482dce55818}</destination>

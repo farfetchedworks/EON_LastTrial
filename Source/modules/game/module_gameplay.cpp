@@ -12,6 +12,7 @@
 #include "modules/module_events.h"
 #include "navmesh/module_navmesh.h"
 #include "lua/module_scripting.h"
+#include "audio/module_audio.h"
 #include "components/messages.h"
 #include "components/common/comp_name.h"
 #include "components/common/comp_transform.h"
@@ -63,7 +64,7 @@ bool ModuleEONGameplay::start()
 	EngineUI.activateWidget("eon_hud");
 
 	// Audio
-	EngineLua.executeFile("data/scripts/audio/enterCave.lua");
+	EngineAudio.setListener(getEntityByName("camera_mixed"));
 
 	// If passing through YOU DIED module
 	if (started)
