@@ -106,6 +106,11 @@ namespace ui
             widget->setState(EState::STATE_OUT);
         }
         else {
+
+            // if no fade out, be sure it's 0% visible
+            TImageParams* ip = widget->getImageParams();
+            if (ip) ip->time_normalized = 0.f;
+
             widget->setState(EState::STATE_NONE);
             widget->setActive(false);
             _activeWidgets.erase(std::remove(_activeWidgets.begin(), _activeWidgets.end(), widget));

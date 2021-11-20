@@ -210,6 +210,10 @@ void TCompBuffers::uploadFromCPU()
 	// copy the number of triangles / vertices from a mesh. The # of instances
 	// will be set by another cs.
 
+	// Don't allow load thread to upload anything
+	if (CEngine::get().getMainThreadId() != std::this_thread::get_id())
+		return;
+
 	for (auto b : gpu_buffers)
 	{
 		const json& j = b->jData;

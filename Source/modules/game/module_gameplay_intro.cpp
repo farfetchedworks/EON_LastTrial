@@ -4,6 +4,7 @@
 #include "render/render_module.h"
 #include "input/input_module.h"
 #include "module_gameplay_intro.h"
+#include "modules/module_subtitles.h"
 #include "lua/module_scripting.h"
 #include "modules/module_boot.h"
 #include "modules/module_camera_mixer.h"
@@ -15,7 +16,7 @@ extern CShaderCte<CtesWorld> cte_world;
 
 bool ModuleEONGameplayIntro::start()
 {
-	timer = 2.15f;
+	timer = 1.15f;
 	return true;
 }
 
@@ -25,11 +26,13 @@ bool ModuleEONGameplayIntro::customStart()
 	Boot.setSlowBoot(true);
 	Boot.customStart();
 
+	Engine.resetClock();
+
 	// Set initial mouse state
 	debugging = false;
 	CApplication::get().changeMouseState(debugging, false);
 
-	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
+	CModuleCameraMixer& mixer = Engine.getCameramixer();
 	mixer.setOutputCamera(getEntityByName("camera_cinematic"));
 	EngineRender.setActiveCamera(getEntityByName("camera_cinematic"));
 
@@ -37,6 +40,7 @@ bool ModuleEONGameplayIntro::customStart()
 	cte_world.in_gameplay = 1.f;
 
 	EngineLua.executeScript("CinematicEonIntro()");
+	Subtitles.startCaption("intro_cinematic");
 
 	started = true;
 
@@ -48,8 +52,10 @@ void ModuleEONGameplayIntro::stop()
 	Boot.reset();
 	cte_world.in_gameplay = 0.f;
 
-	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
+	CModuleCameraMixer& mixer = Engine.getCameramixer();
 	mixer.setEnabled(false);
+
+	Subtitles.stopCaption();
 }
 
 void ModuleEONGameplayIntro::update(float dt)
@@ -66,7 +72,22 @@ void ModuleEONGameplayIntro::update(float dt)
 		return;
 	}
 		
-	if (CEngine::get().getInput(input::MENU)->getButton("interact").getsPressed()) {
+	// DEBUG SHORTCUTS
+	{
+		// get/release mouse
+		if (PlayerInput[VK_F1].getsReleased()) {
+			debugging = !debugging;
+			CApplication::get().changeMouseState(debugging);
+		}
+		if (debugging && PlayerInput[VK_CONTROL].getsPressed()) {
+			CApplication::get().changeMouseState(false);
+		}
+		if (debugging && PlayerInput[VK_CONTROL].getsReleased()) {
+			CApplication::get().changeMouseState(true);
+		}
+	}
+
+	if (Engine.getInput(input::MENU)->getButton("interact").getsPressed()) {
 		EngineLua.executeScript("stopCinematic(1.0)");
 	}
 

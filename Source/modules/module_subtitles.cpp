@@ -92,6 +92,7 @@ void CModuleSubtitles::update(float dt)
 	if (getState() == EState::STATE_IN && _timer >= _fadeInTime)
 	{
 		setState(EState::STATE_ACTIVE);
+		triggerAudio();
 	}
 
 	if(_timer >= current.time)
@@ -128,7 +129,6 @@ bool CModuleSubtitles::setCaptionEntry()
 	else
 	{
 		imgParams->texture = Resources.get(currentCaption.texture)->as<CTexture>();
-		triggerAudio();
 
 		assert(imgParams->texture);
 		if (!imgParams->texture)
@@ -177,7 +177,6 @@ bool CModuleSubtitles::startCaption(const std::string& name, CHandle t)
 
 	if (_active)
 	{
-		EngineUI.activateWidget("eon_subtitles", _fadeCaptions);
 		setState(EState::STATE_IN);
 	}
 
@@ -215,8 +214,13 @@ void CModuleSubtitles::renderInMenu()
     {
 		if (_active)
 		{
+			auto& list = _registeredCaptions[_currentCaption];
+			SCaptionParams& current = list[_currentIndex];
+
 			ImGui::Text("Current scene: %s", _currentCaption.c_str());
 			ImGui::Text("State: %s", state_entries_names.nameOf(_state));
+			ImGui::Text("Current tex: %s", current.texture.c_str());
+			ImGui::Text("Current audio: %s", current.audio.c_str());
 			ImGui::Text("Index: %d", _currentIndex);
 			ImGui::Text("Timer: %f", _timer);
 		}
@@ -226,6 +230,8 @@ void CModuleSubtitles::renderInMenu()
 			for (auto& cs : _registeredCaptions) {
 
 				ImGui::Text("Name: %s", cs.first.c_str());
+
+				ImGui::PushID(&cs);
 
 				if (ImGui::TreeNode("Entries")) {
 					for (auto& c : cs.second) {
@@ -244,6 +250,8 @@ void CModuleSubtitles::renderInMenu()
 				if (ImGui::Button("Stop")) {
 					stopCaption();
 				}
+
+				ImGui::PopID();
 			}
 
 			ImGui::TreePop();
