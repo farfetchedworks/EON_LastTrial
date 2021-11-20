@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.01.00">
-	<object class="AudioFile" id="{fd3ce61a-c1ba-4d40-b04d-250c7a6a180f}">
+	<object class="AudioFile" id="{45274f66-fd61-4553-9cfc-ac4571134a32}">
 		<property name="assetPath">
-			<value>VO/Subtitles/VO_1_2.wav</value>
-		</property>
-		<property name="isStreaming">
-			<value>true</value>
+			<value>VO/Subtitles/VO_4.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
@@ -14,7 +11,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>17.330022675736963</value>
+			<value>9.3419954648526069</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{f8b2a622-7d6e-4c03-8a9c-627e577ec451}</destination>
