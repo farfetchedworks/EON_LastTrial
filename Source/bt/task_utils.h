@@ -1,5 +1,6 @@
 #pragma once
 #include "fsm/fsm.h"
+#include "modules/module_physics.h"
 
 class TCompTransform;
 class TCompAIControllerBase;
@@ -17,7 +18,8 @@ struct TaskUtils {
 	static float rotate(TCompTransform* my_trans, const float speed, const float dt);
 	static void hit(CEntity* striker, CEntity* target, int damage);
 	static bool canSeePlayer(TCompTransform* my_trans, TCompTransform* player_trans);
-	static bool hasObstaclesToEon(TCompTransform* my_trans, TCompTransform* player_trans);
+	static bool hasObstaclesToEon(TCompTransform* my_trans, TCompTransform* player_trans, bool zeroOutY = true, 
+		physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy ^ CModulePhysics::FilterGroup::Trigger ^ CModulePhysics::FilterGroup::EffectArea);
 
 	static void castAreaAttack(CEntity* e_attacker, VEC3 position, const float radius, const int dmg);
 	static void castAreaDelay(CEntity* e_caster, float duration, CHandle h_locked_t);
