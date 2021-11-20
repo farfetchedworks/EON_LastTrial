@@ -19,6 +19,7 @@
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
+#include "ui/ui_module.h"
 
 #define PLAY_CINEMATICS true
 
@@ -118,6 +119,8 @@ public:
 
 		// Cinematics
 		EngineLua.executeScript("CinematicGardPresentation()");
+
+		EngineUI.activateWidget("boss_life_bar");
 	}
 };
 
