@@ -61,7 +61,6 @@ void TCompHealth::update(float dt)
     if (!is_player && !is_boss)
         return;
 
-    // Update UI for PLAYER
     ui::CWidget* w = EngineUI.getWidgetFrom(is_player ? "eon_hud" : "boss_life_bar", "life_bar");
     assert(w);
     
@@ -172,19 +171,20 @@ void TCompHealth::setRenderActive(bool active, const std::string& boss_name)
 {
     render_active = active;
 
-    if (is_boss)
+    if (!is_boss)
+        return;
+
+    if (render_active)
     {
-        if (render_active)
-        {
-            EngineUI.activateWidget("boss_life_bar");
-            ui::CWidget* boss_name_ui = EngineUI.getWidget("boss_name");
-            std::string path = "data/textures/ui/subvert/HUD/enemies/" + std::string(boss_name) + ".dds";
-            boss_name_ui->getImageParams()->texture = Resources.get(path)->as<CTexture>();
-        }
-        else
-        {
-            EngineUI.deactivateWidget("boss_life_bar");
-        }
+        assert(boss_name.length() && "No boss name texture");
+        EngineUI.activateWidget("boss_life_bar");
+        ui::CWidget* boss_name_ui = EngineUI.getWidget("boss_name");
+        std::string path = "data/textures/ui/subvert/HUD/enemies/" + std::string(boss_name) + ".dds";
+        boss_name_ui->getImageParams()->texture = Resources.get(path)->as<CTexture>();
+    }
+    else
+    {
+        EngineUI.deactivateWidget("boss_life_bar");
     }
 }
 
