@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.01.00">
-	<object class="AudioFile" id="{7a90ba33-68ee-40f4-a06e-5aeda170c59f}">
+	<object class="AudioFile" id="{65ca38d0-9f21-4d2e-93fa-a2e69557d676}">
 		<property name="assetPath">
-			<value>UI/SFX_Enter-001.wav</value>
+			<value>UI/SFX_Enter.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

@@ -131,7 +131,7 @@
 			<value>-5</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{7a90ba33-68ee-40f4-a06e-5aeda170c59f}</destination>
+			<destination>{65ca38d0-9f21-4d2e-93fa-a2e69557d676}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{c7b4717b-0a3b-4eb9-80ac-4b2a7e20194e}" />
@@ -143,7 +143,7 @@
 	<object class="MixerBusPanner" id="{97785e95-5bb3-4c23-93a6-5559894b2798}" />
 	<object class="SFXReverbEffect" id="{201202a0-205d-43c9-a6d6-22a2cbb7357a}">
 		<property name="decayTime">
-			<value>1400</value>
+			<value>1200</value>
 		</property>
 		<property name="earlyDelay">
 			<value>9</value>
@@ -153,6 +153,9 @@
 		</property>
 		<property name="earlyLateMix">
 			<value>6</value>
+		</property>
+		<property name="wetLevel">
+			<value>-12</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{8ddcbc74-0020-4c20-9558-c79129e11e91}" />
