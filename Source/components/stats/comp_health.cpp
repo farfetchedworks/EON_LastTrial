@@ -58,18 +58,25 @@ void TCompHealth::update(float dt)
     debugTimer += dt;
     lerpHealth(dt);
 
-    if (!is_player)
+    if (!is_player && !is_boss)
         return;
 
     // Update UI for PLAYER
-    ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "life_bar");
+    ui::CWidget* w = EngineUI.getWidgetFrom(is_player ? "eon_hud" : "boss_life_bar", "life_bar");
     assert(w);
-
+    
     ui::CWidget* wChild = w->getChildByName("bar_fill");
     if (wChild) {
         ui::CImage* fill = static_cast<ui::CImage*>(wChild);
         ui::TImageParams& params = fill->imageParams;
         params.alpha_cut = (float)health / (float)max_health;
+    }
+
+    wChild = w->getChildByName("bar_fill_2");
+    if (wChild) {
+        ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+        ui::TImageParams& params = fill->imageParams;
+        params.alpha_cut = (float)(health - max_health) / (float)max_health;
     }
 
     wChild = w->getChildByName("bar_fill_lerp");
@@ -78,13 +85,6 @@ void TCompHealth::update(float dt)
         ui::TImageParams& params = fill->imageParams;
         params.alpha_cut = (float)lerp_health / (float)max_health;
     }
-
-    /*wChild = w->getChildByName("bar_background");
-    if (wChild) {
-        ui::CImage* fill = static_cast<ui::CImage*>(wChild);
-        ui::TImageParams& params = fill->imageParams;
-        params.alpha_cut = (float)lerp_health / (float)max_health;
-    }*/
 }
 
 void TCompHealth::debugInMenu()
@@ -248,10 +248,10 @@ void TCompHealth::renderDebug() {
     {
         if (is_boss)
         {
-            float width = (float)Render.getWidth();
+            /*float width = (float)Render.getWidth();
             float sizeW = 500.f;
             drawProgressBar2D(VEC2(width/2.f - sizeW/2.f, 40), clr, (float)health, (float)max_health, nullptr, sizeW, 20.f);
-            drawText2D(VEC2(-1.f, 65), Colors::White, c_name->getName(), true);
+            drawText2D(VEC2(-1.f, 65), Colors::White, c_name->getName(), true);*/
         }
         else
         {

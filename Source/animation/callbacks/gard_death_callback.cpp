@@ -16,6 +16,7 @@
 #include "ui/ui_module.h"
 #include "ui/widgets/ui_text.h"
 #include "bt/task_utils.h"
+#include "ui/ui_module.h"
 
 const float DEATH_TIME = 30.f;
 
@@ -93,6 +94,8 @@ struct onGardDeathCallback : public CAnimationCallback
 		{
 			EngineNavMesh.setCurrent("templelevel");
 		}
+
+		EngineUI.deactivateWidget("boss_life_bar");
 	}
 };
 

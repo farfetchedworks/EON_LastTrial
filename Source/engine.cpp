@@ -175,10 +175,16 @@ void CEngine::doFrame()
 {
 	PROFILE_FRAME_BEGINS();
 	PROFILE_FUNCTION("Engine::doFrame");
-	Time.set(timer.elapsed());
+	Time.set(Time.current + timer.elapsedAndReset());
+	// juan:
+	// Time.set(timer.elapsed());
 	update(Time.delta);
-	// Let the renderModule generate the frame
 	_render->generateFrame();
+}
+
+void CEngine::resetClock()
+{
+	timer.reset();
 }
 
 void CEngine::update(float dt)

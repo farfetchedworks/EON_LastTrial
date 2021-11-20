@@ -149,7 +149,7 @@ void TCompAttributes::updateEndurance()
 	int base_stamina = 100;
 	int max_stamina = base_stamina + (attr.value - 1) * attr.ratio;
 
-	stamina->setCurrMaxStamina(max_stamina);
+	stamina->setMaxStamina(max_stamina);
 }
 
 void TCompAttributes::onNewPhase(int phase)

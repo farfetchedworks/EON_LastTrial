@@ -65,7 +65,7 @@ void TCompStamina::update(float dt)
 
 void TCompStamina::fillStamina()
 {
-	current_stamina = curr_max_stamina;
+	current_stamina = max_stamina;
 }
 
 void TCompStamina::reduceStamina(EAction player_action)
@@ -87,7 +87,7 @@ void TCompStamina::reduceStamina(EAction player_action)
 
 bool TCompStamina::hasMaxStamina()
 {
-	return (current_stamina == curr_max_stamina);
+	return (current_stamina == max_stamina);
 }
 
 bool TCompStamina::hasStamina(EAction player_action)
@@ -131,7 +131,7 @@ void TCompStamina::recoverStamina(bool can_recover, float dt)
 	}
 
 	if (time_elapsed >= recovery_frequency && current_stamina != max_stamina) {
-		current_stamina = std::min<float>(current_stamina + recovery_points, curr_max_stamina);
+		current_stamina = std::min<float>(current_stamina + recovery_points, max_stamina);
 		time_elapsed = 0;
 	}
 }
