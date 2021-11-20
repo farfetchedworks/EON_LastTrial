@@ -11,19 +11,26 @@ class TCompAudioEmitter : public TCompBase {
 private:
 
 	CHandle h_cache_transform;
+	CHandle h_cache_player_transform;
 
 	std::string event_name;
 	std::string bank_name;
 	FMOD::Studio::EventInstance* event_inst;
 
 	bool static_inst = false;
+	bool updates_occl = true;
 
 public:
 
 	~TCompAudioEmitter();
 
 	void onEntityCreated();
+	void onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg);
 	void load(const json& j, TEntityParseContext& ctx);
 	void update(float dt);
 	void debugInMenu();
+
+	static void registerMsgs() {
+		DECL_MSG(TCompAudioEmitter, TMsgAllEntitiesCreated, onAllEntitiesCreated);
+	}
 };

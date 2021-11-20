@@ -31,6 +31,9 @@
 		<relationship name="timeline">
 			<destination>{237bef38-ed47-4f0a-9f0b-72c8a5f30993}</destination>
 		</relationship>
+		<relationship name="parameters">
+			<destination>{fa732438-4ace-494a-a4a1-c2491e8a0ae8}</destination>
+		</relationship>
 		<relationship name="banks">
 			<destination>{db717bb3-a2bb-4508-8bf5-96493c3fd158}</destination>
 		</relationship>
@@ -57,7 +60,7 @@
 			<destination>{3e356213-7807-4f83-8f01-b7ce4ac00de6}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{a98a56d7-63a7-4956-a8b4-a9e02aef8076}</destination>
+			<destination>{88deba83-1fa3-45ad-9bfe-376be8ba61c7}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{977607ea-6ca5-4a81-9ad8-f8c3fdb36ac2}" />
@@ -78,6 +81,11 @@
 		</relationship>
 		<relationship name="markers">
 			<destination>{e49259c0-cc7d-42f6-88b7-f859b812416b}</destination>
+		</relationship>
+	</object>
+	<object class="ParameterProxy" id="{fa732438-4ace-494a-a4a1-c2491e8a0ae8}">
+		<relationship name="preset">
+			<destination>{f9e5c7c9-f642-443a-a529-3c327d7854be}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{11893290-4bd1-4e50-9f4b-c650e5281485}">
@@ -172,6 +180,7 @@
 		<relationship name="effects">
 			<destination>{20ac15d1-2904-4d78-b105-ad76e92a9fce}</destination>
 			<destination>{4a85714c-a475-468d-a04e-19d2b51466af}</destination>
+			<destination>{1005af24-048c-48c4-9dd8-4609c73d5763}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{4b303efc-b098-4510-97eb-3bd4210b1cd0}" />
@@ -230,6 +239,14 @@
 		</property>
 		<relationship name="preset">
 			<destination>{adf22196-1c51-413f-806d-9b06736ea9d7}</destination>
+		</relationship>
+	</object>
+	<object class="ProxyEffect" id="{1005af24-048c-48c4-9dd8-4609c73d5763}">
+		<property name="inputFormat">
+			<value>2</value>
+		</property>
+		<relationship name="preset">
+			<destination>{cb630539-2529-4dea-b9ce-e268a252c3a6}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationPoint" id="{704d0340-d79f-4cd6-b03e-c23d92b548ef}">

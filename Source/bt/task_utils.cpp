@@ -129,18 +129,19 @@ bool TaskUtils::canSeePlayer(TCompTransform* my_trans, TCompTransform* player_tr
 	return false;
 }
 
-bool TaskUtils::hasObstaclesToEon(TCompTransform* my_trans, TCompTransform* player_trans)
+bool TaskUtils::hasObstaclesToEon(TCompTransform* my_trans, TCompTransform* player_trans, bool zeroOutY, physx::PxU32 mask)
 {
 	// If Eon is inside the cone, generate a raycast from the Enemy towards Eon's position
 	VEC3 raycast_origin = my_trans->getPosition();
 	VEC3 dir = player_trans->getPosition() - raycast_origin;
-	dir.y = 0;					// To get the "forward" from the enemy to Eon
+
+	if (zeroOutY)
+		dir.y = 0;					// To get the "forward" from the enemy to Eon
+
 	dir.Normalize();
 	VHandles colliders;
 	raycast_origin.y += 1;
 	float distance = 200.f;
-
-	physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy ^ CModulePhysics::FilterGroup::Trigger ^ CModulePhysics::FilterGroup::EffectArea;
 
 	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, true);
 	if (is_ok) {
