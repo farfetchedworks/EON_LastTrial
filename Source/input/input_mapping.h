@@ -28,6 +28,7 @@ namespace input
         CMapping(CModule& module);
         void load(const std::string& filename);
         void update(float dt);
+        void clear();
         
         const TButton& getButton(const std::string& name) const;
         VEC2 getDirection(const std::string& name) const;

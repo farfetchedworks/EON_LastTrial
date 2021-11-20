@@ -36,6 +36,7 @@ public:
   void destroy();
   void doFrame();
   void resetClock();
+  bool canExit();
 
   input::CModule* getInput(int id = input::PLAYER_1);
   ui::CModule& getUI() { return *_ui; }

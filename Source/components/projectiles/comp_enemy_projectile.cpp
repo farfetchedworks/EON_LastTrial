@@ -161,7 +161,7 @@ void TCompEnemyProjectile::onHitObject(const TMsgEntityOnContact& msg)
 
 	// Destroy projectile when it hits anything
 	//destroy();
-	current_time = lifetime - 0.5;
+	current_time = lifetime - 0.5f;
 	has_hit = true;
 }
 

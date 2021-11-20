@@ -48,7 +48,7 @@ namespace input
 
     void CMapping::update(float dt)
     {
-      PROFILE_FUNCTION("Mapping");
+        PROFILE_FUNCTION("Mapping");
         for (auto& entry : _mappedButtons)
         {
             TMappedButton& mbt = entry.second;
@@ -101,8 +101,20 @@ namespace input
         }
     }
 
+    void CMapping::clear()
+    {
+        for (auto& entry : _mappedButtons)
+        {
+            TMappedButton& mbt = entry.second;
+            mbt.button.setValue(0.f);
+        }
+    }
+
     const TButton& CMapping::getButton(const std::string& name) const
     {
+        if (_module.isBlocked())
+            return TButton::dummy;
+
         auto it = _mappedButtons.find(name);
         return it != _mappedButtons.cend() ? it->second.button : TButton::dummy;
     }

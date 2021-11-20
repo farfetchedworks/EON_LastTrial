@@ -37,7 +37,7 @@ void TCompHealth::load(const json& j, TEntityParseContext& ctx)
 
 void TCompHealth::onEntityCreated()
 {
-    if (CHandle(this).getOwner() == getEntityByName("player")){
+    if (getEntity() == getEntityByName("player")){
         is_player = true;
         return;
     }
@@ -239,30 +239,15 @@ void TCompHealth::renderDebug() {
     float pct = health / (float)max_health;
     Color clr = pct > 0.333 ? (pct > 0.666 ? Colors::Green : Colors::Orange) : Colors::Red;
 
-    if (is_player) {
-        
-        /*drawProgressBar2D(VEC2(30, 70), clr, (float)health, (float)max_health, "health", 160, 
-            20.f, true, (float)lerp_health, clr * 0.8f);*/
-    }
-    else
+    if (!is_boss && !is_player)
     {
-        if (is_boss)
-        {
-            /*float width = (float)Render.getWidth();
-            float sizeW = 500.f;
-            drawProgressBar2D(VEC2(width/2.f - sizeW/2.f, 40), clr, (float)health, (float)max_health, nullptr, sizeW, 20.f);
-            drawText2D(VEC2(-1.f, 65), Colors::White, c_name->getName(), true);*/
+        TCompCameraFollow* c_follow = static_cast<CEntity*>(getEntityByName("camera_follow"))->get<TCompCameraFollow>();
+        if (health == max_health && c_follow->h_trans_locked_enemy.getOwner() != CHandle(this).getOwner()) {
+            return;
         }
-        else
-        {
-            TCompCameraFollow* c_follow = static_cast<CEntity*>(getEntityByName("camera_follow"))->get<TCompCameraFollow>();
-            if (health == max_health && c_follow->h_trans_locked_enemy.getOwner() != CHandle(this).getOwner()) {
-                return;
-            }
 
-            TCompTransform* trans = get<TCompTransform>();
-            VEC3 pos = trans->getPosition();
-            drawProgressBar3D(pos, clr, (float)health, (float)max_health);
-        }
+        TCompTransform* trans = get<TCompTransform>();
+        VEC3 pos = trans->getPosition();
+        drawProgressBar3D(pos, clr, (float)health, (float)max_health);
     }
 }

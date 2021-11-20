@@ -31,8 +31,12 @@ void CModuleBoot::update(float dt)
 {
 	if (_loadThread && _bootCompleted && !_bootReady)
 	{
-		if(_loadThread->joinable())
+		if (_loadThread->joinable())
+		{
 			_loadThread->join();
+			delete _loadThread;
+			_loadThread = nullptr;
+		}
 		_bootReady = true;
 	}
 }

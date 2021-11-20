@@ -34,7 +34,7 @@ public:
         // Set player dash status
         controller->is_dashing = true;
         static_cast<TCompStamina*>(owner->get<TCompStamina>())->reduceStamina(EAction::DASH);
-        spawnParticles("data/particles/compute_dash_smoke_particles.json", transform->getPosition() + transform->getForward() * 0.1, transform->getPosition());
+        spawnParticles("data/particles/compute_dash_smoke_particles.json", transform->getPosition() + transform->getForward() * 0.1f, transform->getPosition());
     }
 
     void enableStaminaGain(CContext& ctx, bool val) const
@@ -173,7 +173,7 @@ public:
         // only scenario collisions in startup should stun player
         controller->setWeaponPartStatus(true, controller->attack_count);
 
-        spawnParticles("data/particles/compute_dash_smoke_particles.json", transform->getPosition() + transform->getForward() * 0.1, transform->getPosition());
+        spawnParticles("data/particles/compute_dash_smoke_particles.json", transform->getPosition() + transform->getForward() * 0.1f, transform->getPosition());
         static_cast<TCompStamina*>(owner->get<TCompStamina>())->reduceStamina(EAction::DASH);
     }
 

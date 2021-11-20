@@ -37,6 +37,7 @@ bool ModuleEONMainMenu::start()
 void ModuleEONMainMenu::stop()
 {
     EngineUI.deactivateWidget("eon_main_menu");
+    EngineAudio.stopCurMusicEvent();
 }
 
 void ModuleEONMainMenu::update(float dt)

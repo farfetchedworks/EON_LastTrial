@@ -43,7 +43,6 @@ bool ModuleEONLoadingScreen::start()
 void ModuleEONLoadingScreen::stop()
 {
     EngineUI.deactivateWidget("eon_loading_screen");
-    EngineAudio.stopCurMusicEvent();
     EngineAudio.unloadBank("OutOfGame.bank");
 }
 

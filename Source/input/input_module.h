@@ -20,6 +20,7 @@ namespace input
         void clearInput();
         
         int getId() const { return _id; }
+        bool isBlocked() const { return _blocked; }
         std::vector<IDevice*> getDevices() { return _devices; }
         const TKeyboardData& getKeyboard() const { return _keyboard; }
         const TMouseData& getMouse() const { return _mouse; }

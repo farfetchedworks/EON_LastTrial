@@ -117,6 +117,7 @@ bool TCompCygnusKey::resolve()
 		TCompTransform* transform = camera->get<TCompTransform>();
 		transform->lookAt(camera_follow->getPosition(), newK->getPosition(), VEC3::Up);
 		CameraMixer.blendCamera("camera_dynamic", time, & interpolators::quadInOutInterpolator);
+		PlayerInput.clearInput();
 		PlayerInput.blockInput();
 		TCompBT::UPDATE_ENABLED = false;
 	}

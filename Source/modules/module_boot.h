@@ -44,5 +44,6 @@ public:
 	bool isPreloading() { return _preloadingResources; }
 	bool ready() { return _bootReady; }
 	void setSlowBoot(bool v) { _slowBoot = v; }
+	bool isThreadActive() { return _loadThread != nullptr; }
 };
 

@@ -172,7 +172,16 @@ void CApplication::run() {
 	while (WM_QUIT != msg.message)
 	{
 		if (should_exit)
-			PostMessage(hWnd, WM_CLOSE, 0, 0);
+		{
+			// in case the load thread is active, don't allow
+			// to close the game
+			should_exit = CEngine::get().canExit();
+
+			if (should_exit)
+			{
+				PostMessage(hWnd, WM_CLOSE, 0, 0);
+			}
+		}
 
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{

@@ -764,7 +764,7 @@ public:
 			ctx.setNodeVariable(name, "allow_aborts", false);
 
 			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
-			spawnParticles("data/particles/compute_dash_smoke_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.1, h_trans->getPosition());
+			spawnParticles("data/particles/compute_dash_smoke_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.1f, h_trans->getPosition());
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
@@ -2256,11 +2256,11 @@ public:
 
 
 			std::vector<physx::PxRaycastHit> raycastHits;
-			if (EnginePhysics.raycast(black_hole_pos + beam_target_dir, beam_target_dir, 20.0f, raycastHits, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Characters, true, true)) {
+			if (EnginePhysics.raycast(black_hole_pos + beam_target_dir, beam_target_dir, 20.f, raycastHits, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Characters, true, true)) {
 				VEC3 coll_pos = PXVEC3_TO_VEC3(raycastHits.front().position);
 				VEC3 coll_normal = PXVEC3_TO_VEC3(raycastHits.front().normal);
 				coll_normal.Normalize();
-				spawnParticles("data/particles/compute_cygnus_ray_particles.json", coll_pos + coll_normal * 0.1, coll_pos);
+				spawnParticles("data/particles/compute_cygnus_ray_particles.json", coll_pos + coll_normal * 0.1f, coll_pos);
 			}
 		};
 

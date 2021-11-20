@@ -187,6 +187,11 @@ void CEngine::resetClock()
 	timer.reset();
 }
 
+bool CEngine::canExit()
+{
+	return !getBoot().isThreadActive();
+}
+
 void CEngine::update(float dt)
 {
 	_moduleManager.update(dt);

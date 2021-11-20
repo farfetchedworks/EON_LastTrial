@@ -44,7 +44,7 @@ class CStateFalling : public CStateBaseLogic
                 controller->setFalling(false);
                 ctx.setVariableValue("is_falling", false);
                 
-                if (fallingTime > 0.4f) {
+                if (fallingTime > 0.5f) {
                     TCompHealth* health = owner->get<TCompHealth>();
                     int fall_damage = static_cast<int>(health->getMaxHealth() * (fallingTime / maxFallTime));
                     EngineUI.fadeWidget("screen_damage", 2.f);

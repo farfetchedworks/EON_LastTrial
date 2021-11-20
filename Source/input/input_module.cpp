@@ -69,6 +69,8 @@ namespace input
         {
             device->clearData();
         }
+
+        _mapping.clear();
     }
 
     const TButton& CModule::getButton(const std::string& name) const
