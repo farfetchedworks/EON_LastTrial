@@ -18,7 +18,8 @@ DECL_OBJ_MANAGER("npc", TCompNPC)
 
 void TCompNPC::load(const json& j, TEntityParseContext& ctx)
 {
-	
+	sight_radius = j.value("sight_radius", sight_radius);
+	caption_scene = j.value("caption_scene", std::string());
 }
 
 void TCompNPC::update(float dt)
@@ -31,16 +32,20 @@ bool TCompNPC::resolve()
 	CEntity* player = getEntityByName("player");
 	if (!player)
 		return false;
-	return PawnUtils::isInsideCone(player, CHandle(this).getOwner(), deg2rad(60.f), 2.f);
+	return PawnUtils::isInsideCone(player, CHandle(this).getOwner(), deg2rad(60.f), sight_radius);
 }
 
 void TCompNPC::interact()
 {
-	Subtitles.startCaption("npc_melee", getEntity());	
-	PlayerInput.blockInput();
+	if (caption_scene.length())
+	{
+		Subtitles.startCaption(caption_scene, getEntity());
+		PlayerInput.blockInput();
+	}
 }
 
 void TCompNPC::onStop(const TMsgStopCaption& msg)
 {
+	PlayerInteraction.setActive(false);
 	PlayerInput.unBlockInput();
 }
