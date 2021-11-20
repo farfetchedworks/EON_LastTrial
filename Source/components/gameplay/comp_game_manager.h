@@ -59,8 +59,9 @@ private:
 	std::vector<std::string> boot;
 	VHandles _shrines;
 	bool eonHasDied = false;
-	float deathTimer = 0.f;              // On Eon died use a timer if the player wants to resurrect
-	float timeTillDeath = 5.f;           // After this time Eon is considered dead and the level will restart
+	float deathTimer = 0.f;								// On Eon died use a timer if the player wants to resurrect
+	float timeTillDeath = 5.f;						// After this time Eon is considered dead and the level will restart
+	bool eonDeathManaged = false;					// To avoid managing Eon's death several times after Eon has died
 
 	bool show_end_game = false;
 	float show_end_game_timer = 10.0f;
