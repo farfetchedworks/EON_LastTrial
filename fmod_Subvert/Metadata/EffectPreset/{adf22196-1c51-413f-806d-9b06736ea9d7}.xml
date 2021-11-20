@@ -27,10 +27,10 @@
 	</object>
 	<object class="SpatialiserEffect" id="{8cb07281-3b2e-477f-8649-343d7bc78c62}">
 		<property name="minimumDistance">
-			<value>1.39999998</value>
+			<value>4.20000029</value>
 		</property>
 		<property name="maximumDistance">
-			<value>35</value>
+			<value>65</value>
 		</property>
 		<property name="extentMode">
 			<value>1</value>
@@ -61,7 +61,7 @@
 			<value>100</value>
 		</property>
 		<property name="value">
-			<value>22000</value>
+			<value>20</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{6541fcc6-a55b-489b-852b-dfe669577a79}">
@@ -72,7 +72,7 @@
 			<value>22000</value>
 		</property>
 		<property name="curveShape">
-			<value>0.295259982</value>
+			<value>0.184937656</value>
 		</property>
 	</object>
 </objects>

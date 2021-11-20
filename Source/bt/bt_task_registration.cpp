@@ -762,6 +762,9 @@ public:
 			controller->setWeaponPartStatus(true);
 
 			ctx.setNodeVariable(name, "allow_aborts", false);
+
+			TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
+			spawnParticles("data/particles/compute_dash_smoke_particles.json", h_trans->getPosition() + h_trans->getForward() * 0.1, h_trans->getPosition());
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
