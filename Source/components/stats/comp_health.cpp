@@ -72,6 +72,13 @@ void TCompHealth::update(float dt)
         params.alpha_cut = (float)health / (float)max_health;
     }
 
+    wChild = w->getChildByName("bar_fill_2");
+    if (wChild) {
+        ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+        ui::TImageParams& params = fill->imageParams;
+        params.alpha_cut = (float)(health - max_health) / (float)max_health;
+    }
+
     wChild = w->getChildByName("bar_fill_lerp");
     if (wChild) {
         ui::CImage* fill = static_cast<ui::CImage*>(wChild);
