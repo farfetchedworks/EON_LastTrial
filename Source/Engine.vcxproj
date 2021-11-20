@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\callbacks\animation_launcher_callback.cpp" />
+    <ClCompile Include="animation\callbacks\cygnus_death_callback.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f1_intro.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f1_to_f2.cpp" />
     <ClCompile Include="animation\callbacks\cygnus_f2_to_f3.cpp" />
@@ -36,8 +37,10 @@
     <ClCompile Include="components\audio\comp_audio_emitter.cpp" />
     <ClCompile Include="components\audio\comp_music_interactor.cpp" />
     <ClCompile Include="components\common\comp_prefab_info.cpp" />
+    <ClCompile Include="components\gameplay\comp_aether.cpp" />
     <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
     <ClCompile Include="components\gameplay\comp_launch_animation.cpp" />
+    <ClCompile Include="components\gameplay\comp_npc.cpp" />
     <ClCompile Include="components\gameplay\trigger_area.cpp" />
     <ClCompile Include="components\particles\comp_follow_target.cpp" />
     <ClCompile Include="components\postfx\comp_depth_fog.cpp" />
@@ -214,6 +217,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="audio\module_audio.cpp" />
+    <ClCompile Include="modules\game\module_gameplay_intro.cpp" />
     <ClCompile Include="modules\game\module_loading_screen.cpp" />
     <ClCompile Include="modules\module_boot.cpp" />
     <ClCompile Include="modules\module_camera_mixer.cpp" />
@@ -306,8 +310,10 @@
     <ClInclude Include="components\audio\comp_audio_emitter.h" />
     <ClInclude Include="components\audio\comp_music_interactor.h" />
     <ClInclude Include="components\common\comp_prefab_info.h" />
+    <ClInclude Include="components\gameplay\comp_aether.h" />
     <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
     <ClInclude Include="components\gameplay\comp_launch_animation.h" />
+    <ClInclude Include="components\gameplay\comp_npc.h" />
     <ClInclude Include="components\particles\comp_follow_target.h" />
     <ClInclude Include="components\postfx\comp_depth_fog.h" />
     <ClInclude Include="components\postfx\comp_motion_blur.h" />
@@ -489,6 +495,7 @@
     <ClInclude Include="lua\sol\forward.hpp" />
     <ClInclude Include="lua\sol\sol.hpp" />
     <ClInclude Include="mcv_platform.h" />
+    <ClInclude Include="modules\game\module_gameplay_intro.h" />
     <ClInclude Include="modules\game\module_loading_screen.h" />
     <ClInclude Include="modules\module.h" />
     <ClInclude Include="audio\module_audio.h" />
@@ -650,6 +657,7 @@
     <IntDir>..\objs\$(Configuration)\</IntDir>
     <OutDir>..\bin\</OutDir>
     <IncludePath>$(SolutionDir)..\include\fmod;$(SolutionDir)..\include\RecastNavigation\DebugUtils\Include;$(SolutionDir)..\include\RecastNavigation\Detour\Include;$(SolutionDir)..\include\RecastNavigation\DetourCrown\Include;$(SolutionDir)..\include\RecastNavigation\DetourTileCache\Include;$(SolutionDir)..\include\RecastNavigation\Recast\Include;$(SolutionDir)..\include\PhysX\PxShared\Include;$(SolutionDir)..\include\PhysX\PhysX_3.4\Include;$(SolutionDir)..\include\Lua;$(IncludePath)</IncludePath>
+    <TargetName>EON</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

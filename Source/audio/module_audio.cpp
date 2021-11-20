@@ -124,7 +124,8 @@ bool CModuleAudio::start()
 {
 	myFMOD_RESULT is_ok = FMOD_RESULT::FMOD_OK;
 
-	// Create FMOD Studio system
+
+	// Create FMOD Studio systems
 	is_ok &= Studio::System::create(&system);
 
 	// Validate encryption key

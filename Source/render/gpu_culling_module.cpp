@@ -490,6 +490,14 @@ void CGPUCullingModule::run() {
   comp_compute.executions[0].run(&comp_buffers);
 }
 
+void CGPUCullingModule::reset()
+{
+    objs.clear();
+    prefabs.clear();
+    draw_datas.clear();
+    render_types.clear();
+}
+
 
 void CGPUCullingModule::renderInMenu() {
 

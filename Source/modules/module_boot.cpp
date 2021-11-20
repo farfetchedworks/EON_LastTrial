@@ -3,6 +3,7 @@
 #include "engine.h"
 #include "module_entities.h"
 #include "components/messages.h"
+#include "render/gpu_culling_module.h"
 
 #define USE_LOAD_THREAD
 
@@ -84,47 +85,59 @@ void CModuleBoot::loadBoot(const std::string& p)
 {
 	jBoot = loadJson(p);
 
-	if (_loadPreview)
+	if (_introLoaded || !_slowBoot)
 	{
-		loadPreviewBoot();
-		return;
-	}
-
-	// Pre load resources
-	if(jBoot.count("resources_to_load")){
-
-		_preloadingResources = true;
-
-		auto prefabs = jBoot["resources_to_load"].get<std::vector<std::string>>();
-		for (auto& p : prefabs)
-			loadScene(p, true);
-
-		for (auto& ctx : ctxs) {
-			for (auto& h : ctx.entities_loaded)
-				h.destroy();
+		if (_loadPreview)
+		{
+			loadPreviewBoot();
+			return;
 		}
 
-		ctxs.clear();
-		CHandleManager::destroyAllPendingObjects();
-		_preloadingResources = false;
-	}
+		// Pre load resources
+		if (jBoot.count("resources_to_load")) {
 
-	auto prefabs = jBoot["scenes_to_load"].get<std::vector<std::string>>();
-	for (auto& p : prefabs)
-		loadScene(p);
+			_preloadingResources = true;
 
-	// We have finish parsing all the components of the entity
+			auto prefabs = jBoot["resources_to_load"].get<std::vector<std::string>>();
+			for (auto& p : prefabs)
+				loadScene(p, true);
+
+			for (auto& ctx : ctxs) {
+				for (auto& h : ctx.entities_loaded)
+					h.destroy();
+			}
+
+			ctxs.clear();
+			CHandleManager::destroyAllPendingObjects();
+			_preloadingResources = false;
+		}
+
+		auto prefabs = jBoot["scenes_to_load"].get<std::vector<std::string>>();
+		for (auto& p : prefabs)
+			loadScene(p);
+
+		// We have finish parsing all the components of the entity
 		for (auto ctx : ctxs)
 		{
 			TMsgAllEntitiesCreated msg;
 			for (auto h : ctx.entities_loaded)
 				h.sendMsg(msg);
 		}
+	}
+	else
+	{
+		auto prefabs = jBoot["intro_scenes"].get<std::vector<std::string>>();
+		for (auto& p : prefabs)
+			loadScene(p);
+
+		_introLoaded = true;
+	}
 
 	_bootCompleted = true;
 
 	if (!_loadThread)
 		_bootReady = true;
+	
 }
 
 bool CModuleBoot::destroyBoot()
@@ -176,6 +189,17 @@ bool CModuleBoot::loadPreviewBoot()
 	// don't render debug
 	Entities.clearDebugList();
 	return true;
+}
+
+void CModuleBoot::reset()
+{
+	CEngine::get().getEntities().stop();
+
+	EngineCulling.reset();
+	EngineCullingShadows.reset();
+
+	_bootCompleted = false;
+	_bootReady = false;
 }
 
 void CModuleBoot::renderInMenu()

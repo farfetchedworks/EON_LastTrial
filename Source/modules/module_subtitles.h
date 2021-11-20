@@ -19,10 +19,11 @@ public:
 	void renderInMenu() override;
 	void update(float dt) override;
 
-	bool startCaption(const std::string& name);
+	bool startCaption(const std::string& name, CHandle t = CHandle());
 	void stopCaption();
 
 private:
+
 
 	struct SCaptionParams {
 		std::string texture;
@@ -34,6 +35,7 @@ private:
 	bool _active = false;
 	bool _fadeCaptions = true;
 
+	CHandle _trigger;
 	float _timer = 0.f;
 	float _fadeInTime = 0.f;
 	float _fadeOutTime = 0.f;

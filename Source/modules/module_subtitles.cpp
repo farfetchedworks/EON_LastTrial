@@ -6,6 +6,7 @@
 #include "ui/ui_params.h"
 #include "ui/effects/ui_effect_fade.h"
 #include "audio/module_audio.h"
+#include "components/messages.h"
 
 static NamedValues<CModuleSubtitles::EState>::TEntry state_entries[] = {
 	 {CModuleSubtitles::EState::STATE_NONE, "none"},
@@ -160,15 +161,11 @@ void CModuleSubtitles::triggerAudio()
 	if (!event.length())
 	return;
 
-	// TODO Isaac
-	// Fmod: Parar el audio activo (en caso de q no se pare solo)
-	// y activar el nuevo usando 'event'
 	EngineAudio.postEvent(event);
 }
 
-bool CModuleSubtitles::startCaption(const std::string& name)
+bool CModuleSubtitles::startCaption(const std::string& name, CHandle t)
 {
-	assert(!_active);
 	if (_active)
 		return false;
 
@@ -184,6 +181,8 @@ bool CModuleSubtitles::startCaption(const std::string& name)
 		setState(EState::STATE_IN);
 	}
 
+	_trigger = t;
+
 	return _active;
 }
 
@@ -195,9 +194,14 @@ void CModuleSubtitles::stopCaption()
 	_currentIndex = 0;
 	_active = false;
 
-	// TODO Isaac
-	// Fmod: Parar el audio activo (en caso de q no se pare solo)
-	// ...
+	CEntity* eTrigger = _trigger;
+	if (eTrigger)
+	{
+		eTrigger->sendMsg(TMsgStopCaption());
+		
+	}
+
+	_trigger = CHandle();
 }
 
 void CModuleSubtitles::stop()

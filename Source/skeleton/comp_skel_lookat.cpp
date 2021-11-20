@@ -77,7 +77,7 @@ void TCompSkelLookAt::update(float dt) {
 	{
 		TCompTransform* t = get<TCompTransform>();
 		float yaw_factor = 1.f - (fabsf(t->getYawRotationToAimTo(target)) / (float)M_PI);
-		final_amount *= powf(yaw_factor, 1.2f);
+		final_amount *= powf(yaw_factor, 1.1f);
 	}
 
 	// The set of bones to correct

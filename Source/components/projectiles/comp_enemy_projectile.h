@@ -21,6 +21,7 @@ private:
 	float speed_reduction = 0.f;
 	bool from_player = false;
 	bool is_homing = false;									// If true, the projectile will chase the player unless it hits a collision or lifetime expires
+	bool has_hit = false;
 
 	CHandle projectile_transform;
 	CHandle projectile_collider;

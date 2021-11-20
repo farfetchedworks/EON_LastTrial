@@ -12,6 +12,9 @@ class CModuleBoot : public IModule
 	bool _loadPreview = false;
 	int total_entries = 1;
 
+	bool _introLoaded = false;
+	bool _slowBoot = false;
+
 	tbb::tbb_thread* _loadThread = nullptr;
 
 	json jBoot;
@@ -31,11 +34,15 @@ public:
 
 	bool start() override;
 	void update(float dt) override;
-	bool customStart();
 	void onFileChanged(const std::string& strfilename);
 	void renderInMenu() override;
+	
+	bool customStart();
+	void reset();
+
 	bool inGame() { return !_previewEnabled; }
 	bool isPreloading() { return _preloadingResources; }
 	bool ready() { return _bootReady; }
+	void setSlowBoot(bool v) { _slowBoot = v; }
 };
 

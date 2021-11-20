@@ -8,7 +8,10 @@
 #include "entity/entity.h"
 #include "entity/entity_parser.h"
 #include "render/render_module.h"
+#include "ui/ui_module.h"
+#include "ui/ui_widget.h"
 #include "modules/module_events.h"
+#include "components/controllers/comp_pawn_controller.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_collider.h"
@@ -55,6 +58,12 @@ void TCompGameManager::load(const json& j, TEntityParseContext& ctx)
 void TCompGameManager::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 {
 	registerTriggerAreaEvents();
+}
+
+void TCompGameManager::toLoading()
+{
+	CModuleManager& modules = CEngine::get().getModuleManager();
+	modules.changeToGamestate("loading");
 }
 
 void TCompGameManager::update(float dt)
@@ -173,11 +182,6 @@ void TCompGameManager::restartLevel()
 			h_player_trans->setRotation(h_start_trans->getRotation());
 		}
 	}
-}
-
-bool TCompGameManager::isGardKilled()
-{
-	return bosses_states["Gard"].is_dead;
 }
 
 void TCompGameManager::respawnLevel()
@@ -392,9 +396,8 @@ void TCompGameManager::onEonHasDied(const TMsgEonHasDied& msg)
 
 	notifyEonDeath(true);
 
-	// Allow revival
-	TMsgEonRevive msgEonRevive;
-	player->sendMsg(msgEonRevive);
+	TCompPawnController* pawn = player->get<TCompPawnController>();
+	pawn->resetSpeedMultiplier();
 
 	// Remove motion blur if needed (slow debuff)
 	CEntity* camera = getEntityByName("camera_mixed");
@@ -403,6 +406,10 @@ void TCompGameManager::onEonHasDied(const TMsgEonHasDied& msg)
 	if (c_motion_blur && c_motion_blur->isEnabled()) {
 		c_motion_blur->disable();
 	}
+
+	// Allow revival
+	TMsgEonRevive msgEonRevive;
+	player->sendMsg(msgEonRevive);
 
 	// FMOD event
 	EngineAudio.setGlobalRTPC("Eon_Dead", 1.f);

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "mcv_platform.h"
 #include "components/common/comp_base.h"
 
