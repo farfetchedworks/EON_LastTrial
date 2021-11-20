@@ -48,13 +48,13 @@ void TCompAudioEmitter::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 void TCompAudioEmitter::update(float dt)
 {
 	// Update emitter world position
-	if (event_inst == nullptr)
+	if (event_inst == nullptr || !h_cache_transform.isValid())
 		return;
 
 	TCompTransform* t = h_cache_transform;
 
 	// If the emitter is sensitive to occlusion/obstruction
-	if (updates_occl) {
+	if (updates_occl && h_cache_player_transform.isValid()) {
 		TCompTransform* player_t = h_cache_player_transform;
 		bool occluded = TaskUtils::hasObstaclesToEon(t, player_t, false, CModulePhysics::FilterGroup::Scenario);
 

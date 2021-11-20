@@ -4,6 +4,7 @@
 #include "ui/widgets/ui_button.h"
 #include "input/input_module.h"
 #include "engine.h"
+#include "audio/module_audio.h"
 
 namespace ui
 {
@@ -65,6 +66,9 @@ namespace ui
 
     void CMenuController::selectOption(int idx)
     {
+        if (idx == _currentOption)
+            return;
+
         if (idx < 0 || idx >= _options.size())
         {
             for (auto& option : _options)
@@ -81,6 +85,9 @@ namespace ui
 
         _options.at(idx).button->changeToState("selected");
         _currentOption = idx;
+
+        // FMOD hover event
+        EngineAudio.postEvent("UI/Hover");
     }
 
     void CMenuController::highlightOption()
@@ -89,6 +96,12 @@ namespace ui
             return;
 
         _options.at(_currentOption).button->changeToState("pressed");
+
+
+        if (_currentOption == 0)
+            EngineAudio.postEvent("UI/Start_Game");
+        else
+            EngineAudio.postEvent("UI/Enter");
     }
 
     void CMenuController::confirmOption()
@@ -114,6 +127,7 @@ namespace ui
             selectOption(hoveredButton);
             isHoverButton = hoveredButton != -1;
         }
+
     }
 
     int CMenuController::getButton(VEC2 mouse_pos)
