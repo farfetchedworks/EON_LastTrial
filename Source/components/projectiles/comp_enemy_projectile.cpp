@@ -2,6 +2,7 @@
 #include "engine.h"
 #include "components/projectiles/comp_enemy_projectile.h"
 #include "components/common/comp_transform.h"
+#include "components/common/comp_parent.h"
 #include "modules/module_physics.h"
 #include "lua/module_scripting.h"
 #include "entity/entity_parser.h"
@@ -67,12 +68,35 @@ void TCompEnemyProjectile::update(float dt)
 	// Apply the speed multiplier to the dt if the object is affected by area delay
 	dt *= speed_multiplier;			
 
-	move(dt);
+	if (!has_hit) {
+		move(dt);
+	}
 
 	// Scale projectile
-	{
-		TCompTransform* c_transform = projectile_transform;
-		c_transform->setScale(initial_scale * clampf(powf(current_time, 0.15f), 0.2f, 1.f));
+
+	TCompTransform* c_transform = projectile_transform;
+	if (current_time < 0.5f) {
+		c_transform->setScale(c_transform->getScale() + VEC3(dt) * initial_scale * 2);
+	}
+	else
+	if (current_time >= lifetime - 0.5) {
+
+		VEC3 scale = c_transform->getScale() - VEC3(dt) * initial_scale * 5;
+		scale.Clamp(VEC3(0.0f), VEC3(1.0f));
+		c_transform->setScale(scale);
+
+		TCompParent* c_parent = get<TCompParent>();
+
+		// Stop spawning particles
+		for (auto child : c_parent->children) {
+			CEntity* child_entity = child;
+			TCompBuffers* buffers = child_entity->get<TCompBuffers>();
+			if (!buffers) continue;
+
+			CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte< CtesParticleSystem >*>(buffers->getCteByName("CtesParticleSystem"));
+			cte->emitter_num_particles_per_spawn = 0;
+			cte->updateFromCPU();
+		}
 	}
 
 	// Destroy projectile after a certain time if it didn't hit anything
@@ -136,8 +160,9 @@ void TCompEnemyProjectile::onHitObject(const TMsgEntityOnContact& msg)
 	}
 
 	// Destroy projectile when it hits anything
-	destroy();
-
+	//destroy();
+	current_time = lifetime - 0.5;
+	has_hit = true;
 }
 
 void TCompEnemyProjectile::destroy()
