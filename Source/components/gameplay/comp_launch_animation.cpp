@@ -1,6 +1,5 @@
 #include "mcv_platform.h"
 #include "engine.h"
-#include "handle/handle.h"
 #include "modules/module_physics.h"
 #include "modules/game/module_player_interaction.h"
 #include "comp_launch_animation.h"

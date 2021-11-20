@@ -8,6 +8,8 @@
 #include "entity/entity.h"
 #include "entity/entity_parser.h"
 #include "render/render_module.h"
+#include "ui/ui_module.h"
+#include "ui/ui_widget.h"
 #include "modules/module_events.h"
 #include "components/controllers/comp_pawn_controller.h"
 #include "components/cameras/comp_camera_follow.h"
@@ -56,6 +58,12 @@ void TCompGameManager::load(const json& j, TEntityParseContext& ctx)
 void TCompGameManager::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 {
 	registerTriggerAreaEvents();
+}
+
+void TCompGameManager::toLoading()
+{
+	CModuleManager& modules = CEngine::get().getModuleManager();
+	modules.changeToGamestate("loading");
 }
 
 void TCompGameManager::update(float dt)
@@ -174,11 +182,6 @@ void TCompGameManager::restartLevel()
 			h_player_trans->setRotation(h_start_trans->getRotation());
 		}
 	}
-}
-
-bool TCompGameManager::isGardKilled()
-{
-	return bosses_states["Gard"].is_dead;
 }
 
 void TCompGameManager::respawnLevel()

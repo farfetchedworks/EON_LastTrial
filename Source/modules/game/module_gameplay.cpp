@@ -51,6 +51,7 @@ bool ModuleEONGameplay::start()
 	}
 
 	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
+	mixer.setEnabled(true);
 	mixer.setOutputCamera(getEntityByName("camera_mixed"));
 	EngineRender.setActiveCamera(getEntityByName("camera_mixed"));
 

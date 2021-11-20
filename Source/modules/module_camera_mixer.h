@@ -21,6 +21,7 @@ public:
     bool start() override;
     void stop() override;
     void update(float delta) override;
+    void setEnabled(bool v) { _enabled = v; };
     void renderInMenu() override;
 
     void blendCamera(const std::string& cameraName, float blendTime = 0.f, const interpolators::IInterpolator* interpolator = nullptr);
