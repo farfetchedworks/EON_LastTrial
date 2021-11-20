@@ -5,7 +5,7 @@
 #include "components/messages.h"
 #include "render/gpu_culling_module.h"
 
-#define USE_LOAD_THREAD
+// #define USE_LOAD_THREAD
 
 extern CShaderCte<CtesWorld> cte_world;
 const int MAX_ENTRIES = 32;
