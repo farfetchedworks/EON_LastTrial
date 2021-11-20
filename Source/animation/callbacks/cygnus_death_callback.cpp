@@ -11,6 +11,7 @@
 #include "entity/entity_parser.h"
 #include "lua/module_scripting.h"
 #include "bt/task_utils.h"
+#include "ui/ui_module.h"
 
 struct onCygnusDeathCallback : public CAnimationCallback
 {
@@ -48,6 +49,7 @@ struct onCygnusDeathCallback : public CAnimationCallback
 		t.setPosition(hole_pos);
 		spawn("data/prefabs/eter.json", t);
 
+		EngineUI.deactivateWidget("boss_life_bar");
 	}
 };
 
