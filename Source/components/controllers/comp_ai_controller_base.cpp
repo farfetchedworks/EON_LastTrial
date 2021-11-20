@@ -36,10 +36,16 @@ void TCompAIControllerBase::load(const json& j, TEntityParseContext& ctx)
 
 void TCompAIControllerBase::update(float dt)
 {
-    TCompPawnController::update(dt * speed_multiplier);
+    // TCompPawnController::update(dt * speed_multiplier);
 
     TCompTransform* t = get<TCompTransform>();
     assert(t);
+
+    TCompPawnController* controller = get<TCompPawnController>();
+
+    if (controller) {
+        dt *= controller->speed_multiplier;
+    }
 
     // Only rotate when necessary
     if (has_to_rotate) {

@@ -77,7 +77,7 @@ namespace LogicManager
 		CameraMixer.blendCamera("camera_cinematic", lerp_time, &interpolators::cubicInOutInterpolator);
 	}
 
-	void startCinematicAnimation(const std::string& animation_filename, const std::string& target_name, float speed, float lerp_time, bool is_static, const std::string& bone_name)
+	void startCinematicAnimation(const std::string& animation_filename, const std::string& target_name, float speed, float lerp_time, const std::string& bone_name)
 	{
 		assert(!animation_filename.empty());
 		CEntity* e_target = getEntityByName(target_name);
@@ -97,10 +97,10 @@ namespace LogicManager
 		TCompRigidAnimationController* controller = e_cinematic_camera->get<TCompRigidAnimationController>();
 		assert(controller);
 		controller->setTarget(target_name);
-		controller->setAnimation("data/animations/" + animation_filename);
 		controller->setTargetBone(bone_name);
-		controller->setStatic(is_static);
+		controller->setStatic(false);
 		controller->setSpeed(speed);
+		controller->setAnimation("data/animations/" + animation_filename);
 		controller->start();
 
 		CameraMixer.blendCamera("camera_cinematic", lerp_time, &interpolators::cubicInOutInterpolator);

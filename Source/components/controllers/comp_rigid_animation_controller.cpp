@@ -47,6 +47,7 @@ void TCompRigidAnimationController::load(const json& j, TEntityParseContext& ctx
 	frame_start = j.value("frame_start", frame_start);
 	loop = j.value("loop", loop);
 	dynamic = j.value("dynamic", dynamic);
+	attached = j.value("attached", attached);
 	autoplay = j.value("autoplay", autoplay);
 	animate_prefabs = j.value("animate_prefabs", animate_prefabs);
 	cinematic_animation = j.value("cinematic_animation", cinematic_animation);
@@ -124,8 +125,19 @@ void TCompRigidAnimationController::update(float delta_time)
 		for (auto& o : t.objs) {
 			if (strcmp(t.core_track->property_name, "transform") != 0)
 				continue;
-			CEntity* player = getEntityByName("player");
-			TCompTransform* transform = player->get<TCompTransform>();
+
+			TCompTransform* transform = nullptr;
+
+			if (attached)
+			{
+				CEntity* player = getEntityByName("player");
+				transform = player->get<TCompTransform>();
+			}
+			else
+			{
+				transform = o.handle;
+			}
+
 			o.initial_pose.fromMatrix(*transform);
 		}
 	}

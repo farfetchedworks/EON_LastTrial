@@ -10,6 +10,7 @@
 #include "components/gameplay/comp_shrine.h"
 #include "components/gameplay/comp_launch_animation.h"
 #include "components/gameplay/comp_energy_wall.h"
+#include "components/gameplay/comp_npc.h"
 #include "components/controllers/comp_player_controller.h"
 #include "components/messages.h"
 #include "ui/ui_module.h"
@@ -41,20 +42,25 @@ void CModulePlayerInteraction::checkInteractions()
 	}
 
 	TCompTransform* c_transform = player->get<TCompTransform>();
-	VEC3 overlap_pos = c_transform->getPosition() + c_transform->getForward();
+	VEC3 overlap_pos = c_transform->getPosition();
 
 	VHandles objects_in_area;
-	bool is_ok = EnginePhysics.overlapSphere(overlap_pos, 1.f, objects_in_area, CModulePhysics::FilterGroup::Interactable);
+	bool is_ok = EnginePhysics.overlapSphere(overlap_pos, 3.f, objects_in_area, CModulePhysics::FilterGroup::Interactable);
 	if (is_ok) {
+
 		// Animation launcher can only be executed if at certain distance
 		TCompCollider* c_collider = objects_in_area[0];
 		CEntity* e_interactable = c_collider->getEntity();
 		TCompLaunchAnimation* c_animation = e_interactable->get<TCompLaunchAnimation>();
 		TCompShrine* c_shrine = e_interactable->get<TCompShrine>();
+		TCompNPC* c_npc = e_interactable->get<TCompNPC>();
+
 		if (c_animation)
 			is_ok &= c_animation->resolve();
 		else if(c_shrine)
 			is_ok &= c_shrine->resolve();
+		else if (c_npc)
+			is_ok &= c_npc->resolve();
 
 		if (is_ok) {
 			auto w = EngineUI.getWidget("eon_interact");
@@ -62,15 +68,17 @@ void CModulePlayerInteraction::checkInteractions()
 			CEntity* e_camera = EngineRender.getActiveCamera();
 			TCompCamera* cam = e_camera->get<TCompCamera>();
 
-			// Set 3D position: interactable pos at player's height + 1.5
 			VEC3 posUI = e_interactable->getPosition();
+			posUI.y = c_transform->getPosition().y + 1.5f;
 
 			if (c_animation)
 				posUI += c_animation->getOffset();
 			else if (c_shrine)
 				posUI += c_shrine->getOffset();
+			else if (c_npc)
+				posUI += VEC3(0, 0.5f, 0);
 
-			posUI.y = c_transform->getPosition().y + 1.5f;
+			// Set 3D position: interactable pos at player's height + 1.5
 			w->setPosition(cam->project(posUI, EngineUI.getResolution()));
 
 			if (PlayerInput["interact"].getsPressed()) {
@@ -90,10 +98,12 @@ void CModulePlayerInteraction::interact(CHandle object)
 	CEntity* player = h_player;
 	TCompPlayerController* controller = player->get<TCompPlayerController>();
 
-	// Currently it can interact with only one interactable. If there is more than one, they must be stacked and the player must be able to choose with which one it interacts
-	// Send a message to the interactable
+	// Currently it can interact with only one interactable. 
+	// If there is more than one, they must be stacked and the player must 
+	// be able to choose with which one it interacts
 	TCompCollider* c_collider = object;
 	CEntity* e_interactable = c_collider->getEntity();
+	// Send a message to the interactable
 	e_interactable->sendMsg(TMsgEonInteracted({ player }));
 
 	// Remove lock on when interacting with something
@@ -102,6 +112,7 @@ void CModulePlayerInteraction::interact(CHandle object)
 	TCompShrine* c_shrine = e_interactable->get<TCompShrine>();
 	TCompEnergyWall* c_energyWall = e_interactable->get<TCompEnergyWall>();
 	TCompLaunchAnimation* c_animation = e_interactable->get<TCompLaunchAnimation>();
+	TCompNPC* c_npc = e_interactable->get<TCompNPC>();
 
 	if (c_shrine) {
 		setLastShrine(object.getOwner());
@@ -112,6 +123,9 @@ void CModulePlayerInteraction::interact(CHandle object)
 	}
 	else if (c_animation) {
 		c_animation->launch();
+	}
+	else if (c_npc) {
+		c_npc->interact();
 	}
 	else {
 		controller->setVariable("is_interacting", true);

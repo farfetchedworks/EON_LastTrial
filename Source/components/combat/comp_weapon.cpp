@@ -7,6 +7,7 @@
 #include "components/common/comp_transform.h"
 #include "components/controllers/pawn_utils.h"
 #include "components/gameplay/comp_destructible_prop.h"
+#include "components/gameplay/comp_aether.h"
 #include "components/common/comp_hierarchy.h"
 #include "components/controllers/comp_player_controller.h"
 #include "modules/module_physics.h"
@@ -39,11 +40,17 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
     CEntity* eParent = parent;
 
     TCompDestructible* destructible = eHit->get<TCompDestructible>();
-    if (destructible) {
+    TCompAether* aether = eHit->get<TCompAether>();
+    if (destructible) 
+    {
         TCompTransform* ownerTransform = eParent->get<TCompTransform>();
         TMsgPropDestroyed msg;
         msg.direction = ownerTransform->getForward();
         eHit->sendMsg(msg);
+    }
+    else if (aether) 
+    {
+        aether->onHit();
     }
     else {
 

@@ -1472,7 +1472,7 @@ public:
 			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
 			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
 			CTransform& t = socket->getLocalTransform();
-			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.5f), 8.f, dt));
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.35f), 8.f, dt));
 		};
 
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
@@ -2095,6 +2095,12 @@ public:
 		ctx.setFSMVariable("phase_number", phase_num);
 		ctx.getBlackboard()->setValue<int>("phaseNumber", phase_num);
 
+		// Always remove emissive pinxos on phase change
+		CEntity* owner = ctx.getOwnerEntity();
+		TCompEmissiveMod* mod = owner->get<TCompEmissiveMod>();
+		if (mod)
+			mod->blendOut();
+
 		if (phase_num == 3)
 		{
 			CEntity* e = ctx.getOwnerEntity();
@@ -2153,11 +2159,19 @@ public:
 				return;
 			}
 
+			// Attract particles
 			CEntity* e_attract_particles = h_attract_particles;
 			TCompBuffers* c_buff = e_attract_particles->get<TCompBuffers>();
 			CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte<CtesParticleSystem>*>(c_buff->getCteByName("CtesParticleSystem"));
 			cte->emitter_initial_pos = black_hole_pos;
 			cte->updateFromCPU();
+
+			// Scale black hole
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.6f), 4.f, dt));
 		};
 
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
@@ -2238,7 +2252,7 @@ public:
 			CEntity* e_beam = h_beam;
 			TCompTransform* c_trans = e_beam->get<TCompTransform>();
 			c_trans->lookAt(black_hole_pos, beam_target, VEC3::Up);
-			c_trans->setScale(c_trans->getScale() - 0.1 * VEC3(dt, dt, 0));
+			c_trans->setScale(c_trans->getScale() - 0.1f * VEC3(dt, dt, 0));
 
 			VEC3 raydir = (beam_target - black_hole_pos);
 			raydir.Normalize();
@@ -2258,6 +2272,16 @@ public:
 			h_beam.destroy();
 
 			ctx.setNodeVariable(name, "allow_aborts", true);
+		};
+
+		callbacks.onRecovery = [&](CBTContext& ctx, float dt)
+		{
+			// Scale black hole
+			TCompParent* parent = ctx.getComponent<TCompParent>();
+			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
+			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
+			CTransform& t = socket->getLocalTransform();
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.16f), 8.f, dt));
 		};
 	}
 
@@ -2381,26 +2405,8 @@ public:
 	void init() override {}
 
 	void onEnter(CBTContext& ctx) override {
-		//TaskUtils::resumeAction(ctx, name);
 		ctx.setIsDying(true);
-
-		//CEntity* player = getPlayer();
-		//CEntity* e = ctx.getOwnerEntity();
-		//TCompTransform* transform = e->get<TCompTransform>();
-		//spawn("data/prefabs/black_hole_cygnus.json", *transform);
-
-		// Get Form 1 info
-		//CTransform t;
-		//t.fromMatrix(*transform);
-		//float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		//t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
-
-		// Destroy form 1 entity
-		//ctx.getOwnerEntity().destroy();
-		//CHandleManager::destroyAllPendingObjects();
-
-		// Intro form 2
-		//EngineLua.executeScript("CinematicCygnusF1ToF2()");
+		EngineLua.executeScript("CinematicCygnusDeath()");
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {

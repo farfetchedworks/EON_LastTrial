@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{239bdb9e-3199-43bc-aefe-2bf6f0cd02d7}">
+		<property name="name">
+			<value>UNUSED_Eon_Inside_Temple</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{2d3a0ed4-1021-4eeb-8386-d7bccf9326dc}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{2d3a0ed4-1021-4eeb-8386-d7bccf9326dc}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.32999998331069946</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

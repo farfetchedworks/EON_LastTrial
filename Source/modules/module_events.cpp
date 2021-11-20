@@ -161,11 +161,12 @@ void CModuleEventSystem::registerGlobalEvents()
 		{
 			CEntity* child = h;
 			TCompAttachedToBone* socket = child->get<TCompAttachedToBone>();
+			if (!socket)
+				continue;
 			socket->detach();
 			TCompRigidAnimationController * controller = child->get<TCompRigidAnimationController>();
-			if (!controller)
-				continue;
-			controller->start();
+			if (controller)
+				controller->start();
 		}
 	});
 
@@ -179,11 +180,12 @@ void CModuleEventSystem::registerGlobalEvents()
 		{
 			CEntity* child = h;
 			TCompAttachedToBone* socket = child->get<TCompAttachedToBone>();
+			if (!socket)
+				continue;
 			socket->attach();
 			TCompRigidAnimationController* controller = child->get<TCompRigidAnimationController>();
-			if (!controller)
-				continue;
-			controller->stop();
+			if (controller)
+				controller->stop();
 		}
 	});
 
@@ -227,7 +229,7 @@ void CModuleEventSystem::registerGlobalEvents()
 		CEntity* owner = t;
 		assert(owner);
 		TCompTransform* c_trans = owner->get<TCompTransform>();
-		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6, c_trans->getPosition());
+		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
 	});
 }
 
