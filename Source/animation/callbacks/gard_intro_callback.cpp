@@ -32,7 +32,7 @@ struct onGardIntro : public CAnimationCallback
 		// Show health bar
 		TCompHealth* c_health = e_owner->get<TCompHealth>();
 		c_health->setHealth(c_health->getMaxHealth());
-		c_health->setRenderActive(true);
+		c_health->setRenderActive(true, "gard");
 
 		CEntity* player = getEntityByName("player");
 		TCompCollider* c_collider = player->get<TCompCollider>();

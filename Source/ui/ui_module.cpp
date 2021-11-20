@@ -76,11 +76,11 @@ namespace ui
         _fadingWidgets.push_back(fwidget);
     }
 
-    void CModule::activateWidget(const std::string& name, bool fade_in)
+    CWidget* CModule::activateWidget(const std::string& name, bool fade_in)
     {
         CWidget* widget = getWidget(name);
         assert(widget);
-        if(!widget || widget->isActive()) return;
+        if(!widget || widget->isActive()) return nullptr;
 
         if (fade_in && widget->hasEffect("Fade In")) {
             widget->setState(EState::STATE_IN);
@@ -94,6 +94,7 @@ namespace ui
         
         _activeWidgets.push_back(widget);
         widget->setActive(true);
+        return widget;
     }
 
     void CModule::deactivateWidget(const std::string& name, bool fade_out)
@@ -398,7 +399,10 @@ namespace ui
                     bool isActive = widget->isActive();
                     if (ImGui::Checkbox("Active", &isActive))
                     {
-                        isActive ? activateWidget(name) : deactivateWidget(name);
+                        if (isActive)
+                            activateWidget(name);
+                        else
+                            deactivateWidget(name);
                     }
 
                     widget->renderInMenuRecursive();

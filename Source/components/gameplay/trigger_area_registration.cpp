@@ -19,7 +19,6 @@
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
-#include "ui/ui_module.h"
 
 #define PLAY_CINEMATICS true
 
@@ -119,8 +118,6 @@ public:
 
 		// Cinematics
 		EngineLua.executeScript("CinematicGardPresentation()");
-
-		EngineUI.activateWidget("boss_life_bar");
 	}
 };
 
@@ -145,8 +142,6 @@ public:
 		CEntity* e_eon = getEntityByName("player");
 		TCompMusicInteractor* h_mus_int = e_eon->get<TCompMusicInteractor>();
 		h_mus_int->setEnabled(false);
-
-		EngineUI.activateWidget("boss_life_bar");
 
 #if PLAY_CINEMATICS
 		CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");

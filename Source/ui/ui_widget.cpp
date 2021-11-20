@@ -219,6 +219,10 @@ namespace ui
         {
             if (child->getName() == name)
                 return child;
+
+            CWidget* w = child->getChildByName(name);
+            if (w)
+                return w;
         }
 
         return nullptr;
