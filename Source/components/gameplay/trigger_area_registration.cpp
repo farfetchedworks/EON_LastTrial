@@ -181,7 +181,7 @@ public:
 		TCompHealth* c_health = e_cygnus->get<TCompHealth>();
 		assert(c_health);
 		c_health->setHealth(c_health->getMaxHealth());
-		c_health->setRenderActive(true);
+		c_health->setRenderActive(true, "cygnus");
 #endif
 	}
 };
