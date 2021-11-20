@@ -40,6 +40,8 @@ struct onCygnusDeathCallback : public CAnimationCallback
 		if (c_health->checkDeathAnimationCompleted())
 			return;
 
+		c_health->setRenderActive(false);
+
 		TCompParent* parent = e_owner->get<TCompParent>();
 		CEntity* hole = parent->getChildByName("Cygnus_black_hole");
 		VEC3 hole_pos = hole->getPosition();
@@ -48,8 +50,6 @@ struct onCygnusDeathCallback : public CAnimationCallback
 		CTransform t;
 		t.setPosition(hole_pos);
 		spawn("data/prefabs/eter.json", t);
-
-		EngineUI.deactivateWidget("boss_life_bar");
 	}
 };
 

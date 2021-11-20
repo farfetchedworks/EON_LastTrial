@@ -55,7 +55,7 @@ struct onCygnusF1Intro : public CAnimationCallback
 
 		// Show health bar
 		TCompHealth* c_health = e_owner->get<TCompHealth>();
-		c_health->setRenderActive(true);
+		c_health->setRenderActive(true, "cygnus");
 	}
 };
 

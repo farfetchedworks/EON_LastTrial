@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.01.00">
-	<object class="AudioFile" id="{7a90ba33-68ee-40f4-a06e-5aeda170c59f}">
+	<object class="AudioFile" id="{6b7ef56b-ae34-4632-a884-81272283366e}">
 		<property name="assetPath">
-			<value>UI/SFX_Enter-001.wav</value>
+			<value>VO/Subtitles/VO_7_8.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
@@ -11,7 +14,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>3.600702947845805</value>
+			<value>12.9</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{f8b2a622-7d6e-4c03-8a9c-627e577ec451}</destination>

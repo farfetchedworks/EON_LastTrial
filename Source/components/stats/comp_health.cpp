@@ -61,7 +61,6 @@ void TCompHealth::update(float dt)
     if (!is_player && !is_boss)
         return;
 
-    // Update UI for PLAYER
     ui::CWidget* w = EngineUI.getWidgetFrom(is_player ? "eon_hud" : "boss_life_bar", "life_bar");
     assert(w);
     
@@ -168,6 +167,27 @@ void TCompHealth::onReduceHealth(const TMsgReduceHealth& msg)
     }
 }
 
+void TCompHealth::setRenderActive(bool active, const std::string& boss_name)
+{
+    render_active = active;
+
+    if (!is_boss)
+        return;
+
+    if (render_active)
+    {
+        assert(boss_name.length() && "No boss name texture");
+        EngineUI.activateWidget("boss_life_bar");
+        ui::CWidget* boss_name_ui = EngineUI.getWidget("boss_name");
+        std::string path = "data/textures/ui/subvert/HUD/enemies/" + std::string(boss_name) + ".dds";
+        boss_name_ui->getImageParams()->texture = Resources.get(path)->as<CTexture>();
+    }
+    else
+    {
+        EngineUI.deactivateWidget("boss_life_bar");
+    }
+}
+
 void TCompHealth::setHealth(int value)
 {
     health = value;
@@ -237,7 +257,7 @@ void TCompHealth::renderDebug() {
     TCompName* c_name = get<TCompName>();
 
     float pct = health / (float)max_health;
-    Color clr = pct > 0.333 ? (pct > 0.666 ? Colors::Green : Colors::Orange) : Colors::Red;
+    Color clr = pct > 0.333f ? (pct > 0.666f ? Colors::Green : Colors::Orange) : Colors::Red;
 
     if (!is_boss && !is_player)
     {

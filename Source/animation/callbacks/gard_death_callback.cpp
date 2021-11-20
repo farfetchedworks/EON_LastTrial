@@ -64,13 +64,6 @@ struct onGardDeathCallback : public CAnimationCallback
 			}
 		}
 
-		// TCompGameManager* c_game_mgr = e_game_manager->get<TCompGameManager>();
-		//ui::CText* w_txt_message = (ui::CText*) EngineUI.getWidget("txt_message");
-		//w_txt_message->textParams.text = c_game_mgr->ui_messages["area_unlocked"];
-		//if (!EngineUI.getWidget("eon_message")->isActive()) {
-		//	EngineUI.activateWidget("eon_message");
-		//}
-
 		// Spawn floor particles and geons
 		{
 			VEC3 spawnPos = e_owner->getPosition() + e_owner->getForward() * 3;
@@ -94,8 +87,6 @@ struct onGardDeathCallback : public CAnimationCallback
 		{
 			EngineNavMesh.setCurrent("templelevel");
 		}
-
-		EngineUI.deactivateWidget("boss_life_bar");
 	}
 };
 

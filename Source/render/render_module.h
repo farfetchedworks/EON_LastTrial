@@ -25,6 +25,9 @@ class CRenderModule : public IModule
     void setActiveCamera(CHandle hCamera) { _activeCamera = hCamera; }
     void generateFrame();
 
+    bool useDayAmbient() { return _useDayAmbient; };
+    void setUseDayAmbient(bool v) { _useDayAmbient = v; };
+
     CRenderToTexture* getFinalRT() { return rt_final; };
     CHandle getActiveCamera() const { return _activeCamera; }
     void activateMainCamera();
@@ -42,6 +45,8 @@ class CRenderModule : public IModule
     void loadPipelines();
     void loadComputeShaders();
     void generateShadowMaps();
+
+    bool _useDayAmbient = false;
 
     Color _clearColor;
     CHandle _activeCamera;

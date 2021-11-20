@@ -64,7 +64,7 @@ struct onCygnusF1ToF2 : public CAnimationCallback
 
 		// Show health bar
 		TCompHealth* c_health = e_owner->get<TCompHealth>();
-		c_health->setRenderActive(true);
+		c_health->setRenderActive(true, "cygnus");
 
 		// Destroy Black Hole
 		CEntity* bhole = getEntityByName("Cygnus_Black_Hole");

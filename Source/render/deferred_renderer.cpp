@@ -128,7 +128,8 @@ void CDeferredRenderer::renderGBuffer() {
 void CDeferredRenderer::renderAmbientPass() {
 	if (irradiance_cache) return;
 	CGpuScope gpu_scope("renderAmbientPass");
-	drawFullScreenQuad("pbr_ambient.pipeline", nullptr);
+	drawFullScreenQuad(EngineRender.useDayAmbient() ? 
+		"pbr_ambient_day.pipeline" : "pbr_ambient.pipeline", nullptr);
 }
 
 // -----------------------------------------------------------------

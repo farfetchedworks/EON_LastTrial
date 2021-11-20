@@ -23,8 +23,8 @@
 	<object class="MixerBusPanner" id="{9d23474a-cbcd-43c8-9258-c4a071c07b7f}" />
 	<object class="MixerBusFader" id="{7067af06-da99-4ada-936f-bedd704e58ce}" />
 	<object class="MixerSend" id="{400f27c4-d21b-4b0b-8f9b-41401a731826}">
-		<property name="level">
-			<value>-3</value>
+		<property name="bypass">
+			<value>true</value>
 		</property>
 		<property name="inputFormat">
 			<value>1</value>

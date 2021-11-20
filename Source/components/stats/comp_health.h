@@ -51,7 +51,7 @@ public:
     const int getMaxHealth() const { return max_health; }
     const float getHealthPercentage() const { return (float)health / (float)max_health; }
 
-    void setRenderActive(bool active) { render_active = active; }
+    void setRenderActive(bool active, const std::string& boss_name = std::string());
     void setCurrMaxHealth(int value) { curr_max_health = value; }
     void setHealth(int value);
 
