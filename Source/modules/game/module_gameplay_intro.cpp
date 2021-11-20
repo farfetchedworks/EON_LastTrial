@@ -25,6 +25,10 @@ bool ModuleEONGameplayIntro::customStart()
 	Boot.setSlowBoot(true);
 	Boot.customStart();
 
+	// Set initial mouse state
+	debugging = false;
+	CApplication::get().changeMouseState(debugging, false);
+
 	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
 	mixer.setOutputCamera(getEntityByName("camera_cinematic"));
 	EngineRender.setActiveCamera(getEntityByName("camera_cinematic"));
@@ -62,7 +66,7 @@ void ModuleEONGameplayIntro::update(float dt)
 		return;
 	}
 		
-	if (PlayerInput['C'].getsPressed()) {
+	if (CEngine::get().getInput(input::MENU)->getButton("interact").getsPressed()) {
 		EngineLua.executeScript("stopCinematic(1.0)");
 	}
 
