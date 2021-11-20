@@ -134,8 +134,7 @@ public:
 	void respawnLevel();
 	void respawnEnemies();
 	void restartLevel();
-
-	bool isGardKilled();
+	void toLoading();
 
 	bool		isEonDied() const { return eonHasDied; };
 	float		getTimeScaleFactor() const { return 1.0f; };

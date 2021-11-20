@@ -47,7 +47,7 @@ void ModuleEONMainMenu::update(float dt)
 void ModuleEONMainMenu::onNewGame()
 {
     CModuleManager& modules = CEngine::get().getModuleManager();
-    modules.changeToGamestate("loading");
+    modules.changeToGamestate("intro");
 }
 
 void ModuleEONMainMenu::onExit()

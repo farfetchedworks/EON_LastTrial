@@ -483,7 +483,7 @@ void CRenderModule::generateFrame()
 	// Give an opportunity to all the modules to render something
 	CModuleManager& modules = CEngine::get().getModuleManager();
 
-	if (modules.inGamestate("playing"))
+	if (modules.inGamestate("playing") || modules.inGamestate("intro"))
 	{
 		renderAll();
 		modules.render();

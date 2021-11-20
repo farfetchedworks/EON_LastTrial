@@ -159,5 +159,6 @@ public:
   // ---------------------------------------------------------------
   void addToRender(CHandle h_prefab, const AABB aabb, const MAT44 world);
   void run();
+  void reset();
   void renderAll(eRenderChannel render_channel);
 };

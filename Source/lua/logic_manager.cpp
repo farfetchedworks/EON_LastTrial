@@ -152,7 +152,18 @@ namespace LogicManager
 			controller->stop();
 		}
 
-		CameraMixer.blendCamera("camera_follow", lerp_time, &interpolators::cubicInOutInterpolator);
+		CModuleManager& modules = CEngine::get().getModuleManager();
+
+		if (modules.inGamestate("intro"))
+		{
+			// This is after the intro cinematic..
+			TCompGameManager* gm = GameManager->get<TCompGameManager>();
+			gm->toLoading();
+		}
+		else
+		{
+			CameraMixer.blendCamera("camera_follow", lerp_time, &interpolators::cubicInOutInterpolator);
+		}
 	}
 
 	void setCinematicCurve(const std::string& curve_filename, float curve_speed, float lerp_time)
