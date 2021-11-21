@@ -592,5 +592,8 @@
 		<property name="value">
 			<value>0</value>
 		</property>
+		<property name="curveShape">
+			<value>0.49938783</value>
+		</property>
 	</object>
 </objects>

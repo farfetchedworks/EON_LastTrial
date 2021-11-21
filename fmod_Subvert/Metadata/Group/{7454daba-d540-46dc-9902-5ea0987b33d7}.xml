@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{7454daba-d540-46dc-9902-5ea0987b33d7}">
 		<property name="volume">
-			<value>-8.5</value>
+			<value>-6</value>
 		</property>
 		<property name="name">
 			<value>CHA_Cygnus_DMG</value>

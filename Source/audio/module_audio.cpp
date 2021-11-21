@@ -395,6 +395,10 @@ void CModuleAudio::postMusicEvent(const std::string& event_name)
 	if (areNamesEqual(event_name, cur_mus_event))
 		return;
 
+	// small hack to prevent Cygnus music from being stopped -.-
+	if (areNamesEqual(std::string("Music/Cygnus_Theme"), cur_mus_event))
+		return;
+
 	stopAndRelease(cur_mus_event);
 	cur_mus_event = post2DEventGetInst(event_name);
 }

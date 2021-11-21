@@ -97,12 +97,6 @@ namespace ui
             return;
 
         _options.at(_currentOption).button->changeToState("pressed");
-
-        // FMOD events
-        if (!_options.at(_currentOption).button->getName().compare("start_btn"))
-            EngineAudio.postEvent("UI/Start_Game");
-        else
-            EngineAudio.postEvent("UI/Enter");
     }
 
     void CMenuController::confirmOption()
@@ -113,6 +107,12 @@ namespace ui
         TOption& option = _options.at(_currentOption);
         option.button->changeToState("selected");
         option.callback();
+
+        // FMOD events
+        if (!option.button->getName().compare("start_btn"))
+            EngineAudio.postEvent("UI/Start_Game");
+        else
+            EngineAudio.postEvent("UI/Enter");
     }
 
     void CMenuController::processMouseHover()

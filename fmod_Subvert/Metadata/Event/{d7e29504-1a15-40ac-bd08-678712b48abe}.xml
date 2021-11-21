@@ -82,9 +82,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{4fadffe0-22e3-4682-99d9-3fbc10f20940}">
-		<property name="volume">
-			<value>2</value>
-		</property>
 		<relationship name="effectChain">
 			<destination>{99c8d143-94c5-4e03-a836-548a810e22f4}</destination>
 		</relationship>
@@ -118,7 +115,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{455be152-fa32-4376-9dde-c84259e6a676}">
 		<property name="volume">
-			<value>-2.5</value>
+			<value>-4</value>
 		</property>
 		<property name="name">
 			<value>No voice</value>
@@ -138,7 +135,7 @@
 			<value>true</value>
 		</property>
 		<property name="triggerProbability">
-			<value>40</value>
+			<value>50</value>
 		</property>
 		<property name="length">
 			<value>1.0066458333333332</value>

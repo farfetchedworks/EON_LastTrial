@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{0d56096f-92da-47c4-85d0-6e69f1dc159b}">
 		<property name="volume">
-			<value>-1.5</value>
+			<value>-4.5</value>
 		</property>
 		<property name="name">
 			<value>CHA_Cygnus</value>
@@ -19,9 +19,30 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{894131d5-58da-4cfa-8c51-78690fa1045e}">
 		<relationship name="effects">
+			<destination>{8e7e9a2e-19c4-4f46-a050-a3a5119a14cf}</destination>
+			<destination>{48def32c-2fa2-4a64-a55e-b296c03959ab}</destination>
 			<destination>{9786b3b6-320e-46c2-8854-2119a0b91d73}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{69813988-e7d2-473b-89fa-39ab1506e508}" />
+	<object class="DistortionEffect" id="{8e7e9a2e-19c4-4f46-a050-a3a5119a14cf}">
+		<property name="level">
+			<value>0.164999992</value>
+		</property>
+	</object>
+	<object class="SFXReverbEffect" id="{48def32c-2fa2-4a64-a55e-b296c03959ab}">
+		<property name="decayTime">
+			<value>2300</value>
+		</property>
+		<property name="earlyDelay">
+			<value>46</value>
+		</property>
+		<property name="lateDelay">
+			<value>93</value>
+		</property>
+		<property name="wetLevel">
+			<value>-7.5</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{9786b3b6-320e-46c2-8854-2119a0b91d73}" />
 </objects>
