@@ -65,6 +65,8 @@ CTexture* TCompBloom::generateHighlights(CTexture* in_texture, CTexture* last_te
 	if (!enabled)
 		return in_texture;
 
+	CGpuScope gpu_scope("BLOOM");
+
 	int width = Render.getWidth();
 	int height = Render.getHeight();
 
