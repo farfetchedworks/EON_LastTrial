@@ -2252,11 +2252,14 @@ public:
 			CEntity* e_beam = h_beam;
 			TCompTransform* c_trans = e_beam->get<TCompTransform>();
 			c_trans->lookAt(black_hole_pos, beam_target_dir + black_hole_pos, VEC3::Up);
-			c_trans->setScale(c_trans->getScale() - 0.1f * VEC3(dt, dt, 0));
-
+			
+			// Reduce the scale so that it doesn't cut abruptly
+			VEC3 new_scale = c_trans->getScale() - 0.25f * VEC3(dt, dt, 0);
+			new_scale.Clamp(VEC3::Zero, VEC3::One);
+			c_trans->setScale(new_scale);
 
 			std::vector<physx::PxRaycastHit> raycastHits;
-			if (EnginePhysics.raycast(black_hole_pos + beam_target_dir, beam_target_dir, 20.f, raycastHits, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Characters, true, true)) {
+			if (EnginePhysics.raycast(black_hole_pos + beam_target_dir, beam_target_dir, 20.f, raycastHits, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Characters, true, false)) {
 				VEC3 coll_pos = PXVEC3_TO_VEC3(raycastHits.front().position);
 				VEC3 coll_normal = PXVEC3_TO_VEC3(raycastHits.front().normal);
 				coll_normal.Normalize();

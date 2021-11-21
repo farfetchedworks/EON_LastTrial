@@ -44,6 +44,7 @@ void TCompCygnusBeam::update(float dt)
 
 	CTransform t2;
 	t2.fromMatrix(MAT44::CreateTranslation(offset));
+	t.setScale(VEC3::One);															// Because the scale affects the rotation and affects the physics
 	t = t.combinedWith(t2);
 
 	physx::PxTransform pose = toPxTransform(t);
