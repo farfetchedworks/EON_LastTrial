@@ -1472,7 +1472,7 @@ public:
 			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
 			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
 			CTransform& t = socket->getLocalTransform();
-			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.35f), 8.f, dt));
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.25f), 8.f, dt));
 		};
 
 		callbacks.onActive = [&](CBTContext& ctx, float dt)
@@ -1511,7 +1511,7 @@ public:
 			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
 			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
 			CTransform& t = socket->getLocalTransform();
-			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.16f), 8.f, dt));
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.16f), 12.f, dt));
 		};
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)

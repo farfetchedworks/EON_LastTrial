@@ -69,6 +69,8 @@ bool ModuleEONGameplay::start()
 		// Reactivate UI
 		EngineUI.activateWidget("eon_hud");
 
+		PlayerInput.unBlockInput();
+
 		assert(GameManager);
 		static_cast<TCompGameManager*>(GameManager->get<TCompGameManager>())->restartLevel();
 		return true;
