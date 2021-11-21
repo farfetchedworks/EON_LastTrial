@@ -212,9 +212,6 @@ void TCompGameManager::respawnLevel()
 
 	CHandleManager::destroyAllPendingObjects();
 
-	// FMOD stop all music
-	EngineAudio.stopCurMusicEvent();
-
 	{
 		TEntityParseContext ctx;
 		parseScene("data/scenes/eon.json", ctx);
@@ -261,9 +258,6 @@ void TCompGameManager::respawnLevel()
 			}
 		}
 	}
-
-	// FMOD event
-	EngineAudio.setGlobalRTPC("Eon_Dead", 0.f);
 }
 
 void TCompGameManager::respawnEnemies()
@@ -480,6 +474,14 @@ void TCompGameManager::onBossDead(const TMsgBossDead& msg)
 		// End boss music
 		EngineAudio.setGlobalRTPC("Gard_Phase", 4);
 		boss.music_event->release();
+	}
+	else if (msg.boss_name == "Cygnus") {
+
+		//show_end_game = true;
+		//show_end_game_timer = 10.0f;
+
+		// End boss music
+		EngineAudio.setMusicRTPC("Cygnus_Phase", 4);
 	}
 
 	//CEntity* triggerArea = getEntityByName(boss.trigger_area);
