@@ -24,14 +24,10 @@ bool ModuleEONGameplayIntro::start()
 bool ModuleEONGameplayIntro::customStart()
 {
 	// Tells the boot to load first the intro scenes
-	Boot.setSlowBoot(true);
+	Boot.setIntroBoot(true);
 	Boot.customStart();
 
 	Engine.resetClock();
-
-	// Set initial mouse state
-	debugging = false;
-	CApplication::get().changeMouseState(debugging, false);
 
 	CModuleCameraMixer& mixer = Engine.getCameramixer();
 	mixer.setOutputCamera(getEntityByName("camera_cinematic"));
@@ -42,6 +38,10 @@ bool ModuleEONGameplayIntro::customStart()
 
 	EngineLua.executeScript("CinematicEonIntro()");
 	Subtitles.startCaption("intro_cinematic");
+
+	// Set initial mouse state
+	debugging = false;
+	CApplication::get().changeMouseState(debugging, true);
 
 	started = true;
 

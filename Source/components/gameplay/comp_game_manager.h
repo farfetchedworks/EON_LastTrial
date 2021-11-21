@@ -68,6 +68,7 @@ private:
 
 	ETimeStatus time_status = ETimeStatus::NORMAL;
 	float time_status_timings[ETimeStatus::SIZE] = {};
+	const interpolators::IInterpolator* time_interpolator = nullptr;
 
 	// Used to interpolate time changes
 	ETimeStatus target_time_status = ETimeStatus::NORMAL;
@@ -148,7 +149,8 @@ public:
 	SBossState&   getBossStateByName(const std::string& name);
 
 	void setTimeStatus(ETimeStatus status);
-	void setTimeStatusLerped(ETimeStatus status, float seconds);
+	void setTimeStatusLerped(ETimeStatus status, float seconds, const interpolators::IInterpolator* it = nullptr);
+	void setTimeInterpolator(const interpolators::IInterpolator* it);
 	void setEonDied();
 
 	// DDA methods

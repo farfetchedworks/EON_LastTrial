@@ -79,8 +79,11 @@ struct TCompRigidAnimationController : public TCompBase
 		}
 	};
 
+	std::function<void()> callback = nullptr;
+
 	const TCoreAnimationData* animation_data = nullptr;
 	std::string           animation_src;
+	std::string           fmod_event;
 	std::vector< TTrack > tracks;
 	float                 curr_time = 0.0f;
 	float                 speed_factor = 1.0f;
@@ -101,7 +104,7 @@ struct TCompRigidAnimationController : public TCompBase
 
 	void load(const json& j, TEntityParseContext& ctx);
 	void debugInMenu();
-	void start();
+	void start(std::function<void()> cb = nullptr);
 	void stop();
 	void update(float delta_time);
 	void assignTracksToSceneObjects();

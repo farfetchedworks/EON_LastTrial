@@ -27,9 +27,10 @@ bool ModuleEONYouDied::start()
     _menuController.reset();
     _menuController.selectOption(0);
 
-    // Start title theme
-    // EngineAudio.loadBank("OutOfGame.bank");
-    // EngineAudio.postMusicEvent("Music/Title_Theme");
+    // FMOD
+    EngineAudio.stopCurMusicEvent();
+    EngineAudio.postEvent("UI/YOU_DIED");
+    EngineAudio.setGlobalRTPC("Eon_Dead", 0.f);
 
     return true;
 }

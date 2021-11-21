@@ -9,6 +9,7 @@
 #include "components/abilities/comp_time_reversal.h"
 #include "components/common/comp_collider.h"
 #include "components/messages.h"
+#include "modules/module_physics.h"
 
 DECL_OBJ_MANAGER("energy_wall", TCompEnergyWall)
 
@@ -93,6 +94,12 @@ void TCompEnergyWall::onEonInteracted(const TMsgEonInteracted& msg)
 	dir_entry_point.Normalize();
 	is_moving = true;
 
+	// Rotate Eon in case it is not facing forward
+	/*float angle = rad2deg(DirectX::XMVectorGetX(DirectX::XMVector3AngleBetweenVectors(player_transform->getForward(), init_pos)));
+	if (angle > 5.f) {
+		player_transform->setRotation(trans->getRotation());
+	}*/
+
 	// post fmod event
 	const static char* EVENT = "ENV/General/BossDoor/BossDoor_Interact";
 	EngineAudio.postEvent(EVENT, init_pos);
@@ -103,14 +110,26 @@ VEC3 TCompEnergyWall::calculateEntryPoint()
 	TCompTransform* trans = get<TCompTransform>();
 	TCompTransform* player_transform = e_player->get<TCompTransform>();
 
+	VEC3 player_pos = player_transform->getPosition();
+
 	VEC3 offset = trans->getForward() * 0.1f;
 	VEC3 wall_pos = trans->getPosition();
+
+	// Generate a raycast to perform the animation where the player interacted
+	std::vector<physx::PxRaycastHit> raycastHits;
+
+	// Get the exact position of the wall the player is facing to perform the animation in that section
+	bool is_ok = EnginePhysics.raycast(player_pos, player_transform->getForward(), 20.f, raycastHits, CModulePhysics::FilterGroup::Interactable, true, false);
+	if (is_ok) {
+		wall_pos = PXVEC3_TO_VEC3(raycastHits.front().position);
+	}
+
 	wall_pos.y = player_transform->getPosition().y;
 
 	VEC3 entry_point = wall_pos - offset;
 
-	float dis_wall = VEC3::DistanceSquared(trans->getPosition(), player_transform->getPosition());
-	float dis_entry = VEC3::DistanceSquared(entry_point, player_transform->getPosition());
+	float dis_wall = VEC3::DistanceSquared(trans->getPosition(), player_pos);
+	float dis_entry = VEC3::DistanceSquared(entry_point, player_pos);
 
 	if (dis_entry > dis_wall) {
 		entry_point = trans->getPosition() + offset;

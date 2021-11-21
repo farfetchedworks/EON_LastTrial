@@ -8,6 +8,7 @@
 #include "lua/module_scripting.h"
 #include "render/draw_primitives.h"
 #include "modules/module_physics.h"
+#include "audio/module_audio.h"
 #include "bt/task_utils.h"
 
 // -----------------------------------------------
@@ -53,6 +54,9 @@ void TCompRigidAnimationController::load(const json& j, TEntityParseContext& ctx
 	cinematic_animation = j.value("cinematic_animation", cinematic_animation);
 	static_animation = j.value("static_animation", static_animation);
 	reverse = j.value("reverse", reverse);
+
+	// FMOD audio
+	fmod_event = j.value("fmod_event", std::string());
 }
 
 void TCompRigidAnimationController::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
@@ -97,7 +101,7 @@ float TCompRigidAnimationController::getAnimationTime()
 	return std::max(animation_data->header.max_time - animation_data->header.min_time, 0.f) / speed_factor;
 }
 
-void TCompRigidAnimationController::start()
+void TCompRigidAnimationController::start(std::function<void()> cb)
 {
 	if (frame_start > 0)
 	{
@@ -106,7 +110,15 @@ void TCompRigidAnimationController::start()
 		curr_time = time;
 	}
 
+	callback = cb;
 	playing = true;
+
+	// Fire fmod audio
+	if (!fmod_event.empty()) {
+		TCompParent* p = get<TCompParent>();
+		CEntity* e_child = p->children[0];
+		EngineAudio.postEvent(fmod_event, e_child->getPosition());
+	}
 }
 
 void TCompRigidAnimationController::stop()
@@ -348,6 +360,12 @@ void TCompRigidAnimationController::onEndOfAnimation()
 
 		if (cinematic_animation) {
 			EngineLua.executeScript("stopCinematic(1.0)");
+		}
+
+		if (callback)
+		{
+			callback();
+			callback = nullptr;
 		}
 	}
 }

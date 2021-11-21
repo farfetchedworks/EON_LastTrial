@@ -14,7 +14,7 @@ namespace ui
         void reset();
         void update(float elapsed) override;
         void bind(const std::string& buttonName, Callback callback);
-        void selectOption(int idx);
+        void selectOption(int idx, bool hover_audio = false);
         void setInput(input::CModule* new_input) { input = new_input; }
 
       private:

@@ -62,9 +62,19 @@ namespace LogicManager
 		EngineUI.activateWidget(name);
 	}
 
+	void deactivateWidget(const std::string& name)
+	{
+		EngineUI.deactivateWidget(name);
+	}
+
 	void fade()
 	{
 		EngineUI.activateWidget("modal_black");
+	}
+
+	void unfade()
+	{
+		EngineUI.deactivateWidget("modal_black");
 	}
 
 	void goToGamestate(const std::string& gs_name)
