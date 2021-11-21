@@ -79,8 +79,8 @@ struct onGardDeathCallback : public CAnimationCallback
 
 		// Test progressive loading: "data/scenes/templelevel.json"
 		{
-			/*bool is_ok = Boot.loadScene("data/scenes/templelevel.json");
-			assert(is_ok);*/
+			bool is_ok = Boot.loadScene("data/scenes/templelevel.json");
+			assert(is_ok);
 		}
 
 		// Change navmesh
