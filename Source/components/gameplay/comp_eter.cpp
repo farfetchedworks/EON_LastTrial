@@ -3,6 +3,9 @@
 #include "engine.h"
 #include "entity/entity.h"
 #include "comp_eter.h"
+#include "lua/module_scripting.h"
+#include "ui/ui_module.h"
+#include "modules/module_boot.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_collider.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
@@ -43,24 +46,32 @@ void TCompEter::onHit()
 	CEntity* animation_controller = spawn("data/prefabs/Eter_Broken.json", *t);
 	assert(animation_controller);
 
-	// Iniciar animacion rigida eter roto
-	TCompRigidAnimationController* controller = animation_controller->get<TCompRigidAnimationController>();
-	if (controller)
-	{
-		// assert(controller);
-		controller->start();
-	}
-
 	// Camara lenta
 	TCompGameManager* gm = GameManager->get<TCompGameManager>();
 	gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOW, 0.5f, &interpolators::expoInInterpolator);
 
 	// Iniciar cinematica rotura
+	// EngineLua.executeScript("CinematicEnding_2()");
+	
+	// Iniciar animacion rigida eter roto
+	TCompRigidAnimationController* controller = animation_controller->get<TCompRigidAnimationController>();
+	if (controller)
+	{
+		// assert(controller);
+		controller->start([]() {
 
-	// Cuando la cinematica acabe:
-	// 1. Fade a negro de golpe
-	// 2. Borrar TODO
-	// 3. Esperar unos segundos (deberia haber musica de tic tac mientras)
-	// 4. Spawnear la happy room 
-	// 5. Dejar mover al player hasta que se vaya x la puerta (interaccion)?
+			// 1. Fade a negro de golpe
+			EngineUI.activateWidget("modal_black", false);
+			// 2. Spawnear nuevas escenas
+			Boot.setEndBoot();
+			// 3. Quitar modal
+			EngineLua.executeScript("deactivateWidget('modal_black')", 4.f);
+		});
+	}
+
+	// DEBUG---------
+	EngineUI.activateWidget("modal_black", false);
+	EngineLua.executeScript("deactivateWidget('modal_black')", 4.f);
+	Boot.setEndBoot();
+	// ---------------
 }

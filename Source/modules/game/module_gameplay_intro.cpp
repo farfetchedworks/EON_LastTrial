@@ -24,7 +24,7 @@ bool ModuleEONGameplayIntro::start()
 bool ModuleEONGameplayIntro::customStart()
 {
 	// Tells the boot to load first the intro scenes
-	Boot.setSlowBoot(true);
+	Boot.setIntroBoot(true);
 	Boot.customStart();
 
 	Engine.resetClock();

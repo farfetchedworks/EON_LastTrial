@@ -13,7 +13,8 @@ class CModuleBoot : public IModule
 	int total_entries = 1;
 
 	bool _introLoaded = false;
-	bool _slowBoot = false;
+	bool _introBoot = false;
+	bool _endBoot = false;
 
 	tbb::tbb_thread* _loadThread = nullptr;
 
@@ -38,12 +39,14 @@ public:
 	void renderInMenu() override;
 	
 	bool customStart();
+	bool loadEndingBoot();
 	void reset();
 
 	bool inGame() { return !_previewEnabled; }
 	bool isPreloading() { return _preloadingResources; }
 	bool ready() { return _bootReady; }
-	void setSlowBoot(bool v) { _slowBoot = v; }
+	void setIntroBoot(bool v) { _introBoot = v; }
 	bool isThreadActive() { return _loadThread != nullptr; }
+	void setEndBoot() { _endBoot = true; }
 };
 

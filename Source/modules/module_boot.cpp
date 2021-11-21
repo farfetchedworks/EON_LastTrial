@@ -4,6 +4,13 @@
 #include "module_entities.h"
 #include "components/messages.h"
 #include "render/gpu_culling_module.h"
+#include "render/render_manager.h"
+#include "render/render_module.h"
+#include "components/common/comp_tags.h"
+#include "modules/module_camera_mixer.h"
+#include "audio/module_audio.h"
+#include "components/common/comp_transform.h"
+#include "components/cameras/comp_camera_follow.h"
 
 // #define USE_LOAD_THREAD
 
@@ -39,6 +46,11 @@ void CModuleBoot::update(float dt)
 		}
 		_bootReady = true;
 	}
+
+	if (_endBoot)
+	{
+		loadEndingBoot();
+	}
 }
 
 void BootInThread(const std::string& boot_name, CModuleBoot* instance)
@@ -67,6 +79,56 @@ bool CModuleBoot::customStart()
 	return true;
 }
 
+bool CModuleBoot::loadEndingBoot()
+{
+	assert(jBoot.size());
+	Boot.reset();
+	auto prefabs = jBoot["happyRoom_scenes"].get<std::vector<std::string>>();
+	for (auto& p : prefabs)
+		loadScene(p);
+
+	for (auto ctx : ctxs)
+	{
+		TMsgAllEntitiesCreated msg;
+		for (auto h : ctx.entities_loaded)
+			h.sendMsg(msg);
+	}
+
+	CEntity* camera_mixed = getEntityByName("camera_mixed");
+	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
+	mixer.setEnabled(true);
+	mixer.setOutputCamera(camera_mixed);
+	mixer.setDefaultCamera(getEntityByName("camera_follow"));
+	mixer.blendCamera("camera_follow", 0.f);
+
+	CEntity* e_camera_follow = getEntityByName("camera_follow");
+	TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
+	c_camera_follow->enable();
+
+	EngineRender.setActiveCamera(camera_mixed);
+	EngineAudio.setListener(camera_mixed);
+
+	// Spawn Eon in the player start position
+	CEntity* player = getEntityByName("player");
+	VHandles v_player_start = CTagsManager::get().getAllEntitiesByTag(getID("player_start"));
+
+	assert(player);
+	assert(!v_player_start.empty());
+	
+	// Be sure we have a player_start tag!
+	CEntity* e_player_start = v_player_start[0];
+	TCompTransform* h_start_trans = e_player_start->get<TCompTransform>();
+	TCompTransform* h_player_trans = player->get<TCompTransform>();
+	player->setPosition(h_start_trans->getPosition(), true);
+	h_player_trans->setRotation(h_start_trans->getRotation());
+			
+	_endBoot = false;
+	_bootCompleted = true;
+	_bootReady = true;
+
+	return true;
+}
+
 bool CModuleBoot::loadScene(const std::string& p, bool preloading)
 {
 	PROFILE_FUNCTION("loadScene");
@@ -89,7 +151,7 @@ void CModuleBoot::loadBoot(const std::string& p)
 {
 	jBoot = loadJson(p);
 
-	if (_introLoaded || !_slowBoot)
+	if (_introLoaded || !_introBoot)
 	{
 		if (_loadPreview)
 		{
@@ -197,13 +259,22 @@ bool CModuleBoot::loadPreviewBoot()
 
 void CModuleBoot::reset()
 {
-	CEngine::get().getEntities().stop();
+	auto hm = getObjectManager<CEntity>();
+	hm->forEach([](CEntity* e) {
+		CHandle h(e);
+		h.destroy();
+		});
+
+	CHandleManager::destroyAllPendingObjects();
+
+	RenderManager.clearKeys();
 
 	EngineCulling.reset();
 	EngineCullingShadows.reset();
 
 	_bootCompleted = false;
 	_bootReady = false;
+	ctxs.clear();
 }
 
 void CModuleBoot::renderInMenu()

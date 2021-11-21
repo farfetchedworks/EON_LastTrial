@@ -5,6 +5,7 @@ namespace LogicManager
 {
     void ldbg(sol::variadic_args args);
     void activateWidget(const std::string& name);
+    void deactivateWidget(const std::string& name);
     void fade();
     void goToGamestate(const std::string& gs_name);
     void startCinematic(const std::string& curve_filename, const VEC3& target, float speed, float lerp_time);
