@@ -2,36 +2,34 @@
 #include "handle/handle.h"
 #include "engine.h"
 #include "entity/entity.h"
-#include "comp_aether.h"
+#include "comp_eter.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_collider.h"
 
-DECL_OBJ_MANAGER("aether", TCompAether)
+DECL_OBJ_MANAGER("eter", TCompEter)
 
-void TCompAether::onEntityCreated()
+void TCompEter::onEntityCreated()
 {
 	h_transform = get<TCompTransform>();
 	TCompTransform* t = h_transform;
 
-	_finalPose = t->getPosition() + VEC3(0, 0.8f, 0);
+	_targetPosition = t->getPosition() + VEC3(0, 1.2f, 0);
 }
 
-void TCompAether::update(float dt)
+void TCompEter::update(float dt)
 {
 	TCompTransform* t = h_transform;
 
-	if (t->getPosition() != _finalPose)
+	if (t->getPosition() != _targetPosition)
 	{
-		t->setPosition( damp<VEC3>(t->getPosition(), _finalPose, 1.f, dt) );
+		t->setPosition( damp<VEC3>(t->getPosition(), _targetPosition, 1.25f, dt) );
 	}
 }
 
-void TCompAether::onHit()
+void TCompEter::onHit()
 {
+	// Manage ENDING TWO: eter is broken and go to happy room
 	TCompTransform* t = h_transform;
-	if (t->getPosition() != _finalPose)
-		return;
-
 	VEC3 pos = t->getPosition() + VEC3(0, 0.5f, 0);
 	spawnParticles("data/particles/splatter_blood_front.json", pos, pos);
 

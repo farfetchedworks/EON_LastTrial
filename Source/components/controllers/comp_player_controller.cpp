@@ -224,7 +224,9 @@ void TCompPlayerController::update(float dt)
 
 	if (PlayerInput['C'].getsPressed()) {
 
-		EngineLua.executeScript("CinematicEonIntro()");
+		CTransform t;
+		t.setPosition(getEntity()->getPosition());
+		spawn("data/prefabs/Eter.json", t);
 	}
 
 	if (PlayerInput['B'].getsPressed()) {
