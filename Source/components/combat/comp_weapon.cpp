@@ -94,6 +94,7 @@ void TCompWeapon::onTriggerEnter(const TMsgEntityTriggerEnter& msg, CHandle h_ow
         if (CHandle(target) == getEntityByName("Gard")) {
 
             spawn("data/particles/gard_hit_particles.json", t, ctx);
+            spawn("data/particles/compute_sword_sparks_particle.json", t, ctx);
 
             for (auto h : ctx.entities_loaded) {
                 CEntity* e = h;
