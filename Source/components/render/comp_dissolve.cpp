@@ -92,7 +92,6 @@ void TCompDissolveEffect::applyDissolveMaterial()
 
 void TCompDissolveEffect::recover(bool propagate_childs)
 {
-	assert(!_removeCollider);
 	if (_removeCollider || !_originalMatName.length())
 		return;
 

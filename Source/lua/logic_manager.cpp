@@ -57,7 +57,12 @@ namespace LogicManager
 		EngineLua.logConsole(result.c_str());
 	}
 
-	void fade(float time)
+	void activateWidget(const std::string& name)
+	{
+		EngineUI.activateWidget(name);
+	}
+
+	void fade()
 	{
 		EngineUI.activateWidget("modal_black");
 	}
@@ -66,9 +71,6 @@ namespace LogicManager
 	{
 		CModuleManager& modules = CEngine::get().getModuleManager();
 		modules.changeToGamestate(gs_name);
-
-		/*TCompGameManager* gm = GameManager->get<TCompGameManager>();
-		gm->toLoading();*/
 	}
 
 	void startCinematic(const std::string& curve_filename, const VEC3& target, float speed, float lerp_time)
@@ -79,6 +81,8 @@ namespace LogicManager
 		CEntity* e_camera_follow = getEntityByName("camera_follow");
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->disable();
+		
+		PlayerInput.blockInput();
 
 		CEntity* e_camera = getEntityByName("camera_cinematic");
 		TCompCurveController* controller = e_camera->get<TCompCurveController>();
@@ -155,6 +159,8 @@ namespace LogicManager
 		CEntity* e_camera_follow = getEntityByName("camera_follow");
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->enable();
+
+		PlayerInput.unBlockInput();
 
 		CEntity* e_camera = getEntityByName("camera_cinematic");
 		TCompCurveController* c_curve_controller = e_camera->get<TCompCurveController>();

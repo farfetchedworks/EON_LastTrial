@@ -18,6 +18,7 @@
 #include "components/common/comp_transform.h"
 #include "components/common/comp_camera.h"
 #include "components/cameras/comp_camera_flyover.h"
+#include "components/cameras/comp_camera_follow.h"
 #include "components/common/comp_collider.h"
 #include "components/common/comp_tags.h"
 #include "components/render/comp_irradiance_cache.h"
@@ -58,18 +59,15 @@ bool ModuleEONGameplay::start()
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;
 
-	// TODO: Poner esto después de la cinematica de inicio
-	PlayerInput.unBlockInput();
-
-	// Activate UI
-	EngineUI.activateWidget("eon_hud");
-
 	// Audio
 	EngineAudio.setListener(getEntityByName("camera_mixed"));
 
 	// If passing through YOU DIED module
 	if (started)
 	{
+		// Reactivate UI
+		EngineUI.activateWidget("eon_hud");
+
 		assert(GameManager);
 		static_cast<TCompGameManager*>(GameManager->get<TCompGameManager>())->restartLevel();
 		return true;
@@ -115,6 +113,9 @@ bool ModuleEONGameplay::start()
 			}
 		}
 	}
+
+	Engine.resetClock();
+	EngineLua.executeScript("BeginIntroCinematic()");
 
 	started = true;
 	return true;

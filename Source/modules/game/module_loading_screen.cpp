@@ -7,10 +7,10 @@
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
-#include "ui/widgets/ui_image.h"
-#include "ui/widgets/ui_button.h"
 #include "fmod_studio.hpp"
 #include "audio/module_audio.h"
+#include "ui/widgets/ui_image.h"
+#include "ui/widgets/ui_button.h"
 
 bool ModuleEONLoadingScreen::start()
 {
@@ -34,7 +34,7 @@ bool ModuleEONLoadingScreen::start()
     EngineUI.activateWidget("eon_loading_screen");
 
     _menuController.setInput(input);
-    _menuController.bind("continue_btn", std::bind(&ModuleEONLoadingScreen::onPlay, this));
+    _menuController.bind("continue_btn_loading", std::bind(&ModuleEONLoadingScreen::onPlay, this));
     _menuController.reset();
 
     return true;
@@ -44,6 +44,7 @@ void ModuleEONLoadingScreen::stop()
 {
     EngineUI.deactivateWidget("eon_loading_screen");
     EngineAudio.unloadBank("OutOfGame.bank");
+    PlayerInput.unBlockInput();
 }
 
 void ModuleEONLoadingScreen::update(float dt)
@@ -72,7 +73,7 @@ void ModuleEONLoadingScreen::update(float dt)
         _ready = true;
         _menuController.selectOption(0);
 
-        ui::CWidget* w = EngineUI.getWidget("continue_btn");
+        ui::CWidget* w = EngineUI.getWidget("continue_btn_loading");
         assert(w);
         w->setVisible(true);
 
