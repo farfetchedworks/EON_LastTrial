@@ -25,6 +25,7 @@ bool ModuleEONMainMenu::start()
     _menuController.bind("exit_btn_menu", std::bind(&ModuleEONMainMenu::onExit, this));
 
     _menuController.reset();
+    _menuController.selectOption(0);
 
     // Start title theme
     EngineAudio.postMusicEvent("Music/Title_Theme");

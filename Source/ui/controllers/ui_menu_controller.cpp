@@ -64,7 +64,7 @@ namespace ui
         selectOption(std::clamp<int>(_currentOption - 1, 0, static_cast<int>(_options.size()) - 1));
     }
 
-    void CMenuController::selectOption(int idx)
+    void CMenuController::selectOption(int idx, bool hover_audio)
     {
         if (idx == _currentOption)
             return;
@@ -87,7 +87,8 @@ namespace ui
         _currentOption = idx;
 
         // FMOD hover event
-        EngineAudio.postEvent("UI/Hover");
+        if (hover_audio)
+            EngineAudio.postEvent("UI/Hover");
     }
 
     void CMenuController::highlightOption()
@@ -124,7 +125,7 @@ namespace ui
         {
             last_mouse_pos = mouse_pos;
             hoveredButton = getButton(mouse_pos);
-            selectOption(hoveredButton);
+            selectOption(hoveredButton, true);
             isHoverButton = hoveredButton != -1;
         }
 
