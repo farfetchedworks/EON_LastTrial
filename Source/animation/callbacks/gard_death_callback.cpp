@@ -39,6 +39,8 @@ struct onGardDeathCallback : public CAnimationCallback
 		if (c_health->checkDeathAnimationCompleted())
 			return;
 
+		c_health->setRenderActive(false);
+
 		// Shake camera
 		{
 			CEntity* outputCamera = getEntityByName("camera_mixed");
@@ -67,6 +69,8 @@ struct onGardDeathCallback : public CAnimationCallback
 		// Spawn floor particles and geons
 		{
 			VEC3 spawnPos = e_owner->getPosition() + e_owner->getForward() * 3;
+
+			// TODO PABLO LG: POner humo en lugar de roquitas
 			spawnParticles("data/particles/gard_floor_particles.json", spawnPos, spawnPos, 2.f);
 			PawnUtils::spawnGeons(spawnPos, e_owner);
 		}
@@ -78,10 +82,10 @@ struct onGardDeathCallback : public CAnimationCallback
 		}
 
 		// Test progressive loading: "data/scenes/templelevel.json"
-		{
+		/*{
 			bool is_ok = Boot.loadScene("data/scenes/templelevel.json");
 			assert(is_ok);
-		}
+		}*/
 
 		// Change navmesh
 		{

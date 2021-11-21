@@ -492,6 +492,8 @@ void CGPUCullingModule::run() {
 
 void CGPUCullingModule::reset()
 {
+    clearRenderDataInGPU();
+
     objs.clear();
     prefabs.clear();
     draw_datas.clear();
