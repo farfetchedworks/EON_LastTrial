@@ -83,6 +83,7 @@ struct TCompRigidAnimationController : public TCompBase
 
 	const TCoreAnimationData* animation_data = nullptr;
 	std::string           animation_src;
+	std::string           fmod_event;
 	std::vector< TTrack > tracks;
 	float                 curr_time = 0.0f;
 	float                 speed_factor = 1.0f;
