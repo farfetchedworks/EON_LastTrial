@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{de08a11a-793c-4e6b-b033-03a92ab09152}">
+		<property name="assetPath">
+			<value>VO/NPC/VO_NPC_Interact_Long.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>8.0999999999999996</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f8b2a622-7d6e-4c03-8a9c-627e577ec451}</destination>
+		</relationship>
+	</object>
+</objects>
