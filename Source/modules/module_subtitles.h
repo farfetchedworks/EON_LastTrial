@@ -1,5 +1,6 @@
 #pragma once
 #include "modules/module.h"
+#include "fmod_studio.hpp"
 
 class CModuleSubtitles : public IModule
 {
@@ -21,6 +22,7 @@ public:
 
 	bool startCaption(const std::string& name, CHandle t = CHandle());
 	void stopCaption();
+	void stopAudio() { cur_audio_event->stop(FMOD_STUDIO_STOP_IMMEDIATE); }
 
 private:
 
@@ -48,7 +50,7 @@ private:
 	std::string _currentCaption;
 	std::map<std::string, std::vector<SCaptionParams>> _registeredCaptions;
 	
-	// (fmod instance pointer) _currentAudioEvent;
+	FMOD::Studio::EventInstance* cur_audio_event = nullptr;
 
 	void parseCaptionList(SCaptionParams& caption, const json& j);
 	void parseCaption(const json& j);

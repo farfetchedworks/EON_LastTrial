@@ -8,6 +8,7 @@
 #include "components/gameplay/comp_game_manager.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "modules/module_camera_mixer.h"
+#include "modules/module_subtitles.h"
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 

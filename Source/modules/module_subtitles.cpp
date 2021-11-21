@@ -192,7 +192,7 @@ void CModuleSubtitles::triggerAudio()
 	if (!event.length())
 	return;
 
-	EngineAudio.postEvent(event);
+	cur_audio_event = EngineAudio.post2DEventGetInst(event);
 }
 
 bool CModuleSubtitles::startCaption(const std::string& name, CHandle t)
@@ -232,6 +232,8 @@ void CModuleSubtitles::stopCaption()
 	}
 
 	_trigger = CHandle();
+
+	stopAudio();
 }
 
 void CModuleSubtitles::stop()

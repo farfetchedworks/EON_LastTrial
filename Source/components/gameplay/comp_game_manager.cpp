@@ -125,6 +125,7 @@ void TCompGameManager::setEonDied()
 void TCompGameManager::restartLevel()
 {
 	eonHasDied = false;
+	eonDeathManaged = false;
 
 	CEntity* e_camera_follow = getEntityByName("camera_follow");
 	EngineRender.setActiveCamera(e_camera_follow);
@@ -273,10 +274,11 @@ void TCompGameManager::respawnEnemies()
 void TCompGameManager::manageEonDeath(float dt)
 {
 	deathTimer += (dt / time_status_timings[ETimeStatus::SLOW]);
-	if (deathTimer >= timeTillDeath) {
+	if (deathTimer >= timeTillDeath && !eonDeathManaged) {
 
 		// If Eon hasn't revived, increase the amount of deaths
-		deaths_num++;		
+		deaths_num++;
+		eonDeathManaged = true;
 		
 		// Don't restart automatically
 		// restartLevel();
