@@ -36,6 +36,7 @@ void TCompGameManager::load(const json& j, TEntityParseContext& ctx)
 	timeTillDeath = j.value("death_timer", timeTillDeath);
 	time_status_timings[ETimeStatus::NORMAL] = 1.0f;
 	time_status_timings[ETimeStatus::SLOW] = j.value("time_scale_factor", 0.2f);
+	time_status_timings[ETimeStatus::SLOWEST] = 0.1f;
 	time_status_timings[ETimeStatus::PAUSE] = 0.0f;
 
 	for (const json& jBoss : j["bosses"]) {
