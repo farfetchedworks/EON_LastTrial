@@ -8,6 +8,7 @@ class ModuleEONGameplay : public IModule
 {
 	bool started = false;
 	bool paused = false;
+
 	input::CModule* input = nullptr;
 	ui::CMenuController _menuController;
 

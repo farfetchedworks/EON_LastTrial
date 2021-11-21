@@ -33,7 +33,7 @@ void TCompCameraFollow::onEntityCreated()
     msg.active = true;
     GameManager->sendMsg(msg);
 
-    enabled = true;
+    // enabled = true;
     lock_target = VEC3(-1e8f);
 
     TCompTransform* c_transform = get<TCompTransform>();

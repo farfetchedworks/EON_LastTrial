@@ -418,7 +418,7 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 void TCompPlayerController::move(float dt)
 {
 	TCompGameManager* c_gm = GameManager->get<TCompGameManager>();
-	if (c_gm->isInCinematic() || !currentPath.empty()) {
+	if (!currentPath.empty()) {
 		return;
 	}
 
