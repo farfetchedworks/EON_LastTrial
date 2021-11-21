@@ -229,7 +229,8 @@ void ModuleEONGameplay::togglePause()
 		EngineUI.activateWidget("eon_pause");
 
 		PlayerInput.blockInput();
-		TCompBT::UPDATE_ENABLED = false;
+		//TCompBT::UPDATE_ENABLED = false;
+		Time.scale_factor = 0.f;
 
 		debugging = true;
 		CApplication::get().changeMouseState(debugging, false);
@@ -238,7 +239,8 @@ void ModuleEONGameplay::togglePause()
 	{
 		EngineUI.deactivateWidget("eon_pause");
 		PlayerInput.unBlockInput();
-		TCompBT::UPDATE_ENABLED = true;
+		//TCompBT::UPDATE_ENABLED = true;
+		Time.scale_factor = 1.f;
 
 		debugging = false;
 		CApplication::get().changeMouseState(debugging);
