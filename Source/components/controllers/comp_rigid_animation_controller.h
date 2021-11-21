@@ -15,6 +15,17 @@ struct TCompRigidAnimationController : public TCompBase
 		CTransform initial_pose;
 	};
 
+	struct TTimeStamp {
+		float mark = 0.f;
+		std::function<void()> cb = nullptr;
+		bool fired = false;
+	};
+
+	struct TEvent {
+		std::vector<TTimeStamp> timestamps;
+		std::string name;
+	};
+
 	struct TTrack {
 		
 		// Detailed information to gather from the animation data to update handle
@@ -79,12 +90,13 @@ struct TCompRigidAnimationController : public TCompBase
 		}
 	};
 
-	std::function<void()> callback = nullptr;
+	std::function<void()> end_callback = nullptr;
 
 	const TCoreAnimationData* animation_data = nullptr;
 	std::string           animation_src;
 	std::string           fmod_event;
 	std::vector< TTrack > tracks;
+	std::vector< TEvent > events;
 	float                 curr_time = 0.0f;
 	float                 speed_factor = 1.0f;
 	bool                  playing = false;
@@ -104,12 +116,15 @@ struct TCompRigidAnimationController : public TCompBase
 
 	void load(const json& j, TEntityParseContext& ctx);
 	void debugInMenu();
-	void start(std::function<void()> cb = nullptr);
+	void start(std::function<void()> cbe = nullptr);
 	void stop();
 	void update(float delta_time);
 	void assignTracksToSceneObjects();
 	void updateCurrentTime(float delta_time);
 	void onEndOfAnimation();
+
+	void addEventTimestamp(const std::string& name, int frame, std::function<void()> cb);
+	void updateEvents();
 
 	void setTarget(const std::string& target_name);
 	void setAnimation(const std::string& animation_name);

@@ -167,6 +167,8 @@ bool CModuleSubtitles::stopCaptionEntry()
 	{
 		EngineLua.executeScript(currentCaption.script);
 	}
+
+	return true;
 }
 
 void CModuleSubtitles::setState(EState state)
