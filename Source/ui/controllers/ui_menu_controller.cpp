@@ -97,8 +97,7 @@ namespace ui
 
         _options.at(_currentOption).button->changeToState("pressed");
 
-
-        if (_currentOption == 0)
+        if (!_options.at(_currentOption).button->getName().compare("start_btn"))
             EngineAudio.postEvent("UI/Start_Game");
         else
             EngineAudio.postEvent("UI/Enter");

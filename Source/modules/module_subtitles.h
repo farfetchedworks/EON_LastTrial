@@ -22,7 +22,7 @@ public:
 
 	bool startCaption(const std::string& name, CHandle t = CHandle());
 	void stopCaption();
-	void stopAudio() { cur_audio_event->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT); }
+	void stopAudio() { cur_audio_event->stop(FMOD_STUDIO_STOP_IMMEDIATE); }
 
 private:
 
