@@ -98,6 +98,9 @@ void TCompGeonsManager::increasePhase(bool only_stats)
 		spawnParticles("data/particles/compute_levelup_spread_particles.json", c_trans->getPosition(), c_trans->getPosition());
 		EngineUI.activateWidget("phase_up");
 		timer = 3.f;
+
+		// FMOD audio event
+		EngineAudio.postEvent("UI/Phase_Up");
 	}
 }
 

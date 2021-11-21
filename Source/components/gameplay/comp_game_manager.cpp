@@ -284,6 +284,7 @@ void TCompGameManager::manageEonDeath(float dt)
 		// restartLevel();
 
 		setTimeStatus(ETimeStatus::NORMAL);
+		EngineUI.deactivateWidget("boss_life_bar");
 
 		CModuleManager& modules = CEngine::get().getModuleManager();
 		modules.changeToGamestate("you_died");

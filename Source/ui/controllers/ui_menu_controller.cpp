@@ -97,6 +97,7 @@ namespace ui
 
         _options.at(_currentOption).button->changeToState("pressed");
 
+        // FMOD events
         if (!_options.at(_currentOption).button->getName().compare("start_btn"))
             EngineAudio.postEvent("UI/Start_Game");
         else

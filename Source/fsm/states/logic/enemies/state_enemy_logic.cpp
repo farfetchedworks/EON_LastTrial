@@ -55,7 +55,8 @@ namespace fsm
 	void CStateEnemyLogic::onExit(CContext& ctx) const
 	{
 		// To avoid resetting variables that should be greater than 2 (such as regular attacks) when a combo is active
-		if(!std::get<bool>(ctx.getVariableValue("combo_attack_active")))
+		// Also, the variable name must not contain the word "phase" because phase numbers must not be
+		if(!std::get<bool>(ctx.getVariableValue("combo_attack_active")) && control_variable_name.find("phase") == std::string::npos)
 			ctx.setVariableValue(control_variable_name, 0);
 		
 		anim.stop(ctx);
