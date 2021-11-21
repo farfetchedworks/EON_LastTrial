@@ -73,13 +73,20 @@ void TCompGameManager::update(float dt)
 		float time_lerp_source = time_status_timings[time_status];
 		float time_lerp_target = time_status_timings[target_time_status];
 		lerp_accum += Time.delta_unscaled / lerp_seconds;
-		Time.scale_factor = lerp<float>(time_lerp_source, time_lerp_target, clampf(lerp_accum, 0.f, 1.f));
+
+		float f = clampf(lerp_accum, 0.f, 1.f);
+
+		if (time_interpolator)
+			Time.scale_factor = lerp(time_lerp_source, time_lerp_target, time_interpolator->blend(0.f, 1.f, f));
+		else
+			Time.scale_factor = lerp(time_lerp_source, time_lerp_target, f);
 
 		if (lerp_accum >= 1.f)
 		{
 			interpolating_time = false;
-			setTimeStatus(target_time_status);
+			time_interpolator = nullptr;
 			lerp_accum = 0.0f;
+			setTimeStatus(target_time_status);
 		}
 	}
 
@@ -94,7 +101,7 @@ void TCompGameManager::setTimeStatus(ETimeStatus status)
 	Time.scale_factor = time_status_timings[time_status];
 }
 
-void TCompGameManager::setTimeStatusLerped(ETimeStatus status, float seconds)
+void TCompGameManager::setTimeStatusLerped(ETimeStatus status, float seconds, const interpolators::IInterpolator* it)
 {
 	if (seconds == 0.f) {
 		setTimeStatus(status);
@@ -103,7 +110,15 @@ void TCompGameManager::setTimeStatusLerped(ETimeStatus status, float seconds)
 		lerp_seconds = seconds;
 		interpolating_time = true;
 		target_time_status = status;
+
+		if (it)
+			setTimeInterpolator(it);
 	}
+}
+
+void TCompGameManager::setTimeInterpolator(const interpolators::IInterpolator* it)
+{
+	time_interpolator = it;
 }
 
 void TCompGameManager::setEonDied()
