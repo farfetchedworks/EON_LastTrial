@@ -313,12 +313,12 @@ void TCompPawnController::onHitSound(const TMsgHit& msg)
 		else if (!t_info->getPrefabName()->compare("Gard")) {
 			EngineAudio.postEvent("CHA/Gard/Gard_Receive_Hit", t_trans->getPosition());
 		}
-		else if (!t_info->getPrefabName()->compare("Cygnus_Form_1")) {
-			EngineAudio.postEvent("CHA/Cygnus/P1/DMG/Cygnus_P1_Dmg_Light", t_trans->getPosition());
-		}
 	}
 	else {
-		if (!std::string(t_name->getName()).compare("Cygnus_Form_2")) {
+		if (!std::string(t_name->getName()).compare("Cygnus_Form_1")) {
+			EngineAudio.postEvent("CHA/Cygnus/P1/DMG/Cygnus_P1_Dmg_Light", t_trans->getPosition());
+		}
+		else if (!std::string(t_name->getName()).compare("Cygnus_Form_2")) {
 			TCompFSM* t_fsm = get<TCompFSM>();
 			int phase_number = std::get<int>(t_fsm->getCtx().getVariableValue("phase_number"));
 
