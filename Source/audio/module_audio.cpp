@@ -141,6 +141,8 @@ bool CModuleAudio::start()
 	FMOD_RESULT asd = system->setAdvancedSettings(&settings);
 	system->getAdvancedSettings(&settings);
 
+	Debug_Initialize(FMOD_DEBUG_LEVEL_ERROR);
+
 	// Initialise FMOD Studio system
 	is_ok &= system->initialize(1024, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_3D_RIGHTHANDED, nullptr);
 
