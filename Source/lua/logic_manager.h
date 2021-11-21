@@ -7,6 +7,7 @@ namespace LogicManager
     void activateWidget(const std::string& name);
     void deactivateWidget(const std::string& name);
     void fade();
+    void unfade();
     void goToGamestate(const std::string& gs_name);
     void startCinematic(const std::string& curve_filename, const VEC3& target, float speed, float lerp_time);
     void startCinematicAnimation(const std::string& animation_filename, const std::string& target_name, float speed, float lerp_time, const std::string& bone_name = "");

@@ -11,6 +11,7 @@
 #include "modules/module_camera_mixer.h"
 #include "modules/module_events.h"
 #include "navmesh/module_navmesh.h"
+#include "modules/module_subtitles.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 #include "components/messages.h"
@@ -117,10 +118,11 @@ bool ModuleEONGameplay::start()
 	Engine.resetClock();
 
 	// hacky to allow not playing the cinematic
-	CEntity* gard = getEntityByName("gard");
+	CEntity* gard = getEntityByName("Gard");
 	if (gard)
 	{
 		EngineLua.executeScript("BeginIntroCinematic()");
+		Subtitles.startCaption("intro_cinematic_2");
 	}
 	else
 	{

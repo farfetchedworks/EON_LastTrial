@@ -29,10 +29,6 @@ bool ModuleEONGameplayIntro::customStart()
 
 	Engine.resetClock();
 
-	// Set initial mouse state
-	debugging = false;
-	CApplication::get().changeMouseState(debugging, false);
-
 	CModuleCameraMixer& mixer = Engine.getCameramixer();
 	mixer.setOutputCamera(getEntityByName("camera_cinematic"));
 	EngineRender.setActiveCamera(getEntityByName("camera_cinematic"));
@@ -42,6 +38,10 @@ bool ModuleEONGameplayIntro::customStart()
 
 	EngineLua.executeScript("CinematicEonIntro()");
 	Subtitles.startCaption("intro_cinematic");
+
+	// Set initial mouse state
+	debugging = false;
+	CApplication::get().changeMouseState(debugging, true);
 
 	started = true;
 

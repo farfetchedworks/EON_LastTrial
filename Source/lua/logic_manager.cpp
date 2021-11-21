@@ -72,6 +72,11 @@ namespace LogicManager
 		EngineUI.activateWidget("modal_black");
 	}
 
+	void unfade()
+	{
+		EngineUI.deactivateWidget("modal_black");
+	}
+
 	void goToGamestate(const std::string& gs_name)
 	{
 		CModuleManager& modules = CEngine::get().getModuleManager();

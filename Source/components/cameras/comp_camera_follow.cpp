@@ -33,7 +33,6 @@ void TCompCameraFollow::onEntityCreated()
     msg.active = true;
     GameManager->sendMsg(msg);
 
-    // enabled = true;
     lock_target = VEC3(-1e8f);
 
     TCompTransform* c_transform = get<TCompTransform>();
@@ -61,6 +60,8 @@ void TCompCameraFollow::load(const json& j, TEntityParseContext& ctx)
 
     current_distance = distance;
     current_height = height;
+
+    enabled = false;
 }
 
 void TCompCameraFollow::debugInMenu()
@@ -98,6 +99,9 @@ void TCompCameraFollow::renderDebug()
 
 void TCompCameraFollow::update(float dt)
 {
+    if (!enabled)
+        return;
+
     time_elapsed += dt;
 
     if (Time.scale_factor != 1.0 && Time.scale_factor > 0.0f) {
@@ -207,8 +211,7 @@ void TCompCameraFollow::update(float dt)
     float lerp_velocity = getLerpFactor();
     target_position_lerp = dampCubicIn<VEC3>(target_position_lerp, target_pos, lerp_velocity, dt);
 
-    if (!enabled)
-        return;
+    
 
     // Orbit movement
     MAT44 rot = MAT44::CreateRotationX(delta_pitch_lerp) * MAT44::CreateRotationY(delta_yaw_lerp);
