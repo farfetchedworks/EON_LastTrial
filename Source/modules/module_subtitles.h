@@ -28,6 +28,8 @@ private:
 	struct SCaptionParams {
 		std::string texture;
 		std::string audio;
+		std::string event;
+		std::string script;
 		float time;
 		bool pause;
 	};
@@ -54,5 +56,6 @@ private:
 	EState getState() { return _state; }
 	void setState(EState state);
 	bool setCaptionEntry();
+	bool stopCaptionEntry();
 	void triggerAudio();
 };

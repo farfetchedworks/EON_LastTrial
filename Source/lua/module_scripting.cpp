@@ -82,6 +82,8 @@ void CModuleScripting::bindLua()
 	// Utility functions
 
 	lua_state.set("dbg", &LogicManager::ldbg);
+	lua_state.set("fade", &LogicManager::fade);
+	lua_state.set("goToGamestate", &LogicManager::goToGamestate);
 	lua_state.set("startCinematic", &LogicManager::startCinematic);
 	lua_state.set("startCinematicAnimation", &LogicManager::startCinematicAnimation);
 	lua_state.set("startStaticCinematicAnimation", &LogicManager::startStaticCinematicAnimation);
