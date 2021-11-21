@@ -115,8 +115,22 @@ bool ModuleEONGameplay::start()
 	}
 
 	Engine.resetClock();
-	EngineLua.executeScript("BeginIntroCinematic()");
 
+	// hacky to allow not playing the cinematic
+	CEntity* gard = getEntityByName("gard");
+	if (gard)
+	{
+		EngineLua.executeScript("BeginIntroCinematic()");
+	}
+	else
+	{
+		CEntity* e_camera_follow = getEntityByName("camera_follow");
+		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
+		c_camera_follow->enable();
+
+		PlayerInput.unBlockInput();
+	}
+	
 	started = true;
 	return true;
 }
