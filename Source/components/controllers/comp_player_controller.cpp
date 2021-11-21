@@ -827,7 +827,8 @@ void TCompPlayerController::setDashAnim()
 		float dir_x = move_dir.Dot(transform->getRight());
 
 		if (dir_z == 0.f && dir_x == 0.f)
-			setVariable("dash_vertical", 1.f);
+			setVariable("is_dashing", true);
+			//setVariable("dash_vertical", 1.f);
 		else if (std::abs(dir_z) > std::abs(dir_x))
 			setVariable("dash_vertical", dir_z);
 		else
