@@ -20,6 +20,8 @@ void TCompCollapsingProps::load(const json& j, TEntityParseContext& ctx)
 	assert(spawn_prefab.length());
 	fall_time = j.value("fall_time", fall_time);
 	type = j.value("type", "rocks");
+	if (!type.length())
+		type = "rocks";
 	fmod_event = j.value("fmod_event", "ENV/Cave/Rocks_Falling");
 	if(!fmod_event.length())
 		fmod_event = "ENV/Cave/Rocks_Falling";
