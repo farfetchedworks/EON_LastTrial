@@ -10,6 +10,7 @@
 #include "modules/module_camera_mixer.h"
 #include "modules/module_subtitles.h"
 #include "input/input_module.h"
+#include "ui/ui_module.h"
 
 namespace LogicManager
 {
@@ -54,6 +55,20 @@ namespace LogicManager
 
 		dbg(result.c_str());
 		EngineLua.logConsole(result.c_str());
+	}
+
+	void fade(float time)
+	{
+		EngineUI.activateWidget("modal_black");
+	}
+
+	void goToGamestate(const std::string& gs_name)
+	{
+		CModuleManager& modules = CEngine::get().getModuleManager();
+		modules.changeToGamestate(gs_name);
+
+		/*TCompGameManager* gm = GameManager->get<TCompGameManager>();
+		gm->toLoading();*/
 	}
 
 	void startCinematic(const std::string& curve_filename, const VEC3& target, float speed, float lerp_time)
@@ -153,20 +168,7 @@ namespace LogicManager
 			controller->stop();
 		}
 
-		CModuleManager& modules = CEngine::get().getModuleManager();
-
-		if (modules.inGamestate("intro"))
-		{
-			// This is after the intro cinematic..
-			TCompGameManager* gm = GameManager->get<TCompGameManager>();
-			gm->toLoading();
-
-			Subtitles.stopAudio();
-		}
-		else
-		{
-			CameraMixer.blendCamera("camera_follow", lerp_time, &interpolators::cubicInOutInterpolator);
-		}
+		CameraMixer.blendCamera("camera_follow", lerp_time, &interpolators::cubicInOutInterpolator);
 	}
 
 	void setCinematicCurve(const std::string& curve_filename, float curve_speed, float lerp_time)

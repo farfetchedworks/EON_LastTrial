@@ -4,6 +4,8 @@
 namespace LogicManager
 {
     void ldbg(sol::variadic_args args);
+    void fade(float time);
+    void goToGamestate(const std::string& gs_name);
     void startCinematic(const std::string& curve_filename, const VEC3& target, float speed, float lerp_time);
     void startCinematicAnimation(const std::string& animation_filename, const std::string& target_name, float speed, float lerp_time, const std::string& bone_name = "");
     void startStaticCinematicAnimation(const std::string& animation_filename, float speed, float lerp_time);

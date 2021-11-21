@@ -1,11 +1,13 @@
 #include "mcv_platform.h"
 #include "engine.h"
 #include "module_subtitles.h"
+#include "modules/module_events.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
 #include "ui/ui_params.h"
 #include "ui/effects/ui_effect_fade.h"
 #include "audio/module_audio.h"
+#include "lua/module_scripting.h"
 #include "components/messages.h"
 
 static NamedValues<CModuleSubtitles::EState>::TEntry state_entries[] = {
@@ -63,6 +65,8 @@ void CModuleSubtitles::parseCaptionList(SCaptionParams& caption, const json& j)
 {
 	assert(j.is_object());
 	caption.texture = j.value("texture", std::string());
+	caption.event = j.value("event", std::string());
+	caption.script = j.value("script", std::string());
 	caption.audio = j.value("audio", std::string());
 	caption.time = j.value("time", 0.f);
 	caption.pause = j.value("pause", false);
@@ -82,8 +86,8 @@ void CModuleSubtitles::update(float dt)
 	{
 		if (_timer >= _fadeOutTime)
 		{
-			setState(EState::STATE_IN);
 			_active = setCaptionEntry();
+			setState(EState::STATE_IN);
 			_timer = 0.f;
 			return;
 		}
@@ -97,6 +101,8 @@ void CModuleSubtitles::update(float dt)
 
 	if(_timer >= current.time)
 	{
+		stopCaptionEntry();
+		
 		_currentIndex++;
 		_timer = 0.f;
 
@@ -136,6 +142,31 @@ bool CModuleSubtitles::setCaptionEntry()
 	}
 
 	return true;
+}
+
+bool CModuleSubtitles::stopCaptionEntry()
+{
+	ui::CWidget* w = EngineUI.getWidget("eon_subtitles");
+
+	assert(w);
+	if (!w)
+		return false;
+
+	auto& list = _registeredCaptions[_currentCaption];
+	ui::TImageParams* imgParams = w->getImageParams();
+	const auto& currentCaption = list[_currentIndex];
+
+	// System event?
+	if (currentCaption.event.length())
+	{
+		EventSystem.dispatchEvent(currentCaption.event, _trigger);
+	}
+
+	// Lua script?
+	if (currentCaption.script.length())
+	{
+		EngineLua.executeScript(currentCaption.script);
+	}
 }
 
 void CModuleSubtitles::setState(EState state)
@@ -201,6 +232,8 @@ void CModuleSubtitles::stopCaption()
 	}
 
 	_trigger = CHandle();
+
+	stopAudio();
 }
 
 void CModuleSubtitles::stop()

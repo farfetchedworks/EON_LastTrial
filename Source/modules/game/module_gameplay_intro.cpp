@@ -5,6 +5,7 @@
 #include "input/input_module.h"
 #include "module_gameplay_intro.h"
 #include "modules/module_subtitles.h"
+#include "ui/ui_module.h"
 #include "lua/module_scripting.h"
 #include "modules/module_boot.h"
 #include "modules/module_camera_mixer.h"
@@ -88,7 +89,9 @@ void ModuleEONGameplayIntro::update(float dt)
 	}
 
 	if (Engine.getInput(input::MENU)->getButton("interact").getsPressed()) {
+
 		EngineLua.executeScript("stopCinematic(1.0)");
+		CEngine::get().getModuleManager().changeToGamestate("loading");
 	}
 
 	CEntity* e_camera = EngineRender.getActiveCamera();

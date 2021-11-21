@@ -22,7 +22,7 @@ public:
 
 	bool startCaption(const std::string& name, CHandle t = CHandle());
 	void stopCaption();
-	void stopAudio() { cur_audio_event->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT); }
+	void stopAudio() { cur_audio_event->stop(FMOD_STUDIO_STOP_IMMEDIATE); }
 
 private:
 
@@ -30,6 +30,8 @@ private:
 	struct SCaptionParams {
 		std::string texture;
 		std::string audio;
+		std::string event;
+		std::string script;
 		float time;
 		bool pause;
 	};
@@ -56,5 +58,6 @@ private:
 	EState getState() { return _state; }
 	void setState(EState state);
 	bool setCaptionEntry();
+	bool stopCaptionEntry();
 	void triggerAudio();
 };

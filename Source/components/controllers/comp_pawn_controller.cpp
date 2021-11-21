@@ -329,6 +329,9 @@ void TCompPawnController::onHitSound(const TMsgHit& msg)
 			case 3:
 				EngineAudio.postEvent("CHA/Cygnus/P3/DMG/Cygnus_P3_Dmg_Light", t_trans->getPosition());
 				break;
+			case 4:
+				EngineAudio.postEvent("CHA/Cygnus/P4/DMG/Cygnus_P4_Dmg_Light", t_trans->getPosition());
+				break;
 			default:
 				EngineAudio.postEvent("CHA/Cygnus/P3/DMG/Cygnus_P3_Dmg_Light", t_trans->getPosition());
 				break;

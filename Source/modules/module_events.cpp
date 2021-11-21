@@ -86,7 +86,6 @@ void CModuleEventSystem::unregisterEventCallback(const std::string& name, unsign
 	assert(it != event_callbacks[name].end());
 	unregister_pending.push_back({ id, name });
 
-	// ..
 	unregisterPending();
 }
 

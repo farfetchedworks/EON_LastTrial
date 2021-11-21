@@ -92,6 +92,9 @@
 		<property name="length">
 			<value>0.62</value>
 		</property>
+		<property name="volume">
+			<value>1.5</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{7be3ae57-139a-48d5-b30f-0e422ee4e357}</destination>
 			<destination>{18cb4505-9a55-4334-86da-537e7e12cd16}</destination>
@@ -162,11 +165,17 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{d71e14a6-f5e7-4689-b344-a145bd6aff88}">
+		<property name="volume">
+			<value>10</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{dc596d02-b6f4-434d-8a50-d59438adc068}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{00dff5c8-cc2b-4b69-9144-94a6600fa967}">
+		<property name="volume">
+			<value>10</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{41034757-9618-4604-a108-5f64cc7620eb}</destination>
 		</relationship>
