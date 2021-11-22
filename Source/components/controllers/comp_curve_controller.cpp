@@ -38,31 +38,30 @@ void TCompCurveController::update(float dt)
         final_target = target;
     }
 
-    if (active)
-    {
-        ratio += dt * speed;
+    if (!active) return;
 
-        if (curve_lerped) {
-            ratio_curve_lerped += dt;
+    ratio += dt * speed;
 
-            if (ratio_curve_lerped >= curve_lerped_seconds) {
-                curve = curve_lerped;
-                ratio = 0.0f;
-                speed = curve_lerped_speed;
-                curve_lerped = nullptr;
-            }
+    if (curve_lerped) {
+        ratio_curve_lerped += dt;
+
+        if (ratio_curve_lerped >= curve_lerped_seconds) {
+            curve = curve_lerped;
+            ratio = 0.0f;
+            speed = curve_lerped_speed;
+            curve_lerped = nullptr;
         }
+    }
 
-        if (lerping_target) {
-            ratio_target_lerped += dt;
+    if (lerping_target) {
+        ratio_target_lerped += dt;
 
-            final_target = VEC3::Lerp(target, target_lerped, ratio_target_lerped / target_lerped_seconds);
+        final_target = VEC3::Lerp(target, target_lerped, ratio_target_lerped / target_lerped_seconds);
 
-            if (ratio_target_lerped >= target_lerped_seconds) {
-                target = target_lerped;
-                lerping_target = false;
-                target_entity_transform = CHandle();
-            }
+        if (ratio_target_lerped >= target_lerped_seconds) {
+            target = target_lerped;
+            lerping_target = false;
+            target_entity_transform = CHandle();
         }
     }
 
