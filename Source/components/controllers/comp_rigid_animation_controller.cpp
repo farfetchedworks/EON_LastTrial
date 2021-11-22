@@ -422,6 +422,9 @@ void TCompRigidAnimationController::onEndOfAnimation(float delta_time)
 
 void TCompRigidAnimationController::debugInMenu()
 {
+	if (!animation_data)
+		return;
+
 	if (ImGui::DragFloat("Current Time", &curr_time, 0.01f, animation_data->header.min_time, animation_data->header.max_time))
 	{
 		for (auto t : tracks)
