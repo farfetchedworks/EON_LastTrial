@@ -14,6 +14,7 @@
 #include "components/gameplay/comp_game_manager.h"
 #include "components/gameplay/comp_lifetime.h"
 #include "components/cameras/comp_camera_follow.h"
+#include "components/render/comp_dissolve.h"
 #include "render/draw_primitives.h"
 #include "fsm/fsm_state.h"
 #include "cal3d/cal3d.h"
@@ -294,11 +295,16 @@ void TCompTimeReversal::stopRewinding()
     stop_timer = 0.f;
     
     // Begin lifetime for Eon copy if created
-    CEntity* eonHolo = getEntityByName("EonHolo");
-
-    if (eonHolo) {
-        TCompLifetime* lTime = eonHolo->get<TCompLifetime>();
+    CEntity* e_holo = h_holo;
+    if (e_holo) {
+        TCompLifetime* lTime = e_holo->get<TCompLifetime>();
         lTime->init();
+
+        TCompDissolveEffect* c_dissolve = e_holo->get<TCompDissolveEffect>();
+        if (c_dissolve) {
+            c_dissolve->setRemoveColliders(true);
+            c_dissolve->recover(7.0, 2.4, true);
+        }
     }
 
     // Set FMOD stop parameter
@@ -375,7 +381,15 @@ void TCompTimeReversal::spawnHolo()
     TCompTransform* transform = h_transform;
         
     // Opción sin mirar a nadie usar solo rotacion de Eon
-    spawn("data/prefabs/eon_holo.json", *transform);
+    h_holo = spawn("data/prefabs/eon_holo.json", *transform);
+    CEntity* e_holo = h_holo;
+
+    TCompDissolveEffect* c_dissolve = e_holo->get<TCompDissolveEffect>();
+    if (c_dissolve) {
+        c_dissolve->setRemoveColliders(false);
+        c_dissolve->enable(0.25, 0.001, true);
+    }
+
     return;
 
     // --------------------------------------------------

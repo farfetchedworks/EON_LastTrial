@@ -20,6 +20,7 @@ class CModuleIrradianceCache;
 class CModuleParticlesEditor;
 class CModuleMultithreading;
 class CModulePlayerInteraction;
+class CModuleIrradianceCache;
 
 namespace input { class CModule; }
 namespace ui { class CModule; }
@@ -58,6 +59,7 @@ public:
   CModuleMultithreading& getMultithreading() { return *_multithreading; }
   CModulePlayerInteraction& getPlayerInteraction() { return *_playerInteraction; }
   CModuleSubtitles& getSubtitles() { return *_subtitles; }
+  CModuleIrradianceCache& getIrradiance() { return *_irradiance; }
 
 private:
   void update(float dt);
@@ -85,6 +87,7 @@ private:
   CModuleMultithreading* _multithreading = nullptr;
   CModulePlayerInteraction* _playerInteraction = nullptr;
   CModuleSubtitles* _subtitles = nullptr;
+  CModuleIrradianceCache* _irradiance = nullptr;
 
   std::thread::id _mainThreadId;
   std::vector<input::CModule*> _input;

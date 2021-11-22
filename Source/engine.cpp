@@ -85,7 +85,6 @@ void CEngine::init()
 	static ModuleEONGameplay gameplay_module("eon_gameplay");
 	static ModuleEONGameplayIntro gameplay_intro_module("eon_gameplay_intro");
 	static ModuleEONYouDied you_died_module("eon_you_died");
-	static CModuleIrradianceCache irradiance_cache_module("eon_irradiance_cache");
 	static ModuleEONEndGame endgame_module("eon_end_game");
 
 	registerResourceTypes();
@@ -117,6 +116,7 @@ void CEngine::init()
 	_particlesEditor = new CModuleParticlesEditor("particles_editor");
 	_multithreading = new CModuleMultithreading("multithreading_module");
 	_subtitles = new CModuleSubtitles("subtitles");
+	_irradiance = new CModuleIrradianceCache("eon_irradiance_cache");
 
 	_moduleManager.registerServiceModule(_render);
 	_moduleManager.registerServiceModule(_entities);
@@ -152,7 +152,7 @@ void CEngine::init()
 	_moduleManager.registerGameModule(&gameplay_module);
 	_moduleManager.registerGameModule(&you_died_module);
 	_moduleManager.registerGameModule(_playerInteraction);
-	_moduleManager.registerGameModule(&irradiance_cache_module);
+	_moduleManager.registerGameModule(_irradiance);
 	_moduleManager.registerGameModule(&endgame_module);
 
 	// boot

@@ -42,6 +42,7 @@ private:
     CHandle h_skeleton;
     CHandle h_fsm;
     CHandle h_game_manager;
+    CHandle h_holo;
 
     bool is_rewinding               = false;
     bool enabled                    = true;

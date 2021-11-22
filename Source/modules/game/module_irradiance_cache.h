@@ -8,12 +8,13 @@
 class CModuleIrradianceCache : public IModule
 {
     bool started = false;
+    int idx = 0;
     CGPUBuffer* sh_buffers[MAX_IRRADIANCE_CACHES] = {};
 
 public:
     CModuleIrradianceCache(const std::string& name) : IModule(name) {}
 
     bool start() override;
-    void update(float dt) override;
+    void restart();
     void renderInMenu();
 };
