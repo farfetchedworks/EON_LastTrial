@@ -20,6 +20,7 @@ void TCompWarpEnergy::load(const json& j, TEntityParseContext& ctx)
 	assert(j["on_hit_amount_warp"].is_number());
 
 	max_warp_energy = j.value("max_warp_energy", max_warp_energy);
+	curr_max_warp_energy = j.value("curr_max_warp_energy", max_warp_energy);
 	on_hit_amount_warp = j.value("on_hit_amount_warp", on_hit_amount_warp);
 	warp_recovery_speed = j.value("warp_recovery_speed", warp_recovery_speed);
 	
@@ -46,6 +47,23 @@ void TCompWarpEnergy::update(float dt)
 		params.alpha_cut = pct;
 	}
 
+	pct = (warp_energy - max_warp_energy) / (float)max_warp_energy;
+	ui::CWidget* w_1 = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
+	assert(w_1);
+	wChild = w_1->getChildByName("bar_fill");
+	if (wChild) {
+		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+		ui::TImageParams& params = fill->imageParams;
+		params.alpha_cut = pct;
+	}
+
+	/*wChild = w_1->getChildByName("bar_background_all");
+	if (wChild) {
+		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+		ui::TImageParams& params = fill->imageParams;
+		params.alpha_cut = 1 - pct;
+	}*/
+
 	if (empty_warp_timer > 0.f)
 	{
 		empty_warp_timer -= dt;
@@ -56,6 +74,11 @@ void TCompWarpEnergy::update(float dt)
 			assert(wChild);
 			ui::CImage* img = static_cast<ui::CImage*>(wChild);
 			img->setVisible(false);
+
+			wChild = w_1->getChildByName("bar_background_empty");
+			assert(wChild);
+			img = static_cast<ui::CImage*>(wChild);
+			img->setVisible(false);
 		}
 	}
 }
@@ -63,7 +86,7 @@ void TCompWarpEnergy::update(float dt)
 void TCompWarpEnergy::debugInMenu()
 {
 	ImGui::PushStyleColor(ImGuiCol_PlotHistogram, (ImVec4)ImColor::ImColor(0.11f, 0.15f, 0.8f));
-	ImGui::ProgressBar(warp_energy / (float)max_warp_energy, ImVec2(-1, 0));
+	ImGui::ProgressBar(warp_energy / (float)curr_max_warp_energy, ImVec2(-1, 0));
 	ImGui::PopStyleColor();
 
 	if (ImGui::Button("DBG: Fill"))
@@ -82,7 +105,7 @@ void TCompWarpEnergy::onHit(const TMsgHitWarpRecover& msg)
 	}
 
 	warp_energy = std::min<float>(warp_energy +
-		on_hit_amount_warp * multiplier, (float)max_warp_energy);
+		on_hit_amount_warp * multiplier, (float)curr_max_warp_energy);
 }
 
 bool TCompWarpEnergy::hasWarpEnergy(int warp_cost)
@@ -98,6 +121,20 @@ bool TCompWarpEnergy::hasWarpEnergy(int warp_cost)
 			ui::CImage* img = static_cast<ui::CImage*>(wChild);
 			img->setVisible(true);
 			empty_warp_timer = 0.5f;
+		}
+
+		w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
+		assert(w);
+		wChild = w->getChildByName("bar_background_empty");
+		if (wChild) {
+			ui::CImage* img = static_cast<ui::CImage*>(wChild);
+			img->setVisible(true);
+			empty_warp_timer = 0.5f;
+
+			float pct = (curr_max_warp_energy - max_warp_energy) / (float)max_warp_energy;
+			ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+			ui::TImageParams& params = fill->imageParams;
+			params.alpha_cut = pct;
 		}
 	}
 
@@ -129,6 +166,6 @@ void TCompWarpEnergy::renderDebug() {
 	{
 		TCompTransform* trans = get<TCompTransform>();
 		VEC3 pos = trans->getPosition();
-		drawProgressBar3D(pos, Colors::Blue, warp_energy, static_cast<float>(max_warp_energy), VEC2(0.f, 20.f));
+		drawProgressBar3D(pos, Colors::Blue, warp_energy, static_cast<float>(curr_max_warp_energy), VEC2(0.f, 20.f));
 	}
 }
