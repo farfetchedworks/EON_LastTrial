@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{c93b22e0-ad1b-4fb0-a775-b8a7782ecefc}">
+		<property name="volume">
+			<value>-6.5</value>
+		</property>
 		<property name="name">
 			<value>NPC</value>
 		</property>
@@ -25,6 +28,9 @@
 		<property name="decayTime">
 			<value>1400</value>
 		</property>
+		<property name="earlyDelay">
+			<value>23.5</value>
+		</property>
 		<property name="lateDelay">
 			<value>50</value>
 		</property>
@@ -34,11 +40,8 @@
 		<property name="earlyLateMix">
 			<value>80</value>
 		</property>
-		<property name="wetLevel">
-			<value>-3</value>
-		</property>
 		<property name="dryLevel">
-			<value>-8</value>
+			<value>-1.5</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{800579ec-3491-4d20-b993-93c50d4acd90}" />

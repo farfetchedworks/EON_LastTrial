@@ -29,6 +29,10 @@ public:
 	void load(const json& j, TEntityParseContext& ctx);
 	void update(float dt);
 	void debugInMenu();
+	
+	// Functions to pause and resume emission
+	void stopEmitter();
+	void playEmitter();
 
 	static void registerMsgs() {
 		DECL_MSG(TCompAudioEmitter, TMsgAllEntitiesCreated, onAllEntitiesCreated);

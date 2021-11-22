@@ -45,8 +45,9 @@ bool TCompNPC::resolve()
 
 void TCompNPC::interact()
 {
-	// TODO Isaac:
-	// Parar el emitter del NPC
+	// FMOD stop random audio emission
+	TCompAudioEmitter* t_ae = get<TCompAudioEmitter>();
+	t_ae->stopEmitter();
 
 	CEntity* trigger = talk_3d ? getEntity() : nullptr;
 
@@ -77,4 +78,8 @@ void TCompNPC::onStop(const TMsgStopCaption& msg)
 	CEntity* player = getEntityByName("player");
 	TCompSkelLookAt* look_at = player->get<TCompSkelLookAt>();
 	look_at->stopLooking();
+
+	// FMOD resume random audio emission
+	TCompAudioEmitter* t_ae = get<TCompAudioEmitter>();
+	t_ae->playEmitter();
 }
