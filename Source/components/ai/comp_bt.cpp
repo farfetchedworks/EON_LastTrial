@@ -10,6 +10,7 @@
 #include "components/common/comp_collider.h"
 #include "render/draw_primitives.h"
 #include "components/combat/comp_player_weapon.h"
+#include "components/stats/comp_attributes.h"
 
 DECL_OBJ_MANAGER("behavior_tree", TCompBT)
 
@@ -164,7 +165,11 @@ void TCompBT::onHit(const TMsgHit& msg)
 		//if (!(cast_state->usesTimings() && cast_state->inActiveFrames(anim_ctx))) {
 				
 			// Perform a strong damage animation if the damage exceeds a maximum
-			if (msg.damage >= MAX_REGULAR_DMG) {
+			CEntity* e_player = getEntityByName("player");
+			TCompAttributes* c_attributes = e_player->get<TCompAttributes>();
+
+			// Compute the dmg depending on the attributes and the current phase
+			if (msg.damage >= c_attributes->computeDamageSent(MAX_REGULAR_DMG)) {
 				bt_context->getBlackboard()->setValue("strongDamage", true);
 			}
 

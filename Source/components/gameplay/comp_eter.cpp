@@ -34,12 +34,11 @@ void TCompEter::onEntityCreated()
 
 void TCompEter::update(float dt)
 {
+	if (_exploded)
+		cte_world.exposure_factor = damp(cte_world.exposure_factor, 0.1f, 12.f, Time.delta_unscaled);
+
 	if (_isBroken)
-	{
-		if(_exploded)
-			cte_world.exposure_factor = damp(cte_world.exposure_factor, 0.1f, 8.f, Time.delta_unscaled);
 		return;
-	}
 
 	TCompTransform* t = h_transform;
 
@@ -61,8 +60,6 @@ void TCompEter::spawnBrokenEter()
 	TCompTransform* t = h_transform;
 	VEC3 spawnPos = t->getPosition();
 	spawnParticles("data/particles/splatter_blood_front.json", spawnPos, spawnPos);
-
-	QUAT rot = t->getRotation();
 
 	// Spawnear Eter Roto
 	CTransform tb;
@@ -87,21 +84,46 @@ void TCompEter::onHit()
 	// Manage ENDING TWO
 	// *****************
 
+	CEntity* animation_controller = nullptr;
+
+	// Eter didn't arrive to its destination
+	if (!_isBroken)
+	{
+		TCompTransform* t = h_transform;
+		VEC3 spawnPos = t->getPosition();
+
+		QUAT rot = t->getRotation();
+
+		// Spawnear Eter Roto
+		CTransform tb;
+		tb.fromMatrix(*t);
+		animation_controller = spawn("data/prefabs/Eter_Broken.json", *t);
+		assert(animation_controller);
+
+		// Destruir Eter
+		getEntity()->destroy();
+	}
+	else
+	{
+		_exploded = true;
+
+		// Spawnear Eter Roto
+		animation_controller = getEntityByName("Eter_Controller");
+		assert(animation_controller);
+	}
+
 	_exploded = true;
 
 	TCompTransform* t = h_transform;
 	t->setPosition(_initialPosition);
 
-	// Spawnear Eter Roto
-	CEntity* animation_controller = getEntityByName("Eter_Controller");
-	assert(animation_controller);
 	TCompRigidAnimationController* controller = animation_controller->get<TCompRigidAnimationController>();
 	assert(controller);
 	controller->setLoop(false);
 	controller->setAnimation("data/animations/Eter_Broken_Explosion_Anim.anim");
 
 	// Camara lenta
-	controller->addEventTimestamp("slow_time", 3, [](){
+	controller->addEventTimestamp("slow_time", 3, []() {
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
 		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 1.0f, &interpolators::expoOutInterpolator);
 		// Iniciar cinematica rotura
