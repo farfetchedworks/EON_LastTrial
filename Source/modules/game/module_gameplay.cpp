@@ -132,6 +132,7 @@ bool ModuleEONGameplay::start()
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->enable();
 
+		EngineUI.activateWidget("eon_hud");
 		PlayerInput.unBlockInput();
 	}
 	
