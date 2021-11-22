@@ -98,7 +98,9 @@ private:
     TNavPath currentPath;
     int pathIndex = 0;
     float pathSpeed = 1.6f;
+    float pathAcceptanceDistance = 0.15f;
     float currentPathSpeed = 0.f;
+    std::function<void()> pathCallback = nullptr;
 
     bool toggleFlyover(bool last_enabled);
     void manageLockOn();
@@ -157,7 +159,7 @@ public:
     void changeLockedTarget(VEC2& dir);
     void calcMoveDirection();
     void resetAttackCombo();
-    bool moveTo(VEC3 position, float speed = 1.6f);
+    bool moveTo(VEC3 position, float speed = 1.6f, float acceptance = 0.15f, std::function<void()> cb = nullptr);
     void updatePath(float dt);
 
     bool hasEnoughWarpEnergy(int value);

@@ -20,7 +20,7 @@ DECL_OBJ_MANAGER("npc", TCompNPC)
 
 void TCompNPC::load(const json& j, TEntityParseContext& ctx)
 {
-	assert(j["caption_scenes"]);
+	assert(j.count("caption_scenes"));
 	sight_radius = j.value("sight_radius", sight_radius);
 	
 	unique_caption_scene = j["caption_scenes"].value("unique", std::string());

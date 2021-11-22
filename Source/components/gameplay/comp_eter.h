@@ -8,12 +8,16 @@ class TCompEter : public TCompBase {
 	DECL_SIBLING_ACCESS();
 	CHandle h_transform;
 
+	bool _isBroken = false;
+	bool _spawned = false;
 	VEC3 _targetPosition;
 
 public:
 
+	void load(const json& j, TEntityParseContext& ctx);
 	void onEntityCreated();
 	void update(float dt);
 
+	void spawnBrokenEter();
 	void onHit();
 };
