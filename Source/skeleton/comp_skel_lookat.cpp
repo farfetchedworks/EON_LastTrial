@@ -95,6 +95,12 @@ void TCompSkelLookAt::update(float dt) {
 		it.apply(skel, target, lerp_amount);
 }
 
+void TCompSkelLookAt::setEnabled(bool v)
+{
+	enabled = v;
+	stop_looking = !enabled;
+}
+
 void TCompSkelLookAt::stopLooking()
 {
 	stop_looking = true;
@@ -124,5 +130,6 @@ void TCompSkelLookAt::debugInMenu() {
 	ImGui::InputFloat3("Target", &target.x);
 	ImGui::LabelText("Target Name", "%s", target_entity_name.c_str());
 	ImGui::DragFloat("Amount", &amount, 0.01f, 0.f, 1.0f);
+	ImGui::DragFloat("Lerp Amount", &lerp_amount, 0.01f, 0.f, 1.0f);
 	ImGui::DragFloat("Transition Factor", &target_transition_factor, 0.01f, 0.f, 1.0f);
 }

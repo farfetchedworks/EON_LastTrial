@@ -32,8 +32,8 @@ struct TCompSkelLookAt : public TCompBase {
 	void renderDebug();
 
 	void stopLooking();
+	void setEnabled(bool v);
 	void setTarget(const VEC3& target_pos);
-	void setEnabled(bool v) { enabled = v; }
 	bool isLookingAtTarget(float accept_dist = 0.1f);
 
 private:

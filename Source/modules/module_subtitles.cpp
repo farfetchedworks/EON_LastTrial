@@ -194,7 +194,13 @@ void CModuleSubtitles::triggerAudio()
 	if (!event.length())
 	return;
 
-	cur_audio_event = EngineAudio.post2DEventGetInst(event);
+	if (_trigger.isValid()) {
+		CEntity* e = _trigger;
+		cur_audio_event = EngineAudio.postEventGetInst(event, e->getPosition());
+	}
+	else {
+		cur_audio_event = EngineAudio.post2DEventGetInst(event);
+	}
 }
 
 bool CModuleSubtitles::startCaption(const std::string& name, CHandle t, std::function<void()> cb)
