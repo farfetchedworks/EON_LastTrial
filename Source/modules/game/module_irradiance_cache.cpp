@@ -10,7 +10,6 @@ bool CModuleIrradianceCache::start()
     if (started)
         return true;
 
-    int idx = 0;
     getObjectManager<TCompIrradianceCache>()->forEach([&](TCompIrradianceCache* irradiance) {
         irradiance->initCache(idx, &sh_buffers[idx]);
         idx++;
@@ -21,9 +20,12 @@ bool CModuleIrradianceCache::start()
     return true;
 }
 
-void CModuleIrradianceCache::update(float dt)
+void CModuleIrradianceCache::restart()
 {
-
+    getObjectManager<TCompIrradianceCache>()->forEach([&](TCompIrradianceCache* irradiance) {
+        irradiance->initCache(idx, &sh_buffers[idx]);
+        idx++;
+    });
 }
 
 void CModuleIrradianceCache::renderInMenu()
