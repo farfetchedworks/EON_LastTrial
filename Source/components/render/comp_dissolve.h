@@ -11,24 +11,29 @@ class TCompDissolveEffect : public TCompBase
 	float _waitTimer = 0.f;
 	bool _enabled = false;
 	bool _useDefault = false;
-	bool _removeCollider = true;
+	bool _removeColliders = true;
 	bool _recovering = false;
+	bool _inversed = false;
 
 	std::string _originalMatName;
+
+	void removeColliders();
+	void applyDissolveMaterial();
 
 public:
 	void load(const json& j, TEntityParseContext& ctx);
 	void update(float dt);
 	void debugInMenu();
-	
-	void enable(float time, float waitTime = 1e-6f, bool propagate_childs = true);
+	void onEntityCreated();
+
+	void enable(float time, float waitTime = 1e-6f, bool inversed = false, bool propagate_childs = true);
 	void forceEnabled(bool enabled);
-	void applyDissolveMaterial();
 	void setMaterial(const std::string& mat_name);
 	void setUseDefaultMat(bool use_default);
 	void fromLifetime(float ttl);
 	void updateObjectCte(CShaderCte<CtesObject>& cte);
 	void recover(float time, float waitTime = 1e-6f, bool propagate_childs = true);
+	//void recover(bool propagate_childs = true);
 	void setRemoveColliders(bool remove, bool propagate_childs = true);
 	void reset();
 

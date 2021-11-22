@@ -485,7 +485,7 @@ void TaskUtils::dissolveAt(CBTContext& ctx, float time, float wait_time, bool pr
 	CEntity* e_owner = ctx.getOwnerEntity();
 	TCompDissolveEffect* c_dissolve = e_owner->get<TCompDissolveEffect>();
 	if (c_dissolve) {
-		c_dissolve->enable(time, wait_time, propagate_childs);
+		c_dissolve->enable(time, wait_time, false, propagate_childs);
 	}
 }
 

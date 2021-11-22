@@ -133,7 +133,7 @@ void TCompGameManager::setEonDied()
 	assert(player);
 	TCompDissolveEffect* c_dissolve = player->get<TCompDissolveEffect>();
 	if (c_dissolve) {
-		c_dissolve->enable(7.f);
+		c_dissolve->enable(4.f, 0.01, false);
 	}
 }
 
@@ -447,7 +447,7 @@ void TCompGameManager::onEonHasRevived(const TMsgEonHasRevived& msg)
 	CEntity* player = getEntityByName("player");
 	TCompDissolveEffect* c_dissolve = player->get<TCompDissolveEffect>();
 	if (c_dissolve) {
-		c_dissolve->recover(7.f);
+		c_dissolve->recover(4, 0.0);
 	}
 
 	// FMOD event
