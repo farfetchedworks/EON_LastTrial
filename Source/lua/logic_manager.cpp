@@ -173,15 +173,17 @@ namespace LogicManager
 		PlayerInput.unBlockInput();
 
 		CEntity* e_camera = getEntityByName("camera_cinematic");
-		TCompCurveController* c_curve_controller = e_camera->get<TCompCurveController>();
+		TCompTransform* c_trans = e_camera->get<TCompTransform>();
 
-		if (c_curve_controller) {
+		TCompCurveController* c_curve_controller = e_camera->get<TCompCurveController>();
+		TCompRigidAnimationController* c_ra_controller = e_camera->get<TCompRigidAnimationController>();
+
+		if (c_curve_controller->active) {
 			c_curve_controller->setActive(false);
 		}
 		else
 		{
-			TCompRigidAnimationController* controller = e_camera->get<TCompRigidAnimationController>();
-			controller->stop();
+			c_ra_controller->stop();
 		}
 
 		CameraMixer.blendCamera("camera_follow", lerp_time, &interpolators::cubicInOutInterpolator);
