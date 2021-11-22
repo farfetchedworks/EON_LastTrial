@@ -131,20 +131,25 @@ void TCompEter::onHit()
 	});
 
 	// End and happy room
-	controller->addEventTimestamp("reset", 12, []() {
-		
-		TCompGameManager* gm = GameManager->get<TCompGameManager>();
-		gm->setTimeStatus(TCompGameManager::ETimeStatus::NORMAL);
-		
-		EngineLua.executeScript("deactivateWidget('modal_white')", 3.5f);
-
-		Boot.setEndBoot();
-
-		PlayerInput.unBlockInput();
+	controller->addEventTimestamp("reset", 12, [this]() {
+		spawnHappyRoom();
 	});
 
 	// Shake camera a little bit (will be reduced with the slow time..)
-	EngineLua.executeScript("shakeOnce(15, 0.0, 10.0)");
+	EngineLua.executeScript("shakeOnce(15, 0.1, 10.0)");
 
 	controller->start();
+}
+
+void TCompEter::spawnHappyRoom()
+{
+	PlayerInput.unBlockInput();
+
+	TCompGameManager* gm = GameManager->get<TCompGameManager>();
+	gm->setTimeStatus(TCompGameManager::ETimeStatus::NORMAL);
+
+	EngineLua.executeScript("deactivateWidget('modal_white')", 3.5f);
+	EngineLua.executeScript("activateWidget('eon_hud')", 8.5f);
+
+	Boot.setEndBoot();
 }

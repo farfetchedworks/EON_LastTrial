@@ -12,6 +12,7 @@
 #include "lua/module_scripting.h"
 #include "input/input_module.h"
 #include "ui/ui_module.h"
+#include "ui/ui_widget.h"
 
 struct onCygnusDeathCallback : public CAnimationCallback
 {

@@ -31,6 +31,5 @@ public:
 
 	void update(float dt);
 	void debugInMenu();
-	void renderDebug();
 	void load(const json& j, TEntityParseContext& ctx);
 };
