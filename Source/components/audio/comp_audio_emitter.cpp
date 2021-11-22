@@ -78,6 +78,17 @@ void TCompAudioEmitter::update(float dt)
 	}
 }
 
+void TCompAudioEmitter::stopEmitter()
+{
+	event_inst->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT);
+}
+
+void TCompAudioEmitter::playEmitter()
+{
+	event_inst->start();
+}
+
+
 void TCompAudioEmitter::debugInMenu()
 {
 }
