@@ -17,6 +17,7 @@ public:
 
     // Expose some members
     bool enabled                = true;
+    bool block_attacks          = false;
 
     float current_speed         = 5.f;
     float heavy_attack_timer    = 0.f;
