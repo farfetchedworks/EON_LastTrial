@@ -130,7 +130,10 @@ bool TCompAITimeReversal::startRewinding()
     TCompDissolveEffect* c_dissolve = get<TCompDissolveEffect>();
     if (c_dissolve) {
         c_dissolve->setRemoveColliders(false);
-        c_dissolve->enable(3.f);
+        //c_dissolve->enable(0.f);
+        c_dissolve->applyDissolveMaterial();
+        c_dissolve->forceEnabled(true);
+        c_dissolve->recover(1.4, 0.0);
     }
 
     // Needed to avoid collision with environment
@@ -175,8 +178,8 @@ void TCompAITimeReversal::stopRewinding()
 
     TCompDissolveEffect* c_dissolve = get<TCompDissolveEffect>();
     if (c_dissolve) {
-        c_dissolve->recover();
-        c_dissolve->setRemoveColliders(true);
+        //c_dissolve->recover(1.0);
+        //c_dissolve->setRemoveColliders(true);
     }
 
 
@@ -236,6 +239,11 @@ void TCompAITimeReversal::spawnHolo()
 
     // Set lock-on target to the holo
     CEntity* e_hologram = getEntityByName(holo_entity_name);
+
+    TCompTransform* holo_trans = e_hologram->get<TCompTransform>();
+    holo_trans->setPosition(transform->getPosition());
+    holo_trans->setRotation(transform->getRotation());
+
     CEntity* e_player = getEntityByName("player");
     TCompPlayerController* c_player_cont = e_player->get<TCompPlayerController>();
     if (c_player_cont->is_locked_on)
