@@ -25,6 +25,7 @@ private:
     CHandle h_collider;
     CHandle h_enemy_health;
     CHandle h_game_manager;
+    CHandle h_holo;
 
     bool is_rewinding = false;
     bool spawn_holo = false;

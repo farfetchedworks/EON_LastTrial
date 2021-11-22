@@ -17,6 +17,7 @@ public:
 
     // Expose some members
     bool enabled                = true;
+    bool block_attacks          = false;
 
     float current_speed         = 5.f;
     float heavy_attack_timer    = 0.f;
@@ -141,7 +142,7 @@ public:
 
     void move(float dt);
     void resetMoveTimer();
-    void removeLockOn();
+    void removeLockOn(bool recenter = true);
     void blockAim() { _aimLocked = true; };
     void unBlockAim() { _aimLocked = false; };
     void lockOnToTarget(CHandle target);

@@ -57,12 +57,13 @@ void TCompWarpEnergy::update(float dt)
 		params.alpha_cut = pct;
 	}
 
-	/*wChild = w_1->getChildByName("bar_background_all");
+	wChild = w_1->getChildByName("bar_background_all");
 	if (wChild) {
 		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
 		ui::TImageParams& params = fill->imageParams;
-		params.alpha_cut = 1 - pct;
-	}*/
+		pct = (curr_max_warp_energy - max_warp_energy) / (float)max_warp_energy;;
+		params.alpha_cut = (1 - pct);
+	}
 
 	if (empty_warp_timer > 0.f)
 	{
