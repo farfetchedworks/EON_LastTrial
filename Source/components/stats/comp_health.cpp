@@ -256,8 +256,12 @@ void TCompHealth::renderDebug() {
 
     TCompName* c_name = get<TCompName>();
 
+    static const Color ourGreen = Color(VEC4(0.549f, 0.792f, 0.152f, 1));
+    static const Color ourOrange = Color(VEC4(0.753f, 0.655f, 0.f, 1));
+    static const Color ourRed = Color(VEC4(0.466f, 0.063f, 0.15f, 1));
+
     float pct = health / (float)max_health;
-    Color clr = pct > 0.333f ? (pct > 0.666f ? Colors::Green : Colors::Orange) : Colors::Red;
+    Color clr = pct > 0.333f ? (pct > 0.666f ? ourGreen : ourOrange) : ourRed;
 
     if (!is_boss && !is_player)
     {
