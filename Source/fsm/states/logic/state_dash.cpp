@@ -302,6 +302,9 @@ public:
         // Set player dash status
         controller->is_dashing = false;
 
+        // Stop all forces applied
+        collider->stopFollowForceActor("dash");
+
         float current_speed = controller->getSpeed();
         if (collider->distanceToGround() >= 0.2) {
             // add force to end of dash
