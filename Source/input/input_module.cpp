@@ -63,6 +63,22 @@ namespace input
         _mapping.load(filename);
     }
 
+    void CModule::blockInput()
+    { 
+        _blocked = true; 
+        clearInput();
+    }
+
+    void CModule::unBlockInput()
+    { 
+        _blocked = false; 
+    }
+
+    void CModule::toggleBlockInput()
+    { 
+        _blocked ? unBlockInput() : blockInput();
+    }
+
     void CModule::clearInput()
     {
         for (auto device : _devices)
