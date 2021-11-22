@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="Event" id="{0cc947fc-da87-4478-9050-d46291a4532d}">
 		<property name="name">
-			<value>Eon_ThisWas</value>
+			<value>Eon_AsThisOne</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -107,7 +107,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{db2fd7f9-8056-4396-ae41-547c6ac6c7f8}">
 		<property name="volume">
-			<value>-3.5</value>
+			<value>-3</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
