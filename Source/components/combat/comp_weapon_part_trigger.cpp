@@ -132,46 +132,10 @@ void TCompWeaponPartTrigger::onSetActive(const TMsgEnableWeapon& msg)
 
 VEC3 aux;
 
-void TCompWeaponPartTrigger::spawnFloorParticles()
+void TCompWeaponPartTrigger::spawnFloorParticles(const CTransform& transform)
 {
-	if (h_floor_parts.isValid())
-		return;
-
-	CTransform t;
-	TCompAttachedToBone* c_attached_to_bone = h_attached_to_bone;
-	c_attached_to_bone->applyOffset(t, offset);
-
-	VEC3 newPos = t.getPosition();
-
-	{
-		std::vector<physx::PxRaycastHit> raycastHits;
-		if (EnginePhysics.raycast(newPos + VEC3::Up, VEC3::Down, 5.f, raycastHits, CModulePhysics::FilterGroup::Scenario, true)) {
-			newPos = PXVEC3_TO_VEC3(raycastHits[0].position);
-		}
-	}
-
-	aux = newPos;
-
-	t.setPosition(newPos);
-	t.setRotation(QUAT::Identity);
-
-	TCompGameManager* gm = GameManager->get<TCompGameManager>();
-	bool isCave = gm->getPlayerLocation() == eLOCATION::CAVE;
-
-	CEntity* e = spawn( isCave ? 
-		"data/particles/eon_cavefloor_particles.json" : "data/particles/eon_templefloor_particles.json", t);
-	TCompBuffers* buffers = e->get<TCompBuffers>();
-	CShaderCte< CtesParticleSystem >* cte = static_cast<CShaderCte< CtesParticleSystem >*>(buffers->getCteByName("CtesParticleSystem"));
-
-	CEntity* eParent = parent;
-	cte->emitter_initial_pos = newPos;
-	// Use this as direction
-	VEC3 dir = newPos - eParent->getPosition();
-	dir.Normalize();
-	cte->emitter_owner_position = dir;
-	cte->updateFromCPU();
-
-	h_floor_parts = e;
+	spawnParticles("data/particles/compute_sword_sparks_particle.json", transform.getPosition() + transform.getForward() * 1.8f, transform.getPosition() + transform.getForward() * 1.8f);
+	spawnParticles("data/particles/compute_dash_smoke_particles.json", transform.getPosition() + transform.getForward() * 0.6f, transform.getPosition() + transform.getForward() * 0.7f);
 }
 
 void TCompWeaponPartTrigger::onTriggerEnter(const TMsgEntityTriggerEnter& msg)
@@ -196,7 +160,7 @@ void TCompWeaponPartTrigger::onTriggerEnter(const TMsgEntityTriggerEnter& msg)
 		if (weaponPos.y < (eParent->getPosition().y + 1.f)) {
 
 			if (!is_point) {
-				spawnFloorParticles();
+				spawnFloorParticles(*c_player_trans);
 			}
 
 			return;

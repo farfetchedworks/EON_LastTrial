@@ -2532,9 +2532,7 @@ public:
 	void onEnter(CBTContext& ctx) override {
 		ctx.setIsDying(true);
 		TaskUtils::resumeAction(ctx, name);
-		TaskUtils::dissolveAt(ctx, 20.f, 0.5f);
-
-
+		TaskUtils::dissolveAt(ctx, 18.f, 0.5f);
 
 		CEntity* owner = ctx.getOwnerEntity();
 		// Change group to avoid new hits (blood, etc)
