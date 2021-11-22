@@ -41,8 +41,6 @@ struct onCygnusDeathCallback : public CAnimationCallback
 		if (c_health->checkDeathAnimationCompleted())
 			return;
 
-		c_health->setRenderActive(false);
-
 		EngineUI.deactivateWidget("eon_hud");
 
 		TCompParent* parent = e_owner->get<TCompParent>();

@@ -22,11 +22,13 @@ public:
 	void debugInMenu();
 	
 	void enable(float time, float waitTime = 1e-6f, bool propagate_childs = true);
+	void forceEnabled(bool enabled);
 	void applyDissolveMaterial();
 	void setMaterial(const std::string& mat_name);
+	void setUseDefaultMat(bool use_default);
 	void fromLifetime(float ttl);
 	void updateObjectCte(CShaderCte<CtesObject>& cte);
-	void recover(bool propagate_childs = true);
+	void recover(float time, float waitTime = 1e-6f, bool propagate_childs = true);
 	void setRemoveColliders(bool remove, bool propagate_childs = true);
 	void reset();
 

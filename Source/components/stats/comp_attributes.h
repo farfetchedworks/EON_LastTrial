@@ -4,8 +4,8 @@
 #include "components/messages.h"
 
 struct TAttribute {
-	unsigned short int value;
-	unsigned short int ratio;
+	int value;
+	int ratio;
 };
 
 class TCompAttributes : public TCompBase {
