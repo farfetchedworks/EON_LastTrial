@@ -49,6 +49,11 @@ void TCompDissolveEffect::enable(float time, float waitTime, bool propagate_chil
 	}
 }
 
+void TCompDissolveEffect::forceEnabled(bool enabled)
+{
+	_enabled = enabled;
+}
+
 void TCompDissolveEffect::updateObjectCte(CShaderCte<CtesObject>& cte)
 {
 	if (!_enabled)
@@ -63,6 +68,11 @@ void TCompDissolveEffect::setMaterial(const std::string& mat_name)
 	CEntity* owner = getEntity();
 	TCompRender* c_render = owner->get<TCompRender>();
 	c_render->setMaterialForAll(Resources.get(mat_name)->as<CMaterial>());
+}
+
+void TCompDissolveEffect::setUseDefaultMat(bool use_default)
+{
+	_useDefault = use_default;
 }
 
 void TCompDissolveEffect::applyDissolveMaterial()
@@ -90,20 +100,23 @@ void TCompDissolveEffect::applyDissolveMaterial()
 	}
 }
 
-void TCompDissolveEffect::recover(bool propagate_childs)
+void TCompDissolveEffect::recover(float time, float waitTime, bool propagate_childs)
 {
 	if (_removeCollider || !_originalMatName.length())
 		return;
 
+	_timer = time;
+	_dissolveTime = time;
+	_waitTimer = waitTime;
 	_recovering = true;
 
 	TCompParent* c_parent = get<TCompParent>();
 	if (c_parent && propagate_childs) {
-		c_parent->forEachChild([](CHandle h) {
+		c_parent->forEachChild([&](CHandle h) {
 			CEntity* e = h;
 			TCompDissolveEffect* c_dissolve = e->get<TCompDissolveEffect>();
 			if (c_dissolve) {
-				c_dissolve->recover();
+				c_dissolve->recover(time);
 			}
 		});
 	}
