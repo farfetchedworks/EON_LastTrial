@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{0e9e6620-4cb5-4e2d-9f4d-ffd9920db604}">
-		<property name="volume">
-			<value>1</value>
-		</property>
 		<property name="name">
 			<value>CHA_Lancer_AT</value>
 		</property>
