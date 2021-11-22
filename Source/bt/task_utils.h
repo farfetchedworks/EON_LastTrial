@@ -20,6 +20,8 @@ struct TaskUtils {
 	static bool canSeePlayer(TCompTransform* my_trans, TCompTransform* player_trans);
 	static bool hasObstaclesToEon(TCompTransform* my_trans, TCompTransform* player_trans, bool zeroOutY = true, 
 		physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy ^ CModulePhysics::FilterGroup::Trigger ^ CModulePhysics::FilterGroup::EffectArea);
+	static bool hasObstaclesToEon(VEC3 raycast_origin, TCompTransform* player_trans, bool zeroOutY = true, 
+		physx::PxU32 mask = CModulePhysics::FilterGroup::All ^ CModulePhysics::FilterGroup::Enemy ^ CModulePhysics::FilterGroup::Trigger ^ CModulePhysics::FilterGroup::EffectArea);
 
 	static void castAreaAttack(CEntity* e_attacker, VEC3 position, const float radius, const int dmg);
 	static void castAreaDelay(CEntity* e_caster, float duration, CHandle h_locked_t);
