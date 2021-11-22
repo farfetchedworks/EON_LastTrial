@@ -632,10 +632,10 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-65</value>
+			<value>-80</value>
 		</property>
 		<property name="curveShape">
-			<value>-0.177012026</value>
+			<value>-0.0744836628</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{4f061554-cdf9-4dd8-8fe1-c86d4081d326}">
