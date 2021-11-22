@@ -133,7 +133,7 @@ void TCompAttributes::updateCoherence()
 	// better this?
 	max_warp = base_slots + (attr.value - 1);
 
-	warp->setMaxWarp(max_warp);
+	warp->setCurrMaxWarp(max_warp);
 }
 
 

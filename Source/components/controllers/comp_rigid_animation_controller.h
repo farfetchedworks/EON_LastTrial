@@ -33,10 +33,10 @@ struct TCompRigidAnimationController : public TCompBase
 		uint32_t next_key = 0;
 		std::vector<TTrackObject> objs;
 
-		void rewind()
+		void rewind(float t)
 		{
 			next_key = 0;
-			apply(0.0f);
+			apply(t);
 		}
 
 		void apply(float current_time)
@@ -121,7 +121,7 @@ struct TCompRigidAnimationController : public TCompBase
 	void update(float delta_time);
 	void assignTracksToSceneObjects();
 	void updateCurrentTime(float delta_time);
-	void onEndOfAnimation();
+	void onEndOfAnimation(float delta_time);
 
 	void addEventTimestamp(const std::string& name, int frame, std::function<void()> cb);
 	void updateEvents();
@@ -130,6 +130,7 @@ struct TCompRigidAnimationController : public TCompBase
 	void setAnimation(const std::string& animation_name);
 	void setTargetBone(const std::string& bone_name) { cinematic_target_bone = bone_name; };
 	void setSpeed(float speed) { speed_factor = speed; };
+	void setLoop(bool v) { loop = v; };
 	void setStatic(bool is_static) { static_animation = is_static; };
 
 	bool hasTracks() { return tracks.size() > 0; }

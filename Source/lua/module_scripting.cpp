@@ -179,6 +179,14 @@ void CModuleScripting::bindLua()
 		}
 	));
 
+	lua_state.set("shake", [](float amount, float fadeIn) {
+			CEntity* outputCamera = getEntityByName("camera_mixed");
+			TCompCameraShake* shaker = outputCamera->get<TCompCameraShake>();
+			if (shaker)
+				shaker->shake(amount, fadeIn, true);
+	}
+	);
+
 	// Colliders
 
 	lua_state.set("setColliderStatus", [](CHandle owner, bool status) {

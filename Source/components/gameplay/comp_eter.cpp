@@ -6,6 +6,7 @@
 #include "lua/module_scripting.h"
 #include "ui/ui_module.h"
 #include "modules/module_boot.h"
+#include "input/input_module.h"
 #include "components/common/comp_transform.h"
 #include "components/common/comp_collider.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
@@ -14,6 +15,11 @@
 #include "entity/entity_parser.h"
 
 DECL_OBJ_MANAGER("eter", TCompEter)
+
+void TCompEter::load(const json& j, TEntityParseContext& ctx)
+{
+	_isBroken = j.value("isBroken", _isBroken);
+}
 
 void TCompEter::onEntityCreated()
 {
@@ -25,34 +31,64 @@ void TCompEter::onEntityCreated()
 
 void TCompEter::update(float dt)
 {
+	if (_isBroken)
+		return;
+
 	TCompTransform* t = h_transform;
 
 	if (t->getPosition() != _targetPosition)
 	{
 		t->setPosition( damp<VEC3>(t->getPosition(), _targetPosition, 1.25f, dt) );
 	}
+	
+	if(!_spawned && VEC3::Distance(t->getPosition(), _targetPosition) < 0.1f)
+	{
+		spawnBrokenEter();
+	}
+}
+
+void TCompEter::spawnBrokenEter()
+{
+	_spawned = true;
+
+	TCompTransform* t = h_transform;
+	VEC3 spawnPos = t->getPosition();
+	spawnParticles("data/particles/splatter_blood_front.json", spawnPos, spawnPos);
+
+	QUAT rot = t->getRotation();
+
+	// Spawnear Eter Roto
+	CTransform tb;
+	tb.fromMatrix(*t);
+	CEntity* animation_controller = spawn("data/prefabs/Eter_Broken.json", *t);
+	assert(animation_controller);
+
+	TCompRigidAnimationController* controller = animation_controller->get<TCompRigidAnimationController>();
+	assert(controller);
+	controller->setAnimation("data/animations/Eter_Broken_Idle_Anim.anim");
+	controller->start();
+
+	EngineLua.executeScript("shake(0.1, 1.0)");
+
+	// Destruir Eter
+	getEntity()->destroy();
 }
 
 void TCompEter::onHit()
 {
+	// *****************
 	// Manage ENDING TWO
-	TCompTransform* t = h_transform;
-	VEC3 spawnPos = t->getPosition();
-	//spawnParticles("data/particles/splatter_blood_front.json", spawnPos, spawnPos);
-
-	// Destruir Eter
-	getEntity()->destroy();
-
-	// Spawnear Eter Roto
-	CEntity* animation_controller = spawn("data/prefabs/Eter_Broken.json", *t);
-	assert(animation_controller);
+	// *****************
 
 	// Iniciar cinematica rotura
 	//EngineLua.executeScript("CinematicEnding_2()");
 	
-	// Iniciar animacion rigida eter roto
+	// Spawnear Eter Roto
+	CEntity* animation_controller = getEntityByName("Eter_Controller");
+	assert(animation_controller);
 	TCompRigidAnimationController* controller = animation_controller->get<TCompRigidAnimationController>();
 	assert(controller);
+	controller->setLoop(false);
 	controller->setAnimation("data/animations/Eter_Broken_Explosion_Anim.anim");
 
 	// Camara lenta
@@ -72,7 +108,9 @@ void TCompEter::onHit()
 	});
 
 	// Blood
-	controller->addEventTimestamp("blood", 5, [spawnPos]() {
+	controller->addEventTimestamp("blood", 5, [&]() {
+		TCompTransform* t = h_transform;
+		VEC3 spawnPos = t->getPosition();
 		spawnParticles("data/particles/compute_ether_explosion_particles.json", spawnPos, spawnPos);
 	});
 
@@ -83,11 +121,15 @@ void TCompEter::onHit()
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
 		gm->setTimeStatus(TCompGameManager::ETimeStatus::NORMAL);
 
-		EngineLua.executeScript("deactivateWidget('modal_black')", 3.0f);
+		EngineLua.executeScript("deactivateWidget('modal_black')", 4.0f);
 
-		// 2. Spawnear nuevas escenas
 		Boot.setEndBoot();
+
+		PlayerInput.unBlockInput();
 	});
+
+	// Shake camera a little bit (will be reduced with the slow time..)
+	EngineLua.executeScript("shakeOnce(15, 0.0, 10.0)");
 
 	controller->start();
 }
