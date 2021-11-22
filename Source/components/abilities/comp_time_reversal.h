@@ -44,6 +44,7 @@ private:
     CHandle h_game_manager;
 
     bool is_rewinding               = false;
+    bool enabled                    = true;
     eEffectState rendering_effect   = eEffectState::NONE;
 
     int warp_consumption = 2;
@@ -86,6 +87,7 @@ public:
     void debugInMenu();
     void renderDebug();
 
+    void disable();
     bool startRewinding();
     void stopRewinding();
     bool isRewinding() { return is_rewinding; }

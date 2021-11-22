@@ -22,6 +22,7 @@ void TCompNPC::load(const json& j, TEntityParseContext& ctx)
 {
 	assert(j.count("caption_scenes"));
 	sight_radius = j.value("sight_radius", sight_radius);
+	talk_3d = j.value("talk_3d", talk_3d);
 	
 	unique_caption_scene = j["caption_scenes"].value("unique", std::string());
 	caption_scene = j["caption_scenes"].value("the_rest", std::string());
@@ -39,23 +40,26 @@ bool TCompNPC::resolve()
 	CEntity* player = getEntityByName("player");
 	if (!player)
 		return false;
-	return PawnUtils::isInsideCone(player, CHandle(this).getOwner(), deg2rad(60.f), sight_radius);
+	return PawnUtils::isInsideCone(player, CHandle(this).getOwner(), deg2rad(80.f), sight_radius);
 }
 
 void TCompNPC::interact()
 {
-	// TODO Isaac:
-	// Parar el emitter del NPC
+	// FMOD stop random audio emission
+	TCompAudioEmitter* t_ae = get<TCompAudioEmitter>();
+	t_ae->stopEmitter();
+
+	CEntity* trigger = talk_3d ? getEntity() : nullptr;
 
 	if (!first_interaction)
 	{
-		Subtitles.startCaption(unique_caption_scene, getEntity());
+		Subtitles.startCaption(unique_caption_scene, trigger);
 		PlayerInput.blockInput();
 		first_interaction = true;
 
 	}else if(caption_scene.length())
 	{
-		Subtitles.startCaption(caption_scene, getEntity());
+		Subtitles.startCaption(caption_scene, trigger);
 	}
 
 	// Enable player look at
@@ -74,4 +78,8 @@ void TCompNPC::onStop(const TMsgStopCaption& msg)
 	CEntity* player = getEntityByName("player");
 	TCompSkelLookAt* look_at = player->get<TCompSkelLookAt>();
 	look_at->stopLooking();
+
+	// FMOD resume random audio emission
+	TCompAudioEmitter* t_ae = get<TCompAudioEmitter>();
+	t_ae->playEmitter();
 }

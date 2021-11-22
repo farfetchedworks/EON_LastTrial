@@ -12,6 +12,7 @@
 #include "lua/module_scripting.h"
 #include "input/input_module.h"
 #include "ui/ui_module.h"
+#include "ui/ui_widget.h"
 
 struct onCygnusDeathCallback : public CAnimationCallback
 {
@@ -39,8 +40,6 @@ struct onCygnusDeathCallback : public CAnimationCallback
 		// in other case, this sets completion to true inside
 		if (c_health->checkDeathAnimationCompleted())
 			return;
-
-		c_health->setRenderActive(false);
 
 		EngineUI.deactivateWidget("eon_hud");
 

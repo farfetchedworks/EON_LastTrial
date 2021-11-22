@@ -1879,7 +1879,7 @@ public:
 		CTransform t;
 		t.fromMatrix(*transform);
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t.getRotation()));
+		t.setRotation(QUAT::Concatenate(t.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 
 		// Destroy form 1 entity
 		ctx.getOwnerEntity().destroy();
@@ -2115,6 +2115,12 @@ public:
 
 			// Intro form 3
 			EngineLua.executeScript("CinematicCygnusF2ToF3()");
+
+			// Rotate to face player
+			CEntity* player = getPlayer();
+			TCompTransform* c_trans = e->get<TCompTransform>();
+			float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
+			c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 		}
 
 		return EBTNodeResult::SUCCEEDED;
@@ -2407,7 +2413,21 @@ public:
 
 	void onEnter(CBTContext& ctx) override {
 		ctx.setIsDying(true);
+
+		CEntity* e = ctx.getOwnerEntity();
+
+		// Hide health bar
+		TCompHealth* c_health = e->get<TCompHealth>();
+		c_health->setRenderActive(false);
+
+		// Death cinematic
 		EngineLua.executeScript("CinematicCygnusDeath()");
+
+		// Rotate to face player
+		CEntity* player = getPlayer();
+		TCompTransform* c_trans = e->get<TCompTransform>();
+		float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
+		c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {

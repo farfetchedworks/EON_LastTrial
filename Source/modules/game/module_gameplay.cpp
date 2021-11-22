@@ -120,13 +120,12 @@ bool ModuleEONGameplay::start()
 	Engine.resetClock();
 
 	// hacky to allow not playing the cinematic
-	CEntity* gard = getEntityByName("Gard");
-	if (gard)
+	if (getEntityByName("Gard").isValid())
 	{
 		EngineLua.executeScript("BeginIntroCinematic()");
 		Subtitles.startCaption("intro_cinematic_2");
 	}
-	else
+	else if(!getEntityByName("camera_preview").isValid())
 	{
 		CEntity* e_camera_follow = getEntityByName("camera_follow");
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();

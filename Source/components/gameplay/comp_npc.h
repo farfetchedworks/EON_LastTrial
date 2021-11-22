@@ -8,6 +8,7 @@ class TCompNPC : public TCompBase {
 	DECL_SIBLING_ACCESS();
 
 	bool first_interaction = false;
+	bool talk_3d = true;
 
 	float sight_radius = 2.f;
 	std::string unique_caption_scene;

@@ -9,7 +9,10 @@
 #include "components/common/comp_tags.h"
 #include "modules/module_camera_mixer.h"
 #include "audio/module_audio.h"
+#include "ui/ui_widget.h"
+#include "ui/ui_module.h"
 #include "components/common/comp_transform.h"
+#include "components/abilities/comp_time_reversal.h"
 #include "components/cameras/comp_camera_follow.h"
 
 // #define USE_LOAD_THREAD
@@ -110,6 +113,7 @@ bool CModuleBoot::loadEndingBoot()
 
 	// Spawn Eon in the player start position
 	CEntity* player = getEntityByName("player");
+
 	VHandles v_player_start = CTagsManager::get().getAllEntitiesByTag(getID("player_start"));
 
 	assert(player);
@@ -122,6 +126,17 @@ bool CModuleBoot::loadEndingBoot()
 	player->setPosition(h_start_trans->getPosition(), true);
 	h_player_trans->setRotation(h_start_trans->getRotation());
 			
+	TCompTimeReversal* tr = player->get<TCompTimeReversal>();
+	tr->disable();
+
+	ui::CWidget* w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
+	assert(w_hud);
+	w_hud->setVisible(false);
+
+	w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
+	assert(w_hud);
+	w_hud->setVisible(false);
+
 	_endBoot = false;
 	_bootCompleted = true;
 	_bootReady = true;
