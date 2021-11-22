@@ -38,7 +38,7 @@ void TCompEter::onHit()
 	// Manage ENDING TWO
 	TCompTransform* t = h_transform;
 	VEC3 spawnPos = t->getPosition();
-	spawnParticles("data/particles/splatter_blood_front.json", spawnPos, spawnPos);
+	//spawnParticles("data/particles/splatter_blood_front.json", spawnPos, spawnPos);
 
 	// Destruir Eter
 	getEntity()->destroy();
@@ -48,21 +48,21 @@ void TCompEter::onHit()
 	assert(animation_controller);
 
 	// Iniciar cinematica rotura
-	EngineLua.executeScript("CinematicEnding_2()");
+	//EngineLua.executeScript("CinematicEnding_2()");
 	
 	// Iniciar animacion rigida eter roto
 	TCompRigidAnimationController* controller = animation_controller->get<TCompRigidAnimationController>();
 	assert(controller);
-	controller->setAnimation("data/animations/Eter_Broken_Anim.anim");
+	controller->setAnimation("data/animations/Eter_Broken_Explosion_Anim.anim");
 
 	// Camara lenta
-	controller->addEventTimestamp("slow_time", 88, [](){
+	controller->addEventTimestamp("slow_time", 3, [](){
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
-		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 0.5f, &interpolators::expoOutInterpolator);
+		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 1.0f, &interpolators::expoOutInterpolator);
 	});
 
 	// Motion Blur
-	controller->addEventTimestamp("motion_blur", 70, []() {
+	controller->addEventTimestamp("motion_blur", 0, []() {
 		CEntity* camera = getEntityByName("camera_mixed");
 		assert(camera);
 		TCompMotionBlur* c_motion_blur = camera->get<TCompMotionBlur>();
@@ -72,19 +72,22 @@ void TCompEter::onHit()
 	});
 
 	// Blood
-	controller->addEventTimestamp("blood", 86, [spawnPos]() {
-		spawnParticles("data/particles/splatter_blood_front.json", spawnPos, spawnPos);
+	controller->addEventTimestamp("blood", 5, [spawnPos]() {
+		spawnParticles("data/particles/compute_ether_explosion_particles.json", spawnPos, spawnPos);
 	});
 
 	// End and happy room
-	controller->addEventTimestamp("reset", 110, []() {
+	controller->addEventTimestamp("reset", 10, []() {
 		EngineUI.activateWidget("modal_black", false);
+
+		TCompGameManager* gm = GameManager->get<TCompGameManager>();
+		gm->setTimeStatus(TCompGameManager::ETimeStatus::NORMAL);
+
+		EngineLua.executeScript("deactivateWidget('modal_black')", 3.0f);
+
 		// 2. Spawnear nuevas escenas
 		Boot.setEndBoot();
-		// 3. Quitar modal
-		EngineLua.executeScript("activateWidget('modal_black')", 4.f);
 	});
 
-	// EngineLua.executeScript("activateWidget('modal_black')", 4.f);
 	controller->start();
 }
