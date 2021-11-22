@@ -7,7 +7,10 @@ class TCompNPC : public TCompBase {
 
 	DECL_SIBLING_ACCESS();
 
+	bool first_interaction = false;
+
 	float sight_radius = 2.f;
+	std::string unique_caption_scene;
 	std::string caption_scene;
 
 public:

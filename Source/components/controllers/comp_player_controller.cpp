@@ -501,19 +501,10 @@ void TCompPlayerController::move(float dt)
 	}
 
 	// Manage on stop running/sprinting animations
-	if (!is_turn_sprint && !is_moving) {
-
-		float isPressed = PlayerInput["sprint"].isPressed();
-		float lastTargetSpeed = prev_target_speed * speed_multiplier_move;
-		
-		if (!isPressed && PlayerInput["sprint"].timeSinceReleased() < 0.3f)
-			lastTargetSpeed = sprint_speed;
-
-		if (lastTargetSpeed == sprint_speed && moving_timer > 0.75f) {
-			moving_timer = 0.f;
-			current_speed = 0.0f;
-			setVariable("is_stopping_sprint", true);
-		}
+	if (!is_turn_sprint && !is_moving && PlayerInput["sprint"].wasPressed() && moving_timer > 0.75f) {
+		moving_timer = 0.f;
+		current_speed = 0.0f;
+		setVariable("is_stopping_sprint", true);
 	}
 
 	if (is_moving)
