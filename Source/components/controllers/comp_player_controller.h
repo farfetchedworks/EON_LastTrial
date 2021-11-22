@@ -141,7 +141,7 @@ public:
 
     void move(float dt);
     void resetMoveTimer();
-    void removeLockOn();
+    void removeLockOn(bool recenter = true);
     void blockAim() { _aimLocked = true; };
     void unBlockAim() { _aimLocked = false; };
     void lockOnToTarget(CHandle target);

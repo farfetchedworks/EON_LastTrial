@@ -967,11 +967,17 @@ void TCompPlayerController::manageAimCamera()
 	}
 }
 
-void TCompPlayerController::removeLockOn()
+void TCompPlayerController::removeLockOn(bool recenter)
 {
 	CEntity* e_camera_follow = getEntityByName("camera_follow");
 	TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
-	c_camera_follow->reset();
+	
+	if (is_locked_on) {
+		c_camera_follow->setLockedEntity(CHandle());
+	}
+	else if(recenter){
+		c_camera_follow->must_recenter = true;
+	}
 	is_locked_on = false;
 	h_locked_transform = CHandle();
 }

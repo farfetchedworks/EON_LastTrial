@@ -106,13 +106,13 @@ void CModulePlayerInteraction::interact(CHandle object)
 	// Send a message to the interactable
 	e_interactable->sendMsg(TMsgEonInteracted({ player }));
 
-	// Remove lock on when interacting with something
-	controller->removeLockOn();
-
 	TCompShrine* c_shrine = e_interactable->get<TCompShrine>();
 	TCompEnergyWall* c_energyWall = e_interactable->get<TCompEnergyWall>();
 	TCompLaunchAnimation* c_animation = e_interactable->get<TCompLaunchAnimation>();
 	TCompNPC* c_npc = e_interactable->get<TCompNPC>();
+
+	// Remove lock on when interacting with something
+	controller->removeLockOn(!c_npc);
 
 	if (c_shrine) {
 		setLastShrine(object.getOwner());
