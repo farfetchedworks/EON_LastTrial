@@ -351,8 +351,7 @@ void TCompRigidAnimationController::assignTracksToSceneObjects()
 					CTransform t;
 					t.setPosition(t_transform->getPosition());
 					float yaw = t_transform->getYawRotationToAimTo(player->getPosition());
-					t.setRotation(QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), t_transform->getRotation()));
-				
+					t.setRotation(QUAT::Concatenate(t_transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 					o.initial_pose = t;
 				}
 				else {
