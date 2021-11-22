@@ -167,6 +167,8 @@ bool CModuleSubtitles::stopCaptionEntry()
 	{
 		EngineLua.executeScript(currentCaption.script);
 	}
+
+	return true;
 }
 
 void CModuleSubtitles::setState(EState state)
@@ -195,7 +197,7 @@ void CModuleSubtitles::triggerAudio()
 	cur_audio_event = EngineAudio.post2DEventGetInst(event);
 }
 
-bool CModuleSubtitles::startCaption(const std::string& name, CHandle t)
+bool CModuleSubtitles::startCaption(const std::string& name, CHandle t, std::function<void()> cb)
 {
 	if (_active)
 		return false;
@@ -212,6 +214,7 @@ bool CModuleSubtitles::startCaption(const std::string& name, CHandle t)
 	}
 
 	_trigger = t;
+	_currentCallback = cb;
 
 	return _active;
 }
@@ -228,12 +231,17 @@ void CModuleSubtitles::stopCaption()
 	if (eTrigger)
 	{
 		eTrigger->sendMsg(TMsgStopCaption());
-		
 	}
 
 	_trigger = CHandle();
 
 	stopAudio();
+
+	if (_currentCallback)
+	{
+		_currentCallback();
+		_currentCallback = nullptr;
+	}
 }
 
 void CModuleSubtitles::stop()

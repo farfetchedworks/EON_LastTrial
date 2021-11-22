@@ -8,6 +8,7 @@
 #include "lua/module_scripting.h"
 #include "render/draw_primitives.h"
 #include "modules/module_physics.h"
+#include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 #include "bt/task_utils.h"
 
@@ -101,7 +102,7 @@ float TCompRigidAnimationController::getAnimationTime()
 	return std::max(animation_data->header.max_time - animation_data->header.min_time, 0.f) / speed_factor;
 }
 
-void TCompRigidAnimationController::start(std::function<void()> cb)
+void TCompRigidAnimationController::start(std::function<void()> cbe)
 {
 	if (frame_start > 0)
 	{
@@ -110,7 +111,7 @@ void TCompRigidAnimationController::start(std::function<void()> cb)
 		curr_time = time;
 	}
 
-	callback = cb;
+	end_callback = cbe;
 	playing = true;
 
 	// Fire fmod audio
@@ -156,6 +157,8 @@ void TCompRigidAnimationController::update(float delta_time)
 
 	for (auto t : tracks)
 		t.apply(curr_time);
+
+	updateEvents();
 
 	if (!reverse)
 	{
@@ -221,6 +224,50 @@ void TCompRigidAnimationController::update(float delta_time)
 	}
 
 	cam_transform->lookAt(eye, target, VEC3::Up);
+}
+
+void TCompRigidAnimationController::addEventTimestamp(const std::string& name, int frame, std::function<void()> cb)
+{
+	assert(cb);
+
+	TTimeStamp ts;
+	ts.mark = (float)frame / 30.f;
+	ts.cb = cb;
+
+	for (auto& e : events)
+	{
+		if (e.name != name)
+			continue;
+
+		e.timestamps.push_back(ts);
+		return;
+	}
+
+	TEvent event;
+	event.name = name;
+	event.timestamps.push_back(ts);
+	events.push_back(event);
+}
+
+void TCompRigidAnimationController::updateEvents()
+{
+	float time_threshold = 0.04f;
+
+	if (loop && end_callback && curr_time >= (getAnimationTime() - time_threshold)) {
+		end_callback();
+		return;
+	}
+
+	for (auto& e : events) {
+		for (auto& ts : e.timestamps) {
+
+			if (curr_time < ts.mark || ts.fired)
+				continue;
+
+			ts.cb();
+			ts.fired = true;
+		}
+	}
 }
 
 void TCompRigidAnimationController::assignTracksToSceneObjects()
@@ -358,15 +405,16 @@ void TCompRigidAnimationController::onEndOfAnimation()
 	else {
 		playing = false;
 
-		if (cinematic_animation) {
+		if (cinematic_animation)
 			EngineLua.executeScript("stopCinematic(1.0)");
-		}
 
-		if (callback)
-		{
-			callback();
-			callback = nullptr;
-		}
+		if (end_callback)
+			end_callback();
+
+		// Clean events
+		for (auto& e : events)
+		for (auto& ts : e.timestamps)
+			ts.fired = false;
 	}
 }
 

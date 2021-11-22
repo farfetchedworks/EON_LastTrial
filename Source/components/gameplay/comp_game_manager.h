@@ -34,6 +34,7 @@ public:
 	enum ETimeStatus {
 		NORMAL,
 		SLOW,
+		SLOWEST,
 		PAUSE,
 		SIZE
 	};

@@ -20,12 +20,13 @@ public:
 	void renderInMenu() override;
 	void update(float dt) override;
 
-	bool startCaption(const std::string& name, CHandle t = CHandle());
+	bool startCaption(const std::string& name, CHandle t = CHandle(), std::function<void()> cb = nullptr);
 	void stopCaption();
 	void stopAudio() { cur_audio_event->stop(FMOD_STUDIO_STOP_IMMEDIATE); }
 
 private:
 
+	std::function<void()> _currentCallback = nullptr;
 
 	struct SCaptionParams {
 		std::string texture;
