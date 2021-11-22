@@ -226,7 +226,7 @@ void TCompPlayerController::update(float dt)
 
 		CTransform t;
 		t.setPosition(getEntity()->getPosition());
-		spawn("data/prefabs/Eter.json", t);
+		spawn("data/prefabs/Eter_Entero.json", t);
 	}
 
 	if (PlayerInput['B'].getsPressed()) {
@@ -840,9 +840,11 @@ void TCompPlayerController::calcMoveDirection()
 	move_dir = getMoveDirection(is_moving);
 }
 
-bool TCompPlayerController::moveTo(VEC3 position, float speed)
+bool TCompPlayerController::moveTo(VEC3 position, float speed, float acceptance, std::function<void()> cb)
 {
 	pathSpeed = speed;
+	pathCallback = cb;
+	pathAcceptanceDistance = acceptance;
 	pathIndex = 0;
 	currentPath.clear();
 	EngineNavMesh.getPath(getEntity()->getPosition(), position, currentPath);
@@ -879,10 +881,10 @@ void TCompPlayerController::updatePath(float dt)
 
 		// Detect end
 		origin += move_dir;
-		origin.y = target.y = 0;
-		dist = VEC3::Distance(origin, target);
+		dist = VEC2::Distance(VEC2(origin.x, origin.z), VEC2(target.x, target.z));
+		printFloat("distace to waypoint", dist);
 
-		if (dist < 0.1f) {
+		if (dist < pathAcceptanceDistance) {
 			pathIndex++;
 		}
 	}
@@ -890,6 +892,12 @@ void TCompPlayerController::updatePath(float dt)
 	{
 		pathIndex = 0;
 		currentPath.clear();
+
+		if (pathCallback)
+		{
+			pathCallback();
+			pathCallback = nullptr;
+		}
 	}
 }
 

@@ -160,25 +160,25 @@ void TCompRigidAnimationController::update(float delta_time)
 
 	updateEvents();
 
-	if (!reverse)
+	float threshold = loop ? 0.167f : 0.f;
+
+	if (reverse)
 	{
-		if (curr_time <= animation_data->header.max_time)
+		if (curr_time >= animation_data->header.min_time)
 		{
-			// We can only exit if we know for sure we have applied the max_time to all objects
-			if (curr_time == animation_data->header.max_time)
-				onEndOfAnimation();
+			if (curr_time <= (animation_data->header.min_time + threshold))
+				onEndOfAnimation(delta_time);
 			else
 				updateCurrentTime(delta_time);
 		}
 	}
-	else {
-		if (curr_time >= animation_data->header.min_time)
-		{
-			if (curr_time == animation_data->header.min_time)
-				onEndOfAnimation();
-			else
-				updateCurrentTime(delta_time);
-		}
+	else if (curr_time <= animation_data->header.max_time)
+	{
+		// We can only exit if we know for sure we have applied the max_time to all objects
+		if (curr_time >= (animation_data->header.max_time - threshold))
+			onEndOfAnimation(delta_time);
+		else
+			updateCurrentTime(delta_time);
 	}
 
 	if (!cinematic_animation)
@@ -386,7 +386,7 @@ void TCompRigidAnimationController::updateCurrentTime(float delta_time)
 		curr_time = animation_data->header.min_time;
 }
 
-void TCompRigidAnimationController::onEndOfAnimation()
+void TCompRigidAnimationController::onEndOfAnimation(float delta_time)
 {
 	// loop? / change_direction? / disable
 	if (loop)
@@ -394,13 +394,15 @@ void TCompRigidAnimationController::onEndOfAnimation()
 		if (ping_pong)
 			reverse = !reverse;
 
-		if (!reverse)
-			curr_time = animation_data->header.min_time;
-		else
+		if (reverse)
 			curr_time = animation_data->header.max_time;
+		else
+			curr_time = animation_data->header.min_time;
 
 		for (auto& t : tracks)
-			t.rewind();
+			t.rewind(curr_time);
+
+		updateCurrentTime(delta_time);
 	}
 	else {
 		playing = false;

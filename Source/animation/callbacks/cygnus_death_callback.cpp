@@ -2,15 +2,15 @@
 #include "entity/entity.h"
 #include "engine.h"
 #include "animation/animation_callback.h"
-#include "components/cameras/comp_camera_shake.h"
 #include "components/gameplay/comp_game_manager.h"
+#include "components/controllers/comp_player_controller.h"
 #include "components/controllers/pawn_utils.h"
 #include "components/stats/comp_health.h"
 #include "components/common/comp_parent.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "entity/entity_parser.h"
 #include "lua/module_scripting.h"
-#include "bt/task_utils.h"
+#include "input/input_module.h"
 #include "ui/ui_module.h"
 
 struct onCygnusDeathCallback : public CAnimationCallback
@@ -24,7 +24,7 @@ struct onCygnusDeathCallback : public CAnimationCallback
 			CEntity* hole = parent->getChildByName("Cygnus_black_hole");
 			TCompAttachedToBone* socket = hole->get<TCompAttachedToBone>();
 			CTransform& t = socket->getLocalTransform();
-			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.8f), 6.f, Time.delta));
+			t.setScale(damp<VEC3>(t.getScale(), VEC3(0.6f), 4.f, Time.delta));
 		}
 	}
 
@@ -42,14 +42,25 @@ struct onCygnusDeathCallback : public CAnimationCallback
 
 		c_health->setRenderActive(false);
 
+		EngineUI.deactivateWidget("eon_hud");
+
 		TCompParent* parent = e_owner->get<TCompParent>();
 		CEntity* hole = parent->getChildByName("Cygnus_black_hole");
 		VEC3 hole_pos = hole->getPosition();
-		PawnUtils::spawnGeons(hole_pos, e_owner);
 
 		CTransform t;
 		t.setPosition(hole_pos);
-		spawn("data/prefabs/eter.json", t);
+		spawn("data/prefabs/Eter_Entero.json", t);
+
+		// Manage player cinematics
+
+		PlayerInput.blockInput();
+
+		CEntity* player = getEntityByName("player");
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->moveTo(hole_pos, 1.6f, 1.15f, [&]() {
+			controller->setVariable("is_attacking_heavy", 1);
+		});
 	}
 };
 

@@ -40,16 +40,9 @@ CHandle spawn(const std::string& filename, CTransform root, TEntityParseContext&
     return CHandle();
   assert(!ctx.entities_loaded.empty());
 
-  //for (auto h : ctx.entities_loaded) {
-  //    CEntity* e = h;
-  //    if (!e) continue;
-  //    // Don't spawn things with same name
-  //    if (getEntityByName(e->getName()).isValid()) {
-  //        std::string new_name = e->getName();
-  //        new_name += std::to_string(Random::unit());
-  //        e->setName(new_name.c_str());
-  //    }
-  //}
+  TMsgAllEntitiesCreated msg;
+      for (auto h : ctx.entities_loaded)
+          h.sendMsg(msg);
 
   return ctx.entities_loaded[0];
 }
