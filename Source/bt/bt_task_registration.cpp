@@ -2113,14 +2113,14 @@ public:
 			TCompHealth* c_health = e->get<TCompHealth>();
 			c_health->setRenderActive(false);
 
-			// Intro form 3
-			EngineLua.executeScript("CinematicCygnusF2ToF3()");
-
 			// Rotate to face player
 			CEntity* player = getPlayer();
 			TCompTransform* c_trans = e->get<TCompTransform>();
 			float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
 			c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+
+			// Intro form 3
+			EngineLua.executeScript("CinematicCygnusF2ToF3()");
 		}
 
 		return EBTNodeResult::SUCCEEDED;
@@ -2420,14 +2420,14 @@ public:
 		TCompHealth* c_health = e->get<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		// Death cinematic
-		EngineLua.executeScript("CinematicCygnusDeath()");
-
 		// Rotate to face player
 		CEntity* player = getPlayer();
 		TCompTransform* c_trans = e->get<TCompTransform>();
 		float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
 		c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+
+		// Death cinematic
+		EngineLua.executeScript("CinematicCygnusDeath()");
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
