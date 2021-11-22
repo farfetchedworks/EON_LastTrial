@@ -9,6 +9,7 @@ utility MyMCVExporter "Exporter"
 		label lab0 "Single exports"
 		button btn_mesh "Export Mesh"
 		button btn_collision "Export Collision"
+		button btn_curve "Export Curve"
 		label lab1 "Scene exports"
 		button btn_scene "Export Scene"
 		button btn_scene_collapsed "Export Scene CCSS"
@@ -53,8 +54,8 @@ utility MyMCVExporter "Exporter"
 				messageBox ("Error Exporting Single Mesh:\n" + getCurrentException())
 			)
 		)
-		
-		-- Exports the current selection mesh to file
+
+		-- Exports the current selection collision to file
 		on btn_collision pressed do
 		(
 			try (
@@ -65,6 +66,21 @@ utility MyMCVExporter "Exporter"
 			)
 			catch (
 				messageBox ("Error Exporting Single Collision Mesh:\n" + getCurrentException())
+			)
+		)
+
+		-- Exports the current selection curve to file
+		on btn_curve pressed do
+		(
+			try (
+				if $ == undefined then throw "You must select an object to export as curve"
+				gc()
+				local se = TSceneExporter()
+				se.exportCurve $
+				MessageBox "Curve exported OK"
+			)
+			catch (
+				messageBox ("Error Exporting Curve:\n" + getCurrentException())
 			)
 		)
 				
