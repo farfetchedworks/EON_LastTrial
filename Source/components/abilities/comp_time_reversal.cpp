@@ -57,6 +57,24 @@ void TCompTimeReversal::onEntityCreated()
     circular_buffer = new STRShot[buffer_size];
 }
 
+void TCompTimeReversal::disable()
+{
+    enabled = false;
+    clearBuffer();
+
+    // Update UI
+    {
+        ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "time_reversal_bar");
+        assert(w);
+        ui::CWidget* wChild = w->getChildByName("bar_fill");
+        if (wChild) {
+            ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+            ui::TImageParams& params = fill->imageParams;
+            params.alpha_cut = 0.f;
+        }
+    }
+}
+
 void TCompTimeReversal::renderEffect(bool state)
 {
     rendering_effect = state ? eEffectState::FADE_IN : eEffectState::FADE_OUT;
@@ -70,6 +88,9 @@ void TCompTimeReversal::renderEffect(bool state)
 
 void TCompTimeReversal::update(float dt)
 {
+    if (!enabled)
+        return;
+
     PROFILE_FUNCTION("Time Reversal Update");
 
     dt = Time.delta_unscaled;

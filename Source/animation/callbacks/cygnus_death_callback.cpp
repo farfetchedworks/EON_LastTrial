@@ -41,21 +41,7 @@ struct onCygnusDeathCallback : public CAnimationCallback
 		if (c_health->checkDeathAnimationCompleted())
 			return;
 
-		c_health->setRenderActive(false);
-
 		EngineUI.deactivateWidget("eon_hud");
-
-		ui::CWidget* w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
-		assert(w_hud);
-		w_hud->setVisible(false);
-
-		w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
-		assert(w_hud);
-		w_hud->setVisible(false);
-
-		w_hud = EngineUI.getWidgetFrom("eon_hud", "time_reversal_bar");
-		assert(w_hud);
-		w_hud->setVisible(false);
 
 		TCompParent* parent = e_owner->get<TCompParent>();
 		CEntity* hole = parent->getChildByName("Cygnus_black_hole");

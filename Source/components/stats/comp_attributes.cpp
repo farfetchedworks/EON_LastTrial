@@ -175,12 +175,16 @@ void TCompAttributes::forEach(std::function<void(const std::string, unsigned sho
 
 void TCompAttributes::debugInMenu()
 {
+	int i = 0;
 	for (auto& att : attributes)
 	{
+		ImGui::PushID(i++);
 		ImGui::Text("Attr: %s", att.first.c_str());
 		ImGui::Text("Value: %d", att.second.value);
+		ImGui::DragInt("Value: %d", &att.second.value, 1, 20, 1);
 		ImGui::SameLine();
 		ImGui::Text("Ratio: %d", att.second.ratio);
 		ImGui::Separator();
+		ImGui::PopID();
 	}
 }

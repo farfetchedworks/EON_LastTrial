@@ -21,5 +21,6 @@ public:
 	void update(float dt);
 
 	void spawnBrokenEter();
+	void spawnHappyRoom();
 	void onHit();
 };

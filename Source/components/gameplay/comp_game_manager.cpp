@@ -143,6 +143,9 @@ void TCompGameManager::restartLevel()
 	eonHasDied = false;
 	eonDeathManaged = false;
 
+	// Force normal status
+	setTimeStatus(ETimeStatus::NORMAL);
+
 	CEntity* e_camera_follow = getEntityByName("camera_follow");
 	EngineRender.setActiveCamera(e_camera_follow);
 	TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
@@ -444,7 +447,7 @@ void TCompGameManager::onEonHasRevived(const TMsgEonHasRevived& msg)
 	CEntity* player = getEntityByName("player");
 	TCompDissolveEffect* c_dissolve = player->get<TCompDissolveEffect>();
 	if (c_dissolve) {
-		c_dissolve->recover();
+		c_dissolve->recover(7.f);
 	}
 
 	// FMOD event

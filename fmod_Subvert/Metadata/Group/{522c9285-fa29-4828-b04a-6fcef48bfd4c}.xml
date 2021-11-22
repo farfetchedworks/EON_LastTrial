@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{522c9285-fa29-4828-b04a-6fcef48bfd4c}">
 		<property name="volume">
-			<value>-5</value>
+			<value>-2.5</value>
 		</property>
 		<property name="name">
 			<value>CHA_Eon_FS</value>

@@ -12,7 +12,6 @@ class TCompWeaponPartTrigger : public TCompBase {
 
 private:
 
-	CHandle h_floor_parts;
 	CHandle parent;
 	CHandle h_hierarchy;
 	CHandle h_attached_to_bone;
@@ -38,7 +37,7 @@ public:
 	void renderDebug();
 
 	VEC3 getOffset() { return offset; }
-	void spawnFloorParticles();
+	void spawnFloorParticles(const CTransform& transform);
 
 	static void registerMsgs() {
 		DECL_MSG(TCompWeaponPartTrigger, TMsgEnableWeapon, onSetActive);
