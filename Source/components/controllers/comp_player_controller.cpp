@@ -59,6 +59,7 @@ void TCompPlayerController::load(const json& j, TEntityParseContext& ctx)
 	sprint_speed = j.value("sprint_speed", sprint_speed);
 	rotation_speed = j.value("rotation_speed", rotation_speed);
 	speed_mod = j.value("speed_mod", speed_mod);
+	block_attacks = j.value("block_attacks", block_attacks);
 
 	dash_force = j.value("dash_force", dash_force);
 
@@ -517,7 +518,7 @@ void TCompPlayerController::move(float dt)
 	current_speed = damp<float>(current_speed, target_speed * speed_multiplier_move, lerp_factor, dt);
 	movePhysics(move_dir * current_speed * dt, dt);
 
-	if (!isShooterCamerEnabled)
+	if (!isShooterCamerEnabled && !block_attacks)
 	{
 		if (PlayerInput["attack_regular"].getsPressed() && hasStamina()) {
 
