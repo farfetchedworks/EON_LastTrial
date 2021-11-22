@@ -12,6 +12,7 @@
 #include "lua/module_scripting.h"
 #include "input/input_module.h"
 #include "ui/ui_module.h"
+#include "ui/ui_widget.h"
 
 struct onCygnusDeathCallback : public CAnimationCallback
 {
@@ -43,6 +44,18 @@ struct onCygnusDeathCallback : public CAnimationCallback
 		c_health->setRenderActive(false);
 
 		EngineUI.deactivateWidget("eon_hud");
+
+		ui::CWidget* w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
+		assert(w_hud);
+		w_hud->setVisible(false);
+
+		w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
+		assert(w_hud);
+		w_hud->setVisible(false);
+
+		w_hud = EngineUI.getWidgetFrom("eon_hud", "time_reversal_bar");
+		assert(w_hud);
+		w_hud->setVisible(false);
 
 		TCompParent* parent = e_owner->get<TCompParent>();
 		CEntity* hole = parent->getChildByName("Cygnus_black_hole");

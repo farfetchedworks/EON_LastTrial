@@ -89,8 +89,10 @@ void TCompWarpEnergy::debugInMenu()
 	ImGui::ProgressBar(warp_energy / (float)curr_max_warp_energy, ImVec2(-1, 0));
 	ImGui::PopStyleColor();
 
-	if (ImGui::Button("DBG: Fill"))
+	if (ImGui::Button("Fill"))
 		fillWarpEnergy();
+	if (ImGui::Button("+1 Max"))
+		curr_max_warp_energy += 1;
 }
 
 void TCompWarpEnergy::onHit(const TMsgHitWarpRecover& msg)
@@ -148,24 +150,4 @@ void TCompWarpEnergy::consumeWarpEnergy(int warp_nrg_points)
 	assert(pawn);
 	if(!pawn->GOD_MODE)
 		warp_energy = std::max<float>(warp_energy - static_cast<float>(warp_nrg_points), 0.0f);
-}
-
-void TCompWarpEnergy::renderDebug() {
-	
-	TCompName* c_name = get<TCompName>();
-	if (!strcmp(c_name->getName(), "player")) {
-		/*float slot_width = 20;
-		for (int i = 0; i < max_warp_energy; ++i) {
-			VEC2 pos = VEC2(70 + i * slot_width, 30);
-			float val = std::clamp(warp_energy, 0.f, i + 1.f);
-			val -= (warp_energy >= i ? i : warp_energy);
-			drawProgressBar2D(pos, Colors::ShinyBlue, val, 1.f, nullptr, slot_width);
-		}*/
-	}
-	else
-	{
-		TCompTransform* trans = get<TCompTransform>();
-		VEC3 pos = trans->getPosition();
-		drawProgressBar3D(pos, Colors::Blue, warp_energy, static_cast<float>(curr_max_warp_energy), VEC2(0.f, 20.f));
-	}
 }

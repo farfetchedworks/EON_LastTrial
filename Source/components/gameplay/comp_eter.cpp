@@ -137,10 +137,12 @@ void TCompEter::onHit()
 		gm->setTimeStatus(TCompGameManager::ETimeStatus::NORMAL);
 		
 		EngineLua.executeScript("deactivateWidget('modal_white')", 3.5f);
+		EngineLua.executeScript("activateWidget('eon_hud')", 8.5f);
 
 		Boot.setEndBoot();
 
 		PlayerInput.unBlockInput();
+
 	});
 
 	// Shake camera a little bit (will be reduced with the slow time..)
