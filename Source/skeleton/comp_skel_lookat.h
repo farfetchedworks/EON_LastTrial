@@ -20,8 +20,10 @@ struct TCompSkelLookAt : public TCompBase {
 	VEC3        new_target;
 	VEC3        offset;
 	float       amount = 0.f;
+	float       lerp_amount = 0.f;
 	float       target_transition_factor = 0.95f;
 	bool        look_at_player = false;
+	bool        stop_looking = false;
 	std::string	head_bone_name = std::string();
 
 	void load(const json& j, TEntityParseContext& ctx);
@@ -29,6 +31,7 @@ struct TCompSkelLookAt : public TCompBase {
 	void debugInMenu();
 	void renderDebug();
 
+	void stopLooking();
 	void setTarget(const VEC3& target_pos);
 	void setEnabled(bool v) { enabled = v; }
 	bool isLookingAtTarget(float accept_dist = 0.1f);

@@ -20,7 +20,7 @@ void TCompEter::onEntityCreated()
 	h_transform = get<TCompTransform>();
 	TCompTransform* t = h_transform;
 
-	_targetPosition = t->getPosition() + VEC3(0, 1.2f, 0);
+	_targetPosition = t->getPosition() + VEC3(0, 1.5f, 0);
 }
 
 void TCompEter::update(float dt)
@@ -38,6 +38,7 @@ void TCompEter::onHit()
 	// Manage ENDING TWO
 	TCompTransform* t = h_transform;
 	VEC3 spawnPos = t->getPosition();
+	spawnParticles("data/particles/splatter_blood_front.json", spawnPos, spawnPos);
 
 	// Destruir Eter
 	getEntity()->destroy();
@@ -47,7 +48,7 @@ void TCompEter::onHit()
 	assert(animation_controller);
 
 	// Iniciar cinematica rotura
-	// EngineLua.executeScript("CinematicEnding_2()");
+	EngineLua.executeScript("CinematicEnding_2()");
 	
 	// Iniciar animacion rigida eter roto
 	TCompRigidAnimationController* controller = animation_controller->get<TCompRigidAnimationController>();
@@ -84,6 +85,6 @@ void TCompEter::onHit()
 		EngineLua.executeScript("activateWidget('modal_black')", 4.f);
 	});
 
-	EngineLua.executeScript("activateWidget('modal_black')", 4.f);
+	// EngineLua.executeScript("activateWidget('modal_black')", 4.f);
 	controller->start();
 }

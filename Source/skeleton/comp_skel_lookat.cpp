@@ -14,6 +14,7 @@ void TCompSkelLookAt::load(const json& j, TEntityParseContext& ctx) {
 	if (j.count("target"))
 		target = loadVEC3(j["target"]);
 	amount = j.value("amount", amount);
+	enabled = j.value("enabled", enabled);
 	look_at_player = j.value("look_at_player", look_at_player);
 	target_transition_factor = j.value("target_transition_factor", target_transition_factor);
 	target_entity_name = j.value("target_entity_name", "");
@@ -71,24 +72,37 @@ void TCompSkelLookAt::update(float dt) {
 	// The cal3d skeleton instance
 	CalSkeleton* skel = c_skel->model->getSkeleton();
 
-	float final_amount = amount;
-
 	// Change amount depending on the orientation
+	TCompTransform* t = get<TCompTransform>();
+	float delta_yaw = fabsf(t->getYawRotationToAimTo(target)) / (float)M_PI;
+
+	float f_amount = amount;
+
+	if (delta_yaw > 0.6f || stop_looking)
+		f_amount = 0.f;
+
+	lerp_amount = damp(lerp_amount, f_amount, 1.f, dt);
+
+	if (lerp_amount == 0.f && stop_looking)
 	{
-		TCompTransform* t = get<TCompTransform>();
-		float yaw_factor = 1.f - (fabsf(t->getYawRotationToAimTo(target)) / (float)M_PI);
-		final_amount *= powf(yaw_factor, 1.1f);
+		stop_looking = false;
+		enabled = false;
 	}
 
 	// The set of bones to correct
 	auto core = (CGameCoreSkeleton*)c_skel->getGameCore();
 	for (auto& it : core->lookat_corrections)
-		it.apply(skel, target, final_amount);
+		it.apply(skel, target, lerp_amount);
+}
+
+void TCompSkelLookAt::stopLooking()
+{
+	stop_looking = true;
 }
 
 void TCompSkelLookAt::setTarget(const VEC3& target_pos)
 {
-	new_target = target_pos;
+	new_target = target_pos + offset;
 
 	// Disable entity options
 	look_at_player = false;
@@ -103,7 +117,7 @@ bool TCompSkelLookAt::isLookingAtTarget(float accept_dist)
 
 void TCompSkelLookAt::renderDebug() {
 	const CMesh* mesh = Resources.get("unit_wired_cube.mesh")->as<CMesh>();
-	drawPrimitive(mesh, MAT44::CreateTranslation(target), Colors::Red);
+	drawPrimitive(mesh, MAT44::CreateTranslation(target) * MAT44::CreateScale(0.2f), Colors::Red);
 }
 
 void TCompSkelLookAt::debugInMenu() {
