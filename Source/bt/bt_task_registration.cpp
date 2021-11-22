@@ -1978,6 +1978,13 @@ public:
 
 		teleport_to_entity = bool_field;
 
+		callbacks.onFirstFrame = [&](CBTContext& ctx, float dt)
+		{
+			// Disable colliders
+			TCompCollider* c_collider = ctx.getComponent<TCompCollider>();
+			c_collider->disable(true);
+		};
+
 		callbacks.onStartup = [&](CBTContext& ctx, float dt)
 		{
 			TCompParent* parent = ctx.getComponent<TCompParent>();
@@ -2012,6 +2019,10 @@ public:
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
+			// Re-enable colliders
+			TCompCollider* c_collider = ctx.getComponent<TCompCollider>();
+			c_collider->disable(false);
+			
 			VEC3 target_pos;
 			QUAT target_rot;
 
