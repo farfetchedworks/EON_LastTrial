@@ -84,6 +84,9 @@ void TCompPlayerController::onEntityCreated()
 
 void TCompPlayerController::update(float dt)
 {
+	if (!enabled)
+		return;
+
 	TCompTransform* transform = h_transform;
 	cte_world.player_pos = transform->getPosition();
 	cte_world.player_dead = std::get<bool>(getVariable("is_death")) ? (cte_world.player_dead + dt * 0.7f) : 0.f;

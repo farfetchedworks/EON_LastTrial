@@ -58,8 +58,12 @@ struct onCygnusDeathCallback : public CAnimationCallback
 
 		CEntity* player = getEntityByName("player");
 		TCompPlayerController* controller = player->get<TCompPlayerController>();
-		controller->moveTo(hole_pos, 1.6f, 1.15f, [&]() {
+		controller->moveTo(hole_pos, 1.5f, 2.f, []() {
+
+			CEntity* player = getEntityByName("player");
+			TCompPlayerController* controller = player->get<TCompPlayerController>();
 			controller->setVariable("is_attacking_heavy", 1);
+			controller->enabled = false;
 		});
 	}
 };

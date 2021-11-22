@@ -126,13 +126,13 @@ void TCompEter::onHit()
 	});
 
 	// End and happy room
-	controller->addEventTimestamp("reset", 14, []() {
+	controller->addEventTimestamp("reset", 12, []() {
 		EngineUI.activateWidget("modal_black", false);
 
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
 		gm->setTimeStatus(TCompGameManager::ETimeStatus::NORMAL);
 
-		EngineLua.executeScript("deactivateWidget('modal_black')", 4.0f);
+		EngineLua.executeScript("deactivateWidget('modal_black')", 6.0f);
 
 		Boot.setEndBoot();
 
