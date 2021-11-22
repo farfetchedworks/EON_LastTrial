@@ -155,6 +155,31 @@ bool TaskUtils::hasObstaclesToEon(TCompTransform* my_trans, TCompTransform* play
 	return true;
 }
 
+bool TaskUtils::hasObstaclesToEon(VEC3 raycast_origin, TCompTransform* player_trans, bool zeroOutY, physx::PxU32 mask)
+{
+	// Generate a raycast from the Enemy towards Eon's position
+	VEC3 dir = player_trans->getPosition() - raycast_origin;
+
+	if (zeroOutY)
+		dir.y = 0;					// To get the "forward" from the enemy to Eon
+
+	dir.Normalize();
+	VHandles colliders;
+	raycast_origin.y += 1;
+	float distance = 200.f;
+
+	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, true);
+	if (is_ok) {
+		TCompCollider* c_collider = colliders[0];
+		CEntity* h_firsthit = c_collider->getEntity();
+		if (h_firsthit == getPlayer()) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void TaskUtils::spawnProjectile(const VEC3 shoot_orig, const VEC3 shoot_target, const int dmg, const bool from_player, bool is_homing)
 {
 	CTransform projectile_transform;
