@@ -130,10 +130,7 @@ bool TCompAITimeReversal::startRewinding()
     TCompDissolveEffect* c_dissolve = get<TCompDissolveEffect>();
     if (c_dissolve) {
         c_dissolve->setRemoveColliders(false);
-        //c_dissolve->enable(0.f);
-        c_dissolve->applyDissolveMaterial();
-        c_dissolve->forceEnabled(true);
-        c_dissolve->recover(1.4, 0.0);
+        c_dissolve->enable(1.4, 2.0, true);
     }
 
     // Needed to avoid collision with environment
@@ -175,13 +172,6 @@ void TCompAITimeReversal::stopRewinding()
           lTime->init();
       }
     }
-
-    TCompDissolveEffect* c_dissolve = get<TCompDissolveEffect>();
-    if (c_dissolve) {
-        //c_dissolve->recover(1.0);
-        //c_dissolve->setRemoveColliders(true);
-    }
-
 
     // Set FMOD stop parameter
     EngineAudio.setGlobalRTPC(FMOD_PARAM_END, 1);

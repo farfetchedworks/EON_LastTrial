@@ -2039,6 +2039,15 @@ public:
 				CEntity* player = getPlayer();
 				TCompTransform* h_trans_eon = player->get<TCompTransform>();
 				target_rot = h_trans_eon->getRotation();
+				
+				// Check if the position is in the navmesh
+				VEC3 eon_pos = h_trans_eon->getPosition();
+				bool is_outside_bossarea = EngineNavMesh.raycast(target_pos, eon_pos);	// Returns true if it found an obstacle between the position and Eon
+				bool has_obstacles = TaskUtils::hasObstaclesToEon(target_pos, h_trans_eon);
+				if (is_outside_bossarea || has_obstacles) {
+					target_pos = eon_pos + h_trans_eon->getForward() * 2;
+					target_rot.Inverse(target_rot);
+				}
 			}
 			
 			// Set the position
