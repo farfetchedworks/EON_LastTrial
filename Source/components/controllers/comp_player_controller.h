@@ -16,6 +16,8 @@ class TCompPlayerController : public TCompPawnController {
 public:
 
     // Expose some members
+    bool enabled                = true;
+
     float current_speed         = 5.f;
     float heavy_attack_timer    = 0.f;
     bool can_recover_stamina    = true;         // Checked in update for stamina recovery

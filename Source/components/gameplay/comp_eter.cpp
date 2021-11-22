@@ -16,6 +16,8 @@
 
 DECL_OBJ_MANAGER("eter", TCompEter)
 
+extern CShaderCte<CtesWorld> cte_world;
+
 void TCompEter::load(const json& j, TEntityParseContext& ctx)
 {
 	_isBroken = j.value("isBroken", _isBroken);
@@ -26,13 +28,18 @@ void TCompEter::onEntityCreated()
 	h_transform = get<TCompTransform>();
 	TCompTransform* t = h_transform;
 
+	_initialPosition = t->getPosition() - VEC3(0, 0.5f, 0);;
 	_targetPosition = t->getPosition() + VEC3(0, 1.5f, 0);
 }
 
 void TCompEter::update(float dt)
 {
 	if (_isBroken)
+	{
+		if(_exploded)
+			cte_world.exposure_factor = damp(cte_world.exposure_factor, 0.1f, 8.f, Time.delta_unscaled);
 		return;
+	}
 
 	TCompTransform* t = h_transform;
 
@@ -80,9 +87,11 @@ void TCompEter::onHit()
 	// Manage ENDING TWO
 	// *****************
 
-	// Iniciar cinematica rotura
-	//EngineLua.executeScript("CinematicEnding_2()");
-	
+	_exploded = true;
+
+	TCompTransform* t = h_transform;
+	t->setPosition(_initialPosition);
+
 	// Spawnear Eter Roto
 	CEntity* animation_controller = getEntityByName("Eter_Controller");
 	assert(animation_controller);
@@ -95,6 +104,8 @@ void TCompEter::onHit()
 	controller->addEventTimestamp("slow_time", 3, [](){
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
 		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 1.0f, &interpolators::expoOutInterpolator);
+		// Iniciar cinematica rotura
+		EngineLua.executeScript("CinematicEnding_2()");
 	});
 
 	// Motion Blur
@@ -115,13 +126,13 @@ void TCompEter::onHit()
 	});
 
 	// End and happy room
-	controller->addEventTimestamp("reset", 10, []() {
+	controller->addEventTimestamp("reset", 12, []() {
 		EngineUI.activateWidget("modal_black", false);
 
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
 		gm->setTimeStatus(TCompGameManager::ETimeStatus::NORMAL);
 
-		EngineLua.executeScript("deactivateWidget('modal_black')", 4.0f);
+		EngineLua.executeScript("deactivateWidget('modal_black')", 6.0f);
 
 		Boot.setEndBoot();
 

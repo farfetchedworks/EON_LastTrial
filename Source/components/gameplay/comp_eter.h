@@ -10,7 +10,9 @@ class TCompEter : public TCompBase {
 
 	bool _isBroken = false;
 	bool _spawned = false;
+	bool _exploded = false;
 	VEC3 _targetPosition;
+	VEC3 _initialPosition;
 
 public:
 
