@@ -294,7 +294,8 @@ void TCompCameraFollow::lockedMovement(float dt)
     CEntity* eLocked = h_trans_locked_enemy.getOwner();
 
     if (checkUnlockDistance(eLocked, locked_pos, camera_front)) {
-        setLockedEntity(CHandle());
+        TCompPlayerController* c_player = h_player;
+        c_player->removeLockOn();
         return;
     }
     
@@ -330,14 +331,8 @@ void TCompCameraFollow::setLockedEntity(CHandle handle)
     else {
 
         lock_target = VEC3(-1e8f);
-
-        // delete locking info
         h_trans_locked_enemy = CHandle();
         is_locked_on = false;
-
-        // don't call reset() here, would form a loop
-        TCompPlayerController* c_player = h_player;
-        c_player->removeLockOn();
     }
 }
 

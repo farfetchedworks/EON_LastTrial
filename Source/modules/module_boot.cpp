@@ -8,6 +8,7 @@
 #include "render/render_module.h"
 #include "components/common/comp_tags.h"
 #include "modules/module_camera_mixer.h"
+#include "modules/game/module_irradiance_cache.h"
 #include "audio/module_audio.h"
 #include "ui/ui_widget.h"
 #include "ui/ui_module.h"
@@ -136,6 +137,9 @@ bool CModuleBoot::loadEndingBoot()
 	w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
 	assert(w_hud);
 	w_hud->setVisible(false);
+
+	// restart irradiance module
+	Engine.getIrradiance().restart();
 
 	_endBoot = false;
 	_bootCompleted = true;
