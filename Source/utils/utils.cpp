@@ -23,6 +23,7 @@ bool isPressed(int key) {
 }
 
 void dbg(const char* format, ...) {
+#ifdef _DEBUG
   PROFILE_FUNCTION("dbg");
   va_list argptr;
   va_start(argptr, format);
@@ -32,6 +33,7 @@ void dbg(const char* format, ...) {
   va_end(argptr);
   // This takes forever...
   ::OutputDebugString(dest);
+#endif
 }
 
 bool fatal(const char* format, ...) {
