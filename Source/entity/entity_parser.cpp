@@ -172,7 +172,7 @@ bool parseScene(const std::string& filename, TEntityParseContext& ctx) {
   return true;
 }
 
-bool parseSceneWithTag(const std::string& filename, const std::string& tag, TEntityParseContext& ctx, std::function<bool(const std::string&)> fn) {
+bool parseSceneWithTag(const std::string& filename, const std::string& tag, TEntityParseContext& ctx, std::function<bool(const std::string&, const std::string&)> fn) {
 
     ctx.filename = filename;
 
@@ -211,8 +211,13 @@ bool parseSceneWithTag(const std::string& filename, const std::string& tag, TEnt
                 // no specific tag -> don't parse
                 if (!found)
                     continue;
-                else if (!fn(j_entity["name"]))
+                else {
+                  std::string parent_name = std::string();
+                  if (j_entity.find("hierarchy") != j_entity.end())
+                    parent_name = j_entity["hierarchy"]["parent"];
+                  if (!fn(j_entity["name"], parent_name))
                     continue;
+                }
             }
             // no tags -> tags can be in prefab
             // no tags and no prefab -> no parsing

@@ -19,6 +19,8 @@
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
+#include "ui/ui_module.h"
+#include "input/input_module.h"
 
 #define PLAY_CINEMATICS true
 
@@ -242,6 +244,30 @@ public:
 		TCompPlayerController* controller = player->get<TCompPlayerController>();
 		controller->unBlockAim();
 		controller->blendCamera("camera_follow", 1.4f, &interpolators::quadInOutInterpolator);
+	}
+};
+
+class CTriggerAreaHappyCamera : public ITriggerArea {
+public:
+	CTriggerAreaHappyCamera(const std::string& name) : ITriggerArea(name) {}
+
+	// Trigger will always be Eon: is restricted in the CompTriggerArea
+	void onAreaEnter(CHandle event_trigger, CHandle observer) override
+	{
+		CEntity* player = getAreaTrigger(event_trigger);
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->blockAim();
+		controller->blendCamera("camera_follow_happy", 6.f, &interpolators::quartInOutInterpolator);
+
+		// Blend another cam
+		EngineLua.executeScript("dispatchEvent('Gameplay/ending_cam')", 3.f);
+
+		CEntity* dummy = getEntityByName("dummy_move_to");
+		controller->moveTo(dummy->getPosition(), 1.4f, 0.15f, []() {
+			// EngineUI.fadeOut(2.f);
+			PlayerInput.blockInput();
+			EngineLua.executeScript("dispatchEvent('Gameplay/ending_1')");
+		});
 	}
 };
 

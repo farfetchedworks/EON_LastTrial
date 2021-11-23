@@ -1,11 +1,14 @@
 #include "mcv_platform.h"
 #include "engine.h"
 #include "module_events.h"
+#include "entity/entity_parser.h"
 #include "ui/ui_module.h"
 #include "components/messages.h"
 #include "input/input_module.h"
+#include "components/common/comp_parent.h"
 #include "modules/game/module_player_interaction.h"
 #include "modules/module_camera_mixer.h"
+#include "lua/module_scripting.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "components/ai/comp_bt.h"
 #include "components/common/comp_parent.h"
@@ -229,6 +232,47 @@ void CModuleEventSystem::registerGlobalEvents()
 		assert(owner);
 		TCompTransform* c_trans = owner->get<TCompTransform>();
 		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
+	});
+	
+	EventSystem.registerEventCallback("Gameplay/ending_cam", [](CHandle t, CHandle o) {
+		CEntity* dummy = getEntityByName("dummy_move_to");
+		CEntity* camera = getEntityByName("camera_dynamic");
+		TCompTransform* transform = camera->get<TCompTransform>();
+		transform->lookAt(VEC3(49.63f, 15.6f, -247.f), dummy->getPosition(), VEC3::Up);
+		CameraMixer.blendCamera("camera_dynamic", 4.f, &interpolators::quadInOutInterpolator);
+	});
+
+	EventSystem.registerEventCallback("Gameplay/ending_1", [](CHandle t, CHandle o) {
+		CEntity* dummy = getEntityByName("dummy_move_to");
+		CTransform trans;
+		trans.setPosition(dummy->getPosition());
+		trans.setScale(VEC3(2.5f));
+		spawn("data/prefabs/flor_02.json", trans);
+
+		// remove flower from player hand
+		CEntity* player = getEntityByName("player");
+		TCompParent* parent = player->get<TCompParent>();
+		CEntity* flor = parent->getChildByName("WeaponFlor");
+		parent->delChild(flor);
+		if (flor)
+			flor->destroy();
+
+		EngineLua.executeScript("dispatchEvent('Gameplay/ending_2')", 1.5f);
+	});
+
+	EventSystem.registerEventCallback("Gameplay/ending_2", [](CHandle t, CHandle o) {
+
+		// remove flower from player hand
+		CEntity* player = getEntityByName("player");
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+
+		// in case we are playing with eon..
+		if (!controller->block_attacks)
+			PawnUtils::playAction(player, "Heal");
+		else
+			PawnUtils::playAction(player, "basicEnemyHeal");
+
+		EngineLua.executeScript("fade()", 1.5f);
 	});
 }
 
