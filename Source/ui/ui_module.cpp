@@ -169,6 +169,13 @@ namespace ui
                 if (to_clear) {
                     w->setState(EState::STATE_NONE);
                     w->setActive(false);
+
+                    // Reset time normalized for the next activation
+                    if(w->getImageParams())
+                        w->getImageParams()->time_normalized = 1.f;
+                    else if (w->getVideoParams())
+                        w->getVideoParams()->time_normalized = 1.f;
+
                 }
                 return to_clear;
             });

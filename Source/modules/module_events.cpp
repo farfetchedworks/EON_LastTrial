@@ -273,6 +273,12 @@ void CModuleEventSystem::registerGlobalEvents()
 			PawnUtils::playAction(player, "basicEnemyHeal");
 
 		EngineLua.executeScript("fade()", 1.5f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/To_endgame')", 2.f);
+	});
+
+	EventSystem.registerEventCallback("Gameplay/To_endgame", [](CHandle t, CHandle o) {
+
+		CEngine::get().getModuleManager().changeToGamestate("end_game");
 	});
 }
 
