@@ -130,7 +130,7 @@ bool TCompAITimeReversal::startRewinding()
     TCompDissolveEffect* c_dissolve = get<TCompDissolveEffect>();
     if (c_dissolve) {
         c_dissolve->setRemoveColliders(false);
-        c_dissolve->enable(1.4, 2.0, true);
+        c_dissolve->enable(1.4f, 2.f, true);
     }
 
     // Needed to avoid collision with environment

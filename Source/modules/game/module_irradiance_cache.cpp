@@ -7,6 +7,11 @@ extern CShaderCte<CtesWorld> cte_world;
 
 bool CModuleIrradianceCache::start()
 {
+    return true;
+}
+
+bool CModuleIrradianceCache::customStart()
+{
     if (started)
         return true;
 

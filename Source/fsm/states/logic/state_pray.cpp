@@ -63,7 +63,7 @@ public:
     {
         CEntity* owner = ctx.getOwnerEntity();
 
-        if (!anim.aborted(ctx)) {
+        //if (!anim.aborted(ctx)) {
             TCompTransform* transform = owner->get<TCompTransform>();
             TCompCollider* collider = owner->get<TCompCollider>();
             CEntity* e_shrine = PlayerInteraction.getLastShrine();
@@ -73,7 +73,7 @@ public:
             msg.collider_pos = PXEXVEC3_TO_VEC3(collider->getControllerPosition());
             e_shrine->sendMsg(msg);
             dbg("Prayer done!\n");
-        }
+        //}
 
         ctx.setVariableValue("is_praying", false);
         anim.stop(ctx);

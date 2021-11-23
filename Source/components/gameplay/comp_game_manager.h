@@ -50,7 +50,7 @@ public:
 private:
 
 	// default function for not restricting parseWithTag method
-	std::function<bool(const std::string&)> parse_all = [](const std::string&) {
+	std::function<bool(const std::string&, const std::string&)> parse_all = [](const std::string&, const std::string&) {
 		return true;
 	};
 

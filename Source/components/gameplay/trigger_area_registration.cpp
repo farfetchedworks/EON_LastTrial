@@ -257,13 +257,16 @@ public:
 		CEntity* player = getAreaTrigger(event_trigger);
 		TCompPlayerController* controller = player->get<TCompPlayerController>();
 		controller->blockAim();
-		controller->blendCamera("camera_follow_happy", 6.f, &interpolators::cubicInOutInterpolator);
+		controller->blendCamera("camera_follow_happy", 6.f, &interpolators::quartInOutInterpolator);
+
+		// Blend another cam
+		EngineLua.executeScript("dispatchEvent('Gameplay/ending_cam')", 3.f);
 
 		CEntity* dummy = getEntityByName("dummy_move_to");
-		controller->moveTo(dummy->getPosition(), 1.4f, 0.1f, []() {
-			EngineUI.fadeOut(3.f);
-			EngineLua.executeScript("dispatchEvent('Gameplay/ending')", 1.5f);
+		controller->moveTo(dummy->getPosition(), 1.4f, 0.15f, []() {
+			// EngineUI.fadeOut(2.f);
 			PlayerInput.blockInput();
+			EngineLua.executeScript("dispatchEvent('Gameplay/ending_1')");
 		});
 	}
 };
