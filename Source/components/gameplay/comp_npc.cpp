@@ -51,23 +51,29 @@ void TCompNPC::interact()
 		t_ae->stopEmitter();
 
 	CEntity* trigger = talk_3d ? getEntity() : nullptr;
+	bool is_ok = false;
 
 	if (!first_interaction)
 	{
 		Subtitles.startCaption(unique_caption_scene, trigger);
 		PlayerInput.blockInput();
 		first_interaction = true;
+		is_ok |= true;
 
 	}else if(caption_scene.length())
 	{
 		Subtitles.startCaption(caption_scene, trigger);
+		is_ok |= true;
 	}
 
-	// Enable player look at
-	CEntity* player = getEntityByName("player");
-	TCompSkelLookAt * look_at = player->get<TCompSkelLookAt>();
-	look_at->setEnabled(true);
-	look_at->setTarget(getEntity()->getPosition());
+	if (is_ok)
+	{
+		// Enable player look at
+		CEntity* player = getEntityByName("player");
+		TCompSkelLookAt* look_at = player->get<TCompSkelLookAt>();
+		look_at->setEnabled(true);
+		look_at->setTarget(getEntity()->getPosition());
+	}
 }
 
 void TCompNPC::onStop(const TMsgStopCaption& msg)
@@ -78,6 +84,7 @@ void TCompNPC::onStop(const TMsgStopCaption& msg)
 	// Disable look at
 	CEntity* player = getEntityByName("player");
 	TCompSkelLookAt* look_at = player->get<TCompSkelLookAt>();
+	assert(look_at);
 	look_at->stopLooking();
 
 	// FMOD resume random audio emission
