@@ -2285,7 +2285,8 @@ public:
 			c_trans->setScale(new_scale);
 
 			std::vector<physx::PxRaycastHit> raycastHits;
-			if (EnginePhysics.raycast(black_hole_pos + beam_target_dir, beam_target_dir, 20.f, raycastHits, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Characters, true, false)) {
+			beam_target_dir.Normalize();
+			if (EnginePhysics.raycast(black_hole_pos + beam_target_dir, beam_target_dir, 20.f, raycastHits, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Characters, true, true)) {
 				VEC3 coll_pos = PXVEC3_TO_VEC3(raycastHits.front().position);
 				VEC3 coll_normal = PXVEC3_TO_VEC3(raycastHits.front().normal);
 				coll_normal.Normalize();
