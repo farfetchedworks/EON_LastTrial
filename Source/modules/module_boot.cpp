@@ -2,16 +2,17 @@
 #include "module_boot.h"
 #include "engine.h"
 #include "module_entities.h"
-#include "components/messages.h"
 #include "render/gpu_culling_module.h"
 #include "render/render_manager.h"
 #include "render/render_module.h"
-#include "components/common/comp_tags.h"
-#include "modules/module_camera_mixer.h"
-#include "modules/game/module_irradiance_cache.h"
 #include "audio/module_audio.h"
 #include "ui/ui_widget.h"
 #include "ui/ui_module.h"
+#include "navmesh/module_navmesh.h"
+#include "modules/module_camera_mixer.h"
+#include "modules/game/module_irradiance_cache.h"
+#include "components/messages.h"
+#include "components/common/comp_tags.h"
 #include "components/common/comp_transform.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/cameras/comp_camera_follow.h"
@@ -158,6 +159,14 @@ bool CModuleBoot::loadEndingBoot()
 	cte_world.timeReversal_rewinding_time = 0.f;
 	cte_world.boot_in_preview = 0.f;
 	cte_world.player_dead = 0.f;
+
+	// Set day ambient
+	EngineRender.setUseDayAmbient(true);
+
+	// Set new navmesh
+	{
+		EngineNavMesh.setCurrent("happyRoom");
+	}
 
 	return true;
 }
