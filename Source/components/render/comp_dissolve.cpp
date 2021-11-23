@@ -223,7 +223,8 @@ void TCompDissolveEffect::update(float dt)
 		}
 	}
 
-	if (_timer < 0.0f || _timer > _dissolveTime) {
+	if (((_inversed && !_recovering) || (!_inversed && _recovering)) && 
+		(_timer < 0.0f || _timer > _dissolveTime)) {
 		reset();
 	}
 }
