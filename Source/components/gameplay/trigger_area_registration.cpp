@@ -262,6 +262,7 @@ public:
 		CEntity* dummy = getEntityByName("dummy_move_to");
 		controller->moveTo(dummy->getPosition(), 1.4f, 0.1f, []() {
 			EngineUI.fadeOut(3.f);
+			EngineLua.executeScript("dispatchEvent('Gameplay/ending')", 1.5f);
 			PlayerInput.blockInput();
 		});
 	}
