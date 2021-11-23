@@ -229,9 +229,11 @@ void TCompGameManager::respawnLevel()
 		for (auto& b : boot) {
 			
 			TEntityParseContext ctx;
-			parseSceneWithTag(b, "not_persistent", ctx, [&](const std::string& name) {
+			parseSceneWithTag(b, "not_persistent", ctx, [&](const std::string& name, const std::string& parent_name) {
 				if (isBossValid(name))
 					return !bosses_states[name].is_dead;
+				if(isBossValid(parent_name))
+					return !bosses_states[parent_name].is_dead;
 				return true;
 			});
 

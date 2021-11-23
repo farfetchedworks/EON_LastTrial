@@ -42,7 +42,7 @@ struct TEntityParseContext {
 
 bool parseScene(const std::string& filename, TEntityParseContext& ctx);
 bool parseSceneWithTag(const std::string& filename, const std::string& tag, 
-	TEntityParseContext& ctx, std::function<bool(const std::string&)> fn);
+	TEntityParseContext& ctx, std::function<bool(const std::string&, const std::string&)> fn);
 bool destroyScene(const std::string& filename);
 
 CHandle spawn(const std::string& filename, CTransform root);
