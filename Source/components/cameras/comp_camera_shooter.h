@@ -24,5 +24,4 @@ struct TCompCameraShooter : public IGameplayCamera, TCompBase {
     void load(const json& j, TEntityParseContext& ctx);
     void debugInMenu();
     void update(float dt);
-    void renderDebug();
 };

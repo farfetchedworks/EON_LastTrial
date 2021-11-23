@@ -52,16 +52,15 @@ bool ModuleEONGameplay::start()
 		Boot.customStart();
 	}
 
+	CEntity* mixed_camera = getEntityByName("camera_mixed");
 	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
 	mixer.setEnabled(true);
-	mixer.setOutputCamera(getEntityByName("camera_mixed"));
-	EngineRender.setActiveCamera(getEntityByName("camera_mixed"));
+	mixer.setOutputCamera(mixed_camera);
+	EngineRender.setActiveCamera(mixed_camera);
+	EngineAudio.setListener(mixed_camera);
 
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;
-
-	// Audio
-	EngineAudio.setListener(getEntityByName("camera_mixed"));
 
 	// If passing through YOU DIED module
 	if (started)
@@ -122,6 +121,17 @@ bool ModuleEONGameplay::start()
 	// hacky to allow not playing the cinematic
 	if (getEntityByName("Gard").isValid())
 	{
+		VEC3 introPos = VEC3(-3.16096f, 12.0274f, 17.9437f);
+
+		CEntity* cinematic_cam = getEntityByName("camera_cinematic");
+		assert(cinematic_cam);
+		TCompTransform* h_trans = cinematic_cam->get<TCompTransform>();
+		h_trans->setPosition(introPos);
+
+		TCompTransform* h_trans_mixed = mixed_camera->get<TCompTransform>();
+		h_trans_mixed->setPosition(introPos);
+
+		mixer.blendCamera("camera_cinematic", 0.f);
 		EngineLua.executeScript("BeginIntroCinematic()");
 		Subtitles.startCaption("intro_cinematic_2");
 	}

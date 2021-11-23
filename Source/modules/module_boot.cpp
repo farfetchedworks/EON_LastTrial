@@ -148,6 +148,8 @@ bool CModuleBoot::loadEndingBoot()
 	_bootCompleted = true;
 	_bootReady = true;
 
+	ctxs.clear();
+
 	return true;
 }
 
@@ -296,7 +298,15 @@ void CModuleBoot::reset()
 
 	_bootCompleted = false;
 	_bootReady = false;
+	_introLoaded = false;
+	_introBoot = false;
+	_endBoot = false;
+	_loaded = 0;
+
+	jBoot.clear();
 	ctxs.clear();
+
+	CameraMixer.setEnabled(false);
 }
 
 void CModuleBoot::renderInMenu()

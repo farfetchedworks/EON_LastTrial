@@ -114,19 +114,3 @@ void TCompCameraShooter::debugInMenu()
     ImGui::DragFloat("Yaw", &delta_yaw, 0.01f, 0.f, (float)M_PI_2);
     ImGui::DragFloat("Pitch", &delta_pitch, 0.01f, 0.f, (float)M_PI_2);
 }
-
-void TCompCameraShooter::renderDebug()
-{
-#ifdef _DEBUG
-
-    const TMixedCamera& shooter_camera = CameraMixer.getCameraByName("camera_shooter");
-    if (!enabled || shooter_camera.weight < 0.85f) {
-        return;
-    }
-
-    float x = Render.getWidth() / 2.f;
-    float y = Render.getHeight() / 2.f;
-    drawSpinner(VEC2(x, y), Colors::ShinyBlue, 1, 1, 6, 4);
-
-#endif // _DEBUG
-}

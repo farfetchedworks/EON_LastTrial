@@ -47,7 +47,8 @@ void TCompNPC::interact()
 {
 	// FMOD stop random audio emission
 	TCompAudioEmitter* t_ae = get<TCompAudioEmitter>();
-	t_ae->stopEmitter();
+	if(t_ae)
+		t_ae->stopEmitter();
 
 	CEntity* trigger = talk_3d ? getEntity() : nullptr;
 
@@ -81,5 +82,6 @@ void TCompNPC::onStop(const TMsgStopCaption& msg)
 
 	// FMOD resume random audio emission
 	TCompAudioEmitter* t_ae = get<TCompAudioEmitter>();
-	t_ae->playEmitter();
+	if(t_ae)
+		t_ae->playEmitter();
 }

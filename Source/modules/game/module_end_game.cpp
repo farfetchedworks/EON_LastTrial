@@ -4,6 +4,7 @@
 #include "modules/module_manager.h"
 #include "modules/module_entities.h"
 #include "render/render_module.h"
+#include "modules/module_boot.h"
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
@@ -11,18 +12,45 @@
 
 bool ModuleEONEndGame::start()
 {
+    debugging = true;
+    CApplication::get().changeMouseState(debugging, false);
+
+    input = CEngine::get().getInput(input::MENU);
+    assert(input);
+
     EngineUI.activateWidget("eon_end_game");
-    EngineAudio.stop();
-    Entities.clearDebugList();
+
+    _menuController.setInput(input);
+    _menuController.bind("continue_btn_end", std::bind(&ModuleEONEndGame::onContinue, this));
+    _menuController.bind("exit_btn_end", std::bind(&ModuleEONEndGame::onExit, this));
+
+    _menuController.reset();
+    _menuController.selectOption(0);
+
+    // audio??
+    // ...
+    
     return true;
 }
 
 void ModuleEONEndGame::stop()
 {
-
+    EngineUI.deactivateWidget("modal_black", false);
+    EngineUI.deactivateWidget("eon_end_game");
 }
 
 void ModuleEONEndGame::update(float dt)
 {
+    _menuController.update(dt);
+}
 
+void ModuleEONEndGame::onContinue()
+{
+    /*Boot.reset();
+    CEngine::get().getModuleManager().changeToGamestate("main_menu");*/
+}
+
+void ModuleEONEndGame::onExit()
+{
+    CApplication::get().exit();
 }
