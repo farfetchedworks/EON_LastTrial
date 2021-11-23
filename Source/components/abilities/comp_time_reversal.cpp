@@ -29,7 +29,6 @@ static const char* FMOD_PARAM_END = "Time_Reversal_End";
 static const char* FMOD_PARAM_WARP = "Eon_Inside_Warp";
 static const char* FMOD_EVENT = "CHA/Eon/AT/Eon_Time_Reversal";
 
-
 TCompTimeReversal::~TCompTimeReversal() {
     delete[] circular_buffer;
 }
@@ -39,6 +38,7 @@ void TCompTimeReversal::load(const json& j, TEntityParseContext& ctx)
     warp_consumption = j.value("warp_consumption", warp_consumption);
     max_seconds = j.value("max_seconds", max_seconds);
     rewind_speed = j.value("rewind_speed", rewind_speed);
+    enabled = j.value("enabled", enabled);
 }
 
 void TCompTimeReversal::onEntityCreated()
@@ -60,6 +60,12 @@ void TCompTimeReversal::onEntityCreated()
 
 void TCompTimeReversal::disable()
 {
+    cte_world.timeReversal_rewinding = 0.f;
+    cte_world.timeReversal_rewinding_time = 0.f;
+
+    time_reversal_timer = 0.f;
+    force_scale_timer = 0.f;
+    rendering_effect = eEffectState::NONE;
     enabled = false;
     clearBuffer();
 
@@ -303,7 +309,7 @@ void TCompTimeReversal::stopRewinding()
         TCompDissolveEffect* c_dissolve = e_holo->get<TCompDissolveEffect>();
         if (c_dissolve) {
             c_dissolve->setRemoveColliders(true);
-            c_dissolve->recover(7.0, 2.4, true);
+            c_dissolve->recover(7.f, 2.4f, true);
         }
     }
 
@@ -387,7 +393,7 @@ void TCompTimeReversal::spawnHolo()
     TCompDissolveEffect* c_dissolve = e_holo->get<TCompDissolveEffect>();
     if (c_dissolve) {
         c_dissolve->setRemoveColliders(false);
-        c_dissolve->enable(0.25, 0.001, true);
+        c_dissolve->enable(0.25f, 0.001f, true);
     }
 
     return;

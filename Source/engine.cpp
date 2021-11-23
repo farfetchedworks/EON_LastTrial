@@ -176,8 +176,6 @@ void CEngine::doFrame()
 	PROFILE_FRAME_BEGINS();
 	PROFILE_FUNCTION("Engine::doFrame");
 	Time.set(Time.current + timer.elapsedAndReset());
-	// juan:
-	// Time.set(timer.elapsed());
 	update(Time.delta);
 	_render->generateFrame();
 }

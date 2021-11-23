@@ -88,8 +88,8 @@ bool CModuleBoot::customStart()
 
 bool CModuleBoot::loadEndingBoot()
 {
-	assert(jBoot.size());
 	Boot.reset();
+	assert(jBoot.size());
 	auto prefabs = jBoot["happyRoom_scenes"].get<std::vector<std::string>>();
 	for (auto& p : prefabs)
 		loadScene(p);
@@ -100,6 +100,9 @@ bool CModuleBoot::loadEndingBoot()
 		for (auto h : ctx.entities_loaded)
 			h.sendMsg(msg);
 	}
+
+	// restart irradiance module
+	Engine.getIrradiance().restart();
 
 	CEntity* camera_mixed = getEntityByName("camera_mixed");
 	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
@@ -141,14 +144,20 @@ bool CModuleBoot::loadEndingBoot()
 	assert(w_hud);
 	w_hud->setVisible(false);
 
-	// restart irradiance module
-	Engine.getIrradiance().restart();
-
 	_endBoot = false;
 	_bootCompleted = true;
 	_bootReady = true;
 
 	ctxs.clear();
+
+	// restart world ctes
+	cte_world.ambient_factor = 1.f;
+	cte_world.exposure_factor = 1.0f;
+	cte_world.emissive_irradiance_multiplier = 1.0;
+	cte_world.timeReversal_rewinding = 0.f;
+	cte_world.timeReversal_rewinding_time = 0.f;
+	cte_world.boot_in_preview = 0.f;
+	cte_world.player_dead = 0.f;
 
 	return true;
 }
@@ -287,7 +296,7 @@ void CModuleBoot::reset()
 	hm->forEach([](CEntity* e) {
 		CHandle h(e);
 		h.destroy();
-		});
+	});
 
 	CHandleManager::destroyAllPendingObjects();
 
@@ -301,9 +310,7 @@ void CModuleBoot::reset()
 	_introLoaded = false;
 	_introBoot = false;
 	_endBoot = false;
-	_loaded = 0;
 
-	jBoot.clear();
 	ctxs.clear();
 
 	CameraMixer.setEnabled(false);

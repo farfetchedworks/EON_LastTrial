@@ -27,6 +27,8 @@ bool CModuleIrradianceCache::customStart()
 
 void CModuleIrradianceCache::restart()
 {
+    idx = 0;
+
     getObjectManager<TCompIrradianceCache>()->forEach([&](TCompIrradianceCache* irradiance) {
         irradiance->initCache(idx, &sh_buffers[idx]);
         idx++;
