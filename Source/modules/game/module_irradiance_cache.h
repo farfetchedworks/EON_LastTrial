@@ -15,6 +15,7 @@ public:
     CModuleIrradianceCache(const std::string& name) : IModule(name) {}
 
     bool start() override;
+    bool customStart();
     void restart();
     void renderInMenu();
 };

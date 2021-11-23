@@ -80,7 +80,10 @@ bool CModuleBoot::customStart()
 	loadBoot("data/boot.json");
 #endif
 
-	return true;
+	bool is_ok = Engine.getIrradiance().customStart();
+	assert(is_ok);
+
+	return is_ok;
 }
 
 bool CModuleBoot::loadEndingBoot()
