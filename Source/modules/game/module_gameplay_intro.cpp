@@ -52,6 +52,7 @@ void ModuleEONGameplayIntro::stop()
 {
 	Boot.reset();
 	cte_world.in_gameplay = 0.f;
+	started = false;
 
 	CModuleCameraMixer& mixer = Engine.getCameramixer();
 	mixer.setEnabled(false);

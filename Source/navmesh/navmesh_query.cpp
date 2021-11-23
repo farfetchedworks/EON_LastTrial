@@ -60,7 +60,7 @@ void CNavMeshQuery::render()
 
 void CNavMeshQuery::update(float dt)
 {
-    if (PlayerInput['0'].getsPressed()) {
+    /*if (PlayerInput['0'].getsPressed()) {
         tool = (EQueryTool)(((int)tool + 1) % (int)EQueryTool::NUM_TOOLS);
     }
     else if( PlayerInput['1'].getsPressed() ) {
@@ -92,7 +92,7 @@ void CNavMeshQuery::update(float dt)
         p2.set = false;
         p1.p = getRandomPointAroundCircle(player->getPosition(), m_neighbourhoodRadius) + VEC3::Up;
         p1.set = true;
-    }
+    }*/
 }
 
 // =============================================================== TOOLS

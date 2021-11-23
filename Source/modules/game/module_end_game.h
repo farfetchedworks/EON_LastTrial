@@ -14,9 +14,11 @@ public:
     bool start() override;
     void stop() override;
     void update(float dt) override;
+    void onContinue();
+    void onExit();
 
 private:
 
-    input::CModule* _player1 = nullptr;
-
+    input::CModule* input = nullptr;
+    ui::CMenuController _menuController;
 };
