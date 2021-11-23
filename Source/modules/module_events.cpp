@@ -1,9 +1,11 @@
 #include "mcv_platform.h"
 #include "engine.h"
 #include "module_events.h"
+#include "entity/entity_parser.h"
 #include "ui/ui_module.h"
 #include "components/messages.h"
 #include "input/input_module.h"
+#include "components/common/comp_parent.h"
 #include "modules/game/module_player_interaction.h"
 #include "modules/module_camera_mixer.h"
 #include "skeleton/comp_attached_to_bone.h"
@@ -229,6 +231,29 @@ void CModuleEventSystem::registerGlobalEvents()
 		assert(owner);
 		TCompTransform* c_trans = owner->get<TCompTransform>();
 		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
+	});
+	
+	EventSystem.registerEventCallback("Gameplay/ending", [](CHandle t, CHandle o) {
+		CEntity* dummy = getEntityByName("dummy_move_to");
+		CTransform trans;
+		trans.setPosition(dummy->getPosition());
+		spawn("data/prefabs/flor_02.json", trans);
+
+		// remove flower from player hand
+		CEntity* player = getEntityByName("player");
+		TCompParent* parent = player->get<TCompParent>();
+		CEntity* flor = parent->getChildByName("WeaponFlor");
+		parent->delChild(flor);
+		if (flor)
+			flor->destroy();
+
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		
+		// in case we are playing with eon..
+		if(!controller->block_attacks)
+			PawnUtils::playAction(player, "Heal");
+		else
+			PawnUtils::playAction(player, "basicEnemyHeal");
 	});
 }
 
