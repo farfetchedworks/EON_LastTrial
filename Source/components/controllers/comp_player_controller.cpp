@@ -451,7 +451,7 @@ void TCompPlayerController::move(float dt)
 		return;
 
 	bool isIteractCameraEnabled = isCameraEnabled("camera_interact");
-	if (is_moving && isIteractCameraEnabled)
+	if (is_moving && isIteractCameraEnabled && !c_gm->isInCinematic())
 		blendCamera("camera_follow", 1.0f, &interpolators::linearInterpolator);
 	
 	// ----------------
