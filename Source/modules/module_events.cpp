@@ -237,7 +237,7 @@ void CModuleEventSystem::registerGlobalEvents()
 		CEntity* dummy = getEntityByName("dummy_move_to");
 		CTransform trans;
 		trans.setPosition(dummy->getPosition());
-		spawn("data/prefabs/flor_02.json", trans);
+		spawn("data/prefabs/common/flor_02.json", trans);
 
 		// remove flower from player hand
 		CEntity* player = getEntityByName("player");
