@@ -17,6 +17,7 @@ bool ModuleEONMainMenu::start()
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 
+    EngineUI.deactivateWidget("eon_hud");
     EngineUI.activateWidget("eon_main_menu");
 
     _menuController.setInput(input);
