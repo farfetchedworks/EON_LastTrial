@@ -233,11 +233,11 @@ void CModuleEventSystem::registerGlobalEvents()
 		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
 	});
 	
-	EventSystem.registerEventCallback("Gameplay/ending", [](CHandle t, CHandle o) {
+	EventSystem.registerEventCallback("Gameplay/ending_1", [](CHandle t, CHandle o) {
 		CEntity* dummy = getEntityByName("dummy_move_to");
 		CTransform trans;
 		trans.setPosition(dummy->getPosition());
-		spawn("data/prefabs/flor_02.json", trans);
+		spawn("data/prefabs/common/flor_02.json", trans);
 
 		// remove flower from player hand
 		CEntity* player = getEntityByName("player");
@@ -246,14 +246,21 @@ void CModuleEventSystem::registerGlobalEvents()
 		parent->delChild(flor);
 		if (flor)
 			flor->destroy();
+	});
 
+	EventSystem.registerEventCallback("Gameplay/ending_2", [](CHandle t, CHandle o) {
+
+		// remove flower from player hand
+		CEntity* player = getEntityByName("player");
 		TCompPlayerController* controller = player->get<TCompPlayerController>();
-		
+
 		// in case we are playing with eon..
-		if(!controller->block_attacks)
+		if (!controller->block_attacks)
 			PawnUtils::playAction(player, "Heal");
 		else
 			PawnUtils::playAction(player, "basicEnemyHeal");
+
+		EngineUI.fadeOut(5.f);
 	});
 }
 
