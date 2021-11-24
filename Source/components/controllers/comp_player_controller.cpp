@@ -380,6 +380,7 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 	TCompCamera* c_camera = e_camera->get<TCompCamera>();
 	TCompTransform* c_player_trans = h_transform;
 	TCompTransform* c_locked_trans = h_locked_transform;
+	TCompCollider* c_collider = h_collider;
 
 	VEC3 front;
 	if (lockedMovement) {
@@ -507,7 +508,7 @@ void TCompPlayerController::move(float dt)
 	}
 
 	// Manage on stop running/sprinting animations
-	if (!is_turn_sprint && !is_moving && PlayerInput["sprint"].wasPressed() && moving_timer > 0.75f) {
+	if (!is_turn_sprint && !is_moving && (PlayerInput["sprint"].wasPressed() || PlayerInput["sprint"].timeSinceReleased() < .2f) && moving_timer > 0.75f) {
 		moving_timer = 0.f;
 		current_speed = 0.0f;
 		setVariable("is_stopping_sprint", true);
