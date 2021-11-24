@@ -380,7 +380,6 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 	TCompCamera* c_camera = e_camera->get<TCompCamera>();
 	TCompTransform* c_player_trans = h_transform;
 	TCompTransform* c_locked_trans = h_locked_transform;
-	TCompCollider* c_collider = h_collider;
 
 	VEC3 front;
 	if (lockedMovement) {
@@ -410,7 +409,11 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 		new_rot = QUAT::CreateFromAxisAngle(VEC3(0, 1, 0), atan2(moveDir.x, moveDir.z));
 		float fwdDot = c_player_trans->getForward().Dot(moveDir);
 
-		if (fwdDot < -0.75f && is_sprinting) {
+		TCompFSM* fsm = get<TCompFSM>();
+		fsm::CStateBaseLogic* currState = (fsm::CStateBaseLogic*)fsm->getCurrentState();
+		float time_in_anim = fsm->getCtx().getTimeInState();
+
+		if (fwdDot < -0.75f && is_sprinting && time_in_anim >= 1.f) {
 			setVariable("is_turn_sprint", true);
 		}
 		else {
