@@ -50,6 +50,14 @@ void CCurve::addKnot(const VEC3& pos)
     _knots.push_back(pos);
 }
 
+VEC3 CCurve::getKnot(int idx) const
+{
+    assert(_knots.size() > idx);
+    if (_knots.size() > idx)
+        return _knots[idx];
+    return VEC3();
+}
+
 VEC3 CCurve::evaluate(float ratio, const MAT44& world) const
 {
     return VEC3::Transform(evaluate(ratio), world);
