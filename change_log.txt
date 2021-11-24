@@ -19,6 +19,18 @@
 - Smoothed cinematic lore intro
 - Fixes in dash/dash strike mechanics
 
+== AUDIO ==
+- More accurate Gard music ending and improved with a final cymbal swoosh
+- Fixed memory leaks regarding events ending but not being released
+- Fixed enemy projectile shots being overlapped on Cygnus
+- Fixed temple music not reacting to level respawn
+- Better ambience creation by disabling music after an energy wall has been trespassed
+- Better ambience blending by crossfading
+- Added new UI sound to highlighting
+- Applied UI sounds to arrow selection
+- Improved Gard audio on jump attack
+- Lots of levelling and mixing
+
 
 
 // Headings for later....
