@@ -64,7 +64,7 @@
 	</object>
 	<object class="EventAutomatableProperties" id="{ef425c8c-f57a-4601-84b3-4b64ede31e9b}">
 		<property name="maxVoices">
-			<value>2</value>
+			<value>4</value>
 		</property>
 		<property name="voiceStealing">
 			<value>4</value>
@@ -125,7 +125,8 @@
 	<object class="MixerBusEffectChain" id="{3a4e0a5e-74ff-408f-9370-d1041807e3d2}">
 		<relationship name="effects">
 			<destination>{7cca4b55-71cf-4886-af8d-181e295900c7}</destination>
-			<destination>{32c66a4a-7eec-452d-96cc-4b88fcbcf391}</destination>
+			<destination>{acfb5f38-74da-450c-a443-3abd77d0acd5}</destination>
+			<destination>{4bc94a55-c1e9-458f-94e1-2340c32caf07}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{afe4776b-1a03-409a-9211-b4be1687517c}">
@@ -149,13 +150,63 @@
 	</object>
 	<object class="MixerBusPanner" id="{46d7f5ab-2078-48fe-8e3d-5310b9d18786}" />
 	<object class="MixerBusFader" id="{7cca4b55-71cf-4886-af8d-181e295900c7}" />
-	<object class="ProxyEffect" id="{32c66a4a-7eec-452d-96cc-4b88fcbcf391}">
-		<property name="inputFormat">
-			<value>1</value>
+	<object class="MultibandEqEffect" id="{acfb5f38-74da-450c-a443-3abd77d0acd5}">
+		<property name="qualityA">
+			<value>0.850000024</value>
 		</property>
-		<relationship name="preset">
-			<destination>{759b3dc8-d53f-40dd-9b33-059520aaccb6}</destination>
+		<relationship name="automators">
+			<destination>{5117af26-5259-44c2-960a-f8bb9fcd5cd4}</destination>
 		</relationship>
 	</object>
+	<object class="SpatialiserEffect" id="{4bc94a55-c1e9-458f-94e1-2340c32caf07}">
+		<property name="minimumDistance">
+			<value>2.4000001</value>
+		</property>
+		<property name="maximumDistance">
+			<value>25</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="soundSize">
+			<value>14.5</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{a9ae80af-e253-48b6-9596-24c8dd212960}" />
+	<object class="Automator" id="{5117af26-5259-44c2-960a-f8bb9fcd5cd4}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>frequencyA</value>
+		</property>
+		<relationship name="automationCurves">
+			<destination>{d758511f-2977-4d27-a0a9-ed5ac78d71dc}</destination>
+		</relationship>
+	</object>
+	<object class="AutomationCurve" id="{d758511f-2977-4d27-a0a9-ed5ac78d71dc}">
+		<relationship name="parameter">
+			<destination>{fe2c6086-e230-45f8-ac86-24811fb9d507}</destination>
+		</relationship>
+		<relationship name="automationPoints">
+			<destination>{9b0b648f-6265-4b07-ac27-f121fad68436}</destination>
+			<destination>{bd719b29-2ad6-473f-8279-2b2fab7c4c46}</destination>
+		</relationship>
+	</object>
+	<object class="AutomationPoint" id="{9b0b648f-6265-4b07-ac27-f121fad68436}">
+		<property name="position">
+			<value>100</value>
+		</property>
+		<property name="value">
+			<value>1100</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{bd719b29-2ad6-473f-8279-2b2fab7c4c46}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>22000</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.33033523</value>
+		</property>
+	</object>
 </objects>

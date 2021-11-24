@@ -478,7 +478,6 @@ void TCompGameManager::onBossDead(const TMsgBossDead& msg)
 		//show_end_game_timer = 10.0f;
 
 		// End boss music
-		EngineAudio.setGlobalRTPC("Gard_Phase", 4);
 		boss.music_event->release();
 	}
 	else if (msg.boss_name == "Cygnus") {

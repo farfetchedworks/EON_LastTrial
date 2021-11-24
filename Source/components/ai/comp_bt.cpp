@@ -16,6 +16,14 @@ DECL_OBJ_MANAGER("behavior_tree", TCompBT)
 
 bool TCompBT::UPDATE_ENABLED = true;
 
+TCompBT::~TCompBT()
+{
+	if (getContext()->getHasEonTargeted()) {
+		CEntity* e_player = getEntityByName("player");
+		e_player->sendMsg(TMsgUntarget());
+	}
+}
+
 void TCompBT::load(const json& j, TEntityParseContext& ctx)
 {
 	const std::string& filename = j["behavior_tree"];

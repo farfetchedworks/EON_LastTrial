@@ -100,6 +100,7 @@ void TCompEnergyWall::onEonInteracted(const TMsgEonInteracted& msg)
 	// post fmod event
 	const static char* EVENT = "ENV/General/BossDoor/BossDoor_Interact";
 	EngineAudio.postEvent(EVENT, init_pos);
+	EngineAudio.stopCurMusicEvent();
 }
 
 VEC3 TCompEnergyWall::calculateEntryPoint()

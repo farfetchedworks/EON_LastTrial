@@ -297,6 +297,7 @@ FMOD::Studio::EventInstance* CModuleAudio::post2DEventGetInst(const std::string&
 
 	// Fire instance
 	is_ok &= ev_inst->start();
+	is_ok &= ev_inst->release();
 
 	assert(is_ok == FMOD_RESULT::FMOD_OK);
 
@@ -313,6 +314,7 @@ FMOD::Studio::EventInstance* CModuleAudio::postEventGetInst(const std::string& e
 
 	// Fire instance
 	is_ok &= ev_inst->start();
+	is_ok &= ev_inst->release();
 
 	assert(is_ok == FMOD_RESULT::FMOD_OK);
 

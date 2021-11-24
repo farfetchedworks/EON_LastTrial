@@ -145,6 +145,9 @@
 		<property name="maxVoices">
 			<value>3</value>
 		</property>
+		<property name="volume">
+			<value>1</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{3e63d921-cae9-4505-9eac-7df4f553306b}</destination>
 			<destination>{6391a4f8-5591-4718-acb2-1b343f9762b4}</destination>

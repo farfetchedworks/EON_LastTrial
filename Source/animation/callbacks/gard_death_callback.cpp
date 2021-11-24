@@ -16,14 +16,21 @@
 #include "ui/widgets/ui_text.h"
 #include "bt/task_utils.h"
 #include "ui/ui_module.h"
+#include "audio/module_audio.h"
 
 const float DEATH_TIME = 30.f;
 
 struct onGardDeathCallback : public CAnimationCallback
 {
+
+	bool first_update = true;
+
 	void AnimationUpdate(float anim_time, CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
-		
+		if (first_update) {
+			first_update = false;
+			EngineAudio.setGlobalRTPC("Gard_Phase", 4);
+		}
 	}
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
