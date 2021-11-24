@@ -91,7 +91,7 @@ void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 		assert(player);
 		TMsgHitWarpRecover msgHitWarp;
 		msgHitWarp.hitByPlayer = true;
-		msgHitWarp.multiplier= 0.75f;
+		msgHitWarp.multiplier = 1.2f;
 		player->sendMsg(msgHitWarp);
 	}
 
