@@ -117,7 +117,7 @@ float lerpRadians(float a, float b, float lerp_velocity, float lerpFactor)
     {
         // lerp upwards past PI_TIMES_TWO
         b += pi2;
-        result = damp(a, b, lerp_velocity, lerpFactor);
+        result = lerp(a, b, lerpFactor);
         if (result >= pi2)
         {
             result -= pi2;
@@ -127,7 +127,7 @@ float lerpRadians(float a, float b, float lerp_velocity, float lerpFactor)
     {
         // lerp downwards past 0
         b -= pi2;
-        result = damp(a, b, lerp_velocity, lerpFactor);
+        result = lerp(a, b, lerpFactor);
         if (result < 0.f)
         {
             result += pi2;
@@ -136,7 +136,42 @@ float lerpRadians(float a, float b, float lerp_velocity, float lerpFactor)
     else
     {
         // straight lerp
-        result = damp(a, b, lerp_velocity, lerpFactor);
+        result = lerp(a, b, lerpFactor);
+    }
+
+    return result;
+}
+
+// Lerps from angle a to b (both between 0.f and PI_TIMES_TWO), taking the shortest path
+float dampRadians(float a, float b, float& velocity, float lerp_time, float deltaTime)
+{
+    float result;
+    float diff = b - a;
+    float pi2 = 2.0f * static_cast<float>(M_PI);
+    if (diff < -M_PI)
+    {
+        // lerp upwards past PI_TIMES_TWO
+        b += pi2;
+        result = smoothDamp(a, b, velocity, lerp_time, deltaTime);
+        if (result >= pi2)
+        {
+            result -= pi2;
+        }
+    }
+    else if (diff > M_PI)
+    {
+        // lerp downwards past 0
+        b -= pi2;
+        result = smoothDamp(a, b, velocity, lerp_time, deltaTime);
+        if (result < 0.f)
+        {
+            result += pi2;
+        }
+    }
+    else
+    {
+        // straight lerp
+        result = smoothDamp(a, b, velocity, lerp_time, deltaTime);
     }
 
     return result;

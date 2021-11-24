@@ -12,12 +12,6 @@ struct TCompCameraFollow : public TCompBase, IGameplayCamera {
 
     DECL_SIBLING_ACCESS();
 
-    template<typename T>
-    struct LerpedValue {
-        T value = {};
-        T velocity = {};
-    };
-
     std::string target;
     bool target_dead = false;
 

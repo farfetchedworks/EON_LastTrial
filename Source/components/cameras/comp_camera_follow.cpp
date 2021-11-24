@@ -55,8 +55,8 @@ void TCompCameraFollow::load(const json& j, TEntityParseContext& ctx)
 
     orbit_speed = j.value("orbit_speed", orbit_speed);
 
-    delta_yaw = delta_yaw_lerp = j.value("yaw", delta_yaw);
-    delta_pitch = delta_pitch_lerp = j.value("pitch", delta_pitch);
+    delta_yaw = delta_yaw_lerp.value = j.value("yaw", delta_yaw);
+    delta_pitch = delta_pitch_lerp.value = j.value("pitch", delta_pitch);
 
     current_distance.value = distance;
     current_height.value = height;
@@ -171,13 +171,18 @@ void TCompCameraFollow::update(float dt)
     }
 
     float angleLerpFactor = getAngleLerpFactor();
-    delta_pitch_lerp = lerpRadians(delta_pitch_lerp, delta_pitch, 8.0f * angleLerpFactor, dt);
-    delta_yaw_lerp = lerpRadians(delta_yaw_lerp, delta_yaw, 12.0f * angleLerpFactor, dt);
+    delta_pitch_lerp.value = dampRadians(delta_pitch_lerp.value, delta_pitch, delta_pitch_lerp.velocity, 0.05f, dt);
+    delta_yaw_lerp.value =  dampRadians(delta_yaw_lerp.value, delta_yaw, delta_yaw_lerp.velocity, 0.05f, dt);
 
     TCompPlayerController* c_player = h_player;
     bool is_praying = std::get<bool>(c_player->getVariable("is_praying"));
-    current_distance.value = is_praying ? smoothDamp(current_distance.value, 6.f, current_distance.velocity, 0.1f, dt) : smoothDamp(current_distance.value, distance, current_distance.velocity, 0.1f, dt);
-    current_height.value = is_praying ? smoothDamp(current_height.value, 2.f, current_height.velocity, 0.1f, dt) : smoothDamp(current_height.value, height, current_height.velocity, 0.1f, dt);
+
+
+    float targetDistance = is_praying ? 6.0f : distance;
+    current_distance.value = smoothDamp(current_distance.value, targetDistance, current_distance.velocity, 0.5f, dt);
+
+    float targetHeight = is_praying ? 2.0f : height;
+    current_height.value = smoothDamp(current_height.value, targetHeight, current_height.velocity, 0.5f, dt);
 
     // Modify camera settings when locked depending on the distance to the target
     float finalDistance = current_distance.value;
@@ -209,10 +214,10 @@ void TCompCameraFollow::update(float dt)
     target_pos.y += finalHeight;
 
     float lerp_velocity = getLerpFactor();
-    target_position_lerp.value = smoothDamp(target_position_lerp.value, target_pos, target_position_lerp.velocity, 0.1f, dt);
+    target_position_lerp.value = smoothDamp(target_position_lerp.value, target_pos, target_position_lerp.velocity, 0.17f, dt);
 
     // Orbit movement
-    MAT44 rot = MAT44::CreateRotationX(delta_pitch_lerp) * MAT44::CreateRotationY(delta_yaw_lerp);
+    MAT44 rot = MAT44::CreateRotationX(delta_pitch_lerp.value) * MAT44::CreateRotationY(delta_yaw_lerp.value);
     VEC3 position = target_position_lerp.value + rot.Forward() * finalDistance;
 
     bool is_crossing_objects = std::get<bool>(c_player->getVariable("is_crossing_wall"));
@@ -241,7 +246,7 @@ void TCompCameraFollow::update(float dt)
         }
     }
 
-    collision_position_lerp.value = smoothDamp(collision_position_lerp.value, position, collision_position_lerp.velocity, 0.1f, dt);
+    collision_position_lerp.value = smoothDamp(collision_position_lerp.value, position, collision_position_lerp.velocity, 0.03f, dt);
 
     // Restrict movement in any axis
     applyAxisRestrictions(collision_position_lerp.value);

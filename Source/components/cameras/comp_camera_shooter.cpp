@@ -58,13 +58,13 @@ void TCompCameraShooter::update(float dt)
 
     updateDeltas(dt);
 
-    delta_pitch_lerp = lerpRadians(delta_pitch_lerp, delta_pitch, 14.0f, dt);
-    delta_yaw_lerp = lerpRadians(delta_yaw_lerp, delta_yaw, 14.0f, dt);
+    delta_pitch_lerp.value = dampRadians(delta_pitch_lerp.value, delta_pitch, delta_pitch_lerp.velocity, 0.05f, dt);
+    delta_yaw_lerp.value = dampRadians(delta_yaw_lerp.value, delta_yaw, delta_yaw_lerp.velocity, 0.05f, dt);
 
     TCompTransform* c_transform = get<TCompTransform>();
     TCompTransform* t_target = h_trans_target;
 
-    MAT44 m_player_rot = MAT44::CreateRotationY(delta_yaw_lerp);
+    MAT44 m_player_rot = MAT44::CreateRotationY(delta_yaw_lerp.value);
     QUAT player_rot = QUAT::CreateFromRotationMatrix(m_player_rot);
     t_target->setRotation(player_rot);
 
@@ -77,7 +77,7 @@ void TCompCameraShooter::update(float dt)
 
     target_position_lerp = VEC3::Lerp(target_position_lerp, target_pos, 9.f * dt);
 
-    MAT44 m_camera_rot = MAT44::CreateRotationX(delta_pitch_lerp) * MAT44::CreateRotationY(delta_yaw_lerp);
+    MAT44 m_camera_rot = MAT44::CreateRotationX(delta_pitch_lerp.value) * MAT44::CreateRotationY(delta_yaw_lerp.value);
     VEC3 cameraFwd = m_camera_rot.Forward();
     cameraFwd = VEC3::Transform(cameraFwd, QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(25)));
     VEC3 position = target_position_lerp + cameraFwd * distance;
