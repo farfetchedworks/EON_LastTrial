@@ -27,9 +27,11 @@ public:
 	void fillWarpEnergy() { warp_energy = (float)curr_max_warp_energy; };
 	void setMaxWarp(int max) { max_warp_energy = max; };
 	void setCurrMaxWarp(int max) { curr_max_warp_energy = max; };
+	void addSlot();
 	bool hasWarpEnergy(int warp_cost);
 
 	void update(float dt);
 	void debugInMenu();
 	void load(const json& j, TEntityParseContext& ctx);
+	void onEntityCreated();
 };
