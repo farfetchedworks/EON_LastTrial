@@ -53,6 +53,11 @@ T damp(T a, T b, float lambda, float dt)
     return lerp(a, b, 1 - exp(-lambda * dt));
 }
 
+float smoothDamp(float current, float target, float& currentVelocity, float smoothTime, float deltaTime, float maxSpeed = FLT_MAX);
+
+// From Unity: https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Vector3.cs#L97
+VEC3 smoothDamp(VEC3 current, VEC3 target, VEC3& currentVelocity, float smoothTime, float deltaTime, float maxSpeed = FLT_MAX);
+
 template<typename T>
 T dampCubicIn(T a, T b, float lambda, float dt) {
     return cubicIn(a, b, 1 - exp(-lambda * dt));

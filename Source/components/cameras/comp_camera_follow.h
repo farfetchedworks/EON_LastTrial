@@ -12,20 +12,27 @@ struct TCompCameraFollow : public TCompBase, IGameplayCamera {
 
     DECL_SIBLING_ACCESS();
 
+    template<typename T>
+    struct LerpedValue {
+        T value = {};
+        T velocity = {};
+    };
+
     std::string target;
     bool target_dead = false;
 
     float distance = 0.0f;
     float height = 0.0f;
-    float current_distance = 0.0f;
-    float current_height = 0.0f;
     float lerp_scale = 5.5f;
     float time_elapsed = 0.0f;
 
-    float speed_lerp = 5.0f;
+    LerpedValue<float> current_distance = {};
+    LerpedValue<float> current_height = {};
+    LerpedValue<float> speed_lerp = {};
 
-    VEC3 target_position_lerp;
-    VEC3 collision_position_lerp;
+    LerpedValue<VEC3> target_position_lerp = {};
+    LerpedValue<VEC3> collision_position_lerp = {};
+
     VEC3 lock_target;
     VEC3 lastTargetPosition;
     VEC3 original_pos;

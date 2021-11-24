@@ -58,8 +58,8 @@ void TCompCameraFollow::load(const json& j, TEntityParseContext& ctx)
     delta_yaw = delta_yaw_lerp = j.value("yaw", delta_yaw);
     delta_pitch = delta_pitch_lerp = j.value("pitch", delta_pitch);
 
-    current_distance = distance;
-    current_height = height;
+    current_distance.value = distance;
+    current_height.value = height;
 
     enabled = false;
 }
@@ -67,7 +67,7 @@ void TCompCameraFollow::load(const json& j, TEntityParseContext& ctx)
 void TCompCameraFollow::debugInMenu()
 {
     ImGui::Text("Target: %s", target.c_str());
-    ImGui::DragFloat3("Target LERP Pos", &target_position_lerp.x);
+    ImGui::DragFloat3("Target LERP Pos", &target_position_lerp.value.x);
     ImGui::Checkbox("Enabled", &enabled);
     ImGui::Text("Axis Restrictions");
     ImGui::Checkbox("X", &restrict_x_axis);
@@ -121,13 +121,13 @@ void TCompCameraFollow::update(float dt)
 
         h_trans_target = e_target->get<TCompTransform>();
         TCompTransform* c_trans = h_trans_target;
-        target_position_lerp = c_trans->getPosition();
-        target_position_lerp.y += height;
+        target_position_lerp.value = c_trans->getPosition();
+        target_position_lerp.value.y += height;
 
         if(orbit_enabled) {
             delta_yaw = vectorToYaw(c_trans->getForward());
             MAT44 rot = MAT44::CreateRotationX(delta_pitch) * MAT44::CreateRotationY(delta_yaw);
-            collision_position_lerp = target_position_lerp + rot.Forward() * distance;
+            collision_position_lerp.value = target_position_lerp.value + rot.Forward() * distance;
         }
 
         h_player = e_target->get<TCompPlayerController>();
@@ -176,12 +176,12 @@ void TCompCameraFollow::update(float dt)
 
     TCompPlayerController* c_player = h_player;
     bool is_praying = std::get<bool>(c_player->getVariable("is_praying"));
-    current_distance = is_praying ? damp(current_distance, 6.f, 3.f, dt) : damp(current_distance, distance, 3.f, dt);
-    current_height = is_praying ? damp(current_height, 2.f, 3.f, dt) : damp(current_height, height, 3.f, dt);
+    current_distance.value = is_praying ? smoothDamp(current_distance.value, 6.f, current_distance.velocity, 0.1f, dt) : smoothDamp(current_distance.value, distance, current_distance.velocity, 0.1f, dt);
+    current_height.value = is_praying ? smoothDamp(current_height.value, 2.f, current_height.velocity, 0.1f, dt) : smoothDamp(current_height.value, height, current_height.velocity, 0.1f, dt);
 
     // Modify camera settings when locked depending on the distance to the target
-    float finalDistance = current_distance;
-    float finalHeight = current_height;
+    float finalDistance = current_distance.value;
+    float finalHeight = current_height.value;
 
     TCompTransform* c_trans = h_trans_target;
     TCompTransform* t_locked = h_trans_locked_enemy;
@@ -209,13 +209,11 @@ void TCompCameraFollow::update(float dt)
     target_pos.y += finalHeight;
 
     float lerp_velocity = getLerpFactor();
-    target_position_lerp = dampCubicIn<VEC3>(target_position_lerp, target_pos, lerp_velocity, dt);
-
-    
+    target_position_lerp.value = smoothDamp(target_position_lerp.value, target_pos, target_position_lerp.velocity, 0.1f, dt);
 
     // Orbit movement
     MAT44 rot = MAT44::CreateRotationX(delta_pitch_lerp) * MAT44::CreateRotationY(delta_yaw_lerp);
-    VEC3 position = target_position_lerp + rot.Forward() * finalDistance;
+    VEC3 position = target_position_lerp.value + rot.Forward() * finalDistance;
 
     bool is_crossing_objects = std::get<bool>(c_player->getVariable("is_crossing_wall"));
     is_crossing_objects |= std::get<bool>(c_player->getVariable("is_crossing_rift"));
@@ -243,11 +241,11 @@ void TCompCameraFollow::update(float dt)
         }
     }
 
-    collision_position_lerp = damp<VEC3>(collision_position_lerp, position, 20.f, dt);
+    collision_position_lerp.value = smoothDamp(collision_position_lerp.value, position, collision_position_lerp.velocity, 0.1f, dt);
 
     // Restrict movement in any axis
-    applyAxisRestrictions(collision_position_lerp);
-    c_transform->lookAt(collision_position_lerp, target_position_lerp, VEC3::Up);
+    applyAxisRestrictions(collision_position_lerp.value);
+    c_transform->lookAt(collision_position_lerp.value, target_position_lerp.value, VEC3::Up);
 }
 
 float TCompCameraFollow::getAngleLerpFactor()
