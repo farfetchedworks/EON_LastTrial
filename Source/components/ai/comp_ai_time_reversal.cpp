@@ -15,10 +15,6 @@
 
 DECL_OBJ_MANAGER("ai_time_reversal", TCompAITimeReversal)
 
-static const char* FMOD_PARAM_END = "Time_Reversal_End";
-static const char* FMOD_PARAM_WARP = "Eon_Inside_Warp";
-static const char* FMOD_EVENT = "CHA/Eon/AT/Eon_Time_Reversal";
-
 TCompAITimeReversal::~TCompAITimeReversal() {
     delete[] circular_buffer;
 }
@@ -142,13 +138,6 @@ bool TCompAITimeReversal::startRewinding()
     EnginePhysics.setSimulationDisabled(comp_collider->force_actor, true);
     EnginePhysics.setupFilteringOnAllShapesOfActor(comp_collider->force_actor, CModulePhysics::FilterGroup::None, CModulePhysics::FilterGroup::None);
 
-    // Fire FMOD event
-    EngineAudio.setGlobalRTPC(FMOD_PARAM_END, 0);
-    EngineAudio.postEvent(FMOD_EVENT);
-
-    // Set FMOD parameter to filter and modify gain
-    EngineAudio.setGlobalRTPC(FMOD_PARAM_WARP, 1);
-
     return true;
 }
 
@@ -172,12 +161,6 @@ void TCompAITimeReversal::stopRewinding()
           lTime->init();
       }
     }
-
-    // Set FMOD stop parameter
-    EngineAudio.setGlobalRTPC(FMOD_PARAM_END, 1);
-
-    // Set FMOD parameter to filter and modify gain
-    EngineAudio.setGlobalRTPC(FMOD_PARAM_WARP, 0);
 }
 
 STRAIShot TCompAITimeReversal::interpolatedValue(float lerp_value)

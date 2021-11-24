@@ -1533,7 +1533,7 @@ void TCompPlayerController::onApplyAreaDelay(const TMsgApplyAreaDelay& msg)
 	EngineAudio.postEvent("CHA/Eon/DMG/Eon_Receive_Area_Delay");
 
 	const char* FMOD_EON_INSIDE_WARP_PARAMETER = "Eon_Inside_Warp";
-	EngineAudio.setGlobalRTPC(FMOD_EON_INSIDE_WARP_PARAMETER, 1.f, true);
+	EngineAudio.setGlobalRTPC(FMOD_EON_INSIDE_WARP_PARAMETER, 1.f);
 }
 
 void TCompPlayerController::onRemoveAreaDelay(const TMsgRemoveAreaDelay& msg)

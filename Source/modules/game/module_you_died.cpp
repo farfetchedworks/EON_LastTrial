@@ -28,9 +28,10 @@ bool ModuleEONYouDied::start()
     _menuController.selectOption(0);
 
     // FMOD
+    EngineAudio.setGlobalRTPC("Eon_Dead", 0.f, true);
+    EngineAudio.setGlobalRTPC("Eon_Inside_Warp", 0.f, true);
     EngineAudio.stopCurMusicEvent();
     EngineAudio.postEvent("UI/YOU_DIED");
-    EngineAudio.setGlobalRTPC("Eon_Dead", 0.f);
 
     return true;
 }
