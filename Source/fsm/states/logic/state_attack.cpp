@@ -115,6 +115,8 @@ public:
             TCompPlayerController* controller = owner->get<TCompPlayerController>();
 
             bool is_dash_strike = std::get<bool>(ctx.getVariableValue("is_dash_strike"));
+            controller->movePhysics(VEC3::Down * 0.001f, Time.delta, -1.f);
+
             if (PlayerInput["attack_regular"].getsPressed() && controller->hasStamina() && !is_dash_strike) {
                 controller->continue_attacking = true;
             }
@@ -135,6 +137,7 @@ public:
         callbacks.onActiveFinished = [&](CContext& ctx) {
 
             CEntity* owner = ctx.getOwnerEntity();
+            TCompCollider* collider = owner->get<TCompCollider>();
             TCompTransform* transform = owner->get<TCompTransform>();
             TCompPlayerController* controller = owner->get<TCompPlayerController>();
             controller->setWeaponStatus(false);
@@ -177,13 +180,28 @@ public:
             else {
                 resetAttackVariables(ctx);
             }
+
+            float current_speed = controller->getSpeed();
+
+            if (!controller->isFalling() && controller->manageFalling(current_speed, Time.delta)) {
+
+                ctx.setVariableValue("is_falling", true);
+                ctx.setStateFinished(true);
+                // add force to end of dash
+                VEC3 dir = transform->getForward() - transform->getUp();
+                collider->addForce(normVEC3(dir) * 3.f, "dash");
+            }
         };
 
         callbacks.onRecovery = [&](CContext& ctx) {
 
             CEntity* owner = ctx.getOwnerEntity();
+            TCompCollider* collider = owner->get<TCompCollider>();
+            TCompTransform* transform = owner->get<TCompTransform>();
             TCompPlayerController* controller = owner->get<TCompPlayerController>();
             EAction currentAction = getCurrentAction(ctx);
+
+            controller->movePhysics(VEC3::Down * 0.001f, Time.delta, -1.f);
 
             if (controller->checkDashInput()) {
                 controller->calcMoveDirection();
@@ -216,6 +234,16 @@ public:
                     ctx.setVariableValue("is_attacking_heavy", 2);
             }
 
+            float current_speed = controller->getSpeed();
+
+            if (!controller->isFalling() && controller->manageFalling(current_speed, Time.delta)) {
+
+                ctx.setVariableValue("is_falling", true);
+                ctx.setStateFinished(true);
+                // add force to end of dash
+                VEC3 dir = transform->getForward() - transform->getUp();
+                collider->addForce(normVEC3(dir) * 3.f, "dash");
+            }
         };
     }
 
@@ -243,6 +271,8 @@ public:
         int attackHeavy = std::get<int>(ctx.getVariableValue("is_attacking_heavy"));
 
         CEntity* owner = ctx.getOwnerEntity();
+        TCompCollider* collider = owner->get<TCompCollider>();
+        TCompTransform* transform = owner->get<TCompTransform>();
         TCompPlayerController* controller = owner->get<TCompPlayerController>();
 
         resetAttackVariables(ctx);

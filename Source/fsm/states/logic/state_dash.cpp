@@ -51,8 +51,12 @@ public:
 
         callbacks.onStartup = [&](CContext& ctx)
         {
+            CEntity* owner = ctx.getOwnerEntity();
+            TCompPlayerController* controller = owner->get<TCompPlayerController>();
+
             if (PlayerInput["attack_regular"].getsPressed())
             {
+                controller->is_dash_strike = true;
                 ctx.setVariableValue("is_dash_strike", true);
                 ctx.setStateFinished(true);
             }
