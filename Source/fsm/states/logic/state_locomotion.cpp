@@ -21,6 +21,9 @@ void CStateLocomotion::onEnter(CContext& ctx, const ITransition* transition) con
 
 void CStateLocomotion::onExit(CContext& ctx) const
 {
+    CEntity* owner = ctx.getOwnerEntity();
+    TCompPlayerController* controller = owner->get<TCompPlayerController>();
+    controller->is_sprinting = false;
     anim.stop(ctx);
 }
 

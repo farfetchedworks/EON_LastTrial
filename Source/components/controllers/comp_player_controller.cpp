@@ -409,7 +409,11 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 		new_rot = QUAT::CreateFromAxisAngle(VEC3(0, 1, 0), atan2(moveDir.x, moveDir.z));
 		float fwdDot = c_player_trans->getForward().Dot(moveDir);
 
-		if (fwdDot < -0.75f && is_sprinting) {
+		TCompFSM* fsm = get<TCompFSM>();
+		fsm::CStateBaseLogic* currState = (fsm::CStateBaseLogic*)fsm->getCurrentState();
+		float time_in_anim = fsm->getCtx().getTimeInState();
+
+		if (fwdDot < -0.75f && is_sprinting && time_in_anim >= 1.f) {
 			setVariable("is_turn_sprint", true);
 		}
 		else {
@@ -507,7 +511,7 @@ void TCompPlayerController::move(float dt)
 	}
 
 	// Manage on stop running/sprinting animations
-	if (!is_turn_sprint && !is_moving && PlayerInput["sprint"].wasPressed() && moving_timer > 0.75f) {
+	if (!is_turn_sprint && !is_moving && (PlayerInput["sprint"].wasPressed() || PlayerInput["sprint"].timeSinceReleased() < .2f) && moving_timer > 0.75f) {
 		moving_timer = 0.f;
 		current_speed = 0.0f;
 		setVariable("is_stopping_sprint", true);

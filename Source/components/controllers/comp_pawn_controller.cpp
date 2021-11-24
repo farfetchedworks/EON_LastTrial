@@ -95,7 +95,7 @@ void TCompPawnController::removeSlowDebuff()
 bool TCompPawnController::isPlayerDashing()
 {
 	TCompPlayerController* controller = get<TCompPlayerController>();
-	return controller && controller->is_dashing;
+	return controller && (controller->is_dashing || controller->is_dash_strike);
 }
 
 bool TCompPawnController::manageFalling(float speed, float dt)
