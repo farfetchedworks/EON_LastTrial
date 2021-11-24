@@ -6,6 +6,8 @@
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
+#include "ui/widgets/ui_text.h"
+#include "ui/ui_params.h"
 #include "fmod_studio.hpp"
 #include "audio/module_audio.h"
 
@@ -18,7 +20,13 @@ bool ModuleEONMainMenu::start()
     assert(input);
 
     EngineUI.deactivateWidget("eon_hud");
-    EngineUI.activateWidget("eon_main_menu");
+
+    // Set version
+    ui::CWidget* wMenu = EngineUI.getWidget("eon_main_menu");
+    assert(wMenu);
+    ui::CText* wVersion = (ui::CText*)wMenu->getChildByName("version");
+    wVersion->textParams.text = Engine.getVersion();
+    EngineUI.activateWidget(wMenu);
 
     _menuController.setInput(input);
     _menuController.bind("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));

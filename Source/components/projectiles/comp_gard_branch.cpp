@@ -57,7 +57,7 @@ void TCompGardBranch::update(float dt)
 }
 
 // When the branch hits something, sends a message to the player to damage it
-void TCompGardBranch::onHitObject(const TMsgEntityTriggerEnter& msg)
+void TCompGardBranch::onHitObject(const TMsgEntityOnContact& msg)
 {
 	CEntity* e_object_hit = msg.h_entity;
 	if (!e_object_hit)
