@@ -76,7 +76,7 @@ void TCompEnergyWall::onEonInteracted(const TMsgEonInteracted& msg)
 	player_transform->setRotation(trans->getRotation());
 
 	is_active = true;
-	//eon_passed = true;
+	eon_passed = true;
 	
 	TCompPlayerController* c_controller = e_player->get<TCompPlayerController>();
 	c_controller->blendCamera("camera_interact", 4.0f, &interpolators::cubicInOutInterpolator);
