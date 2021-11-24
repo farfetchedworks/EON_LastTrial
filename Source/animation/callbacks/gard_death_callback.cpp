@@ -12,7 +12,6 @@
 #include "components/common/comp_tags.h"
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
-#include "navmesh/module_navmesh.h"
 #include "ui/ui_module.h"
 #include "ui/widgets/ui_text.h"
 #include "bt/task_utils.h"
@@ -86,11 +85,6 @@ struct onGardDeathCallback : public CAnimationCallback
 			bool is_ok = Boot.loadScene("data/scenes/templelevel.json");
 			assert(is_ok);
 		}*/
-
-		// Change navmesh
-		{
-			EngineNavMesh.setCurrent("templelevel");
-		}
 	}
 };
 
