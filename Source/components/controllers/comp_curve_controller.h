@@ -32,15 +32,14 @@ struct TCompCurveController : public TCompBase
     void onEntityCreated();
     void update(float dt);
 
+    const CCurve* getCurve() { return curve; }
+
     void setRatio(float newRatio);
     void setTarget(const VEC3& new_target);
     void setTargetEntity(const std::string& target_entity);
     void setTargetLerped(const VEC3& new_target, float seconds);
-
     void setSpeed(float new_speed);
-    
     void setActive(bool value);
-
     void setCurve(const std::string& filename);
     void setCurveLerped(const std::string& filename, float speed, float seconds);
 

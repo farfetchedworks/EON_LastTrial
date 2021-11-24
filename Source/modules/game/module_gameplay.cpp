@@ -22,12 +22,14 @@
 #include "components/cameras/comp_camera_follow.h"
 #include "components/common/comp_collider.h"
 #include "components/common/comp_tags.h"
+#include "components/controllers/comp_curve_controller.h"
 #include "components/render/comp_irradiance_cache.h"
 #include "components/gameplay/comp_game_manager.h"
 #include "components/ai/comp_bt.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
 #include "ui/widgets/ui_image.h"
+#include "geometry/curve.h"
 
 extern CShaderCte<CtesWorld> cte_world;
 bool debugging = false;
@@ -121,10 +123,12 @@ bool ModuleEONGameplay::start()
 	// hacky to allow not playing the cinematic
 	if (getEntityByName("Gard").isValid())
 	{
-		VEC3 introPos = VEC3(-3.16096f, 12.0274f, 17.9437f);
-
 		CEntity* cinematic_cam = getEntityByName("camera_cinematic");
 		assert(cinematic_cam);
+		TCompCurveController* curve_controller = cinematic_cam->get<TCompCurveController>();
+		const CCurve* curve = curve_controller->getCurve();
+		VEC3 introPos = curve->getKnot(0);
+			
 		TCompTransform* h_trans = cinematic_cam->get<TCompTransform>();
 		h_trans->setPosition(introPos);
 
@@ -244,7 +248,6 @@ void ModuleEONGameplay::togglePause()
 		EngineUI.activateWidget("eon_pause");
 
 		PlayerInput.blockInput();
-		//TCompBT::UPDATE_ENABLED = false;
 		Time.scale_factor = 0.f;
 
 		debugging = true;
@@ -254,7 +257,6 @@ void ModuleEONGameplay::togglePause()
 	{
 		EngineUI.deactivateWidget("eon_pause");
 		PlayerInput.unBlockInput();
-		//TCompBT::UPDATE_ENABLED = true;
 		Time.scale_factor = 1.f;
 
 		debugging = false;
