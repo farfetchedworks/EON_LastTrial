@@ -18,10 +18,11 @@ bool TCompBT::UPDATE_ENABLED = true;
 
 TCompBT::~TCompBT()
 {
-	if (getContext()->getHasEonTargeted()) {
-		CEntity* e_player = getEntityByName("player");
-		e_player->sendMsg(TMsgUntarget());
-	}
+	if (!getContext()->getHasEonTargeted())
+		return;
+	
+	CEntity* e_player = getEntityByName("player");
+	if(e_player) e_player->sendMsg(TMsgUntarget());
 }
 
 void TCompBT::load(const json& j, TEntityParseContext& ctx)
