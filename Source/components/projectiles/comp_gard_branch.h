@@ -25,12 +25,12 @@ private:
 	FMOD::Studio::EventInstance* fmod_event = nullptr;
 
 	// Called when the branch has hit anything	
-	void onHitObject(const TMsgEntityTriggerEnter& msg);
+	void onHitObject(const TMsgEntityOnContact& msg);
 
 public:
 
 	static void registerMsgs() {
-		DECL_MSG(TCompGardBranch, TMsgEntityTriggerEnter, onHitObject);
+		DECL_MSG(TCompGardBranch, TMsgEntityOnContact, onHitObject);
 	}
 
 	void setParameters(int new_damage);
