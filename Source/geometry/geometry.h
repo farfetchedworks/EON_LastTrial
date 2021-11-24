@@ -10,6 +10,12 @@ using VEC4 = DirectX::SimpleMath::Vector4;
 using Color = VEC4;
 using AABB = DirectX::BoundingBox;
 
+template<typename T>
+struct LerpedValue {
+    T value = {};
+    T velocity = {};
+};
+
 VEC2 loadVEC2(const std::string& str);
 VEC2 loadVEC2(const json& j, const char* attr, const VEC2& defaultValue = VEC2::Zero);
 VEC3 loadVEC3(const std::string& str);
@@ -53,6 +59,11 @@ T damp(T a, T b, float lambda, float dt)
     return lerp(a, b, 1 - exp(-lambda * dt));
 }
 
+float smoothDamp(float current, float target, float& currentVelocity, float smoothTime, float deltaTime, float maxSpeed = FLT_MAX);
+
+// From Unity: https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Vector3.cs#L97
+VEC3 smoothDamp(VEC3 current, VEC3 target, VEC3& currentVelocity, float smoothTime, float deltaTime, float maxSpeed = FLT_MAX);
+
 template<typename T>
 T dampCubicIn(T a, T b, float lambda, float dt) {
     return cubicIn(a, b, 1 - exp(-lambda * dt));
@@ -68,6 +79,8 @@ QUAT dampQUAT(QUAT a, QUAT b, float lambda, float dt);
 
 // from https://gist.github.com/itsmrpeck/be41d72e9d4c72d2236de687f6f53974
 float lerpRadians(float a, float b, float lerp_velocity, float lerpFactor);
+
+float dampRadians(float a, float b, float& velocity, float lerp_time, float deltaTime);
 
 // Maps value in [in_min, in_max] range to [out_min, out_max] range
 float mapToRange(float in_min, float in_max, float out_min, float out_max, float value);

@@ -375,6 +375,8 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 
 	// Modify player direction with camera rotation
 	CEntity* e_camera = EngineRender.getActiveCamera();
+	if (!e_camera)
+		return moveDir;
 	TCompCamera* c_camera = e_camera->get<TCompCamera>();
 	TCompTransform* c_player_trans = h_transform;
 	TCompTransform* c_locked_trans = h_locked_transform;
@@ -561,9 +563,9 @@ void TCompPlayerController::move(float dt)
 			heavy_attack_timer = 0.f;
 		}
 
-		if (PlayerInput["parry"].getsPressed() && hasStamina()) {
+		/*if (PlayerInput["parry"].getsPressed() && hasStamina()) {
 			setVariable("in_parry", true);
-		}
+		}*/
 
 		if (PlayerInput["heal"].getsPressed()) {
 			CEntity* owner = getEntity();

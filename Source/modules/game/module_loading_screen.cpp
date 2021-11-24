@@ -36,6 +36,7 @@ bool ModuleEONLoadingScreen::start()
     _menuController.setInput(input);
     _menuController.bind("continue_btn_loading", std::bind(&ModuleEONLoadingScreen::onPlay, this));
     _menuController.reset();
+    _menuController.setdefaultIfUndefined(false);
 
     return true;
 }

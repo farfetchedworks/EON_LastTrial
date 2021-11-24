@@ -22,7 +22,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
   const json& jConfig = loadJson("config.json");
   int wWidth = jConfig.value("width", 1280);
   int wHeight = jConfig.value("height", 720);
+  const std::string& version = jConfig.value("version", "");
+  assert(version.length());
   bool fullscreen = jConfig.value("fullscreen", false);
+  bool vsync = jConfig.value("vsync", true);
 
   if (fullscreen) {
       RECT desktop;
@@ -38,10 +41,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     return -1;
 
 
-  if (!Render.create(app.getHandle(), fullscreen))
+  if (!Render.create(app.getHandle(), fullscreen, vsync))
     return -2;
 
-  CEngine::get().init();
+  CEngine::get().init(version);
 
   app.run();
 

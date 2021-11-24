@@ -18,6 +18,7 @@
 #include "components/audio/comp_music_interactor.h"
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
+#include "navmesh/module_navmesh.h"
 #include "audio/module_audio.h"
 #include "ui/ui_module.h"
 #include "input/input_module.h"
@@ -335,11 +336,14 @@ public:
 
 		// Inform the game manager that Eon has entered the rift at least once, music purposes
 		gm->setHasEnteredRiftOnce(true);
+
+		// Change navmesh
+		EngineNavMesh.setCurrent("templelevel");
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
 	{
-		// dbg("EXIT RIFT");
+		
 	}
 };
 

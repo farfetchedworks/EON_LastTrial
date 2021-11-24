@@ -32,8 +32,9 @@ public:
   static CEngine& get();
   std::vector<input::CModule*> getInputs() { return _input; };
   std::thread::id getMainThreadId();
+  const std::string& getVersion() { return _version; };
 
-  void init();
+  void init(const std::string& version);
   void destroy();
   void doFrame();
   void resetClock();
@@ -92,6 +93,7 @@ private:
   std::thread::id _mainThreadId;
   std::vector<input::CModule*> _input;
   ui::CModule* _ui = nullptr;
+  std::string _version = "0.0.0";
 };
 
 extern bool debugging;

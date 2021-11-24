@@ -40,8 +40,8 @@ void IGameplayCamera::clearDeltas()
 
     delta_yaw = 0.f;
     delta_pitch = 0.f;
-    delta_yaw_lerp = 0.f;
-    delta_pitch_lerp = 0.f;
+    delta_yaw_lerp = {};
+    delta_pitch_lerp = {};
 }
 
 void IGameplayCamera::updateDeltas(float dt)

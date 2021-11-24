@@ -2,16 +2,17 @@
 #include "module_boot.h"
 #include "engine.h"
 #include "module_entities.h"
-#include "components/messages.h"
 #include "render/gpu_culling_module.h"
 #include "render/render_manager.h"
 #include "render/render_module.h"
-#include "components/common/comp_tags.h"
-#include "modules/module_camera_mixer.h"
-#include "modules/game/module_irradiance_cache.h"
 #include "audio/module_audio.h"
 #include "ui/ui_widget.h"
 #include "ui/ui_module.h"
+#include "navmesh/module_navmesh.h"
+#include "modules/module_camera_mixer.h"
+#include "modules/game/module_irradiance_cache.h"
+#include "components/messages.h"
+#include "components/common/comp_tags.h"
 #include "components/common/comp_transform.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/cameras/comp_camera_follow.h"
@@ -88,8 +89,8 @@ bool CModuleBoot::customStart()
 
 bool CModuleBoot::loadEndingBoot()
 {
-	assert(jBoot.size());
 	Boot.reset();
+	assert(jBoot.size());
 	auto prefabs = jBoot["happyRoom_scenes"].get<std::vector<std::string>>();
 	for (auto& p : prefabs)
 		loadScene(p);
@@ -100,6 +101,9 @@ bool CModuleBoot::loadEndingBoot()
 		for (auto h : ctx.entities_loaded)
 			h.sendMsg(msg);
 	}
+
+	// restart irradiance module
+	Engine.getIrradiance().restart();
 
 	CEntity* camera_mixed = getEntityByName("camera_mixed");
 	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
@@ -141,14 +145,28 @@ bool CModuleBoot::loadEndingBoot()
 	assert(w_hud);
 	w_hud->setVisible(false);
 
-	// restart irradiance module
-	Engine.getIrradiance().restart();
-
 	_endBoot = false;
 	_bootCompleted = true;
 	_bootReady = true;
 
 	ctxs.clear();
+
+	// restart world ctes
+	cte_world.ambient_factor = 1.f;
+	cte_world.exposure_factor = 1.0f;
+	cte_world.emissive_irradiance_multiplier = 1.0;
+	cte_world.timeReversal_rewinding = 0.f;
+	cte_world.timeReversal_rewinding_time = 0.f;
+	cte_world.boot_in_preview = 0.f;
+	cte_world.player_dead = 0.f;
+
+	// Set day ambient
+	EngineRender.setUseDayAmbient(true);
+
+	// Set new navmesh
+	{
+		EngineNavMesh.setCurrent("happyRoom");
+	}
 
 	return true;
 }
@@ -287,7 +305,7 @@ void CModuleBoot::reset()
 	hm->forEach([](CEntity* e) {
 		CHandle h(e);
 		h.destroy();
-		});
+	});
 
 	CHandleManager::destroyAllPendingObjects();
 
@@ -301,9 +319,7 @@ void CModuleBoot::reset()
 	_introLoaded = false;
 	_introBoot = false;
 	_endBoot = false;
-	_loaded = 0;
 
-	jBoot.clear();
 	ctxs.clear();
 
 	CameraMixer.setEnabled(false);

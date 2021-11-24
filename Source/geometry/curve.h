@@ -13,6 +13,8 @@ public:
     VEC3 evaluate(float ratio, const MAT44& world) const;
     VEC3 evaluate(float ratio) const;
 
+    VEC3 getKnot(int idx) const;
+
 private:
     mutable bool _loop = false;
     mutable std::vector<VEC3> _knots;
