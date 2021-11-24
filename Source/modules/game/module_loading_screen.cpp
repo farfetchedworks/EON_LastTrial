@@ -45,7 +45,6 @@ void ModuleEONLoadingScreen::stop()
 {
     EngineUI.deactivateWidget("eon_loading_screen");
     EngineAudio.setMusicRTPC("End_Theme", 1);
-    PlayerInput.unBlockInput();
 }
 
 void ModuleEONLoadingScreen::update(float dt)

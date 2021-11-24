@@ -86,14 +86,26 @@ void TCompGeonsManager::addGeons(int geons)
 
 void TCompGeonsManager::increasePhase(bool only_stats)
 {
+	if (phase >= 10)
+		return;
+
 	++phase;
+
 	TCompAttributes* attrs = get<TCompAttributes>();
 	attrs->onNewPhase(phase);
+
+	// Update UI
+	ui::CWidget* w = EngineUI.getWidget("phase_number");
+	assert(w);
+	ui::CImage* img = static_cast<ui::CImage*>(w);
+	ui::TImageParams& params = img->imageParams;
+	std::string path = "data/textures/ui/subvert/HUD/PhaseNumbers/" + std::to_string(phase) + ".dds";
+	params.texture = Resources.get(path)->as<CTexture>();
+	assert(params.texture);
 
 	if (!only_stats)
 	{
 		TCompTransform* c_trans = get<TCompTransform>();
-		//spawnParticles("data/particles/compute_levelup_particles.json", c_trans->getPosition(), 2.f, 1);
 		spawnParticles("data/particles/compute_levelup_smoke_particles.json", c_trans->getPosition(), c_trans->getPosition());
 		spawnParticles("data/particles/compute_levelup_spread_particles.json", c_trans->getPosition(), c_trans->getPosition());
 		EngineUI.activateWidget("phase_up");

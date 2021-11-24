@@ -26,6 +26,7 @@
 #include "components/stats/comp_health.h"
 #include "components/stats/comp_warp_energy.h"
 #include "components/stats/comp_attributes.h"
+#include "components/stats/comp_geons_manager.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/cameras/comp_camera_shooter.h"
 #include "components/gameplay/comp_game_manager.h"
@@ -228,13 +229,12 @@ void TCompPlayerController::update(float dt)
 
 	if (PlayerInput['C'].getsPressed()) {
 
-		CTransform t;
+		/*CTransform t;
 		t.setPosition(getEntity()->getPosition());
-		spawn("data/prefabs/Eter_Entero.json", t);
-	}
+		spawn("data/prefabs/Eter_Entero.json", t);*/
 
-	if (PlayerInput['B'].getsPressed()) {
-		moveTo(VEC3(), 6.f);
+		TCompGeonsManager* geons_man = get<TCompGeonsManager >();
+		geons_man->increasePhase();
 	}
 
 	// Auto-Kill (K)
