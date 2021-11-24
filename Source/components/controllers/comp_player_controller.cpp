@@ -563,9 +563,9 @@ void TCompPlayerController::move(float dt)
 			heavy_attack_timer = 0.f;
 		}
 
-		if (PlayerInput["parry"].getsPressed() && hasStamina()) {
+		/*if (PlayerInput["parry"].getsPressed() && hasStamina()) {
 			setVariable("in_parry", true);
-		}
+		}*/
 
 		if (PlayerInput["heal"].getsPressed()) {
 			CEntity* owner = getEntity();

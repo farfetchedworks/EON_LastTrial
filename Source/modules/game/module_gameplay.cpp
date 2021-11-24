@@ -133,7 +133,12 @@ bool ModuleEONGameplay::start()
 
 		mixer.blendCamera("camera_cinematic", 0.f);
 		EngineLua.executeScript("BeginIntroCinematic()");
-		Subtitles.startCaption("intro_cinematic_2");
+		Subtitles.startCaption("intro_cinematic_2", CHandle(), []() {
+			ui::CImage* w = static_cast<ui::CImage*>(EngineUI.getWidget("eon_location"));
+			assert(w);
+			EngineLua.executeScript("activateWidget('eon_location')", 2.f);
+			EngineLua.executeScript("deactivateWidget('eon_location')", 5.5f);
+		});
 	}
 	else if(!getEntityByName("camera_preview").isValid())
 	{

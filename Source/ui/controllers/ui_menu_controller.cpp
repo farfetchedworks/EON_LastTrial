@@ -71,9 +71,13 @@ namespace ui
 
         if (idx < 0 || idx >= _options.size())
         {
-            for (auto& option : _options)
+            if (defaultIfUndefined)
             {
-                option.button->changeToState("default");
+                for (auto& option : _options)
+                {
+                    _currentOption = kUndefinedOption;
+                    option.button->changeToState("default");
+                }
             }
             return;
         }

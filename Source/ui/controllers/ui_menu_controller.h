@@ -16,6 +16,7 @@ namespace ui
         void bind(const std::string& buttonName, Callback callback);
         void selectOption(int idx, bool hover_audio = false);
         void setInput(input::CModule* new_input) { input = new_input; }
+        void setdefaultIfUndefined(bool v) { defaultIfUndefined = v; }
 
       private:
         void nextOption();
@@ -36,6 +37,7 @@ namespace ui
         int _currentOption = kUndefinedOption;
         VEC2 last_mouse_pos = VEC2::Zero;
         bool isHoverButton = false;
+        bool defaultIfUndefined = true;
         input::CModule* input = nullptr;
     };
 }
