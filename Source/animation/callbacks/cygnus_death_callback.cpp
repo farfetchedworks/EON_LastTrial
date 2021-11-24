@@ -60,7 +60,7 @@ struct onCygnusDeathCallback : public CAnimationCallback
 
 		// Manage player cinematics
 
-		PlayerInput.blockInput();
+		/*PlayerInput.blockInput();
 
 		CEntity* player = getEntityByName("player");
 		TCompPlayerController* controller = player->get<TCompPlayerController>();
@@ -70,7 +70,7 @@ struct onCygnusDeathCallback : public CAnimationCallback
 			TCompPlayerController* controller = player->get<TCompPlayerController>();
 			controller->setVariable("is_attacking_heavy", 1);
 			controller->enabled = false;
-		});
+		});*/
 	}
 };
 
