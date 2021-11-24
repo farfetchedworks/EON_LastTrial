@@ -18,6 +18,7 @@ class CRender {
 	int                     width = 0;
 	int                     height = 0;
 	bool					  fullscreen;
+	bool					  vsync;
 
 	ID3D11Debug* debug;
 
@@ -35,7 +36,7 @@ public:
 	ID3D11ShaderResourceView* depth_srv = nullptr;
 	ID3D11ShaderResourceView* depth_srv_irradiance = nullptr;
 
-	bool create(HWND hWnd, bool fullscreen);
+	bool create(HWND hWnd, bool fullscreen, bool vsync);
 	void destroy();
 
 	int getWidth() const { return width; }

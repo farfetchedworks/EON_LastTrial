@@ -165,9 +165,10 @@ bool CRender::createDepthBuffer() {
   return true;
 }
 
-bool CRender::create(HWND hWnd, bool fullscreen) {
+bool CRender::create(HWND hWnd, bool fullscreen, bool vsync) {
   
   this->fullscreen = fullscreen;
+  this->vsync = vsync;
 
   if (!createDevice(hWnd))
     return false;
@@ -234,9 +235,8 @@ void CRender::destroy() {
 void CRender::swapFrames() {
 
     PROFILE_FUNCTION("swapFrames");
-    static bool _vsync_enabled = true;
 
-    if (_vsync_enabled) {
+    if (vsync) {
         // Lock to screen refresh rate.
         swap_chain->Present(1, 0);
     }
