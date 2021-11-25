@@ -34,7 +34,7 @@ bool ModuleEONLoadingScreen::start()
     EngineUI.activateWidget("eon_loading_screen");
 
     _menuController.setInput(input);
-    _menuController.bind("continue_btn_loading", std::bind(&ModuleEONLoadingScreen::onPlay, this));
+    _menuController.bindButton("continue_btn_loading", std::bind(&ModuleEONLoadingScreen::onPlay, this));
     _menuController.reset();
     _menuController.setdefaultIfUndefined(false);
 

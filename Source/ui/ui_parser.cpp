@@ -7,6 +7,7 @@
 #include "ui/widgets/ui_text.h"
 #include "ui/widgets/ui_bar.h"
 #include "ui/widgets/ui_button.h"
+#include "ui/widgets/ui_checkbox.h"
 #include "ui/effects/ui_effect_anim_uvs.h"
 #include "ui/effects/ui_effect_fade.h"
 #include "engine.h"
@@ -71,6 +72,10 @@ namespace ui
             else if (type == "button")
             {
                 widget = parseButton(jData);
+            }
+            else if (type == "checkbox")
+            {
+                widget = parseCheckbox(jData);
             }
             else
             {
@@ -155,6 +160,15 @@ namespace ui
             }
 
             return button;
+        }
+
+        CWidget* parseCheckbox(const json& jData)
+        {
+            CCheckbox* checkbox = new CCheckbox();
+            parseImageParams(checkbox->imageParams, jData);
+            if (jData.value("default", false))
+                checkbox->toggle();
+            return checkbox;
         }
 
         CEffect* parseEffect(const json& jData)

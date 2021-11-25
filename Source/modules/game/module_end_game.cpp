@@ -21,8 +21,8 @@ bool ModuleEONEndGame::start()
     EngineUI.activateWidget("eon_end_game");
 
     _menuController.setInput(input);
-    _menuController.bind("continue_btn_end", std::bind(&ModuleEONEndGame::onContinue, this));
-    _menuController.bind("exit_btn_end", std::bind(&ModuleEONEndGame::onExit, this));
+    _menuController.bindButton("continue_btn_end", std::bind(&ModuleEONEndGame::onContinue, this));
+    _menuController.bindButton("exit_btn_end", std::bind(&ModuleEONEndGame::onExit, this));
 
     _menuController.reset();
     _menuController.selectOption(0);

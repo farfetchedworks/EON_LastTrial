@@ -13,7 +13,8 @@ namespace ui
 
         void reset();
         void update(float elapsed) override;
-        void bind(const std::string& buttonName, Callback callback);
+        void bindButton(const std::string& buttonName, Callback callback);
+        void bindCheckbox(const std::string& buttonName, CheckboxCallback callback);
         void selectOption(int idx, bool hover_audio = false);
         void setInput(input::CModule* new_input) { input = new_input; }
         void setdefaultIfUndefined(bool v) { defaultIfUndefined = v; }
@@ -31,6 +32,8 @@ namespace ui
         {
             CButton* button = nullptr;
             Callback callback;
+            CheckboxCallback cb_callback;
+            bool isCheckbox = false;
         };
 
         std::vector<TOption> _options;

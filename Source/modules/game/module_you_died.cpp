@@ -21,8 +21,8 @@ bool ModuleEONYouDied::start()
     EngineUI.deactivateWidget("eon_hud");
 
     _menuController.setInput(_input);
-    _menuController.bind("bt_continue", std::bind(&ModuleEONYouDied::onContinue, this));
-    _menuController.bind("bt_surrender", std::bind(&ModuleEONYouDied::onExit, this));
+    _menuController.bindButton("bt_continue", std::bind(&ModuleEONYouDied::onContinue, this));
+    _menuController.bindButton("bt_surrender", std::bind(&ModuleEONYouDied::onExit, this));
 
     _menuController.reset();
     _menuController.selectOption(0);

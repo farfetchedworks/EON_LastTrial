@@ -22,6 +22,7 @@ namespace ui
     constexpr float kDebugMenuSensibility = 0.05f;
 
     using Callback = std::function<void()>;
+    using CheckboxCallback = std::function<void(const std::string, bool enabled)>;
 
     enum class ESizeType
     {

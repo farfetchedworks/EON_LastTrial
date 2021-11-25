@@ -1,10 +1,12 @@
 #include "mcv_platform.h"
+#include "engine.h"
 #include "comp_godrays.h"
 #include "render/textures/render_to_texture.h"
 #include "comp_fx_stack.h"
 #include "render/blur_step.h"
 #include "render/draw_primitives.h"
 #include "components/common/comp_light_spot.h"
+#include "modules/module_settings.h"
 
 DECL_OBJ_MANAGER("god_rays", TCompGodRays);
 
@@ -26,6 +28,10 @@ void TCompGodRays::load(const json& j, TEntityParseContext& ctx)
 
 	// set apply callback
 	apply_fn = std::bind(&TCompGodRays::generateVolumetricShape, this, std::placeholders::_1, std::placeholders::_2);
+
+	// Set state depending on the settings
+	TSetting* s = Settings.getSetting("godrays_cb");
+	enabled = s ? s->enabled : enabled;
 }
 
 void TCompGodRays::onEntityCreated()

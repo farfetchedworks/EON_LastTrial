@@ -26,4 +26,5 @@ public:
   void  load(const json& j, TEntityParseContext& ctx);
   void  debugInMenu();
   const CTexture* compute(CTexture* normals, ASSAO_Effect* fx);
+  void setEnabled(bool v) { enabled = v; };
 };

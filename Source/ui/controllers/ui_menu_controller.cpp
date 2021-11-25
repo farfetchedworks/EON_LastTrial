@@ -2,6 +2,7 @@
 #include "ui/controllers/ui_menu_controller.h"
 #include "ui/ui_module.h"
 #include "ui/widgets/ui_button.h"
+#include "ui/widgets/ui_checkbox.h"
 #include "input/input_module.h"
 #include "engine.h"
 #include "audio/module_audio.h"
@@ -42,15 +43,28 @@ namespace ui
         }
     }
 
-    void CMenuController::bind(const std::string& buttonName, Callback callback)
+    void CMenuController::bindButton(const std::string& buttonName, Callback callback)
     {
         CButton* button = dynamic_cast<CButton*>(CEngine::get().getUI().getWidget(buttonName));
         assert(button);
-        if(!button) return;
+        if (!button) return;
 
         TOption option;
         option.button = button;
         option.callback = callback;
+        _options.push_back(option);
+    }
+
+    void CMenuController::bindCheckbox(const std::string& buttonName, CheckboxCallback callback)
+    {
+        CButton* checkbox = dynamic_cast<CCheckbox*>(CEngine::get().getUI().getWidget(buttonName));
+        assert(checkbox);
+        if (!checkbox) return;
+
+        TOption option;
+        option.button = checkbox;
+        option.cb_callback = callback;
+        option.isCheckbox = true;
         _options.push_back(option);
     }
 
@@ -119,7 +133,16 @@ namespace ui
 
         TOption& option = _options.at(_currentOption);
         option.button->changeToState("selected");
-        option.callback();
+
+        if (option.isCheckbox)
+        {
+            CCheckbox* cb = (CCheckbox*)option.button;
+            option.cb_callback(cb->getName(), cb->toggle());
+        }
+        else
+        {
+            option.callback();
+        }
 
         // FMOD events
         if (!option.button->getName().compare("start_btn"))
