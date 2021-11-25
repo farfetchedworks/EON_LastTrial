@@ -408,6 +408,9 @@ void TCompGameManager::onCameraCreated(const TMsgCameraCreated& msg)
 
 void TCompGameManager::onEonHasDied(const TMsgEonHasDied& msg)
 {
+	// FMOD event
+	EngineAudio.setGlobalRTPC("Eon_Dead", 1.f);
+
 	CEntity* player = getEntityByName("player");
 	if (!player)
 		return;
@@ -428,13 +431,13 @@ void TCompGameManager::onEonHasDied(const TMsgEonHasDied& msg)
 	// Allow revival
 	TMsgEonRevive msgEonRevive;
 	player->sendMsg(msgEonRevive);
-
-	// FMOD event
-	EngineAudio.setGlobalRTPC("Eon_Dead", 1.f);
 }
 
 void TCompGameManager::onEonHasRevived(const TMsgEonHasRevived& msg)
 {
+	// FMOD event
+	EngineAudio.setGlobalRTPC("Eon_Dead", 0.f);
+
 	eonHasDied = false;
 
 	notifyEonDeath(false);
@@ -451,9 +454,6 @@ void TCompGameManager::onEonHasRevived(const TMsgEonHasRevived& msg)
 	if (c_dissolve) {
 		c_dissolve->recover(1.0f, 0.0f);
 	}
-
-	// FMOD event
-	EngineAudio.setGlobalRTPC("Eon_Dead", 0.f);
 }
 
 void TCompGameManager::onShrineCreated(const TMsgShrineCreated& msg)
@@ -478,7 +478,6 @@ void TCompGameManager::onBossDead(const TMsgBossDead& msg)
 		//show_end_game_timer = 10.0f;
 
 		// End boss music
-		EngineAudio.setGlobalRTPC("Gard_Phase", 4);
 		boss.music_event->release();
 	}
 	else if (msg.boss_name == "Cygnus") {

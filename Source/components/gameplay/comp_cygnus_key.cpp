@@ -40,10 +40,10 @@ void TCompCygnusKey::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 
 void TCompCygnusKey::update(float dt)
 {
-// #ifdef _DEBUG
+#ifdef _DEBUG
 	if (PlayerInput['O'].getsPressed())
 		onAllKeysOpened();
-// #endif
+#endif
 
 	if (_waitTime > 0.f)
 	{
@@ -103,7 +103,7 @@ bool TCompCygnusKey::resolve()
 
 	cte->emitter_initial_pos = owner->getPosition();
 	cte->emitter_owner_position = static_cast<CEntity*>(next.getOwner())->getPosition();
-	cte->emitter_num_particles_per_spawn = 3000;
+	cte->emitter_num_particles_per_spawn = 5000;
 	cte->updateFromCPU();
 
 	// 4. Look at next key if first

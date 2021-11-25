@@ -170,7 +170,6 @@ namespace LogicManager
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->enable();
 
-		PlayerInput.unBlockInput();
 
 		CEntity* e_camera = getEntityByName("camera_cinematic");
 		TCompTransform* c_trans = e_camera->get<TCompTransform>();
@@ -180,6 +179,7 @@ namespace LogicManager
 
 		if (c_curve_controller->active) {
 			c_curve_controller->setActive(false);
+			PlayerInput.unBlockInput();
 		}
 		else
 		{

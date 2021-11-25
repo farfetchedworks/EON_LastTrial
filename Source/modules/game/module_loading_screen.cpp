@@ -36,6 +36,7 @@ bool ModuleEONLoadingScreen::start()
     _menuController.setInput(input);
     _menuController.bind("continue_btn_loading", std::bind(&ModuleEONLoadingScreen::onPlay, this));
     _menuController.reset();
+    _menuController.setdefaultIfUndefined(false);
 
     return true;
 }
@@ -44,7 +45,6 @@ void ModuleEONLoadingScreen::stop()
 {
     EngineUI.deactivateWidget("eon_loading_screen");
     EngineAudio.setMusicRTPC("End_Theme", 1);
-    PlayerInput.unBlockInput();
 }
 
 void ModuleEONLoadingScreen::update(float dt)

@@ -18,6 +18,7 @@
 #include "components/gameplay/comp_lifetime.h"
 #include "fsm/states/logic/state_logic.h"
 #include "../bin/data/shaders/constants_particles.h"
+#include "audio/module_audio.h"
 
  // #define ALLOW_PAUSES
 
@@ -198,6 +199,9 @@ void TaskUtils::spawnProjectile(const VEC3 shoot_orig, const VEC3 shoot_target, 
 
 	VEC3 front = normVEC3((shoot_target + VEC3::Up) - shoot_orig);
 	c_enemyproj->setParameters(dmg, from_player, front, is_homing);
+
+	// FMOD event
+	EngineAudio.postEvent("CHA/General/AT/Projectile_Shoot", shoot_orig);
 }
 
 void TaskUtils::spawnCygnusProjectiles(const VEC3 shoot_orig, const VEC3 shoot_target, const int dmg, const int num_projectiles)
@@ -228,6 +232,9 @@ void TaskUtils::spawnCygnusProjectiles(const VEC3 shoot_orig, const VEC3 shoot_t
 		shoot_dest.x = prev_shoot_dest.x * cos_angle - prev_shoot_dest.z * sin_angle;
 		shoot_dest.z = prev_shoot_dest.x * sin_angle + prev_shoot_dest.z * cos_angle;
 	}
+
+	// FMOD event
+	EngineAudio.postEvent("CHA/General/AT/Projectile_Shoot", shoot_orig);
 }
 
 void TaskUtils::castAreaAttack(CEntity* e_attacker, VEC3 position, const float radius, const int dmg)

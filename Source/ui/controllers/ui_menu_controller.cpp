@@ -57,11 +57,17 @@ namespace ui
     void CMenuController::nextOption()
     {
         selectOption(std::clamp<int>(_currentOption + 1, 0, static_cast<int>(_options.size()) - 1));
+
+        // FMOD hover event
+        EngineAudio.postEvent("UI/Hover");
     }
 
     void CMenuController::prevOption()
     {
         selectOption(std::clamp<int>(_currentOption - 1, 0, static_cast<int>(_options.size()) - 1));
+
+        // FMOD hover event
+        EngineAudio.postEvent("UI/Hover");
     }
 
     void CMenuController::selectOption(int idx, bool hover_audio)
@@ -71,9 +77,13 @@ namespace ui
 
         if (idx < 0 || idx >= _options.size())
         {
-            for (auto& option : _options)
+            if (defaultIfUndefined)
             {
-                option.button->changeToState("default");
+                for (auto& option : _options)
+                {
+                    _currentOption = kUndefinedOption;
+                    option.button->changeToState("default");
+                }
             }
             return;
         }
@@ -97,6 +107,9 @@ namespace ui
             return;
 
         _options.at(_currentOption).button->changeToState("pressed");
+
+        // Fmod event
+        EngineAudio.postEvent("UI/Highlight");
     }
 
     void CMenuController::confirmOption()

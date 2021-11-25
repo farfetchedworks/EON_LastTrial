@@ -126,14 +126,15 @@ void TCompAttributes::updateCoherence()
 	TCompWarpEnergy* warp = get<TCompWarpEnergy>();
 	assert(controller && warp);
 
-	TAttribute attr = get("coherence");
-	int base_slots = 6;
-	int max_warp = base_slots + (int)(floor((attr.value - 1) / 2));
+	// TAttribute attr = get("coherence");
+	// int base_slots = 6;
+	// int max_warp = base_slots + (int)(floor((attr.value - 1) / 2));
 	
 	// better this?
-	max_warp = base_slots + (attr.value - 1);
+	// max_warp = base_slots + (attr.value - 1);
 
-	warp->setCurrMaxWarp(max_warp);
+	// warp->setCurrMaxWarp(max_warp);
+	warp->addSlot();
 }
 
 

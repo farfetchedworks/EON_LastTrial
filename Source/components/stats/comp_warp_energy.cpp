@@ -14,6 +14,8 @@
 
 DECL_OBJ_MANAGER("warp_energy", TCompWarpEnergy)
 
+const int MAX_HUD_WARP = 9;
+
 void TCompWarpEnergy::load(const json& j, TEntityParseContext& ctx)
 {
 	assert(j["max_warp_energy"].is_number());
@@ -23,8 +25,25 @@ void TCompWarpEnergy::load(const json& j, TEntityParseContext& ctx)
 	curr_max_warp_energy = j.value("curr_max_warp_energy", max_warp_energy);
 	on_hit_amount_warp = j.value("on_hit_amount_warp", on_hit_amount_warp);
 	warp_recovery_speed = j.value("warp_recovery_speed", warp_recovery_speed);
-	
+
 	fillWarpEnergy();
+}
+
+void TCompWarpEnergy::onEntityCreated()
+{
+	for (int i = 1; i <= MAX_HUD_WARP; ++i)
+	{
+		// Update UI
+		ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
+		assert(w);
+		std::string slotName = "bar_fill_slot_" + std::to_string(i);
+		ui::CWidget* wChild = w->getChildByName(slotName);
+		if(!wChild)
+			continue;
+		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+		ui::TImageParams& params = fill->imageParams;
+		params.alpha_cut = 0.f;
+	}
 }
 
 void TCompWarpEnergy::update(float dt)
@@ -36,64 +55,66 @@ void TCompWarpEnergy::update(float dt)
 	}
 #endif // AUTO_WARP_SLOT
 
-	// Update UI
-	float pct = warp_energy / (float)max_warp_energy;
-	ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
-	assert(w);
-	ui::CWidget* wChild = w->getChildByName("bar_fill");
-	if (wChild) {
-		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
-		ui::TImageParams& params = fill->imageParams;
-		params.alpha_cut = pct;
-	}
-
-	pct = (warp_energy - max_warp_energy) / (float)max_warp_energy;
-	ui::CWidget* w_1 = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
-	assert(w_1);
-	wChild = w_1->getChildByName("bar_fill");
-	if (wChild) {
-		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
-		ui::TImageParams& params = fill->imageParams;
-		params.alpha_cut = pct;
-	}
-
-	wChild = w_1->getChildByName("bar_background_all");
-	if (wChild) {
-		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
-		ui::TImageParams& params = fill->imageParams;
-		pct = (curr_max_warp_energy - max_warp_energy) / (float)max_warp_energy;;
-		params.alpha_cut = (1 - pct);
-	}
-
-	if (empty_warp_timer > 0.f)
+	for (int i = 1; i <= curr_max_warp_energy; ++i)
 	{
-		empty_warp_timer -= dt;
+		// Update UI
+		ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
+		assert(w);
+		std::string slotName = "bar_fill_slot_" + std::to_string(i);
+		ui::CWidget* wChild = w->getChildByName(slotName);
+		assert(wChild);
+		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+		// Compute pct for this slot
+		ui::TImageParams& params = fill->imageParams;
+		params.alpha_cut = clampf(1.f + warp_energy - (float)i, 0.f, 1.f);
+	}
 
-		if (empty_warp_timer < 0.f)
-		{
-			ui::CWidget* wChild = w->getChildByName("bar_background_empty");
-			assert(wChild);
-			ui::CImage* img = static_cast<ui::CImage*>(wChild);
-			img->setVisible(false);
+	if (empty_warp_timer < 0.f)
+		return;
+	
+	empty_warp_timer -= dt;
 
-			wChild = w_1->getChildByName("bar_background_empty");
-			assert(wChild);
-			img = static_cast<ui::CImage*>(wChild);
-			img->setVisible(false);
-		}
+	if (empty_warp_timer < 0.f)
+	{
+		ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
+		assert(w);
+		ui::CWidget* wChild = w->getChildByName("bar_background_complete");
+		assert(wChild);
+		ui::CImage* img = static_cast<ui::CImage*>(wChild);
+		ui::TImageParams& params = img->imageParams;
+		params.texture = Resources.get("data/textures/ui/subvert/HUD/WarpEnergyMarco.dds")->as<CTexture>();
+	}
+}
+
+void TCompWarpEnergy::addSlot()
+{
+	if (curr_max_warp_energy == MAX_HUD_WARP)
+		return;
+
+	curr_max_warp_energy++;
+
+	int extraSlots = curr_max_warp_energy - 6; // 6 is the base slots
+	for (int i = 0; i < extraSlots; ++i)
+	{
+		// Update UI
+		ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
+		assert(w);
+		std::string slotName = "bar_extra_slot_" + std::to_string(i + 1);
+		ui::CWidget* wChild = w->getChildByName(slotName);
+		assert(wChild);
+		ui::CImage* img = static_cast<ui::CImage*>(wChild);
+		img->setVisible(true);
 	}
 }
 
 void TCompWarpEnergy::debugInMenu()
 {
-	ImGui::PushStyleColor(ImGuiCol_PlotHistogram, (ImVec4)ImColor::ImColor(0.11f, 0.15f, 0.8f));
-	ImGui::ProgressBar(warp_energy / (float)curr_max_warp_energy, ImVec2(-1, 0));
-	ImGui::PopStyleColor();
+	ImGui::DragFloat("Warp", &warp_energy, 0.1f, 0.f, (float)curr_max_warp_energy);
 
 	if (ImGui::Button("Fill"))
 		fillWarpEnergy();
 	if (ImGui::Button("+1 Max"))
-		curr_max_warp_energy += 1;
+		addSlot();
 }
 
 void TCompWarpEnergy::onHit(const TMsgHitWarpRecover& msg)
@@ -119,26 +140,12 @@ bool TCompWarpEnergy::hasWarpEnergy(int warp_cost)
 	{
 		ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar");
 		assert(w);
-		ui::CWidget* wChild = w->getChildByName("bar_background_empty");
-		if (wChild) {
-			ui::CImage* img = static_cast<ui::CImage*>(wChild);
-			img->setVisible(true);
-			empty_warp_timer = 0.5f;
-		}
-
-		w = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
-		assert(w);
-		wChild = w->getChildByName("bar_background_empty");
-		if (wChild) {
-			ui::CImage* img = static_cast<ui::CImage*>(wChild);
-			img->setVisible(true);
-			empty_warp_timer = 0.5f;
-
-			float pct = (curr_max_warp_energy - max_warp_energy) / (float)max_warp_energy;
-			ui::CImage* fill = static_cast<ui::CImage*>(wChild);
-			ui::TImageParams& params = fill->imageParams;
-			params.alpha_cut = pct;
-		}
+		ui::CWidget* wChild = w->getChildByName("bar_background_complete");
+		assert(wChild);
+		ui::CImage* img = static_cast<ui::CImage*>(wChild);
+		ui::TImageParams& params = img->imageParams;
+		params.texture = Resources.get("data/textures/ui/subvert/HUD/WarpEnergyMarcoEmpty.dds")->as<CTexture>();
+		empty_warp_timer = 0.5f;
 	}
 
 	return is_ok;

@@ -70,6 +70,11 @@ void TCompEnergyWall::onEonInteracted(const TMsgEonInteracted& msg)
 	if (eon_passed || controller->inAreaDelay())
 		return;
 
+	// Rotate Eon to look at the energy wall
+	TCompTransform* player_transform = e_player->get<TCompTransform>();
+	TCompTransform* trans = get<TCompTransform>();
+	player_transform->setRotation(trans->getRotation());
+
 	is_active = true;
 	eon_passed = true;
 	
@@ -81,10 +86,8 @@ void TCompEnergyWall::onEonInteracted(const TMsgEonInteracted& msg)
 	c_collider->setGroupAndMask("interactable", "all_but_player");
 
 	// hack to allow pass through the wall when Eon is very close
-	TCompTransform* trans = get<TCompTransform>();
 	VEC3 init_pos = trans->getPosition();
 
-	TCompTransform* player_transform = e_player->get<TCompTransform>();
 	VEC3 new_pos = trans->getPosition() + trans->getForward() * 0.01f;
 	trans->setPosition(new_pos);
 	c_collider->setGlobalPose(trans->getPosition(), trans->getRotation());
@@ -94,15 +97,10 @@ void TCompEnergyWall::onEonInteracted(const TMsgEonInteracted& msg)
 	dir_entry_point.Normalize();
 	is_moving = true;
 
-	// Rotate Eon in case it is not facing forward
-	/*float angle = rad2deg(DirectX::XMVectorGetX(DirectX::XMVector3AngleBetweenVectors(player_transform->getForward(), init_pos)));
-	if (angle > 5.f) {
-		player_transform->setRotation(trans->getRotation());
-	}*/
-
 	// post fmod event
 	const static char* EVENT = "ENV/General/BossDoor/BossDoor_Interact";
 	EngineAudio.postEvent(EVENT, init_pos);
+	EngineAudio.stopCurMusicEvent();
 }
 
 VEC3 TCompEnergyWall::calculateEntryPoint()
@@ -119,7 +117,7 @@ VEC3 TCompEnergyWall::calculateEntryPoint()
 	std::vector<physx::PxRaycastHit> raycastHits;
 
 	// Get the exact position of the wall the player is facing to perform the animation in that section
-	bool is_ok = EnginePhysics.raycast(player_pos, player_transform->getForward(), 20.f, raycastHits, CModulePhysics::FilterGroup::Interactable, true, false);
+	bool is_ok = EnginePhysics.raycast(player_pos, -trans->getForward(), 20.f, raycastHits, CModulePhysics::FilterGroup::Interactable, true, false);
 	if (is_ok) {
 		wall_pos = PXVEC3_TO_VEC3(raycastHits.front().position);
 	}

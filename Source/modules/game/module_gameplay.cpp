@@ -22,15 +22,18 @@
 #include "components/cameras/comp_camera_follow.h"
 #include "components/common/comp_collider.h"
 #include "components/common/comp_tags.h"
+#include "components/controllers/comp_curve_controller.h"
 #include "components/render/comp_irradiance_cache.h"
 #include "components/gameplay/comp_game_manager.h"
 #include "components/ai/comp_bt.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
 #include "ui/widgets/ui_image.h"
+#include "geometry/curve.h"
 
-extern CShaderCte<CtesWorld> cte_world;
+const bool PLAY_INTRO_CINEMATIC = true;
 bool debugging = false;
+extern CShaderCte<CtesWorld> cte_world;
 
 bool ModuleEONGameplay::start()
 {
@@ -52,16 +55,15 @@ bool ModuleEONGameplay::start()
 		Boot.customStart();
 	}
 
+	CEntity* mixed_camera = getEntityByName("camera_mixed");
 	CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
 	mixer.setEnabled(true);
-	mixer.setOutputCamera(getEntityByName("camera_mixed"));
-	EngineRender.setActiveCamera(getEntityByName("camera_mixed"));
+	mixer.setOutputCamera(mixed_camera);
+	EngineRender.setActiveCamera(mixed_camera);
+	EngineAudio.setListener(mixed_camera);
 
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;
-
-	// Audio
-	EngineAudio.setListener(getEntityByName("camera_mixed"));
 
 	// If passing through YOU DIED module
 	if (started)
@@ -120,10 +122,27 @@ bool ModuleEONGameplay::start()
 	Engine.resetClock();
 
 	// hacky to allow not playing the cinematic
-	if (getEntityByName("Gard").isValid())
+	if (getEntityByName("Gard").isValid() && PLAY_INTRO_CINEMATIC)
 	{
+		CEntity* cinematic_cam = getEntityByName("camera_cinematic");
+		assert(cinematic_cam);
+		TCompCurveController* curve_controller = cinematic_cam->get<TCompCurveController>();
+		const CCurve* curve = curve_controller->getCurve();
+		VEC3 introPos = curve->getKnot(0);
+			
+		TCompTransform* h_trans = cinematic_cam->get<TCompTransform>();
+		h_trans->setPosition(introPos);
+
+		TCompTransform* h_trans_mixed = mixed_camera->get<TCompTransform>();
+		h_trans_mixed->setPosition(introPos);
+
 		EngineLua.executeScript("BeginIntroCinematic()");
-		Subtitles.startCaption("intro_cinematic_2");
+		Subtitles.startCaption("intro_cinematic_2", CHandle(), []() {
+			ui::CImage* w = static_cast<ui::CImage*>(EngineUI.getWidget("eon_location"));
+			assert(w);
+			EngineLua.executeScript("activateWidget('eon_location')", 2.f);
+			EngineLua.executeScript("deactivateWidget('eon_location')", 5.5f);
+		});
 	}
 	else if(!getEntityByName("camera_preview").isValid())
 	{
@@ -229,7 +248,6 @@ void ModuleEONGameplay::togglePause()
 		EngineUI.activateWidget("eon_pause");
 
 		PlayerInput.blockInput();
-		//TCompBT::UPDATE_ENABLED = false;
 		Time.scale_factor = 0.f;
 
 		debugging = true;
@@ -239,7 +257,6 @@ void ModuleEONGameplay::togglePause()
 	{
 		EngineUI.deactivateWidget("eon_pause");
 		PlayerInput.unBlockInput();
-		//TCompBT::UPDATE_ENABLED = true;
 		Time.scale_factor = 1.f;
 
 		debugging = false;

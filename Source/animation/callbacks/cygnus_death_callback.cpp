@@ -9,6 +9,7 @@
 #include "components/common/comp_parent.h"
 #include "skeleton/comp_attached_to_bone.h"
 #include "entity/entity_parser.h"
+#include "audio/module_audio.h"
 #include "lua/module_scripting.h"
 #include "input/input_module.h"
 #include "ui/ui_module.h"
@@ -16,8 +17,14 @@
 
 struct onCygnusDeathCallback : public CAnimationCallback
 {
+	bool first_update = true;
+
 	void AnimationUpdate(float anim_time, CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		if (first_update) {
+			first_update = false;
+			EngineAudio.setMusicRTPC("Cygnus_Phase", 4, true);
+		}
 		if (anim_time > 6.75f)
 		{
 			CEntity* e_owner = getOwnerEntity(userData);
@@ -53,7 +60,7 @@ struct onCygnusDeathCallback : public CAnimationCallback
 
 		// Manage player cinematics
 
-		PlayerInput.blockInput();
+		/*PlayerInput.blockInput();
 
 		CEntity* player = getEntityByName("player");
 		TCompPlayerController* controller = player->get<TCompPlayerController>();
@@ -63,7 +70,7 @@ struct onCygnusDeathCallback : public CAnimationCallback
 			TCompPlayerController* controller = player->get<TCompPlayerController>();
 			controller->setVariable("is_attacking_heavy", 1);
 			controller->enabled = false;
-		});
+		});*/
 	}
 };
 

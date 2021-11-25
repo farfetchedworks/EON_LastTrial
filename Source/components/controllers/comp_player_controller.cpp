@@ -26,6 +26,7 @@
 #include "components/stats/comp_health.h"
 #include "components/stats/comp_warp_energy.h"
 #include "components/stats/comp_attributes.h"
+#include "components/stats/comp_geons_manager.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/cameras/comp_camera_shooter.h"
 #include "components/gameplay/comp_game_manager.h"
@@ -228,13 +229,12 @@ void TCompPlayerController::update(float dt)
 
 	if (PlayerInput['C'].getsPressed()) {
 
-		CTransform t;
+		/*CTransform t;
 		t.setPosition(getEntity()->getPosition());
-		spawn("data/prefabs/Eter_Entero.json", t);
-	}
+		spawn("data/prefabs/Eter_Entero.json", t);*/
 
-	if (PlayerInput['B'].getsPressed()) {
-		moveTo(VEC3(), 6.f);
+		TCompGeonsManager* geons_man = get<TCompGeonsManager >();
+		geons_man->increasePhase();
 	}
 
 	// Auto-Kill (K)
@@ -375,6 +375,8 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 
 	// Modify player direction with camera rotation
 	CEntity* e_camera = EngineRender.getActiveCamera();
+	if (!e_camera)
+		return moveDir;
 	TCompCamera* c_camera = e_camera->get<TCompCamera>();
 	TCompTransform* c_player_trans = h_transform;
 	TCompTransform* c_locked_trans = h_locked_transform;
@@ -407,7 +409,11 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 		new_rot = QUAT::CreateFromAxisAngle(VEC3(0, 1, 0), atan2(moveDir.x, moveDir.z));
 		float fwdDot = c_player_trans->getForward().Dot(moveDir);
 
-		if (fwdDot < -0.75f && is_sprinting) {
+		TCompFSM* fsm = get<TCompFSM>();
+		fsm::CStateBaseLogic* currState = (fsm::CStateBaseLogic*)fsm->getCurrentState();
+		float time_in_anim = fsm->getCtx().getTimeInState();
+
+		if (fwdDot < -0.75f && is_sprinting && time_in_anim >= 1.f) {
 			setVariable("is_turn_sprint", true);
 		}
 		else {
@@ -505,7 +511,7 @@ void TCompPlayerController::move(float dt)
 	}
 
 	// Manage on stop running/sprinting animations
-	if (!is_turn_sprint && !is_moving && PlayerInput["sprint"].wasPressed() && moving_timer > 0.75f) {
+	if (!is_turn_sprint && !is_moving && (PlayerInput["sprint"].wasPressed() || PlayerInput["sprint"].timeSinceReleased() < .2f) && moving_timer > 0.75f) {
 		moving_timer = 0.f;
 		current_speed = 0.0f;
 		setVariable("is_stopping_sprint", true);
@@ -561,9 +567,9 @@ void TCompPlayerController::move(float dt)
 			heavy_attack_timer = 0.f;
 		}
 
-		if (PlayerInput["parry"].getsPressed() && hasStamina()) {
+		/*if (PlayerInput["parry"].getsPressed() && hasStamina()) {
 			setVariable("in_parry", true);
-		}
+		}*/
 
 		if (PlayerInput["heal"].getsPressed()) {
 			CEntity* owner = getEntity();
@@ -1527,7 +1533,7 @@ void TCompPlayerController::onApplyAreaDelay(const TMsgApplyAreaDelay& msg)
 	EngineAudio.postEvent("CHA/Eon/DMG/Eon_Receive_Area_Delay");
 
 	const char* FMOD_EON_INSIDE_WARP_PARAMETER = "Eon_Inside_Warp";
-	EngineAudio.setGlobalRTPC(FMOD_EON_INSIDE_WARP_PARAMETER, 1.f, true);
+	EngineAudio.setGlobalRTPC(FMOD_EON_INSIDE_WARP_PARAMETER, 1.f);
 }
 
 void TCompPlayerController::onRemoveAreaDelay(const TMsgRemoveAreaDelay& msg)

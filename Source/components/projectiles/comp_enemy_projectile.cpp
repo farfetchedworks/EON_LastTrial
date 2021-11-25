@@ -7,7 +7,6 @@
 #include "lua/module_scripting.h"
 #include "entity/entity_parser.h"
 #include "../bin/data/shaders/constants_particles.h"
-#include "audio/module_audio.h"
 
 DECL_OBJ_MANAGER("enemy_projectile", TCompEnemyProjectile)
 
@@ -59,10 +58,6 @@ void TCompEnemyProjectile::onEntityCreated()
 	TCompCollider* c_collider = projectile_collider;
 	physx::PxRigidDynamic* actor_collider = static_cast<physx::PxRigidDynamic*>(c_collider->actor);
 	actor_collider->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
-
-	// FMOD event
-	TCompTransform* t = projectile_transform;
-	EngineAudio.postEvent("CHA/General/AT/Projectile_Shoot", t->getPosition());
 }
 
 void TCompEnemyProjectile::update(float dt)

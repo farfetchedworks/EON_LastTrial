@@ -23,6 +23,8 @@ private:
 
 public:
 
+	~TCompBT();
+
 	void load(const json& j, TEntityParseContext& ctx);
 	void onEntityCreated();
 

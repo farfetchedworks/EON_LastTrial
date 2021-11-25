@@ -73,10 +73,11 @@ void CEngine::registerResourceTypes()
 	Resources.registerResourceType(getClassResourceType<TCoreAnimationData>());
 }
 
-void CEngine::init()
+void CEngine::init(const std::string& version)
 {
 	PROFILE_FUNCTION("Engine::init");
 
+	_version = version;
 	_mainThreadId = std::this_thread::get_id();
 
 	static ModuleEONSplashScreen splash_screen_module("eon_splash_screen");
@@ -176,8 +177,6 @@ void CEngine::doFrame()
 	PROFILE_FRAME_BEGINS();
 	PROFILE_FUNCTION("Engine::doFrame");
 	Time.set(Time.current + timer.elapsedAndReset());
-	// juan:
-	// Time.set(timer.elapsed());
 	update(Time.delta);
 	_render->generateFrame();
 }

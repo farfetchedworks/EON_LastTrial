@@ -10,6 +10,7 @@
 #include "modules/module_physics.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
+#include "input/input_module.h"
 #include "bt/task_utils.h"
 
 // -----------------------------------------------
@@ -125,6 +126,9 @@ void TCompRigidAnimationController::start(std::function<void()> cbe)
 void TCompRigidAnimationController::stop()
 {
 	playing = false;
+
+	if(!static_animation)
+		PlayerInput.unBlockInput();
 }
 
 void TCompRigidAnimationController::update(float delta_time)

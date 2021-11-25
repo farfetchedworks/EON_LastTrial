@@ -95,7 +95,7 @@ void TCompPawnController::removeSlowDebuff()
 bool TCompPawnController::isPlayerDashing()
 {
 	TCompPlayerController* controller = get<TCompPlayerController>();
-	return controller && controller->is_dashing;
+	return controller && (controller->is_dashing || controller->is_dash_strike);
 }
 
 bool TCompPawnController::manageFalling(float speed, float dt)
@@ -271,7 +271,7 @@ void TCompPawnController::setWeaponInAreaDelay(bool status)
 
 	// In the case of the enemy, check if there are more than one weapon
 	TCompAIControllerBase* c_controller = e_owner->get<TCompAIControllerBase>();
-	if (h_weapons.size() == 0) {
+	if (h_weapons.size() == 0 && c_controller) {
 		CEntity* e_weapon = c_controller->getWeaponEntity();
 		if(c_controller && e_weapon)		// Only apply effect to weapon damage when the entity has a weapon
 			e_weapon->sendMsg(TMsgWeaponInAreaDelay({ status }));

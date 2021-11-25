@@ -33,13 +33,13 @@
 			<value>5</value>
 		</property>
 		<property name="maximumDistance">
-			<value>100</value>
+			<value>115</value>
 		</property>
 		<property name="extentMode">
 			<value>1</value>
 		</property>
 		<property name="soundSize">
-			<value>40</value>
+			<value>68</value>
 		</property>
 	</object>
 	<object class="Automator" id="{f4b5ec27-f0be-4942-bddd-6f7dca7ae205}">

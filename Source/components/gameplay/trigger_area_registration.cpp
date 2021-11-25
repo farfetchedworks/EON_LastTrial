@@ -18,9 +18,11 @@
 #include "components/audio/comp_music_interactor.h"
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
+#include "navmesh/module_navmesh.h"
 #include "audio/module_audio.h"
 #include "ui/ui_module.h"
 #include "input/input_module.h"
+#include "modules/module_camera_mixer.h"
 
 #define PLAY_CINEMATICS true
 
@@ -257,14 +259,12 @@ public:
 		CEntity* player = getAreaTrigger(event_trigger);
 		TCompPlayerController* controller = player->get<TCompPlayerController>();
 		controller->blockAim();
-		controller->blendCamera("camera_follow_happy", 6.f, &interpolators::quartInOutInterpolator);
 
-		// Blend another cam
-		EngineLua.executeScript("dispatchEvent('Gameplay/ending_cam')", 3.f);
+		CModuleCameraMixer& mixer = CEngine::get().getCameramixer();
+		EngineLua.executeScript("BeginEndCinematic()");
 
 		CEntity* dummy = getEntityByName("dummy_move_to");
 		controller->moveTo(dummy->getPosition(), 1.4f, 0.15f, []() {
-			// EngineUI.fadeOut(2.f);
 			PlayerInput.blockInput();
 			EngineLua.executeScript("dispatchEvent('Gameplay/ending_1')");
 		});
@@ -335,11 +335,14 @@ public:
 
 		// Inform the game manager that Eon has entered the rift at least once, music purposes
 		gm->setHasEnteredRiftOnce(true);
+
+		// Change navmesh
+		EngineNavMesh.setCurrent("templelevel");
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
 	{
-		// dbg("EXIT RIFT");
+		
 	}
 };
 

@@ -41,6 +41,7 @@ public:
     float distance_to_ground    = 0.f;
     bool is_dashing             = false;        // Dashing?
     bool is_dash_strike         = false;
+    bool is_sprinting           = false;        // Sprinting?
     VEC3 dash_dir               = VEC3::Zero;
 
     CHandle h_locked_transform;                 // For lock on camera
@@ -65,7 +66,6 @@ private:
     float moving_timer              = 0.f;
 
     bool can_sprint                 = false;        // Can sprint? if shift key is pressed
-    bool is_sprinting               = false;        // Sprinting?
     bool can_continue_sprinting     = false;        // Can continue sprinting? if the sprint key is still pressed
     const float dash_check_elapsed  = 0.3f;
 

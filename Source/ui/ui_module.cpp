@@ -80,7 +80,14 @@ namespace ui
     {
         CWidget* widget = getWidget(name);
         assert(widget);
-        if(!widget || widget->isActive()) return nullptr;
+        if (!widget || widget->isActive()) return nullptr;
+        return activateWidget(widget, fade_in);
+    }
+
+    CWidget* CModule::activateWidget(CWidget* widget, bool fade_in)
+    {
+        assert(widget);
+        if (!widget || widget->isActive()) return nullptr;
 
         if (fade_in && widget->hasEffect("Fade In")) {
             widget->setState(EState::STATE_IN);
@@ -89,9 +96,9 @@ namespace ui
         {
             // if no fade in, be sure it's 100% visible
             TImageParams* ip = widget->getImageParams();
-            if(ip) ip->time_normalized = 1.f;
+            if (ip) ip->time_normalized = 1.f;
         }
-        
+
         _activeWidgets.push_back(widget);
         widget->setActive(true);
         return widget;

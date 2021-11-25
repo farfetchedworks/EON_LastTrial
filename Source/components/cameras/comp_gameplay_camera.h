@@ -14,8 +14,9 @@ struct IGameplayCamera {
 
     float delta_yaw             = 0.0f;
     float delta_pitch           = 0.0f;
-    float delta_yaw_lerp        = 0.0f;
-    float delta_pitch_lerp      = 0.0f;
+
+    LerpedValue<float>  delta_yaw_lerp = {};
+    LerpedValue<float>  delta_pitch_lerp = {};
 
     float orbit_speed           = 0.0f;
     float rotation_sensibility  = 0.0f;

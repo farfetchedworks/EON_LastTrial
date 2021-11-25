@@ -69,8 +69,8 @@ void TCompCameraPreview::update(float dt)
         updateDeltas(delta);
     }
 
-    delta_pitch_lerp = lerpRadians(delta_pitch_lerp, delta_pitch, 14.0f, delta);
-    delta_yaw_lerp = lerpRadians(delta_yaw_lerp, delta_yaw, 14.0f, delta);
+    delta_pitch_lerp.value = dampRadians(delta_pitch_lerp.value, delta_pitch, delta_pitch_lerp.velocity, 0.05f, dt);
+    delta_yaw_lerp.value = dampRadians(delta_yaw_lerp.value, delta_yaw, delta_yaw_lerp.velocity, 0.05f, dt);
 
     static float target_distance = distance;
 
@@ -105,7 +105,7 @@ void TCompCameraPreview::update(float dt)
 
     distance = damp(distance, target_distance, 4.f, delta);
 
-    MAT44 rot = MAT44::CreateRotationX(delta_pitch_lerp) * MAT44::CreateRotationY(delta_yaw_lerp);
+    MAT44 rot = MAT44::CreateRotationX(delta_pitch_lerp.value) * MAT44::CreateRotationY(delta_yaw_lerp.value);
     VEC3 position = target_position_lerp + rot.Forward() * distance;
     c_transform->lookAt(position, target_position_lerp, VEC3::Up);
 }

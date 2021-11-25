@@ -12,19 +12,25 @@
 #include "components/common/comp_tags.h"
 #include "skeleton/comp_skeleton.h"
 #include "lua/module_scripting.h"
-#include "navmesh/module_navmesh.h"
 #include "ui/ui_module.h"
 #include "ui/widgets/ui_text.h"
 #include "bt/task_utils.h"
 #include "ui/ui_module.h"
+#include "audio/module_audio.h"
 
 const float DEATH_TIME = 30.f;
 
 struct onGardDeathCallback : public CAnimationCallback
 {
+
+	bool first_update = true;
+
 	void AnimationUpdate(float anim_time, CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
-		
+		if (first_update) {
+			first_update = false;
+			EngineAudio.setGlobalRTPC("Gard_Phase", 4);
+		}
 	}
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
@@ -86,11 +92,6 @@ struct onGardDeathCallback : public CAnimationCallback
 			bool is_ok = Boot.loadScene("data/scenes/templelevel.json");
 			assert(is_ok);
 		}*/
-
-		// Change navmesh
-		{
-			EngineNavMesh.setCurrent("templelevel");
-		}
 	}
 };
 

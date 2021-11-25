@@ -90,14 +90,15 @@ void CModuleCameraMixer::lerpCameras(CHandle hCamera1, CHandle hCamera2, CHandle
     VEC3 position = VEC3::Lerp(camera1->getPosition(), camera2->getPosition(), ratio);
     VEC3 direction = VEC3::Lerp(camera1->getForward(), camera2->getForward(), ratio);
 
+    TCompCamera* cameraOutput = eOutput->get<TCompCamera>();
     {
         TCompCamera* camera1 = eCamera1->get<TCompCamera>();
         TCompCamera* camera2 = eCamera2->get<TCompCamera>();
-        TCompCamera* cameraOutput = eOutput->get<TCompCamera>();
         cameraOutput->setFovVerticalRadians(lerp<float>(camera1->getFov(), camera2->getFov(), ratio));
     }
 
     transformOutput->lookAt(position, position + direction, VEC3::Up);
+    cameraOutput->update(Time.delta);
 }
 
 const TMixedCamera& CModuleCameraMixer::getLastCamera()
