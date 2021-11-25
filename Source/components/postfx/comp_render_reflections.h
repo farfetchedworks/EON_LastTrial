@@ -22,6 +22,7 @@ public:
 	void onEntityCreated();
 	void debugInMenu();
 	CTexture* compute(CTexture* in_texture, CTexture* last_texture);
+	void setEnabled(bool v) { enabled = v; };
 
 	// ------------- render in fx stack -------------
 	void onRender(const TMsgRenderPostFX& msg);

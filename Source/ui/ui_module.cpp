@@ -76,7 +76,7 @@ namespace ui
         _fadingWidgets.push_back(fwidget);
     }
 
-    CWidget* CModule::activateWidget(const std::string& name, bool fade_in)
+    CWidget* CModule::activateWidget(const std::string& name, bool fade_in, float time_in)
     {
         CWidget* widget = getWidget(name);
         assert(widget);
@@ -84,12 +84,19 @@ namespace ui
         return activateWidget(widget, fade_in);
     }
 
-    CWidget* CModule::activateWidget(CWidget* widget, bool fade_in)
+    CWidget* CModule::activateWidget(CWidget* widget, bool fade_in, float time_in)
     {
         assert(widget);
         if (!widget || widget->isActive()) return nullptr;
 
         if (fade_in && widget->hasEffect("Fade In")) {
+
+            if (time_in > 0.f)
+            {
+                CEffect_FadeIn* effect = (CEffect_FadeIn*)widget->getEffect("Fade In");
+                effect->setFadeTime(time_in);
+            }
+
             widget->setState(EState::STATE_IN);
         }
         else
@@ -104,13 +111,20 @@ namespace ui
         return widget;
     }
 
-    void CModule::deactivateWidget(const std::string& name, bool fade_out)
+    void CModule::deactivateWidget(const std::string& name, bool fade_out, float time_out)
     {
         CWidget* widget = getWidget(name);
         assert(widget);
         if (!widget || !widget->isActive()) return;
 
         if (fade_out && widget->hasEffect("Fade Out")) {
+
+            if (time_out > 0.f)
+            {
+                CEffect_FadeOut* effect = (CEffect_FadeOut*)widget->getEffect("Fade Out");
+                effect->setFadeTime(time_out);
+            }
+
             widget->setState(EState::STATE_OUT);
         }
         else {

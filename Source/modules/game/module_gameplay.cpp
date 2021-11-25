@@ -41,8 +41,8 @@ bool ModuleEONGameplay::start()
 	assert(input);
 
 	_menuController.setInput(input);
-	_menuController.bind("resume_btn", std::bind(&ModuleEONGameplay::onResume, this));
-	_menuController.bind("exit_btn", std::bind(&ModuleEONGameplay::onExit, this));
+	_menuController.bindButton("resume_btn", std::bind(&ModuleEONGameplay::onResume, this));
+	_menuController.bindButton("exit_btn", std::bind(&ModuleEONGameplay::onExit, this));
 	_menuController.reset();
 	_menuController.selectOption(0);
 

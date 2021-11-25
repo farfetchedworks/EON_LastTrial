@@ -21,6 +21,7 @@
 #include "modules/module_tools.h"
 #include "modules/module_multithreading.h"
 #include "modules/module_subtitles.h"
+#include "modules/module_settings.h"
 #include "audio/module_audio.h"
 #include "lua/module_scripting.h"
 #include "navmesh/module_navmesh.h"
@@ -118,6 +119,7 @@ void CEngine::init(const std::string& version)
 	_multithreading = new CModuleMultithreading("multithreading_module");
 	_subtitles = new CModuleSubtitles("subtitles");
 	_irradiance = new CModuleIrradianceCache("eon_irradiance_cache");
+	_settings = new CModuleSettings("settings");
 
 	_moduleManager.registerServiceModule(_render);
 	_moduleManager.registerServiceModule(_entities);
@@ -149,6 +151,7 @@ void CEngine::init(const std::string& version)
 	_moduleManager.registerGameModule(&splash_screen_module);
 	_moduleManager.registerGameModule(&loading_screen_module);
 	_moduleManager.registerGameModule(&mainmenu_module);
+	_moduleManager.registerGameModule(_settings);
 	_moduleManager.registerGameModule(&gameplay_intro_module);
 	_moduleManager.registerGameModule(&gameplay_module);
 	_moduleManager.registerGameModule(&you_died_module);

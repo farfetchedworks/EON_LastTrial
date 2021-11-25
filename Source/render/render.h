@@ -45,6 +45,7 @@ public:
 	void activateBackBuffer();
 	void swapFrames();
 	void setFullScreenMode(bool mode);
+	void setVSyncEnabled(bool v) { vsync = v; };
 	void toggleFullScreen();
 };
 

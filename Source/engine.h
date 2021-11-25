@@ -21,6 +21,7 @@ class CModuleParticlesEditor;
 class CModuleMultithreading;
 class CModulePlayerInteraction;
 class CModuleIrradianceCache;
+class CModuleSettings;
 
 namespace input { class CModule; }
 namespace ui { class CModule; }
@@ -61,6 +62,7 @@ public:
   CModulePlayerInteraction& getPlayerInteraction() { return *_playerInteraction; }
   CModuleSubtitles& getSubtitles() { return *_subtitles; }
   CModuleIrradianceCache& getIrradiance() { return *_irradiance; }
+  CModuleSettings& getSettings() { return *_settings; }
 
 private:
   void update(float dt);
@@ -89,6 +91,7 @@ private:
   CModulePlayerInteraction* _playerInteraction = nullptr;
   CModuleSubtitles* _subtitles = nullptr;
   CModuleIrradianceCache* _irradiance = nullptr;
+  CModuleSettings* _settings = nullptr;
 
   std::thread::id _mainThreadId;
   std::vector<input::CModule*> _input;
@@ -116,6 +119,7 @@ extern bool debugging;
 #define ParticlesEditor CEngine::get().getParticlesEditor()
 #define Multithreading CEngine::get().getMultithreading()
 #define PlayerInteraction CEngine::get().getPlayerInteraction()
+#define Settings CEngine::get().getSettings()
 #define Boot CEngine::get().getBoot()
 
 #define Engine CEngine::get()

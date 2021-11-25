@@ -19,9 +19,9 @@ namespace ui
         void registerWidget(CWidget* widget);
         void registerAlias(CWidget* widget);
         void setWidgetActive(const std::string& name, bool active);
-        CWidget* activateWidget(CWidget* w, bool fade_in = true);
-        CWidget* activateWidget(const std::string& name, bool fade_in = true);
-        void deactivateWidget(const std::string& name, bool fade_out = true);
+        CWidget* activateWidget(CWidget* w, bool fade_in = true, float time_in = 0.f);
+        CWidget* activateWidget(const std::string& name, bool fade_in = true, float time_in = 0.f);
+        void deactivateWidget(const std::string& name, bool fade_out = true, float time_out = 0.f);
         void fadeWidget(const std::string& name, float time);
         CWidget* getWidget(const std::string& name);
         CWidget* getWidgetFrom(const std::string& parent_widget, const std::string& name);
