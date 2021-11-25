@@ -46,8 +46,10 @@ void ModuleEONEndGame::update(float dt)
 
 void ModuleEONEndGame::onContinue()
 {
-    /*Boot.reset();
-    CEngine::get().getModuleManager().changeToGamestate("main_menu");*/
+    auto& mm = CEngine::get().getModuleManager();
+
+    mm.resetModules();
+    mm.changeToGamestate("main_menu");
 }
 
 void ModuleEONEndGame::onExit()

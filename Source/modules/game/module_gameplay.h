@@ -18,6 +18,7 @@ public:
 
 	bool start() override;
 	void stop() override;
+	void reset() override;
 	void update(float dt) override;
 	void togglePause();
 

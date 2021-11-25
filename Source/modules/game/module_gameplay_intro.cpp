@@ -29,9 +29,13 @@ bool ModuleEONGameplayIntro::customStart()
 
 	Engine.resetClock();
 
+	CEntity* cinematic_cam = getEntityByName("camera_cinematic");
+
 	CModuleCameraMixer& mixer = Engine.getCameramixer();
-	mixer.setOutputCamera(getEntityByName("camera_cinematic"));
-	EngineRender.setActiveCamera(getEntityByName("camera_cinematic"));
+	mixer.setDefaultCamera(cinematic_cam);
+	mixer.setOutputCamera(cinematic_cam);
+	mixer.setEnabled(true);
+	EngineRender.setActiveCamera(cinematic_cam);
 
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;

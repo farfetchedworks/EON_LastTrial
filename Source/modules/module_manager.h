@@ -7,6 +7,7 @@ class CModuleManager
   public:
     void boot();
     void clear();
+    void resetModules();
 
     void update(float dt);
     void render();
