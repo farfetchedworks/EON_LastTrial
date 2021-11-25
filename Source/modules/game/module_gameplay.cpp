@@ -136,7 +136,6 @@ bool ModuleEONGameplay::start()
 		TCompTransform* h_trans_mixed = mixed_camera->get<TCompTransform>();
 		h_trans_mixed->setPosition(introPos);
 
-		mixer.blendCamera("camera_cinematic", 0.f);
 		EngineLua.executeScript("BeginIntroCinematic()");
 		Subtitles.startCaption("intro_cinematic_2", CHandle(), []() {
 			ui::CImage* w = static_cast<ui::CImage*>(EngineUI.getWidget("eon_location"));

@@ -234,14 +234,6 @@ void CModuleEventSystem::registerGlobalEvents()
 		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
 	});
 	
-	EventSystem.registerEventCallback("Gameplay/ending_cam", [](CHandle t, CHandle o) {
-		CEntity* dummy = getEntityByName("dummy_move_to");
-		CEntity* camera = getEntityByName("camera_dynamic");
-		TCompTransform* transform = camera->get<TCompTransform>();
-		transform->lookAt(VEC3(49.63f, 15.6f, -247.f), dummy->getPosition(), VEC3::Up);
-		CameraMixer.blendCamera("camera_dynamic", 4.f, &interpolators::quadInOutInterpolator);
-	});
-
 	EventSystem.registerEventCallback("Gameplay/ending_1", [](CHandle t, CHandle o) {
 		CEntity* dummy = getEntityByName("dummy_move_to");
 		CTransform trans;
