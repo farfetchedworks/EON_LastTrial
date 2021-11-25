@@ -3,6 +3,7 @@
 #include "engine.h"
 #include "modules/module_manager.h"
 #include "render/render_module.h"
+#include "modules/module_settings.h"
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
@@ -16,34 +17,56 @@ bool ModuleEONMainMenu::start()
     debugging = true;
     CApplication::get().changeMouseState(debugging, false);
 
-    input = CEngine::get().getInput(input::MENU);
-    assert(input);
-
     EngineUI.deactivateWidget("eon_hud");
-
-    // Set version
-    ui::CWidget* wMenu = EngineUI.getWidget("eon_main_menu");
-    assert(wMenu);
-    ui::CText* wVersion = (ui::CText*)wMenu->getChildByName("version");
-    wVersion->textParams.text = Engine.getVersion();
-    EngineUI.activateWidget(wMenu);
-
-    _menuController.setInput(input);
-    _menuController.bind("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
-    _menuController.bind("settings_btn", std::bind(&ModuleEONMainMenu::onSettings, this));
-    _menuController.bind("exit_btn_menu", std::bind(&ModuleEONMainMenu::onExit, this));
-
-    _menuController.reset();
-    _menuController.selectOption(0);
 
     // Start title theme
     EngineAudio.postMusicEvent("Music/Title_Theme");
+
+    // if there's input, we have been here before..
+    if (!input)
+    {
+        // Init settings the first time we enter
+        Settings.initSettings();
+
+        input = CEngine::get().getInput(input::MENU);
+        assert(input);
+
+        // Set version
+        ui::CWidget* wMenu = EngineUI.getWidget("eon_main_menu");
+        assert(wMenu);
+        ui::CText* wVersion = (ui::CText*)wMenu->getChildByName("version");
+        wVersion->textParams.text = Engine.getVersion();
+        EngineUI.activateWidget(wMenu);
+
+        _menuController.setInput(input);
+        _menuController.bindButton("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
+        _menuController.bindButton("settings_btn", std::bind(&ModuleEONMainMenu::onSettings, this));
+        _menuController.bindButton("exit_btn_menu", std::bind(&ModuleEONMainMenu::onExit, this));
+
+        _menuController.reset();
+        _menuController.selectOption(0);
+    }
+
+    // We come from the settings
+    if (_toSettings)
+    {
+        auto children = EngineUI.getWidget("eon_main_menu")->getChildren();
+        for (auto child : children)
+        {
+            child->setVisible(true);
+        }
+
+        _toSettings = false;
+    }
 
     return true;
 }
 
 void ModuleEONMainMenu::stop()
 {
+    if (_toSettings)
+        return;
+
     EngineUI.deactivateWidget("eon_main_menu");
 }
 
@@ -56,6 +79,20 @@ void ModuleEONMainMenu::onNewGame()
 {
     CModuleManager& modules = CEngine::get().getModuleManager();
     modules.changeToGamestate("intro");
+}
+
+void ModuleEONMainMenu::onSettings()
+{
+    _toSettings = true;
+
+    auto children = EngineUI.getWidget("eon_main_menu")->getChildren();
+    for (auto child : children)
+    {
+        child->setVisible(child->getChildren().size() == 0);
+    }
+
+    CModuleManager& modules = CEngine::get().getModuleManager();
+    modules.changeToGamestate("settings");
 }
 
 void ModuleEONMainMenu::onExit()

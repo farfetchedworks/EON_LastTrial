@@ -119,5 +119,5 @@ public:
 	/*
 	 * Stops the current music event being played
 	 */
-	void stopCurAmbienceEvent();
+	void stopCurAmbienceEvent(bool immediately = false);
 };

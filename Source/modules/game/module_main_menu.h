@@ -6,18 +6,20 @@ namespace input { class CModule; }
 
 class ModuleEONMainMenu : public IModule
 {
-  public:
-      ModuleEONMainMenu(const std::string& name) : IModule(name) {}
+public:
+	ModuleEONMainMenu(const std::string& name) : IModule(name) {}
 
-    bool start() override;
-    void stop() override;
-    void update(float dt) override;
+	bool start() override;
+	void stop() override;
+	void update(float dt) override;
 
-  private:
-    void onNewGame();
-    void onSettings() {}
-    void onExit();
+private:
+	void onNewGame();
+	void onSettings();
+	void onExit();
 
-    input::CModule* input = nullptr;
-    ui::CMenuController _menuController;
+	bool _toSettings = false;
+
+	input::CModule* input = nullptr;
+	ui::CMenuController _menuController;
 };

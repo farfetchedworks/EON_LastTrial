@@ -133,6 +133,8 @@ namespace LogicManager
 		controller->setAnimation("data/animations/" + animation_filename);
 		controller->start();
 
+		PlayerInput.blockInput();
+
 		CameraMixer.blendCamera("camera_cinematic", lerp_time, &interpolators::cubicInOutInterpolator);
 	}
 

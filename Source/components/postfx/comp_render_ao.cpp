@@ -1,8 +1,10 @@
 #include "mcv_platform.h"
+#include "engine.h"
 #include "comp_render_ao.h"
 #include "resources/resources.h"
 #include "components/common/comp_camera.h"
 #include "render/textures/render_to_texture.h"
+#include "modules/module_settings.h"
 
 // Using https://github.com/GameTechDev/ASSAO
 
@@ -115,6 +117,10 @@ void TCompRenderAO::load(const json& j, TEntityParseContext& ctx) {
   Resources.registerResource(rt_output, rt_name, getClassResourceType<CTexture>());
 
   prepareRenderTarget();
+
+  // Set state depending on the settings
+  TSetting* s = Settings.getSetting("ssao_cb");
+  enabled = s ? s->enabled : enabled;
 }
 
 void TCompRenderAO::prepareRenderTarget()

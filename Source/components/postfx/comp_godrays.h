@@ -12,6 +12,7 @@ struct TCompGodRays : public TCompBilateralBlur
 	void onEntityCreated();
 	void debugInMenu();
 
+	void setEnabled(bool v) { enabled = v; };
 	CTexture* generateVolumetricShape(CTexture* in_texture, CTexture* last_texture);
 
 	// ------------- render in fx stack -------------

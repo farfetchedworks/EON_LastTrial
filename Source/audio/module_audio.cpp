@@ -371,12 +371,16 @@ bool CModuleAudio::postFloorEvent(const std::string& event_name, CHandle actor)
 }
 
 // Music event - specifics
-void stopAndRelease(FMOD::Studio::EventInstance* ev_inst)
+void stopAndRelease(FMOD::Studio::EventInstance* ev_inst, bool immediately = false)
 {
 	if (ev_inst == nullptr)
 		return;
 
-	ev_inst->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT);
+	if (immediately)
+		ev_inst->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+	else
+		ev_inst->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT);
+
 	ev_inst->release();
 }
 
@@ -431,7 +435,7 @@ void CModuleAudio::postAmbienceEvent(const std::string& event_name)
 	cur_amb_event = post2DEventGetInst(event_name);
 }
 
-void CModuleAudio::stopCurAmbienceEvent()
+void CModuleAudio::stopCurAmbienceEvent(bool immediately)
 {
-	stopAndRelease(cur_amb_event);
+	stopAndRelease(cur_amb_event, immediately);
 }

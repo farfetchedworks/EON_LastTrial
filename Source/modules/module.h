@@ -15,6 +15,7 @@ class IModule
   protected:
     virtual bool start() { return true; }
     virtual void stop() {}
+    virtual void reset() {}
     virtual void update(float delta) {};
     virtual void render() {};
     virtual void renderUI() {};

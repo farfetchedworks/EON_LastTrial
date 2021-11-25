@@ -17,6 +17,7 @@ namespace ui
         CWidget* parseText(const json& jData);
         CWidget* parseProgressBar(const json& jData);
         CWidget* parseButton(const json& jData);
+        CWidget* parseCheckbox(const json& jData);
 
         CEffect* parseEffect(const json& jData);
         CEffect_AnimateUV* parseAnimateUVs(const json& jData);

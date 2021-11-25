@@ -146,6 +146,7 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{b065a23c-e188-4ac0-9b33-9678a4d8637d}">
 		<relationship name="effects">
+			<destination>{f933c02c-c6bb-448c-b1c3-3e9fd7d7c500}</destination>
 			<destination>{0dcea8d9-e74d-4044-82ae-0b975acbbf77}</destination>
 			<destination>{4c250ab2-e5da-4d0d-919d-197b2c741e01}</destination>
 		</relationship>
@@ -170,6 +171,11 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{69f028ab-6e91-46be-b425-55697be5416e}" />
+	<object class="GainEffect" id="{f933c02c-c6bb-448c-b1c3-3e9fd7d7c500}">
+		<property name="gain">
+			<value>4</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{0dcea8d9-e74d-4044-82ae-0b975acbbf77}" />
 	<object class="ProxyEffect" id="{4c250ab2-e5da-4d0d-919d-197b2c741e01}">
 		<property name="inputFormat">
@@ -184,15 +190,12 @@
 			<value>pitch</value>
 		</property>
 		<property name="amount">
-			<value>2.5</value>
+			<value>2</value>
 		</property>
 	</object>
 	<object class="RandomizerModulator" id="{66460260-3204-447f-b132-83860ad0be68}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>volume</value>
-		</property>
-		<property name="amount">
-			<value>3</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{abdbc7da-05e1-4757-a7ff-007e3af86f3e}" />

@@ -41,8 +41,8 @@ bool ModuleEONGameplay::start()
 	assert(input);
 
 	_menuController.setInput(input);
-	_menuController.bind("resume_btn", std::bind(&ModuleEONGameplay::onResume, this));
-	_menuController.bind("exit_btn", std::bind(&ModuleEONGameplay::onExit, this));
+	_menuController.bindButton("resume_btn", std::bind(&ModuleEONGameplay::onResume, this));
+	_menuController.bindButton("exit_btn", std::bind(&ModuleEONGameplay::onExit, this));
 	_menuController.reset();
 	_menuController.selectOption(0);
 
@@ -78,32 +78,25 @@ bool ModuleEONGameplay::start()
 		return true;
 	}
 
+	bool previewMode = getEntityByName("camera_preview").isValid();
+
 	// Enable 3d preview mode (for artists)
-	if (getEntityByName("camera_preview").isValid())
+	if (previewMode)
 	{
+		mixer.setDefaultCamera(getEntityByName("camera_preview"));
 		mixer.blendCamera("camera_preview", 0.f);
 	}
 	else
 	{
 		CEntity* e_player = getEntityByName("player");
-		if (e_player) {
+		if (e_player)
+		{
 			mixer.setDefaultCamera(getEntityByName("camera_follow"));
 			mixer.blendCamera("camera_follow", 0.f);
-		}
-		else {
-			CEntity* e_camera_flyover = getEntityByName("camera_flyover");
-			TCompCameraFlyover* c_camera_flyover = e_camera_flyover->get<TCompCameraFlyover>();
-			c_camera_flyover->enable();
-			mixer.setDefaultCamera(e_camera_flyover);
-			mixer.blendCamera("camera_flyover", 0.f);
-			debugging = true;
-			CApplication::get().changeMouseState(debugging);
-		}
 
-		// Spawn Eon in the player start position
-		VHandles v_player_start = CTagsManager::get().getAllEntitiesByTag(getID("player_start"));
+			// Spawn Eon in the player start position
+			VHandles v_player_start = CTagsManager::get().getAllEntitiesByTag(getID("player_start"));
 
-		if (e_player) {
 			if (v_player_start.empty()) {
 				e_player->setPosition(VEC3::Zero, true);
 			}
@@ -116,6 +109,16 @@ bool ModuleEONGameplay::start()
 				e_player->setPosition(h_start_trans->getPosition(), true);
 				h_player_trans->setRotation(h_start_trans->getRotation());
 			}
+		}
+		else // Debug case without player
+		{
+			CEntity* e_camera_flyover = getEntityByName("camera_flyover");
+			TCompCameraFlyover* c_camera_flyover = e_camera_flyover->get<TCompCameraFlyover>();
+			c_camera_flyover->enable();
+			mixer.setDefaultCamera(e_camera_flyover);
+			mixer.blendCamera("camera_flyover", 0.f);
+			debugging = true;
+			CApplication::get().changeMouseState(debugging);
 		}
 	}
 
@@ -144,7 +147,7 @@ bool ModuleEONGameplay::start()
 			EngineLua.executeScript("deactivateWidget('eon_location')", 5.5f);
 		});
 	}
-	else if(!getEntityByName("camera_preview").isValid())
+	else if(!previewMode)
 	{
 		CEntity* e_camera_follow = getEntityByName("camera_follow");
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
@@ -162,6 +165,12 @@ void ModuleEONGameplay::stop()
 {
 	PlayerInput.blockInput();
 	cte_world.in_gameplay = 0.f;
+}
+
+void ModuleEONGameplay::reset()
+{
+	started = false;
+	paused = false;
 }
 
 void ModuleEONGameplay::update(float dt)

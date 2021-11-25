@@ -1,6 +1,8 @@
 #include "mcv_platform.h"
+#include "engine.h"
 #include "comp_render_reflections.h"
 #include "resources/resources.h"
+#include "modules/module_settings.h"
 #include "components/common/comp_camera.h"
 #include "render/textures/render_to_texture.h"
 #include "render/draw_primitives.h"
@@ -27,6 +29,10 @@ void TCompSSReflections::load(const json& j, TEntityParseContext& ctx) {
 
 	// set apply callback
 	apply_fn = std::bind(&TCompSSReflections::compute, this, std::placeholders::_1, std::placeholders::_2);
+
+	// Set state depending on the settings
+	TSetting* s = Settings.getSetting("ssr_cb");
+	enabled = s ? s->enabled : enabled;
 }
 
 void TCompSSReflections::onEntityCreated()
