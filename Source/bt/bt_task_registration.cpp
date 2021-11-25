@@ -1090,7 +1090,7 @@ public:
 		};
 
 		// Set animation callbacks
-		callbacks.onActive = [&](CBTContext& ctx, float dt)
+		/*callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
 			CEntity* player = getPlayer();
 			VEC3 player_pos = player->getPosition();
@@ -1099,7 +1099,7 @@ public:
 			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
 
 			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
-		};
+		};*/
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
@@ -1258,7 +1258,7 @@ public:
 		};
 
 		// Set animation callbacks
-		callbacks.onActive = [&](CBTContext& ctx, float dt)
+		/*callbacks.onActive = [&](CBTContext& ctx, float dt)
 		{
 			CEntity* player = getPlayer();
 			VEC3 player_pos = player->getPosition();
@@ -1267,7 +1267,7 @@ public:
 			TCompAIControllerBase* h_controller = ctx.getComponent<TCompAIControllerBase>();
 
 			TaskUtils::rotateToFace(h_trans, player_pos, rotation_speed, dt);
-		};
+		};*/
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
