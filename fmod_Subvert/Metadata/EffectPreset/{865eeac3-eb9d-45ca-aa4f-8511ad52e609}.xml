@@ -30,7 +30,7 @@
 			<value>0.699999988</value>
 		</property>
 		<property name="maximumDistance">
-			<value>30</value>
+			<value>35</value>
 		</property>
 		<property name="extentMode">
 			<value>1</value>

@@ -27,12 +27,12 @@
 	<object class="MixerBusPanner" id="{f31132a4-7719-4de1-b257-14a6ff1ae54c}" />
 	<object class="DistortionEffect" id="{af453f5b-fa9e-42b9-aedd-24d52c7fc724}">
 		<property name="level">
-			<value>0.234999999</value>
+			<value>0.284999996</value>
 		</property>
 	</object>
 	<object class="SFXReverbEffect" id="{5fa33838-785a-4601-a258-60b6b3d6d783}">
 		<property name="decayTime">
-			<value>2700</value>
+			<value>2800</value>
 		</property>
 		<property name="earlyDelay">
 			<value>13</value>
@@ -41,10 +41,13 @@
 			<value>28.5</value>
 		</property>
 		<property name="HFDecayRatio">
-			<value>53</value>
+			<value>55</value>
 		</property>
 		<property name="lowShelfGain">
 			<value>-1</value>
+		</property>
+		<property name="wetLevel">
+			<value>-5</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{f2adecb0-11a6-4413-8788-5f4e718c14e1}" />

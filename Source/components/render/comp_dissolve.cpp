@@ -120,8 +120,8 @@ void TCompDissolveEffect::applyDissolveMaterial()
 	_originalMatName = material_name;
 
 	// FMOD event
-	static const char* EVENT_NAME = "ENV/General/Disintegrate";
-	EngineAudio.postEvent(EVENT_NAME, CHandle(this).getOwner());
+	if (_soundOn)
+		EngineAudio.postEvent("ENV/General/Disintegrate", CHandle(this).getOwner());
 }
 
 void TCompDissolveEffect::recover(float time, float waitTime, bool propagate_childs)
