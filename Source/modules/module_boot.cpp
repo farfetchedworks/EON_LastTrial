@@ -141,10 +141,6 @@ bool CModuleBoot::loadEndingBoot()
 	assert(w_hud);
 	w_hud->setVisible(false);
 
-	w_hud = EngineUI.getWidgetFrom("eon_hud", "warp_energy_bar_1");
-	assert(w_hud);
-	w_hud->setVisible(false);
-
 	_endBoot = false;
 	_bootCompleted = true;
 	_bootReady = true;

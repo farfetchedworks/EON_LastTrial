@@ -31,8 +31,9 @@
 #include "ui/widgets/ui_image.h"
 #include "geometry/curve.h"
 
-extern CShaderCte<CtesWorld> cte_world;
+const bool PLAY_INTRO_CINEMATIC = true;
 bool debugging = false;
+extern CShaderCte<CtesWorld> cte_world;
 
 bool ModuleEONGameplay::start()
 {
@@ -121,7 +122,7 @@ bool ModuleEONGameplay::start()
 	Engine.resetClock();
 
 	// hacky to allow not playing the cinematic
-	if (getEntityByName("Gard").isValid())
+	if (getEntityByName("Gard").isValid() && PLAY_INTRO_CINEMATIC)
 	{
 		CEntity* cinematic_cam = getEntityByName("camera_cinematic");
 		assert(cinematic_cam);

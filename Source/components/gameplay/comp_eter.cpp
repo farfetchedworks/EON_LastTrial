@@ -12,6 +12,7 @@
 #include "components/controllers/comp_rigid_animation_controller.h"
 #include "components/postfx/comp_motion_blur.h"
 #include "components/gameplay/comp_game_manager.h"
+#include "components/render/comp_dissolve.h"
 #include "entity/entity_parser.h"
 
 DECL_OBJ_MANAGER("eter", TCompEter)
@@ -122,14 +123,6 @@ void TCompEter::onHit()
 	controller->setLoop(false);
 	controller->setAnimation("data/animations/Eter_Broken_Explosion_Anim.anim");
 
-	// Camara lenta
-	controller->addEventTimestamp("slow_time", 3, []() {
-		TCompGameManager* gm = GameManager->get<TCompGameManager>();
-		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 1.0f, &interpolators::expoOutInterpolator);
-		// Iniciar cinematica rotura
-		EngineLua.executeScript("CinematicEnding_2()");
-	});
-
 	// Motion Blur
 	controller->addEventTimestamp("motion_blur", 0, []() {
 		CEntity* camera = getEntityByName("camera_mixed");
@@ -138,6 +131,21 @@ void TCompEter::onHit()
 		if (c_motion_blur) {
 			c_motion_blur->enable();
 		}
+	});
+
+	// Camara lenta
+	controller->addEventTimestamp("slow_time", 2, []() {
+		TCompGameManager* gm = GameManager->get<TCompGameManager>();
+		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 1.0f, &interpolators::expoOutInterpolator);
+		// Iniciar cinematica rotura
+		EngineLua.executeScript("CinematicEnding_2()");
+	});
+
+	// Dissolve
+	controller->addEventTimestamp("dissolve_effect", 4, []() {
+		CEntity* player = getEntityByName("player");
+		TCompDissolveEffect * dissolve = player->get<TCompDissolveEffect >();
+		dissolve->enable(1.5f);
 	});
 
 	// Blood
