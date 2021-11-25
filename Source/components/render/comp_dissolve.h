@@ -14,6 +14,7 @@ class TCompDissolveEffect : public TCompBase
 	bool _removeColliders = true;
 	bool _recovering = false;
 	bool _inversed = false;
+	bool _soundOn = true;
 
 	std::string _originalMatName;
 
@@ -35,6 +36,7 @@ public:
 	void recover(float time, float waitTime = 1e-6f, bool propagate_childs = true);
 	//void recover(bool propagate_childs = true);
 	void setRemoveColliders(bool remove, bool propagate_childs = true);
+	void setSoundOn(bool val) { _soundOn = val; };
 	void reset();
 
 	float getDissolveTime() { return _dissolveTime; }

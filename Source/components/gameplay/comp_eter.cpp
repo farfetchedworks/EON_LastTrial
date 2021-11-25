@@ -14,6 +14,7 @@
 #include "components/gameplay/comp_game_manager.h"
 #include "components/render/comp_dissolve.h"
 #include "entity/entity_parser.h"
+#include "audio/module_audio.h"
 
 DECL_OBJ_MANAGER("eter", TCompEter)
 
@@ -144,7 +145,8 @@ void TCompEter::onHit()
 	// Dissolve
 	controller->addEventTimestamp("dissolve_effect", 4, []() {
 		CEntity* player = getEntityByName("player");
-		TCompDissolveEffect * dissolve = player->get<TCompDissolveEffect >();
+		TCompDissolveEffect * dissolve = player->get<TCompDissolveEffect>();
+		dissolve->setSoundOn(false);
 		dissolve->enable(1.5f);
 	});
 
@@ -167,6 +169,10 @@ void TCompEter::onHit()
 
 	// Shake camera a little bit (will be reduced with the slow time..)
 	EngineLua.executeScript("shakeOnce(15, 0.1, 10.0)");
+
+	// Turn off all ambience (and music just in case);
+	EngineAudio.stopCurAmbienceEvent(true);
+	EngineAudio.stopCurMusicEvent();
 
 	controller->start();
 }
