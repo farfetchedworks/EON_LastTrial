@@ -97,6 +97,9 @@ CModulePhysics::FilterGroup CModulePhysics::getFilterByName(const std::string& n
 	else if (strcmp("invisible_wall", name.c_str()) == 0) {
 		return FilterGroup::InvisibleWall;
 	}
+	else if (strcmp("invisible_wall_enemy", name.c_str()) == 0) {
+		return FilterGroup::InvisibleWallEnemy;
+	}
 	else if (strcmp("none", name.c_str()) == 0) {
 		return FilterGroup::None;
 	}
@@ -105,6 +108,9 @@ CModulePhysics::FilterGroup CModulePhysics::getFilterByName(const std::string& n
 	}
 	else if (strcmp("all_but_effect_area", name.c_str()) == 0) {
 		return FilterGroup::AllButEffectArea;
+	}	
+	else if (strcmp("all_but_invisible_wall_enemy", name.c_str()) == 0) {
+		return FilterGroup::AllButInvisibleWallEnemy;
 	}
 	return FilterGroup::All;
 }
