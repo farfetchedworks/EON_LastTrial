@@ -332,5 +332,8 @@ bool destroyScene(const std::string& filename)
       e_entity->destroy();
     }
   }
+  
+  CHandleManager::destroyAllPendingObjects();
+
   return true;
 }
