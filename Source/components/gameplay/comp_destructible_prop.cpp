@@ -93,6 +93,8 @@ void TCompDestructible::onDestroy(const TMsgPropDestroyed& msg)
 		msgHitWarp.hitByPlayer = true;
 		msgHitWarp.multiplier = 1.2f;
 		player->sendMsg(msgHitWarp);
+
+		spawnParticles("data/particles/compute_warp_particles.json", transform->getPosition(), transform->getPosition());
 	}
 
 	TCompCollider* collider = get<TCompCollider>();
