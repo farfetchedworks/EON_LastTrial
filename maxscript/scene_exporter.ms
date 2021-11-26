@@ -41,6 +41,7 @@ struct TSceneExporter (
 	checking_xrefs,
 	collapsed_colliders,
 	fast_export = false,
+	default_cull_distance = 150,
 	
 	-- Context
 	curr_obj,
@@ -451,6 +452,32 @@ struct TSceneExporter (
 		fs.endArray()
 		fs.end()
 	),
+	
+	fn exportGPUInstanced fs obj = (
+
+		local dist_threshold = default_cull_distance
+		
+		if( getUserProp obj "cull_dist" != undefined ) then (
+			dist_threshold = getUserProp obj "cull_dist"
+		)
+		
+		local replacement_prefab = undefined
+		
+		if( getUserProp obj "lod" != undefined ) then (
+			replacement_prefab = getUserProp obj "lod"
+		)
+		
+		fs.writeComma()
+		fs.writeKey "gpu_instancing"
+		fs.beginObj()
+			fs.writeKeyValue "threshold" dist_threshold
+			if replacement_prefab != undefined then(
+				fs.writeComma()
+				fs.writeKeyValue "replacement_prefab" replacement_prefab	
+			)
+		fs.endObj()
+
+	),
 
 	fn exportObj obj parent_obj obj_name check_xref fs = (
 
@@ -536,8 +563,7 @@ struct TSceneExporter (
 				local skinned = getUserProp obj "skin" 
 				
 				if (skinned == undefined or skinned == false) and (no_gpu_instancing == false) then(
-					fs.writeComma()
-					fs.writeKeyValue "gpu_instancing" "true"
+					exportGPUInstanced fs obj
 				)
 			)
 			

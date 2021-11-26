@@ -10,6 +10,7 @@
 #include "comp_fsm.h"
 #include "skeleton/comp_skeleton.h"
 #include "components/common/comp_collider.h"
+#include "components/common/comp_lod.h"
 #include "comp_aabb.h"
 
 DECL_OBJ_MANAGER("gpu_instancing", TCompInstancing);
@@ -20,6 +21,7 @@ VHandles TCompInstancing::instanced_prefabs;
 void TCompInstancing::load(const json& j, TEntityParseContext& ctx)
 {
     prefab_name = ctx.filename;
+    j_instance = j;
 }
 
 void TCompInstancing::onEntityCreated()
@@ -70,6 +72,11 @@ void TCompInstancing::setInstancedPrefab()
 {
     CHandle handle = CHandle(this).getOwner();
     CEntity* e_handle = handle; 
+
+    // add lod: this should be done for every instanced prefab
+    /*TCompLod* c_lod = e_handle->addComponent<TCompLod>();
+    c_lod->parse(j_instance);*/
+
     TCompAbsAABB* aabb = e_handle->get<TCompAbsAABB>();
     TCompTransform* transform = e_handle->get<TCompTransform>();
 

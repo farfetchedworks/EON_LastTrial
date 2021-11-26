@@ -16,6 +16,7 @@ private:
 	void setInstancedPrefab();
 	CHandle getPrefab();
 
+	json j_instance;
 	std::string prefab_name;
 	static std::map<std::string, CHandle> prefabs;
 	static VHandles instanced_prefabs;

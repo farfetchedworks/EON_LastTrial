@@ -347,6 +347,9 @@ public:
 
 		// Change navmesh
 		EngineNavMesh.setCurrent("templelevel");
+
+		// Delete all cave stuff (This will only destroy NOT instanced entities)
+		destroyScene("data/scenes/cavelevel_new_walls.json");
 	}
 
 	void onAreaExit(CHandle event_trigger, CHandle observer) override
