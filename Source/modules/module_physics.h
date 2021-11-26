@@ -26,11 +26,13 @@ public:
 		Trigger = 1 << 9,
 		Prop = 1 << 10,
 		InvisibleWall = 1 << 11,
+		InvisibleWallEnemy = 1 << 12,
 		Scenario = Wall | Floor | Door,
 		Characters = Player | Enemy,
 		All = -1,
 		AllButPlayer = All ^ Player | Scenario,
-		AllButEffectArea = All ^ EffectArea
+		AllButEffectArea = All ^ EffectArea,
+		AllButInvisibleWallEnemy = All ^ InvisibleWallEnemy
 	};
 
 	physx::PxScene* gScene = NULL;
