@@ -248,10 +248,7 @@ void CModuleEventSystem::registerGlobalEvents()
 		flor->destroy();
 		CHandleManager::destroyAllPendingObjects();
 
-		float wait_time = 5.f;
-
-		EngineLua.executeScript("fade(4.0)", wait_time);
-		EngineLua.executeScript("goToGamestate('end_game')", wait_time + 4.f);
+		EngineLua.executeScript("BeginEndLoreCinematic()");
 	});
 }
 

@@ -151,6 +151,11 @@ namespace LogicManager
 
 		CEntity* e_cinematic_camera = getEntityByName("camera_cinematic");
 		assert(e_cinematic_camera);
+
+		// This animation is static, so we have to reset the camera transform
+		TCompTransform* transform = e_cinematic_camera->get<TCompTransform>();
+		transform->fromMatrix(MAT44());
+
 		TCompRigidAnimationController* controller = e_cinematic_camera->get<TCompRigidAnimationController>();
 		assert(controller);
 		controller->setTarget("");

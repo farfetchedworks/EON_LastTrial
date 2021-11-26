@@ -40,7 +40,7 @@ bool ModuleEONGameplayIntro::customStart()
 	// Apply tone mapping to frame
 	cte_world.in_gameplay = 1.f;
 
-	EngineLua.executeScript("CinematicEonIntro()");
+	EngineLua.executeScript("LoreCinematicIntro()");
 	Subtitles.startCaption("intro_cinematic");
 
 	// Set initial mouse state

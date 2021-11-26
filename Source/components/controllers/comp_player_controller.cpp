@@ -232,9 +232,6 @@ void TCompPlayerController::update(float dt)
 		/*CTransform t;
 		t.setPosition(getEntity()->getPosition());
 		spawn("data/prefabs/Eter_Entero.json", t);*/
-
-		TCompGeonsManager* geons_man = get<TCompGeonsManager >();
-		geons_man->increasePhase();
 	}
 
 	// Auto-Kill (K)
