@@ -15,6 +15,7 @@
 #include "components/render/comp_dissolve.h"
 #include "entity/entity_parser.h"
 #include "audio/module_audio.h"
+#include "fmod_studio.hpp"
 
 DECL_OBJ_MANAGER("eter", TCompEter)
 
@@ -124,6 +125,11 @@ void TCompEter::onHit()
 	controller->setLoop(false);
 	controller->setAnimation("data/animations/Eter_Broken_Explosion_Anim.anim");
 
+	// Turn off all ambience (and music just in case) and fire event;
+	EngineAudio.stopCurAmbienceEvent(true);
+	EngineAudio.stopCurMusicEvent();
+	FMOD::Studio::EventInstance* ev_inst = EngineAudio.post2DEventGetInst("ENV/General/Aether/Break_Aether");
+
 	// Motion Blur
 	controller->addEventTimestamp("motion_blur", 0, []() {
 		CEntity* camera = getEntityByName("camera_mixed");
@@ -157,8 +163,9 @@ void TCompEter::onHit()
 		spawnParticles("data/particles/compute_ether_explosion_particles.json", spawnPos, spawnPos);
 	});
 
-	controller->addEventTimestamp("fading", 10, []() {
-
+	controller->addEventTimestamp("fading", 10, [ev_inst]() {
+		ev_inst->setParameterByName("End_Break_Aether", 1);
+		EngineAudio.postEvent("ENV/General/Aether/Winds");
 		EngineUI.activateWidget("modal_white");
 	});
 
@@ -169,10 +176,6 @@ void TCompEter::onHit()
 
 	// Shake camera a little bit (will be reduced with the slow time..)
 	EngineLua.executeScript("shakeOnce(15, 0.1, 10.0)");
-
-	// Turn off all ambience (and music just in case);
-	EngineAudio.stopCurAmbienceEvent(true);
-	EngineAudio.stopCurMusicEvent();
 
 	controller->start();
 }

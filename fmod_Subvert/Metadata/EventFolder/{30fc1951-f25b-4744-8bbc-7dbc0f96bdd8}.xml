@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="EventFolder" id="{30fc1951-f25b-4744-8bbc-7dbc0f96bdd8}">
+		<property name="name">
+			<value>Aether</value>
+		</property>
+		<relationship name="folder">
+			<destination>{6f6c7bcc-896d-4c52-9e6e-f505a9fc2022}</destination>
+		</relationship>
+	</object>
+</objects>

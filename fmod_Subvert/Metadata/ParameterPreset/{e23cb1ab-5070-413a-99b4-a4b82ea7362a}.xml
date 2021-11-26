@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{e23cb1ab-5070-413a-99b4-a4b82ea7362a}">
+		<property name="name">
+			<value>End_Break_Aether</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bf1f244b-21fe-4f2f-babe-8dad2504c4e3}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{1960caae-18ec-4b97-980b-941958185d0d}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{1960caae-18ec-4b97-980b-941958185d0d}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.14999999105930328</value>
+		</property>
+	</object>
+</objects>
