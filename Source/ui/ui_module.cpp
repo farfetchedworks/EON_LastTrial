@@ -81,7 +81,7 @@ namespace ui
         CWidget* widget = getWidget(name);
         assert(widget);
         if (!widget || widget->isActive()) return nullptr;
-        return activateWidget(widget, fade_in);
+        return activateWidget(widget, fade_in, time_in);
     }
 
     CWidget* CModule::activateWidget(CWidget* widget, bool fade_in, float time_in)

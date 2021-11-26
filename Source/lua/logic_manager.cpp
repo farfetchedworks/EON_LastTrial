@@ -67,9 +67,9 @@ namespace LogicManager
 		EngineUI.deactivateWidget(name);
 	}
 
-	void fade()
+	void fade(float time)
 	{
-		EngineUI.activateWidget("modal_black");
+		EngineUI.activateWidget("modal_black", true, time);
 	}
 
 	void unfade()

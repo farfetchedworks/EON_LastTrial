@@ -9,6 +9,7 @@
 #include "components/gameplay/comp_game_manager.h"
 #include "components/ai/comp_bt.h"
 #include "components/controllers/comp_player_controller.h"
+#include "components/controllers/pawn_utils.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/stats/comp_health.h"
 #include "components/common/comp_hierarchy.h"
@@ -264,9 +265,17 @@ public:
 		EngineLua.executeScript("BeginEndCinematic()");
 
 		CEntity* dummy = getEntityByName("dummy_move_to");
-		controller->moveTo(dummy->getPosition(), 1.4f, 0.15f, []() {
+		controller->moveTo(dummy->getPosition(), 1.4f, 0.1f, []() {
 			PlayerInput.blockInput();
-			EngineLua.executeScript("dispatchEvent('Gameplay/ending_1')");
+
+			CEntity* player = getEntityByName("player");
+			TCompPlayerController* controller = player->get<TCompPlayerController>();
+
+			// In case we are playing with eon..
+			if (!controller->block_attacks)
+				PawnUtils::playAction(player, "Heal");
+			else
+				PawnUtils::playAction(player, "basicEnemyFlower");
 		});
 	}
 };

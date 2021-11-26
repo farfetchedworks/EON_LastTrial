@@ -234,43 +234,24 @@ void CModuleEventSystem::registerGlobalEvents()
 		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
 	});
 	
-	EventSystem.registerEventCallback("Gameplay/ending_1", [](CHandle t, CHandle o) {
-		CEntity* dummy = getEntityByName("dummy_move_to");
-		CTransform trans;
-		trans.setPosition(dummy->getPosition());
-		trans.setScale(VEC3(2.5f));
-		spawn("data/prefabs/flor_02.json", trans);
-
-		// remove flower from player hand
+	EventSystem.registerEventCallback("Gameplay/NPC/Flower", [](CHandle t, CHandle o) {
+	
+		// Remove flower from player hand
 		CEntity* player = getEntityByName("player");
 		TCompParent* parent = player->get<TCompParent>();
 		CEntity* flor = parent->getChildByName("WeaponFlor");
-		parent->delChild(flor);
-		if (flor)
-			flor->destroy();
+		TCompTransform* transFlower = flor->get<TCompTransform>();
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/ending_2')", 1.5f);
-	});
+		CTransform trans;
+		trans.fromMatrix(*transFlower);
+		spawn("data/prefabs/flor_02.json", trans);
+		flor->destroy();
+		CHandleManager::destroyAllPendingObjects();
 
-	EventSystem.registerEventCallback("Gameplay/ending_2", [](CHandle t, CHandle o) {
+		float wait_time = 5.f;
 
-		// remove flower from player hand
-		CEntity* player = getEntityByName("player");
-		TCompPlayerController* controller = player->get<TCompPlayerController>();
-
-		// in case we are playing with eon..
-		if (!controller->block_attacks)
-			PawnUtils::playAction(player, "Heal");
-		else
-			PawnUtils::playAction(player, "basicEnemyHeal");
-
-		EngineLua.executeScript("fade()", 1.5f);
-		EngineLua.executeScript("dispatchEvent('Gameplay/To_endgame')", 2.f);
-	});
-
-	EventSystem.registerEventCallback("Gameplay/To_endgame", [](CHandle t, CHandle o) {
-
-		CEngine::get().getModuleManager().changeToGamestate("end_game");
+		EngineLua.executeScript("fade(4.0)", wait_time);
+		EngineLua.executeScript("goToGamestate('end_game')", wait_time + 4.f);
 	});
 }
 
