@@ -22,7 +22,7 @@ struct onHealCallback : public CAnimationCallback
 			return;
 
 		fsm::CContext ctx = c_fsm->getCtx();
-		bool stunned = std::get<bool>(ctx.getVariableValue("is_stunned"));
+		bool stunned = std::get<bool>(ctx.getVariableValue("is_stunned")) || std::get<bool>(ctx.getVariableValue("is_death"));
 
 		if (stunned)
 			return;
