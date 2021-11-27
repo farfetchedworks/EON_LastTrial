@@ -224,6 +224,11 @@ void TCompHealth::reduceHealth(int health_points)
     }
 }
 
+bool TCompHealth::aliveAfterHit(int health_points)
+{
+    return (health - health_points) > 0;
+}
+
 void TCompHealth::lerpHealth(float dt)
 {
     if (elapsedHitTime >= lerpHealthWaitTime) {

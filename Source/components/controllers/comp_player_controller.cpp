@@ -1418,7 +1418,17 @@ void TCompPlayerController::onHit(const TMsgHit& msg)
 			is_dashing = false;
 		}
 
-		if (isCancellable) {
+		// Scale with ARMOR!
+		TCompAttributes* attrs = get<TCompAttributes>();
+		int dmg_scaled = attrs->computeDamageReceived(msg.damage);
+
+		TCompHealth* c_health = get<TCompHealth>();
+		assert(c_health);
+
+		// If the player is dead, don't reproduce hit stun anims
+		bool alive = c_health->aliveAfterHit(dmg_scaled);
+
+		if (isCancellable && alive) {
 
 			std::string var = "is_stunned";
 
@@ -1434,10 +1444,6 @@ void TCompPlayerController::onHit(const TMsgHit& msg)
 			setVariable(var, true);
 		}
 
-		// Scale with ARMOR!
-		TCompAttributes* attrs = get<TCompAttributes>();
-		int dmg_scaled = attrs->computeDamageReceived(msg.damage);
-
 		// Reduce health
 		TMsgReduceHealth hmsg;
 		hmsg.damage = dmg_scaled;
@@ -1445,7 +1451,8 @@ void TCompPlayerController::onHit(const TMsgHit& msg)
 		hmsg.hitByPlayer = msg.hitByPlayer;
 		hmsg.fromBack = msg.fromBack;
 		hmsg.skip_blood = msg.hitType == EHIT_TYPE::GARD_BRANCH;
-		getEntity()->sendMsg(hmsg);
+
+		c_health->onReduceHealth(hmsg);
 
 		// Disable Aim mode
 		if (is_aiming)

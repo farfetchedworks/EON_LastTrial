@@ -61,6 +61,7 @@ public:
     void increaseHealth(int health_points);
     void reduceHealth(int health_points);
     void lerpHealth(float dt);
+    bool aliveAfterHit(int health_points);
     bool isDead();
 
     // Register messages to be called by other entities
