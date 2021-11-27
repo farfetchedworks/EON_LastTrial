@@ -135,9 +135,12 @@ namespace input
             }
             default:;
         }
-    }
+    }   
     void CDeviceMouseWindows::clearData()
     {
+        _delta = VEC2::Zero;
+        _currPosition = VEC2(0.5);
+        _wheelSteps = 0;
         _buttons.reset();
     }
 }

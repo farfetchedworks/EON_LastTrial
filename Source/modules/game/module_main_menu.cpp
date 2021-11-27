@@ -91,6 +91,7 @@ void ModuleEONMainMenu::onSettings()
         child->setVisible(child->getChildren().size() == 0);
     }
 
+    Settings.setCaller("main_menu");
     CModuleManager& modules = CEngine::get().getModuleManager();
     modules.changeToGamestate("settings");
 }

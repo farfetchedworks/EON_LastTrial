@@ -65,9 +65,9 @@ namespace ui
         }
     }
 
-    void CModule::fadeWidget(const std::string& name, float time)
+    void CModule::fadeWidget(const std::string& name, float time, float blend_time)
     {
-        activateWidget(name);
+        activateWidget(name, true, blend_time);
 
         TFadeWidget fwidget;
         fwidget.widget = getWidget(name);
@@ -393,9 +393,9 @@ namespace ui
         }
     }
 
-    void CModule::fadeOut(float time)
+    void CModule::fadeOut(float time, float out_time)
     {
-        fadeWidget("modal_black", time);
+        fadeWidget("modal_black", time, out_time);
     }
 
     void CModule::renderInMenu()

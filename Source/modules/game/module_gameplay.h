@@ -22,6 +22,6 @@ public:
 	void update(float dt) override;
 	void togglePause();
 
-	void onResume();
+	void onSettings();
 	void onExit();
 };

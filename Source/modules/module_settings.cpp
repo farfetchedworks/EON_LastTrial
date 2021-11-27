@@ -14,6 +14,9 @@
 
 bool CModuleSettings::start()
 {
+    debugging = true;
+    CApplication::get().changeMouseState(debugging, false);
+
     if (!input)
     {
         initSettings();
@@ -21,6 +24,12 @@ bool CModuleSettings::start()
 
     _menuController.reset();
     _menuController.selectOption(0);
+
+    if (_callingScreen == "playing")
+    {
+        EngineUI.activateWidget("modal_black_alpha");
+        EngineUI.deactivateWidget("eon_pause");
+    }
 
     EngineUI.activateWidget("eon_settings");
 
@@ -117,12 +126,21 @@ TSetting* CModuleSettings::getSetting(const std::string& settingName)
 
 void CModuleSettings::stop()
 {
-    EngineUI.deactivateWidget("eon_settings");
+    // Playing state will deactivate the widget after 
+    // deactivating pause one
+    if (_callingScreen != "playing")
+    {
+        EngineUI.deactivateWidget("eon_settings");
+    }
 }
 
 void CModuleSettings::update(float dt)
 {
     _menuController.update(dt);
+
+    if (input->getButton("pause_game").getsPressed() && _callingScreen == "playing") {
+        onGoBack();
+    }
 }
 
 void CModuleSettings::onChangeSetting(const std::string& buttonName, bool enabled)
@@ -137,5 +155,14 @@ void CModuleSettings::onChangeSetting(const std::string& buttonName, bool enable
 void CModuleSettings::onGoBack()
 {
     CModuleManager& modules = CEngine::get().getModuleManager();
-    modules.changeToGamestate("main_menu");
+
+    if (_callingScreen == "playing")
+    {
+        modules.changeToGamestate("playing");
+        _toGameplay = true;
+    }
+    else
+    {
+        modules.changeToGamestate("main_menu");
+    }
 }

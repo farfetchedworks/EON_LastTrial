@@ -10,6 +10,7 @@
 #include "modules/module_boot.h"
 #include "modules/module_camera_mixer.h"
 #include "modules/module_events.h"
+#include "modules/module_settings.h"
 #include "navmesh/module_navmesh.h"
 #include "modules/module_subtitles.h"
 #include "lua/module_scripting.h"
@@ -31,7 +32,7 @@
 #include "ui/widgets/ui_image.h"
 #include "geometry/curve.h"
 
-const bool PLAY_INTRO_CINEMATIC = true;
+const bool PLAY_INTRO_CINEMATIC = false;
 bool debugging = false;
 extern CShaderCte<CtesWorld> cte_world;
 
@@ -41,12 +42,20 @@ bool ModuleEONGameplay::start()
 	assert(input);
 
 	_menuController.setInput(input);
-	_menuController.bindButton("resume_btn", std::bind(&ModuleEONGameplay::onResume, this));
+	_menuController.bindButton("settings_btn_pause", std::bind(&ModuleEONGameplay::onSettings, this));
 	_menuController.bindButton("exit_btn", std::bind(&ModuleEONGameplay::onExit, this));
 	_menuController.reset();
 	_menuController.selectOption(0);
 
-	// set initial mouse state
+	// We are returning to pause menu..
+	if (Settings.fromCaller("playing"))
+	{
+		EngineUI.activateWidget("eon_pause");
+		EngineUI.deactivateWidget("modal_black_alpha");
+		EngineUI.deactivateWidget("eon_settings");
+		return true;
+	}
+
 	debugging = false;
 	CApplication::get().changeMouseState(debugging, false);
 
@@ -70,9 +79,7 @@ bool ModuleEONGameplay::start()
 	{
 		// Reactivate UI
 		EngineUI.activateWidget("eon_hud");
-
 		PlayerInput.unBlockInput();
-
 		assert(GameManager);
 		static_cast<TCompGameManager*>(GameManager->get<TCompGameManager>())->restartLevel();
 		return true;
@@ -199,12 +206,6 @@ void ModuleEONGameplay::update(float dt)
 			TCompIrradianceCache::GLOBAL_RENDER_PROBES = !TCompIrradianceCache::GLOBAL_RENDER_PROBES;
 		}
 
-		// Capture frames for profiling
-		if (PlayerInput['C'].getsPressed()) {
-			PROFILE_SET_NFRAMES(3);
-			dbg("3 FRAMES CAPTURED\n");
-		}
-
 		// open Lua console
 		if (PlayerInput['L'].getsPressed()) {
 			EngineLua.openConsole();
@@ -254,28 +255,29 @@ void ModuleEONGameplay::togglePause()
 		params.texture = Resources.get(PlayerInput.getPad().connected ?
 			"data/textures/ui/subvert/pause/pause_gamepad.dds" :
 			"data/textures/ui/subvert/pause/pause_keyboard.dds")->as<CTexture>();
+		
 		EngineUI.activateWidget("eon_pause");
-
 		PlayerInput.blockInput();
 		Time.scale_factor = 0.f;
-
 		debugging = true;
-		CApplication::get().changeMouseState(debugging, false);
+		CApplication::get().changeMouseState(debugging);
 	}
 	else
 	{
-		EngineUI.deactivateWidget("eon_pause");
-		PlayerInput.unBlockInput();
-		Time.scale_factor = 1.f;
-
 		debugging = false;
 		CApplication::get().changeMouseState(debugging);
+		Time.scale_factor = 1.f;
+		EngineUI.deactivateWidget("eon_pause");
+		PlayerInput.unBlockInput();
+		PlayerInput.clearInput();
 	}
 }
 
-void ModuleEONGameplay::onResume()
+void ModuleEONGameplay::onSettings()
 {
-	togglePause();
+	Settings.setCaller("playing");
+	CModuleManager& modules = CEngine::get().getModuleManager();
+	modules.changeToGamestate("settings");
 }
 
 void ModuleEONGameplay::onExit()

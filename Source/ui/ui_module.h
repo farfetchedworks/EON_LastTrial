@@ -22,7 +22,7 @@ namespace ui
         CWidget* activateWidget(CWidget* w, bool fade_in = true, float time_in = 0.f);
         CWidget* activateWidget(const std::string& name, bool fade_in = true, float time_in = 0.f);
         void deactivateWidget(const std::string& name, bool fade_out = true, float time_out = 0.f);
-        void fadeWidget(const std::string& name, float time);
+        void fadeWidget(const std::string& name, float time, float blend_time = 0.f);
         CWidget* getWidget(const std::string& name);
         CWidget* getWidgetFrom(const std::string& parent_widget, const std::string& name);
 
@@ -37,7 +37,7 @@ namespace ui
         float getHeight() { return _resolution.y; }
 
         void setResolution(const VEC2& res);
-        void fadeOut(float time);
+        void fadeOut(float time, float out_time = 0.f);
 
     private:
         VEC2 _resolution;
