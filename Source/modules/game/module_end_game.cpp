@@ -8,7 +8,7 @@
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
-#include "fmod_studio.hpp"
+#include "audio/module_audio.h"
 
 bool ModuleEONEndGame::start()
 {
@@ -26,9 +26,6 @@ bool ModuleEONEndGame::start()
 
     _menuController.reset();
     _menuController.selectOption(0);
-
-    // audio??
-    // ...
     
     return true;
 }
@@ -50,6 +47,9 @@ void ModuleEONEndGame::onContinue()
 
     mm.resetModules();
     mm.changeToGamestate("main_menu");
+
+    // FMOD end ending theme
+    EngineAudio.stopCurMusicEvent();
 }
 
 void ModuleEONEndGame::onExit()
