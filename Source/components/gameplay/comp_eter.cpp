@@ -190,5 +190,8 @@ void TCompEter::spawnHappyRoom()
 	EngineLua.executeScript("deactivateWidget('modal_white')", 3.5f);
 	EngineLua.executeScript("activateWidget('eon_hud')", 8.5f);
 
+	// FMOD ending theme
+	EngineAudio.postMusicEvent("Music/Ending_Theme");
+
 	Boot.setEndBoot();
 }
