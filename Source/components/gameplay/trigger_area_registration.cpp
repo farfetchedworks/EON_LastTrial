@@ -275,7 +275,7 @@ public:
 			if (!controller->block_attacks)
 				PawnUtils::playAction(player, "Heal");
 			else
-				PawnUtils::playAction(player, "basicEnemyFlower");
+				PawnUtils::playAction(player, "basicEnemyFlower", 0.25f, 0.25f, 1.f, true, true, true);
 		});
 	}
 };
