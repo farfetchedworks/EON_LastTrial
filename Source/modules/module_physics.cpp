@@ -79,6 +79,9 @@ CModulePhysics::FilterGroup CModulePhysics::getFilterByName(const std::string& n
 	else if (strcmp("interactable", name.c_str()) == 0) {
 		return FilterGroup::Interactable;
 	}
+	else if (strcmp("interactable_no_collision", name.c_str()) == 0) {
+		return FilterGroup::InteractableNoCamCollision;
+	}
 	else if (strcmp("door", name.c_str()) == 0) {
 		return FilterGroup::Door;
 	}

@@ -27,6 +27,7 @@ public:
 		Prop = 1 << 10,
 		InvisibleWall = 1 << 11,
 		InvisibleWallEnemy = 1 << 12,
+		InteractableNoCamCollision = 1 << 13,
 		Scenario = Wall | Floor | Door,
 		Characters = Player | Enemy,
 		All = -1,

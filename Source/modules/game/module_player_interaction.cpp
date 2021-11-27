@@ -43,9 +43,10 @@ void CModulePlayerInteraction::checkInteractions()
 
 	TCompTransform* c_transform = player->get<TCompTransform>();
 	VEC3 overlap_pos = c_transform->getPosition();
-
 	VHandles objects_in_area;
-	bool is_ok = EnginePhysics.overlapSphere(overlap_pos, 3.f, objects_in_area, CModulePhysics::FilterGroup::Interactable);
+	physx::PxU32 mask = CModulePhysics::FilterGroup::Interactable | CModulePhysics::FilterGroup::InteractableNoCamCollision;
+
+	bool is_ok = EnginePhysics.overlapSphere(overlap_pos, 3.f, objects_in_area, mask);
 	if (is_ok) {
 
 		// Animation launcher can only be executed if at certain distance

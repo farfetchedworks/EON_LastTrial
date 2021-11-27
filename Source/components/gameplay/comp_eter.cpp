@@ -143,7 +143,7 @@ void TCompEter::onHit()
 	// Camara lenta
 	controller->addEventTimestamp("slow_time", 2, []() {
 		TCompGameManager* gm = GameManager->get<TCompGameManager>();
-		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 1.0f, &interpolators::expoOutInterpolator);
+		gm->setTimeStatusLerped(TCompGameManager::ETimeStatus::SLOWEST, 0.7f, &interpolators::quartOutInterpolator);
 		// Iniciar cinematica rotura
 		EngineLua.executeScript("CinematicEnding_2()");
 	});

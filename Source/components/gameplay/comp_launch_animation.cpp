@@ -15,6 +15,13 @@ DECL_OBJ_MANAGER("anim_launcher", TCompLaunchAnimation)
 
 void TCompLaunchAnimation::load(const json& j, TEntityParseContext& ctx)
 {
+	if(j.count("value") > 0)
+	{
+		useVariableValue = true;
+		variable_value = j.value("value", variable_value);
+	}
+
+	new_group = j.value("group", std::string());
 	animation_variable = j.value("var", std::string());
 	assert(animation_variable.length());
 
@@ -23,7 +30,11 @@ void TCompLaunchAnimation::load(const json& j, TEntityParseContext& ctx)
 	assert(jData.count(animation_variable));
 	const json& jItem = jData[animation_variable];
 
-	acceptance_dist = jItem.value("acceptance_dist", 0.f);
+	acceptance_dist = jItem.value("acceptance_dist", acceptance_dist);
+	acceptance_angle = jItem.value("acceptance_angle", acceptance_angle);
+	skipFront = jItem.value("skip_front", skipFront);
+	useInteractCam = jItem.value("use_cam", useInteractCam);
+	rotateToFace = jItem.value("rotate_to_face", rotateToFace);
 	offset = loadVEC3(jItem, "offset");
 
 	if (jItem.count("use_limits") > 0)
@@ -33,13 +44,29 @@ void TCompLaunchAnimation::load(const json& j, TEntityParseContext& ctx)
 		Zlimits = loadVEC2(jItem, "z_limits");
 	}
 
-	assert(jItem.count("transform"));
-	finalPose.fromJson(jItem["transform"]);
+	if (jItem.count("transform") > 0)
+	{
+		useFinalPose = true;
+		finalPose.fromJson(jItem["transform"]);
+	}
 }
 
 void TCompLaunchAnimation::update(float dt)
 {
 	if (!enabled)
+		return;
+
+	if (rotateToFace)
+	{
+		CEntity* player = getEntityByName("player");
+		if (!player)
+			return;
+
+		TCompTransform* player_transform = player->get<TCompTransform>();
+		player_transform->setRotation(dampQUAT(player_transform->getRotation(), targetRotation, 8.f, dt));
+	}
+
+	if (!useFinalPose)
 		return;
 
 	timer += dt;
@@ -84,10 +111,21 @@ bool TCompLaunchAnimation::resolve()
 
 	// target is in front?
 	VHandles colliders;
+	physx::PxU32 mask = CModulePhysics::FilterGroup::Interactable | CModulePhysics::FilterGroup::InteractableNoCamCollision;
 	bool is_ok = EnginePhysics.raycast(player_transform->getPosition(),
-		player_transform->getForward(), 1.f, colliders, CModulePhysics::FilterGroup::Interactable);
+		player_transform->getForward(), 1.f, colliders, mask);
+	is_ok |= skipFront;
 
-	is_ok &= player_transform->getForward().Dot(transform->getForward()) < 0.f;
+	float delta_yaw = player_transform->getYawRotationToAimTo(transform->getPosition());
+	is_ok &= fabsf(rad2deg(delta_yaw)) < acceptance_angle;
+
+	if (rotateToFace)
+	{
+		TCompTransform* player_transform = player->get<TCompTransform>();
+		targetRotation = player_transform->getRotation() * QUAT::CreateFromYawPitchRoll(delta_yaw, 0.f, 0.f);
+	}
+
+	// is_ok &= player_transform->getForward().Dot(transform->getForward()) < 0.f;
 
 	VEC3 pos = transform->getPosition() + offset;
 	VEC3 playerPos = player_transform->getPosition();
@@ -116,19 +154,33 @@ void TCompLaunchAnimation::launch()
 	enabled = true;
 
 	TCompPlayerController* c_controller = player->get<TCompPlayerController>();
-	c_controller->blendCamera("camera_interact", 3.0f, &interpolators::cubicInOutInterpolator);
-	c_controller->setVariable(animation_variable, true);
 
+	if (useInteractCam)
+		c_controller->blendCamera("camera_interact", 3.0f, &interpolators::cubicInOutInterpolator);
+	
+	if (useVariableValue)
+		c_controller->setVariable(animation_variable, variable_value);
+	else // Don't do a binary op it will fail bc of the variant
+		c_controller->setVariable(animation_variable, true);
+	
 	PlayerInteraction.setAnimationLauncher(CHandle(this));
 
-	// disable collisions with the player
+	// Set new masks
 	TCompCollider* c_collider = get<TCompCollider>();
-	c_collider->setGroupAndMask("interactable", "all_but_player");
 
-	TCompTransform* trans = get<TCompTransform>();
-	VEC3 new_pos = trans->getPosition() + trans->getForward() * 0.001f;
-	trans->setPosition(new_pos);
-	c_collider->setGlobalPose(trans->getPosition(), trans->getRotation());
+	if (new_group.length())
+	{
+		c_collider->setGroupAndMask(new_group, "all");
+	}
+	else
+	{
+		c_collider->setGroupAndMask("interactable", "all_but_player");
+	}
+	
+	TCompTransform* transform = get<TCompTransform>();
+	VEC3 new_pos = transform->getPosition() + transform->getForward() * 0.001f;
+	transform->setPosition(new_pos);
+	c_collider->setGlobalPose(transform->getPosition(), transform->getRotation());
 }
 
 void TCompLaunchAnimation::oncomplete()
@@ -148,6 +200,9 @@ void TCompLaunchAnimation::oncomplete()
 	TCompCollider* c_collider = get<TCompCollider>();
 	c_collider->setGroupAndMask("interactable", "all");
 
-	TCompPlayerController* c_controller = player->get<TCompPlayerController>();
-	c_controller->blendCamera("camera_follow", 1.2f, &interpolators::cubicInOutInterpolator);
+	if (useInteractCam)
+	{
+		TCompPlayerController* c_controller = player->get<TCompPlayerController>();
+		c_controller->blendCamera("camera_follow", 1.2f, &interpolators::cubicInOutInterpolator);
+	}
 }
