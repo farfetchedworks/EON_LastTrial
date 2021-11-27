@@ -20,6 +20,7 @@
 #include "components/gameplay/comp_shrine.h"
 #include "components/abilities/comp_area_delay.h"
 #include "components/abilities/comp_time_reversal.h"
+#include "components/postfx/comp_color_grading.h"
 
 extern CShaderCte<CtesWorld> cte_world;
 
@@ -129,6 +130,18 @@ void CModuleEventSystem::registerGlobalEvents()
 
 	EventSystem.registerEventCallback("Input/unblock", [](CHandle t, CHandle o) {
 		PlayerInput.unBlockInput();
+	});
+
+	EventSystem.registerEventCallback("Render/lutIn", [](CHandle t, CHandle o)  {
+		CEntity* cam = getEntityByName("camera_mixed");
+		TCompColorGrading* lut = cam->get<TCompColorGrading>();
+		lut->fadeIn(2.f, &interpolators::cubicOutInterpolator);
+	});
+
+	EventSystem.registerEventCallback("Render/lutOut", [](CHandle t, CHandle o) {
+		CEntity* cam = getEntityByName("camera_mixed");
+		TCompColorGrading* lut = cam->get<TCompColorGrading>();
+		lut->fadeOut(5.5f, &interpolators::quadInInterpolator);
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/setLocomotion", [](CHandle t, CHandle o) {
