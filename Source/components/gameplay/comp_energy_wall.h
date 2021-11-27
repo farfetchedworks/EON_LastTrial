@@ -13,6 +13,7 @@ private:
 	bool eon_passed = false;			// set to true to avoid Eon exiting the energy wall area
 	bool is_active = false;
 	bool is_moving = false;
+	bool is_facing_to_wall = false;
 	float move_time = 3.f;				// time to move Eon through the wall
 	float move_speed = 2.f;
 	float curr_time = 0.f;

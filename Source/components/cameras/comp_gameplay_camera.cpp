@@ -8,6 +8,7 @@
 #include "components/cameras/comp_camera_shooter.h"
 #include "components/cameras/comp_camera_flyover.h"
 #include "modules/module_camera_mixer.h"
+#include "modules/game/module_player_interaction.h"
 
 void IGameplayCamera::load(const json& j, TEntityParseContext& ctx)
 {
@@ -48,6 +49,9 @@ void IGameplayCamera::updateDeltas(float dt)
 {
     if (debugging && !isPressed(VK_LCONTROL))
         return; 
+
+    if (PlayerInteraction.isEnergyWallActive())
+        return;
 
     // Gamepad queries
     if (input->getPad().connected && input->getButton("move_camera").isPressed())

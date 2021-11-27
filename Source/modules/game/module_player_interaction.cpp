@@ -97,6 +97,7 @@ void CModulePlayerInteraction::checkInteractions()
 void CModulePlayerInteraction::interact(CHandle object)
 {
 	CEntity* player = h_player;
+	TCompTransform* c_transform = player->get<TCompTransform>();
 	TCompPlayerController* controller = player->get<TCompPlayerController>();
 
 	// Currently it can interact with only one interactable. 
@@ -111,7 +112,7 @@ void CModulePlayerInteraction::interact(CHandle object)
 	TCompEnergyWall* c_energyWall = e_interactable->get<TCompEnergyWall>();
 	TCompLaunchAnimation* c_animation = e_interactable->get<TCompLaunchAnimation>();
 	TCompNPC* c_npc = e_interactable->get<TCompNPC>();
-
+	
 	// Remove lock on when interacting with something
 	controller->removeLockOn(!c_npc);
 
@@ -139,4 +140,16 @@ void CModulePlayerInteraction::interact(CHandle object)
 bool CModulePlayerInteraction::isEnergyWallActive()
 {
 	return h_currEnergyWall.isValid() && static_cast<TCompEnergyWall*>(h_currEnergyWall)->isActive();
+}
+
+bool CModulePlayerInteraction::isLookingAtTheEnergyWall()
+{
+	if (h_currEnergyWall.isValid() && h_player.isValid()) {
+		CEntity* player = h_player;
+		CEntity* e_wall = CHandle(h_currEnergyWall).getOwner();
+		TCompTransform* c_transform = player->get<TCompTransform>();
+		return !(e_wall->getForward().Dot(c_transform->getForward()) >= .9f);
+	}
+	
+	return false;
 }

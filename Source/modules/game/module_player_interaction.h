@@ -34,4 +34,5 @@ public:
 	void interact(CHandle object);
 
 	bool isEnergyWallActive();
+	bool isLookingAtTheEnergyWall();
 };

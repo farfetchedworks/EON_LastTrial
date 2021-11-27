@@ -4,6 +4,7 @@
 #include "render/draw_primitives.h"
 #include "modules/module_physics.h"
 #include "modules/module_camera_mixer.h"
+#include "modules/game/module_player_interaction.h"
 #include "components/messages.h"
 #include "components/ai/comp_bt.h"
 #include "components/common/comp_transform.h"
@@ -251,6 +252,14 @@ void TCompCameraFollow::update(float dt)
     // Restrict movement in any axis
     applyAxisRestrictions(collision_position_lerp.value);
     c_transform->lookAt(collision_position_lerp.value, target_position_lerp.value, VEC3::Up);
+
+    if (PlayerInteraction.isEnergyWallActive()) {
+        time_elapsed_energey_wall += dt;
+        if (time_elapsed_energey_wall >= 0.5f) {
+            c_player->blendCamera("camera_interact", 4.0f, &interpolators::cubicInOutInterpolator);
+            time_elapsed_energey_wall = 0.f;
+        }
+    }
 }
 
 float TCompCameraFollow::getAngleLerpFactor()

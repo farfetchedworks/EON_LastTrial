@@ -19,6 +19,7 @@ struct TCompCameraFollow : public TCompBase, IGameplayCamera {
     float height = 0.0f;
     float lerp_scale = 5.5f;
     float time_elapsed = 0.0f;
+    float time_elapsed_energey_wall = 0.0f;
 
     LerpedValue<float> current_distance = {};
     LerpedValue<float> current_height = {};

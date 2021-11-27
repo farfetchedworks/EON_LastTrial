@@ -6,6 +6,7 @@
 #include "components/gameplay/comp_energy_wall.h"
 #include "components/common/comp_transform.h"
 #include "components/controllers/comp_player_controller.h"
+#include "components/cameras/comp_camera_follow.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/common/comp_collider.h"
 #include "components/messages.h"
@@ -15,14 +16,24 @@ DECL_OBJ_MANAGER("energy_wall", TCompEnergyWall)
 
 void TCompEnergyWall::update(float dt)
 {
+	if (!e_player) return;
+
+	TCompPlayerController* c_controller = e_player->get<TCompPlayerController>();
+
+	bool isIteractCameraEnabled = c_controller->isCameraEnabled("camera_interact");
 	if (!is_active)
 		return;
 
 	TCompTransform* c_trans = get<TCompTransform>();
 	TCompTransform* player_transform = e_player->get<TCompTransform>();
-	TCompPlayerController* c_controller = e_player->get<TCompPlayerController>();
 
 	c_controller->last_dir = dir_entry_point;
+
+	CEntity* e_camera_follow = getEntityByName("camera_follow");
+	TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
+
+	if (PlayerInteraction.isLookingAtTheEnergyWall())
+		c_camera_follow->must_recenter = true;
 
 	float dis_entry = VEC3::DistanceSquared(entry_point, player_transform->getPosition());
 	if (dis_entry > 0.5f && is_moving) {
@@ -30,6 +41,7 @@ void TCompEnergyWall::update(float dt)
 		// move player to entry point
 		VEC3 move = dir_entry_point * move_speed * dt;
 		c_controller->movePhysics(move, dt);
+
 		return;
 	}
 
@@ -70,16 +82,11 @@ void TCompEnergyWall::onEonInteracted(const TMsgEonInteracted& msg)
 	if (eon_passed || controller->inAreaDelay())
 		return;
 
-	// Rotate Eon to look at the energy wall
-	TCompTransform* player_transform = e_player->get<TCompTransform>();
-	TCompTransform* trans = get<TCompTransform>();
-	player_transform->setRotation(trans->getRotation());
-
 	is_active = true;
 	eon_passed = true;
-	
-	TCompPlayerController* c_controller = e_player->get<TCompPlayerController>();
-	c_controller->blendCamera("camera_interact", 4.0f, &interpolators::cubicInOutInterpolator);
+
+	TCompTransform* player_transform = e_player->get<TCompTransform>();
+	TCompTransform* trans = get<TCompTransform>();
 
 	// disable collisions with the player
 	TCompCollider* c_collider = get<TCompCollider>();
