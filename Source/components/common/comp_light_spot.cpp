@@ -5,6 +5,7 @@
 #include "render/render_manager.h"
 #include "render/render.h"
 #include "components/render/comp_irradiance_cache.h"
+#include "components/common/comp_culling.h"
 
 DECL_OBJ_MANAGER("light_spot", TCompLightSpot)
 
@@ -178,9 +179,15 @@ void TCompLightSpot::generateShadowMap() {
           TCompTransform* c_trans_player = player->get<TCompTransform>();
           TCompTransform* c_trans_camera = h_transform;
 
+          TCompCulling* c_culling = get<TCompCulling>();
+
           if (c_trans_player->distance(*c_trans_camera) > getFar() * 1.5f) {
+
+              c_culling->setHasToUpdate(false);
               return;
           }
+
+          c_culling->setHasToUpdate(true);
       }
 
       // Start from cached shadowmap

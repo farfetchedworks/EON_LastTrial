@@ -13,6 +13,7 @@
 #include "components/common/comp_aabb.h"
 #include "components/common/comp_culling.h"
 #include "components/ai/comp_bt.h"
+#include "components/common/comp_fsm.h"
 #include "comp_skeleton_ik.h"
 #include "comp_skel_lookat.h"
 
@@ -149,6 +150,7 @@ void TCompSkeleton::update(float dt) {
 	CEntity* player = getEntityByName("player");
 	CEntity* owner = getEntity();
 	TCompCollider* collider = get<TCompCollider>();
+	TCompFSM* c_fsm = get<TCompFSM>();
 	CEntity* e_camera = EngineRender.getActiveCamera();
 
 	has_to_update = true;
@@ -184,6 +186,10 @@ void TCompSkeleton::update(float dt) {
 
 		if (!first_update) {
 			has_to_update = first_update = true;
+		}
+
+		if (c_fsm) {
+			c_fsm->setHasToUpdate(has_to_update);
 		}
 	}
 	

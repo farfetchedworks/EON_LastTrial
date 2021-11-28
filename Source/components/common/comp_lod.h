@@ -11,7 +11,10 @@ struct TCompLod : public TCompBase {
 	}
 
 	void parse(const json& j) {
-		assert(j.is_object());
+		if (!j.is_object()) {
+			return;
+		}
+
 		threshold = j.value("threshold", threshold);
 		replacement_prefab = j.value("replacement_prefab", replacement_prefab);
 	}

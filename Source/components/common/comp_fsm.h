@@ -22,6 +22,8 @@ public:
 
     void startCtx();
 
+    void setHasToUpdate(bool has_to_update);
+
     void onSetVariable(const TMsgFSMVariable& msg);
     const fsm::IState* getCurrentState();
     fsm::CContext& getCtx() { return _context; };
@@ -32,4 +34,5 @@ public:
 private:
     std::string     _name;
     fsm::CContext   _context;
+    bool _has_to_update = true;
 };

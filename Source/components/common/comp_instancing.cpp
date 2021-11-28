@@ -74,8 +74,8 @@ void TCompInstancing::setInstancedPrefab()
     CEntity* e_handle = handle; 
 
     // add lod: this should be done for every instanced prefab
-    /*TCompLod* c_lod = e_handle->addComponent<TCompLod>();
-    c_lod->parse(j_instance);*/
+    TCompLod* c_lod = e_handle->addComponent<TCompLod>();
+    c_lod->parse(j_instance);
 
     TCompAbsAABB* aabb = e_handle->get<TCompAbsAABB>();
     TCompTransform* transform = e_handle->get<TCompTransform>();

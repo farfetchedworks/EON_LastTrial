@@ -49,9 +49,16 @@ void TCompFSM::startCtx()
 	_context.start();
 }
 
+void TCompFSM::setHasToUpdate(bool has_to_update)
+{
+	_has_to_update = has_to_update;
+}
+
 void TCompFSM::update(float dt)
 {
 	PROFILE_FUNCTION("update " + _name);
+
+	if (!_has_to_update) return;
 
 	TCompPawnController* controller = get<TCompPawnController>();
 

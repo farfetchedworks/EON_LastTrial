@@ -5,6 +5,7 @@
 #include "utils/resource_json.h"
 #include "components/messages.h"
 #include "components/common/comp_name.h"
+#include "components/common/comp_tags.h"
 
 TEntityParseContext::TEntityParseContext(TEntityParseContext& another_ctx, const CTransform& delta_transform) {
   parent = &another_ctx;
@@ -336,4 +337,41 @@ bool destroyScene(const std::string& filename)
   CHandleManager::destroyAllPendingObjects();
 
   return true;
+}
+
+bool destroyEntitiesWithTag(const std::string& filename, const std::string& tag)
+{
+    const CJson* file_json = Resources.get(filename)->as<CJson>();
+
+    if (!file_json) return false;
+
+    json jscene = file_json->getJson();
+    assert(jscene.is_array());
+
+    // For each item in the scene as array
+    for (int i = 0; i < jscene.size(); ++i) {
+
+        // get access to the i-th tem
+        const json& j_item = jscene[i];
+        assert(j_item.is_object());
+
+        if (j_item.count("entity")) {
+            const json& j_entity = j_item["entity"];
+            const std::string &j_name = j_entity["name"];
+
+            CEntity* e_entity = getEntityByName(j_name);
+
+            if (!e_entity) continue;
+
+            TCompTags* c_tags = e_entity->get<TCompTags>();
+
+            if (c_tags && c_tags->hasTag(getID(tag.c_str()))) {
+                e_entity->destroy();
+            }
+        }
+    }
+
+    //CHandleManager::destroyAllPendingObjects();
+
+    return true;
 }

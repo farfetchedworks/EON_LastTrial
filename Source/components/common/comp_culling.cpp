@@ -46,8 +46,15 @@ void TCompCulling::updateFromMatrix(MAT44 view_proj) {
     });
 }
 
+void TCompCulling::setHasToUpdate(bool has_to_update)
+{
+    _has_to_update = has_to_update;
+}
+
 void TCompCulling::update(float dt) {
     PROFILE_FUNCTION("Updating culling");
+
+    if (!_has_to_update) return;
 
     // Or send a msg to the entity to get the view proj
     if (TCompCamera* c_camera = get<TCompCamera>())
