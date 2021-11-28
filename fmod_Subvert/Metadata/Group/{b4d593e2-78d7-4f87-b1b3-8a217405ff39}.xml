@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{b4d593e2-78d7-4f87-b1b3-8a217405ff39}">
 		<property name="volume">
-			<value>-11</value>
+			<value>-9.5</value>
 		</property>
 		<property name="name">
 			<value>CHA_Cygnus_CIN</value>
@@ -19,9 +19,15 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{c833ccf6-f18c-4eab-aa2e-732326911235}">
 		<relationship name="effects">
+			<destination>{66a36a70-6c04-4b12-affd-a8ffccadd5bd}</destination>
 			<destination>{f2161171-5e21-46ec-9159-669904a83544}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{cce86ada-7f3b-42c6-856d-bef1e828da61}" />
+	<object class="DistortionEffect" id="{66a36a70-6c04-4b12-affd-a8ffccadd5bd}">
+		<property name="level">
+			<value>0.194999993</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{f2161171-5e21-46ec-9159-669904a83544}" />
 </objects>
