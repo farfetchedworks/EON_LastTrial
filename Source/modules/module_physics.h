@@ -82,7 +82,7 @@ public:
 	bool raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, VEC3& first_hit, physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool render_debug = false);
 
 	// Creates a raycast and saves the results in a colliders vector
-	bool raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool getClosestHit = false, bool render_debug = false);
+	bool raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, physx::PxU32 hitMask = CModulePhysics::FilterGroup::All, bool getClosestHit = false, bool render_debug = false, bool orderByDistance = false);
 
 	// Creates a raycast and returns a raycast buffer to get information about each hit
 	bool raycast(const VEC3& origin, const VEC3& dir, float distance, std::vector<physx::PxRaycastHit>& raycastHits,

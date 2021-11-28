@@ -5,10 +5,14 @@
 #include "render/render_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
+#include "input/input_module.h"
+#include "ui/widgets/ui_video.h"
 
 bool ModuleEONSplashScreen::start()
 {
-    _timer = 3.f;
+    input = CEngine::get().getInput(input::MENU);
+    assert(input);
+
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
     EngineUI.activateWidget("eon_splash_screen");
     return true;
@@ -21,10 +25,10 @@ void ModuleEONSplashScreen::stop()
 
 void ModuleEONSplashScreen::update(float dt)
 {
-    _timer -= dt;
-    
-    if (_timer <= 0.f)
-    {
+    if(input->getButton("pause_game").getsPressed())
         CEngine::get().getModuleManager().changeToGamestate("main_menu");
-    }
+
+    ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_splash_screen");
+    if(video->getVideoParams()->video->hasFinished())
+        CEngine::get().getModuleManager().changeToGamestate("main_menu");
 }

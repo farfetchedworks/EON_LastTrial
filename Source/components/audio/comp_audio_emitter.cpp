@@ -8,6 +8,8 @@
 
 DECL_OBJ_MANAGER("audio_emitter", TCompAudioEmitter)
 
+static const float OCCLUSION_SENSITIVE_DISTANCE_SQ = 3000;
+
 void TCompAudioEmitter::load(const json& j, TEntityParseContext& ctx)
 {
 	event_name = j.value("fmod_event", std::string());
@@ -55,20 +57,15 @@ bool hasObstaclesToEonIgnoreNavmesh(TCompTransform* my_trans, TCompTransform* pl
 	raycast_origin.y += 1;
 	float distance = 200.f;
 
-	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, false, true);
+	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, false, false, true);
+
 	if (is_ok) {
 		TCompCollider* c_collider;
 		for (auto& c_collider : colliders) {
 			CEntity* h_hit = c_collider.getOwner();
 			std::string str = h_hit->getName();
 
-			// if it collides with forbiddnen navmesh, ignore...
-			if (!str.compare("collapsed_parent")) {
-				continue;
-			}
-
-			// else, check
-			if (h_hit == getEntityByName("player") || h_hit == getEntityByName("entrance")) {
+			if (h_hit == getEntityByName("player")) {
 				return false;
 			}
 			else
@@ -90,7 +87,12 @@ void TCompAudioEmitter::update(float dt)
 	// If the emitter is sensitive to occlusion/obstruction
 	if (updates_occl && h_cache_player_transform.isValid()) {
 		TCompTransform* player_t = h_cache_player_transform;
-		bool occluded = hasObstaclesToEonIgnoreNavmesh(t, player_t, CModulePhysics::FilterGroup::Scenario | CModulePhysics::FilterGroup::Player | CModulePhysics::FilterGroup::Prop | CModulePhysics::FilterGroup::InvisibleWall);
+
+		bool occluded = true;
+
+		// If the player is at a distance sensitive to occlusion/obstruction
+		if (VEC3::DistanceSquared(t->getPosition(), player_t->getPosition()) < OCCLUSION_SENSITIVE_DISTANCE_SQ) 
+			occluded = hasObstaclesToEonIgnoreNavmesh(t, player_t, CModulePhysics::FilterGroup::Player | CModulePhysics::FilterGroup::Scenario);
 
 		if (occluded)
 			event_inst->setParameterByName("Occluded", 1.f);
