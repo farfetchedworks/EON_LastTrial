@@ -83,6 +83,11 @@ namespace LogicManager
 		modules.changeToGamestate(gs_name);
 	}
 
+	void startCaption(const std::string& caption_name)
+	{
+		Subtitles.startCaption(caption_name);
+	}
+
 	void startCinematic(const std::string& curve_filename, const VEC3& target, float speed, float lerp_time)
 	{
 		TCompGameManager* c_gm = GameManager->get<TCompGameManager>();

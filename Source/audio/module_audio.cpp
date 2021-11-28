@@ -439,3 +439,16 @@ void CModuleAudio::stopCurAmbienceEvent(bool immediately)
 {
 	stopAndRelease(cur_amb_event, immediately);
 }
+
+void CModuleAudio::stopEvent(FMOD::Studio::EventInstance* event_to_stop, bool immediate)
+{
+	if (immediate)
+		event_to_stop->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+	else
+		event_to_stop->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT);
+}
+
+void CModuleAudio::setMusicTimelinePosition(int ms)
+{
+	cur_mus_event->setTimelinePosition(ms);
+}
