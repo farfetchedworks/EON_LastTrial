@@ -44,23 +44,18 @@ namespace ui
 
         render();
 
-        // Don't render children until we have a complete blend effect 
-        bool skip = getState() != EState::STATE_NONE;
+        auto parentWidget = this;
+        while (parentWidget->_parent)
+            parentWidget = parentWidget->_parent;
 
         for (auto& child : _children)
         {
-            if (skip)
+            if (parentWidget->getState() != EState::STATE_NONE)
             {
-                if (child->_alwaysRender)
-                {
-                    // Render, but sync fade in/out
-                    child->updateTimeFromParent(this);
-                    child->renderRecursive();
-                }
-                // else do nothing
+                child->updateTimeFromParent(parentWidget);
             }
-            else
-                child->renderRecursive();
+
+            child->renderRecursive();
         }
     }
 
@@ -182,10 +177,21 @@ namespace ui
     void CWidget::updateTimeFromParent(CWidget* parent)
     {
         TImageParams* tChild = getImageParams();
-        assert(tChild);
+        if (!tChild)
+            return;
         TImageParams* tParent = parent->getImageParams();
-        assert(tParent);
-        tChild->time_normalized = tParent->time_normalized;
+        if (tParent)
+        {
+            tChild->time_normalized = tParent->time_normalized;
+        }
+        else
+        {
+            TVideoParams* tParent = parent->getVideoParams();
+            if (!tParent)
+                return;
+            tChild->time_normalized = tParent->time_normalized;
+        }
+        
     }
 
     void CWidget::addChild(CWidget* widget)
