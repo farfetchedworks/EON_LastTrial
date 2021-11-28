@@ -4,12 +4,6 @@
 #include "entity/entity.h"
 #include "components/messages.h"
 
-namespace FMOD {
-	namespace Studio {
-		class EventInstance;
-	}
-}
-
 class TCompGardBranch : public TCompBase {
 
 	DECL_SIBLING_ACCESS();
@@ -20,9 +14,6 @@ private:
 	
 	CHandle h_branch_trans;
 	CHandle h_branch_collider;
-
-	// Stored audio event, to kill whenever the branch destroys itself
-	FMOD::Studio::EventInstance* fmod_event = nullptr;
 
 	// Called when the branch has hit anything	
 	void onHitObject(const TMsgEntityOnContact& msg);
