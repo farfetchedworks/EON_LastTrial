@@ -7,6 +7,7 @@
 #include "ui/ui_widget.h"
 #include "input/input_module.h"
 #include "ui/widgets/ui_video.h"
+#include "audio/module_audio.h"
 
 bool ModuleEONSplashScreen::start()
 {
@@ -15,6 +16,10 @@ bool ModuleEONSplashScreen::start()
 
     EngineRender.setClearColor({0.f, 0.f, 0.f, 1.f});
     EngineUI.activateWidget("eon_splash_screen");
+
+    // Start title theme
+    EngineAudio.postMusicEvent("Music/Title_Theme");
+
     return true;
 }
 
