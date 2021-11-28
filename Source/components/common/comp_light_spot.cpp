@@ -179,15 +179,16 @@ void TCompLightSpot::generateShadowMap() {
           TCompTransform* c_trans_player = player->get<TCompTransform>();
           TCompTransform* c_trans_camera = h_transform;
 
-          TCompCulling* c_culling = get<TCompCulling>();
-
+          bool has_to_update = true;
           if (c_trans_player->distance(*c_trans_camera) > getFar() * 1.5f) {
-
-              c_culling->setHasToUpdate(false);
+              has_to_update = false;
               return;
           }
 
-          c_culling->setHasToUpdate(true);
+          TCompCulling* c_culling = get<TCompCulling>();
+          if (c_culling) {
+              c_culling->setHasToUpdate(has_to_update);
+          }
       }
 
       // Start from cached shadowmap
