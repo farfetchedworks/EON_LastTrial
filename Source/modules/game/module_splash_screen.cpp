@@ -19,6 +19,7 @@ bool ModuleEONSplashScreen::start()
 
     // Start title theme
     EngineAudio.postMusicEvent("Music/Title_Theme");
+    EngineAudio.postEvent("UI/Splash_Screen");
 
     return true;
 }
