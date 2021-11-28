@@ -20,6 +20,8 @@ private:
 	bool static_inst = false;
 	bool updates_occl = true;
 
+	unsigned short occl_update_counter = 0;
+
 public:
 
 	~TCompAudioEmitter();
