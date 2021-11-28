@@ -457,7 +457,7 @@ void TCompCollider::activateForceActor(bool disable)
 
 	EnginePhysics.setupFilteringOnAllShapesOfActor(actor, CModulePhysics::FilterGroup::Player, CModulePhysics::FilterGroup::Scenario);
 
-	EnginePhysics.setupFilteringOnAllShapesOfActor(force_actor, CModulePhysics::FilterGroup::Player, CModulePhysics::FilterGroup::All);
+	EnginePhysics.setupFilteringOnAllShapesOfActor(force_actor, CModulePhysics::FilterGroup::Player, EnginePhysics.readFilterFromJson(jconfig["mask"]));
 	EnginePhysics.setSimulationDisabled(force_actor, false);
 	((physx::PxRigidDynamic*)force_actor)->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, disable_gravity);
 
@@ -501,7 +501,7 @@ void TCompCollider::stopFollowForceActor(const std::string force_origin)
 	TCompTransform* c_trans = h_transform;
 
 	EnginePhysics.setupFilteringOnAllShapesOfActor(force_actor, CModulePhysics::FilterGroup::None, CModulePhysics::FilterGroup::None);
-	EnginePhysics.setupFilteringOnAllShapesOfActor(actor, CModulePhysics::FilterGroup::Player, CModulePhysics::FilterGroup::All);
+	EnginePhysics.setupFilteringOnAllShapesOfActor(actor, CModulePhysics::FilterGroup::Player, EnginePhysics.readFilterFromJson(jconfig["mask"]));
 	((physx::PxRigidDynamic*)force_actor)->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, false);
 
 	// If this was the last applied force, deactivate all forces and initialize the number of applied forces
