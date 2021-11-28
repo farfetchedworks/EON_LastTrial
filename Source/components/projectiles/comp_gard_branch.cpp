@@ -3,14 +3,10 @@
 #include "components/common/comp_transform.h"
 #include "engine.h"
 #include "modules/module_physics.h"
-#include "audio/module_audio.h"
-#include "fmod_studio.hpp"
 #include "components/combat/comp_hitmap.h"
 #include "skeleton/comp_skeleton.h"
 
 DECL_OBJ_MANAGER("gard_branch", TCompGardBranch)
-
-static const char* FMOD_FINISH_PARAM = "Gard_Ranged_Attack_BRANCH_Finish";
 
 void TCompGardBranch::load(const json& j, TEntityParseContext& ctx)
 {
@@ -33,20 +29,12 @@ void TCompGardBranch::onEntityCreated()
 	physx::PxRigidDynamic* actor_collider = static_cast<physx::PxRigidDynamic*>(c_collider->actor);
 	actor_collider->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
 
-	// Start audio event and store reference to it
-	fmod_event = EngineAudio.postEventGetInst("CHA/Gard/AT/Gard_Ranged_Attack_BRANCH", c_trans->getPosition());
-
 	TCompSkeleton* skel = get<TCompSkeleton>();
 	skel->playAction("Spawn", 0.f, 0.f);
 }
 
 void TCompGardBranch::destroy()
 {
-	FMOD_RESULT is_ok = fmod_event->setParameterByName(FMOD_FINISH_PARAM, 1);
-	assert(is_ok == FMOD_RESULT::FMOD_OK);
-	is_ok = fmod_event->release();
-	assert(is_ok == FMOD_RESULT::FMOD_OK);
-
 	// Destroy branch
 	CHandle(this).getOwner().destroy();
 }

@@ -1355,10 +1355,18 @@ bool CModulePhysics::sweep(PxTransform initial_pose, const VEC3& dir, float dist
 	Fills the vector "colliders" with the handle of the colliders which were detected in the hit
 	If GetClosestHit is True, it will return the first blocking hit (by default is false)
 */
-bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, PxU32 hitMask, bool getClosestHit, bool render_debug)
+bool CModulePhysics::raycast(const VEC3& origin, const VEC3& dir, float distance, VHandles& colliders, PxU32 hitMask, bool getClosestHit, bool render_debug, bool orderByDistance)
 {
 	std::vector<physx::PxRaycastHit> raycastHits;
 	bool status = raycast(origin, dir, distance, raycastHits, hitMask, getClosestHit);
+
+	if (orderByDistance) {
+		struct {
+			bool operator()(physx::PxRaycastHit a, physx::PxRaycastHit b) const { return a.distance < b.distance; }
+		} less_distance;
+		std::sort(raycastHits.begin(), raycastHits.end(), less_distance);
+	}
+		
 
 	// Check if there is a hit
 	if (status) {

@@ -5,9 +5,10 @@
 #include "components/controllers/comp_player_controller.h"
 #include "audio/module_audio.h"
 #include "modules/module_physics.h"
-#include "bt/task_utils.h"
 
 DECL_OBJ_MANAGER("audio_emitter", TCompAudioEmitter)
+
+static const float OCCLUSION_SENSITIVE_DISTANCE_SQ = 3000;
 
 void TCompAudioEmitter::load(const json& j, TEntityParseContext& ctx)
 {
@@ -45,6 +46,36 @@ void TCompAudioEmitter::onAllEntitiesCreated(const TMsgAllEntitiesCreated& msg)
 	h_cache_player_transform = e_player->get<TCompTransform>();
 }
 
+bool hasObstaclesToEonIgnoreNavmesh(TCompTransform* my_trans, TCompTransform* player_trans, physx::PxU32 mask)
+{
+	// If Eon is inside the cone, generate a raycast from the Enemy towards Eon's position
+	VEC3 raycast_origin = my_trans->getPosition();
+	VEC3 dir = player_trans->getPosition() - raycast_origin;
+
+	dir.Normalize();
+	VHandles colliders;
+	raycast_origin.y += 1;
+	float distance = 200.f;
+
+	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, false, false, true);
+
+	if (is_ok) {
+		TCompCollider* c_collider;
+		for (auto& c_collider : colliders) {
+			CEntity* h_hit = c_collider.getOwner();
+			std::string str = h_hit->getName();
+
+			if (h_hit == getEntityByName("player")) {
+				return false;
+			}
+			else
+				return true;
+		}
+	}
+
+	return true;
+}
+
 void TCompAudioEmitter::update(float dt)
 {
 	// Update emitter world position
@@ -56,7 +87,12 @@ void TCompAudioEmitter::update(float dt)
 	// If the emitter is sensitive to occlusion/obstruction
 	if (updates_occl && h_cache_player_transform.isValid()) {
 		TCompTransform* player_t = h_cache_player_transform;
-		bool occluded = TaskUtils::hasObstaclesToEon(t, player_t, false, CModulePhysics::FilterGroup::Scenario);
+
+		bool occluded = true;
+
+		// If the player is at a distance sensitive to occlusion/obstruction
+		if (VEC3::DistanceSquared(t->getPosition(), player_t->getPosition()) < OCCLUSION_SENSITIVE_DISTANCE_SQ) 
+			occluded = hasObstaclesToEonIgnoreNavmesh(t, player_t, CModulePhysics::FilterGroup::Player | CModulePhysics::FilterGroup::Scenario);
 
 		if (occluded)
 			event_inst->setParameterByName("Occluded", 1.f);
