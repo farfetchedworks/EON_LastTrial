@@ -145,7 +145,7 @@ void TCompAITimeReversal::stopRewinding()
 {
     // Restore default filters
     TCompCollider* c_collider = h_collider;
-    EnginePhysics.setupFilteringOnAllShapesOfActor(c_collider->actor, CModulePhysics::FilterGroup::Enemy, CModulePhysics::FilterGroup::All);
+    EnginePhysics.setupFilteringOnAllShapesOfActor(c_collider->actor, CModulePhysics::FilterGroup::Enemy, EnginePhysics.readFilterFromJson(c_collider->jconfig["mask"]));
 
     // Reset internal variables
     is_rewinding = false;
