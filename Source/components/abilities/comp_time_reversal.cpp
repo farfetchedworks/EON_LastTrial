@@ -263,7 +263,7 @@ void TCompTimeReversal::stopRewinding()
 
     // Restore default filters
     TCompCollider* c_collider = h_collider;
-    EnginePhysics.setupFilteringOnAllShapesOfActor(c_collider->actor, CModulePhysics::FilterGroup::Player, CModulePhysics::FilterGroup::All);
+    EnginePhysics.setupFilteringOnAllShapesOfActor(c_collider->actor, CModulePhysics::FilterGroup::Player, EnginePhysics.readFilterFromJson(c_collider->jconfig["mask"]));
 
     // Check if I have passed over a death camera trigger
     {

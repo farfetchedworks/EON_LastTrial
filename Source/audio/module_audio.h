@@ -120,4 +120,14 @@ public:
 	 * Stops the current music event being played
 	 */
 	void stopCurAmbienceEvent(bool immediately = false);
+
+	/*
+	 * Posts a given event instance
+	 */
+	void stopEvent(FMOD::Studio::EventInstance* event_to_stop, bool immediate = false);
+
+	/*
+	 * Sets the timeline for a specific event
+	 */
+	void setMusicTimelinePosition(int ms);
 };
