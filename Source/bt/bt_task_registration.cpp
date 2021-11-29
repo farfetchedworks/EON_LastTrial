@@ -1866,7 +1866,7 @@ public:
 		ctx.setIsDying(true);
 
 		// Add a fade out to start the animation
-		EngineUI.fadeOut(2.f, 0.2f, 1.f);
+		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
 
 		// Stop all forces
 		CEntity* player = getPlayer();
@@ -1875,34 +1875,7 @@ public:
 		msgForce.force_origin = "Cygnus";
 		player->sendMsg(msgForce);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 1.0f);
-
-		//// Place Cygnus in the center
-		//CEntity* e = ctx.getOwnerEntity();
-		//TCompTransform* transform = e->get<TCompTransform>();
-		//CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
-		//TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-		//transform->setPosition(c_trans_arena->getPosition());
-
-		//// Spawn the black hole where Cygnus is
-		//spawn("data/prefabs/black_hole_cygnus.json", *transform);
-
-		//// Get Form 1 info
-		//CTransform t;
-		//t.fromMatrix(*transform);
-		//float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		//t.setRotation(QUAT::Concatenate(t.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-
-		//// Destroy form 1 entity
-		//ctx.getOwnerEntity().destroy();
-		//CHandleManager::destroyAllPendingObjects();
-
-		//// Spawn new form
-		//spawn("data/prefabs/cygnus_form_2.json", t);
-
-		//// Intro form 2
-		//EngineLua.executeScript("CinematicCygnusF1ToF2()", 1.f);
-		//EngineLua.executeScript("placeEntityInPos('Cygnus_Form_1', 'CygnusArenaCenter')", 1.f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 1.f);
 
 #else
 		// To avoid playing cinematics

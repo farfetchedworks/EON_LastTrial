@@ -291,12 +291,12 @@ void CModuleEventSystem::registerGlobalEvents()
 			float yaw = transform->getYawRotationToAimTo(player->getPosition());
 			transform_form_1.setRotation(QUAT::Concatenate(transform_form_1.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 
+			// Spawn new form
+			spawn("data/prefabs/cygnus_form_2.json", transform_form_1);
+
 			// Destroy form 1 entity
 			e->destroy();
 			CHandleManager::destroyAllPendingObjects();
-
-			// Spawn new form
-			spawn("data/prefabs/cygnus_form_2.json", *transform);
 
 			// Intro form 2
 			EngineLua.executeScript("CinematicCygnusF1ToF2()");
