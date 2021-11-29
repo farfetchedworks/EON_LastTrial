@@ -406,8 +406,9 @@ bool TCompCameraFollow::checkUnlockDistance(CHandle h_locked_entity, VEC3& locke
     CEntity* eLocked = h_locked_entity;
     locked_pos = getLockedPos(eLocked, finalHeight);
 
-    VEC3 target_pos = t_target->getPosition();
-    target_pos.y += finalHeight + finalHeight * lockedUnitDistance;
+    TCompTransform* c_transform = h_transform;
+    VEC3 target_pos = c_transform->getPosition();
+    target_pos.y += finalHeight * lockedUnitDistance;
 
     camera_front = locked_pos - target_pos;
 
