@@ -1326,6 +1326,8 @@ bool TCompPlayerController::canSeeTarget(TCompTransform* camera_trans, CEntity* 
 		TCompCollider* c_collider = colliders[0];
 		CEntity* e_firsthit = c_collider->getEntity();
 
+		if (e_firsthit != e_target) return false;
+
 		TCompBT* e_bt = e_firsthit->get<TCompBT>();
 
 		if (!e_bt) return false;
