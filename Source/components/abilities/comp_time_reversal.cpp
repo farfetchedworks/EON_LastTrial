@@ -111,7 +111,7 @@ void TCompTimeReversal::update(float dt)
         else if (rendering_effect == eEffectState::FADE_OUT)
         {
             cte_world.timeReversal_rewinding_time = damp(cte_world.timeReversal_rewinding_time, 0.f, 2.f, dt);
-            if (cte_world.timeReversal_rewinding_time == 0.f)
+            if (cte_world.timeReversal_rewinding_time < 0.01f)
             {
                 rendering_effect = eEffectState::NONE;
                 cte_world.timeReversal_rewinding = 0.f;
