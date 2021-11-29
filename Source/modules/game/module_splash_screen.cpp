@@ -11,6 +11,9 @@
 
 bool ModuleEONSplashScreen::start()
 {
+    debugging = false;
+    CApplication::get().changeMouseState(debugging, false);
+
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 
