@@ -2107,10 +2107,25 @@ public:
 		if (mod)
 			mod->blendOut();
 
+		if (phase_num == 2)
+			return EBTNodeResult::SUCCEEDED;
+
+		EngineUI.fadeOut(0.8f, 0.2f, 0.2f);
+
+		// Place Cygnus in the center
+		CEntity* e = ctx.getOwnerEntity();
+		TCompTransform* c_trans = e->get<TCompTransform>();
+		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
+		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
+		c_trans->setPosition(c_trans_arena->getPosition());
+
+		// Rotate to face player
+		CEntity* player = getPlayer();
+		float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
+		c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+
 		if (phase_num == 3)
 		{
-			CEntity* e = ctx.getOwnerEntity();
-
 			TCompBT* c_bt = e->get<TCompBT>();
 			assert(c_bt);
 			c_bt->setEnabled(false);
@@ -2119,16 +2134,10 @@ public:
 			TCompHealth* c_health = e->get<TCompHealth>();
 			c_health->setRenderActive(false);
 
-			// Rotate to face player
-			CEntity* player = getPlayer();
-			TCompTransform* c_trans = e->get<TCompTransform>();
-			float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
-			c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-
 			// Intro form 3
-			EngineLua.executeScript("CinematicCygnusF2ToF3()");
+			EngineLua.executeScript("CinematicCygnusF2ToF3()", 0.8f);
 		}
-
+		
 		return EBTNodeResult::SUCCEEDED;
 	}
 };
