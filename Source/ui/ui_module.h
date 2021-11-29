@@ -22,7 +22,7 @@ namespace ui
         CWidget* activateWidget(CWidget* w, bool fade_in = true, float time_in = 0.f);
         CWidget* activateWidget(const std::string& name, bool fade_in = true, float time_in = 0.f);
         void deactivateWidget(const std::string& name, bool fade_out = true, float time_out = 0.f);
-        void fadeWidget(const std::string& name, float time, float blend_time = 0.f);
+        void fadeWidget(const std::string& name, float time, float time_in = 0.f, float time_out = 0.f);
         CWidget* getWidget(const std::string& name);
         CWidget* getWidgetFrom(const std::string& parent_widget, const std::string& name);
 
@@ -46,6 +46,7 @@ namespace ui
         struct TFadeWidget {
             CWidget* widget = nullptr;
             float timer = 0.f;
+            float blend_out = 0.f;
         };
 
         // test
