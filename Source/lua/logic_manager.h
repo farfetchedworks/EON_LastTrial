@@ -18,4 +18,5 @@ namespace LogicManager
     void setCinematicTarget(const VEC3& target, float lerp_time);
     void setCinematicTargetEntity(const std::string& entity_name, float lerp_time);
     VEC3 getEntityPosByName(const std::string& entity_name);
+    void placeEntityInPos(const std::string& entity_to_move, const std::string& entity_destination);
 };
