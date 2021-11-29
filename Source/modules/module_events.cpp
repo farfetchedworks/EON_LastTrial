@@ -21,6 +21,7 @@
 #include "components/abilities/comp_area_delay.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/postfx/comp_color_grading.h"
+#include "entity/entity_parser.h"
 
 extern CShaderCte<CtesWorld> cte_world;
 
@@ -59,6 +60,12 @@ unsigned int CModuleEventSystem::registerEventCallback(const std::string& name, 
 
 	event_callbacks[name].push_back(data);
 	return data.id;
+}
+
+void CModuleEventSystem::dispatchEvent(const std::string& name, const std::string& trigger_name)
+{
+	CEntity* trigger = getEntityByName(trigger_name);
+	dispatchEvent(name, trigger_name);
 }
 
 void CModuleEventSystem::dispatchEvent(const std::string& name, CHandle trigger)
@@ -263,6 +270,37 @@ void CModuleEventSystem::registerGlobalEvents()
 
 		EngineLua.executeScript("BeginEndLoreCinematic()");
 	});
+
+	EventSystem.registerEventCallback("Gameplay/Cygnus/Phase_1_to_2", [](CHandle t, CHandle o) {
+
+			CEntity* player = getEntityByName("player");
+		
+			// Place Cygnus in the center
+			CEntity* e = getEntityByName("Cygnus_Form_1");
+			TCompTransform* transform = e->get<TCompTransform>();
+			CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
+			TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
+			transform->setPosition(c_trans_arena->getPosition());
+
+			// Spawn the black hole where Cygnus is
+			spawn("data/prefabs/black_hole_cygnus.json", *transform);
+
+			// Get Form 1 info
+			CTransform transform_form_1;
+			transform_form_1.fromMatrix(*transform);
+			float yaw = transform->getYawRotationToAimTo(player->getPosition());
+			transform_form_1.setRotation(QUAT::Concatenate(transform_form_1.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+
+			// Spawn new form
+			spawn("data/prefabs/cygnus_form_2.json", transform_form_1);
+
+			// Destroy form 1 entity
+			e->destroy();
+			CHandleManager::destroyAllPendingObjects();
+
+			// Intro form 2
+			EngineLua.executeScript("CinematicCygnusF1ToF2()");
+		});
 }
 
 void CModuleEventSystem::renderInMenu()

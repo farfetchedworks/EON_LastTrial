@@ -411,7 +411,7 @@ void TCompRigidAnimationController::onEndOfAnimation(float delta_time)
 		playing = false;
 
 		if (cinematic_animation)
-			EngineLua.executeScript("stopCinematic(1.0)");
+			EngineLua.executeScript("stopCinematic(1.5)");
 
 		if (end_callback)
 			end_callback();

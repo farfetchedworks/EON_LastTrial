@@ -96,6 +96,7 @@ void CModuleScripting::bindLua()
 	lua_state.set("setCinematicTarget", &LogicManager::setCinematicTarget);
 	lua_state.set("setCinematicTargetEntity", &LogicManager::setCinematicTargetEntity);
 	lua_state.set("getEntityPosByName", &LogicManager::getEntityPosByName);
+	lua_state.set("placeEntityInPos", &LogicManager::placeEntityInPos);
 
 	// Entities
 
@@ -122,7 +123,10 @@ void CModuleScripting::bindLua()
 		},
 		[](const std::string& event_name, CHandle trigger) {
 			EventSystem.dispatchEvent(event_name, trigger);
-		})
+		}),
+		[](const std::string& event_name, const std::string& trigger_name) {
+			EventSystem.dispatchEvent(event_name, trigger_name);
+		}
 	);
 
 	// Audio

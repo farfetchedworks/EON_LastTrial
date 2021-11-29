@@ -5,6 +5,7 @@
 #include "engine.h"
 #include "bt_task.h"
 #include "modules/module_physics.h"
+#include "ui/ui_module.h"
 #include "lua/module_scripting.h"
 #include "audio/module_audio.h"
 #include "navmesh/module_navmesh.h"
@@ -1864,6 +1865,9 @@ public:
 		TaskUtils::resumeAction(ctx, name);
 		ctx.setIsDying(true);
 
+		// Add a fade out to start the animation
+		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
+
 		// Stop all forces
 		CEntity* player = getPlayer();
 		TMsgRemoveForces msgForce;
@@ -1871,25 +1875,7 @@ public:
 		msgForce.force_origin = "Cygnus";
 		player->sendMsg(msgForce);
 
-		CEntity* e = ctx.getOwnerEntity();
-		TCompTransform* transform = e->get<TCompTransform>();
-		spawn("data/prefabs/black_hole_cygnus.json", *transform);
-
-		// Get Form 1 info
-		CTransform t;
-		t.fromMatrix(*transform);
-		float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		t.setRotation(QUAT::Concatenate(t.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-
-		// Destroy form 1 entity
-		ctx.getOwnerEntity().destroy();
-		CHandleManager::destroyAllPendingObjects();
-
-		// Spawn new form
-		spawn("data/prefabs/cygnus_form_2.json", t);
-
-		// Intro form 2
-		EngineLua.executeScript("CinematicCygnusF1ToF2()");
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 1.f);
 
 #else
 		// To avoid playing cinematics
@@ -2121,10 +2107,25 @@ public:
 		if (mod)
 			mod->blendOut();
 
+		if (phase_num == 2)
+			return EBTNodeResult::SUCCEEDED;
+
+		EngineUI.fadeOut(0.8f, 0.2f, 0.2f);
+
+		// Place Cygnus in the center
+		CEntity* e = ctx.getOwnerEntity();
+		TCompTransform* c_trans = e->get<TCompTransform>();
+		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
+		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
+		c_trans->setPosition(c_trans_arena->getPosition());
+
+		// Rotate to face player
+		CEntity* player = getPlayer();
+		float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
+		c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+
 		if (phase_num == 3)
 		{
-			CEntity* e = ctx.getOwnerEntity();
-
 			TCompBT* c_bt = e->get<TCompBT>();
 			assert(c_bt);
 			c_bt->setEnabled(false);
@@ -2133,16 +2134,10 @@ public:
 			TCompHealth* c_health = e->get<TCompHealth>();
 			c_health->setRenderActive(false);
 
-			// Rotate to face player
-			CEntity* player = getPlayer();
-			TCompTransform* c_trans = e->get<TCompTransform>();
-			float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
-			c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-
 			// Intro form 3
-			EngineLua.executeScript("CinematicCygnusF2ToF3()");
+			EngineLua.executeScript("CinematicCygnusF2ToF3()", 0.8f);
 		}
-
+		
 		return EBTNodeResult::SUCCEEDED;
 	}
 };

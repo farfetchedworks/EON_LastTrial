@@ -227,6 +227,15 @@ namespace LogicManager
 		c_curve_controller->setTargetEntity(entity_name);
 	}
 
+	void placeEntityInPos(const std::string& entity_to_move, const std::string& entity_destination)
+	{
+		CEntity* e = getEntityByName(entity_to_move);
+		TCompTransform* transform = e->get<TCompTransform>();
+		CEntity* e_destination = getEntityByName(entity_destination);
+		TCompTransform* c_trans_destination = e_destination->get<TCompTransform>();
+		transform->setPosition(c_trans_destination->getPosition());
+	}
+
 	VEC3 getEntityPosByName(const std::string& entity_name)
 	{
 		CEntity* entity = getEntityByName(entity_name);
