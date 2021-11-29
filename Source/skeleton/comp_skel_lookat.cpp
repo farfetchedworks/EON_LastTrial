@@ -81,7 +81,7 @@ void TCompSkelLookAt::update(float dt) {
 	if (delta_yaw > 0.6f || stop_looking)
 		f_amount = 0.f;
 
-	lerp_amount = damp(lerp_amount, f_amount, 1.f, dt);
+	lerp_amount = damp(lerp_amount, f_amount, 3.f, dt);
 
 	if (lerp_amount == 0.f && stop_looking)
 	{

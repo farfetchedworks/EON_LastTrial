@@ -21,6 +21,9 @@ bool ModuleEONMainMenu::start()
     // Start title theme
     EngineAudio.postMusicEvent("Music/Title_Theme");
 
+    ui::CWidget* wMenu = EngineUI.getWidget("eon_main_menu");
+    assert(wMenu);
+
     // if there's input, we have been here before..
     if (!input)
     {
@@ -31,11 +34,8 @@ bool ModuleEONMainMenu::start()
         assert(input);
 
         // Set version
-        ui::CWidget* wMenu = EngineUI.getWidget("eon_main_menu");
-        assert(wMenu);
         ui::CText* wVersion = (ui::CText*)wMenu->getChildByName("version");
         wVersion->textParams.text = Engine.getVersion();
-        EngineUI.activateWidget(wMenu);
 
         _menuController.setInput(input);
         _menuController.bindButton("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
@@ -46,10 +46,12 @@ bool ModuleEONMainMenu::start()
         _menuController.selectOption(0);
     }
 
+    EngineUI.activateWidget(wMenu);
+
     // We come from the settings
     if (_toSettings)
     {
-        auto children = EngineUI.getWidget("eon_main_menu")->getChildren();
+        auto children = wMenu->getChildren();
         for (auto child : children)
         {
             child->setVisible(true);
