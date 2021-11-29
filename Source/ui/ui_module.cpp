@@ -399,9 +399,9 @@ namespace ui
         }
     }
 
-    void CModule::fadeOut(float time, float out_time)
+    void CModule::fadeOut(float time, float in_time, float out_time)
     {
-        fadeWidget("modal_black", time, out_time);
+        fadeWidget("modal_black", time, in_time, out_time);
     }
 
     void CModule::renderInMenu()
