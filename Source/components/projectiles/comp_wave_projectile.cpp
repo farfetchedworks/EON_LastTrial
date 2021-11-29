@@ -124,7 +124,7 @@ void TCompWaveProjectile::update(float dt)
 	if (wave_caster == EWaveCaster::ENEMY)
 		flags = CModulePhysics::FilterGroup::Player;
 
-	if (EnginePhysics.overlapSphere(transform->getPosition(), radius, colliders, flags))
+	if (!fading && EnginePhysics.overlapSphere(transform->getPosition(), radius, colliders, flags))
 	{
 		// get closer
 		float max_dist = -1.f;
