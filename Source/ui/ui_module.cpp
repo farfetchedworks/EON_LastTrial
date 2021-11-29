@@ -65,13 +65,19 @@ namespace ui
         }
     }
 
-    void CModule::fadeWidget(const std::string& name, float time, float blend_time)
+    void CModule::fadeWidget(const std::string& name, float time, float time_in, float time_out)
     {
-        activateWidget(name, true, blend_time);
+        auto w = activateWidget(name, true, time_in);
 
         TFadeWidget fwidget;
         fwidget.widget = getWidget(name);
         fwidget.timer = time;
+
+        CEffect_FadeIn* effect = (CEffect_FadeIn*)w->getEffect("Fade Out");
+        fwidget.blend_out = effect->getFadeTime();
+
+        if (time_out > 0.f)
+            fwidget.blend_out = time_out;
 
         _fadingWidgets.push_back(fwidget);
     }
@@ -213,7 +219,7 @@ namespace ui
 
                 if (fW.timer < 0.f)
                 {
-                    deactivateWidget(fW.widget->getName());
+                    deactivateWidget(fW.widget->getName(), true, fW.blend_out);
                 }
             }
 

@@ -9,6 +9,7 @@
 DECL_OBJ_MANAGER("audio_emitter", TCompAudioEmitter)
 
 static const float OCCLUSION_SENSITIVE_DISTANCE_SQ = 3000;
+static const unsigned short OCCLUSION_UPDATE_COUNTER = 5;
 
 void TCompAudioEmitter::load(const json& j, TEntityParseContext& ctx)
 {
@@ -60,7 +61,6 @@ bool hasObstaclesToEonIgnoreNavmesh(TCompTransform* my_trans, TCompTransform* pl
 	bool is_ok = EnginePhysics.raycast(raycast_origin, dir, distance, colliders, mask, false, false, true);
 
 	if (is_ok) {
-		TCompCollider* c_collider;
 		for (auto& c_collider : colliders) {
 			CEntity* h_hit = c_collider.getOwner();
 			std::string str = h_hit->getName();
@@ -86,18 +86,24 @@ void TCompAudioEmitter::update(float dt)
 
 	// If the emitter is sensitive to occlusion/obstruction
 	if (updates_occl && h_cache_player_transform.isValid()) {
-		TCompTransform* player_t = h_cache_player_transform;
+		++occl_update_counter;
+		// Only update every X frames
+		if (occl_update_counter >= OCCLUSION_UPDATE_COUNTER) {
+			occl_update_counter = 0;
 
-		bool occluded = true;
+			TCompTransform* player_t = h_cache_player_transform;
 
-		// If the player is at a distance sensitive to occlusion/obstruction
-		if (VEC3::DistanceSquared(t->getPosition(), player_t->getPosition()) < OCCLUSION_SENSITIVE_DISTANCE_SQ) 
-			occluded = hasObstaclesToEonIgnoreNavmesh(t, player_t, CModulePhysics::FilterGroup::Player | CModulePhysics::FilterGroup::Scenario);
+			bool occluded = true;
 
-		if (occluded)
-			event_inst->setParameterByName("Occluded", 1.f);
-		else
-			event_inst->setParameterByName("Occluded", 0.f);
+			// If the player is at a distance sensitive to occlusion/obstruction
+			if (VEC3::DistanceSquared(t->getPosition(), player_t->getPosition()) < OCCLUSION_SENSITIVE_DISTANCE_SQ)
+				occluded = hasObstaclesToEonIgnoreNavmesh(t, player_t, CModulePhysics::FilterGroup::Player | CModulePhysics::FilterGroup::Scenario);
+
+			if (occluded)
+				event_inst->setParameterByName("Occluded", 1.f);
+			else
+				event_inst->setParameterByName("Occluded", 0.f);
+		}
 	}
 	
 	// If the emitter is mobile
