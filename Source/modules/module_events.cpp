@@ -61,6 +61,12 @@ unsigned int CModuleEventSystem::registerEventCallback(const std::string& name, 
 	return data.id;
 }
 
+void CModuleEventSystem::dispatchEvent(const std::string& name, const std::string& trigger_name)
+{
+	CEntity* trigger = getEntityByName(trigger_name);
+	dispatchEvent(name, trigger_name);
+}
+
 void CModuleEventSystem::dispatchEvent(const std::string& name, CHandle trigger)
 {
 	if (event_callbacks.find(name) == event_callbacks.end()) {

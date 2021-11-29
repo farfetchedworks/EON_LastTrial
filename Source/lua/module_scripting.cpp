@@ -122,6 +122,9 @@ void CModuleScripting::bindLua()
 		},
 		[](const std::string& event_name, CHandle trigger) {
 			EventSystem.dispatchEvent(event_name, trigger);
+		}),
+		[](const std::string& event_name, const std::string& trigger_name) {
+			EventSystem.dispatchEvent(event_name, trigger_name);
 		})
 	);
 

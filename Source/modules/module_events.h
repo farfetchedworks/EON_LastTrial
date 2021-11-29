@@ -40,4 +40,5 @@ public:
 	unsigned int registerEventCallback(const std::string& name, std::function<void(CHandle, CHandle)> callback);
 	void unregisterEventCallback(const std::string& name, unsigned int id);
 	void dispatchEvent(const std::string& name, CHandle trigger = CHandle());
+	void dispatchEvent(const std::string& name, const std::string& trigger_name);
 };
