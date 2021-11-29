@@ -16,6 +16,7 @@ public:
 private:
 	void onNewGame();
 	void onSettings();
+	void onCredits();
 	void onExit();
 
 	bool _toSettings = false;

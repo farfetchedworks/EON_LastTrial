@@ -40,6 +40,7 @@ bool ModuleEONMainMenu::start()
         _menuController.setInput(input);
         _menuController.bindButton("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
         _menuController.bindButton("settings_btn", std::bind(&ModuleEONMainMenu::onSettings, this));
+        _menuController.bindButton("credits_btn", std::bind(&ModuleEONMainMenu::onCredits, this));
         _menuController.bindButton("exit_btn_menu", std::bind(&ModuleEONMainMenu::onExit, this));
 
         _menuController.reset();
@@ -95,6 +96,11 @@ void ModuleEONMainMenu::onSettings()
     Settings.setCaller("main_menu");
     CModuleManager& modules = CEngine::get().getModuleManager();
     modules.changeToGamestate("settings");
+}
+
+void ModuleEONMainMenu::onCredits()
+{
+
 }
 
 void ModuleEONMainMenu::onExit()
