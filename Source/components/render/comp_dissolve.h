@@ -27,9 +27,13 @@ public:
 	void debugInMenu();
 	void onEntityCreated();
 
+	bool isEnabled();
+
 	void enable(float time, float waitTime = 1e-6f, bool inversed = false, bool propagate_childs = true);
 	void forceEnabled(bool enabled);
 	void setMaterial(const std::string& mat_name);
+	void setOriginalMaterial(const std::string& mat_name);
+	const std::string& getOriginalMaterial();
 	void setUseDefaultMat(bool use_default);
 	void fromLifetime(float ttl);
 	void updateObjectCte(CShaderCte<CtesObject>& cte);
