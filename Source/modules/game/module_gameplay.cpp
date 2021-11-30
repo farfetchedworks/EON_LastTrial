@@ -32,7 +32,7 @@
 #include "ui/widgets/ui_image.h"
 #include "geometry/curve.h"
 
-const bool PLAY_INTRO_CINEMATIC = false;
+const bool PLAY_INTRO_CINEMATIC = true;
 bool debugging = false;
 extern CShaderCte<CtesWorld> cte_world;
 
