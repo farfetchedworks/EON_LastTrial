@@ -6,6 +6,7 @@
 #include "components/common/comp_transform.h"
 #include "components/controllers/comp_ai_controller_base.h"
 #include "task_utils.h"
+#include "bt/bt_blackboard.h"
 
 EBTNodeResult IBTTask::tickCondition(CBTContext& ctx, const std::string& variable, float dt, bool allow_aborts)
 {
@@ -26,6 +27,10 @@ EBTNodeResult IBTTask::tickCondition(CBTContext& ctx, const std::string& variabl
 		return EBTNodeResult::IN_PROGRESS;
 	}
 	else if (condition == 0 || hitStunnedCompleted) {
+
+		// Clear all hitstuns that have not been processed
+		ctx.getBlackboard()->setValue("processHit", 0);
+		ctx.getBlackboard()->setValue("strongDamage", false);
 
 		callbacks.onRecoveryFinished(ctx, dt);
 		ctx.setFSMVariable("pend_recovery_finished", true);
