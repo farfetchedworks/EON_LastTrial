@@ -8,6 +8,7 @@
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
+#include "ui/widgets/ui_video.h"
 #include "audio/module_audio.h"
 
 bool ModuleEONEndGame::start()
@@ -18,7 +19,11 @@ bool ModuleEONEndGame::start()
     input = CEngine::get().getInput(input::MENU);
     assert(input);
 
-    EngineUI.activateWidget("eon_end_game");
+    EngineUI.activateWidget("eon_credits");
+
+    ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_credits");
+    bool is_ok = video->getVideoParams()->video->reset();
+    assert(is_ok);
 
     _menuController.setInput(input);
     _menuController.bindButton("continue_btn_end", std::bind(&ModuleEONEndGame::onContinue, this));
@@ -27,18 +32,24 @@ bool ModuleEONEndGame::start()
     _menuController.reset();
     _menuController.selectOption(0);
     
-    return true;
+    return is_ok;
 }
 
 void ModuleEONEndGame::stop()
 {
     EngineUI.deactivateWidget("modal_black", false);
+    EngineUI.deactivateWidget("eon_credits", false);
     EngineUI.deactivateWidget("eon_end_game");
 }
 
 void ModuleEONEndGame::update(float dt)
 {
-    _menuController.update(dt);
+    ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_credits");
+    if (video->getVideoParams()->video->hasFinished())
+    {
+        EngineUI.activateWidget("eon_end_game");
+        _menuController.update(dt);
+    }
 }
 
 void ModuleEONEndGame::onContinue()

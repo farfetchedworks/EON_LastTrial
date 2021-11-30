@@ -24,7 +24,11 @@ bool ModuleEONSplashScreen::start()
     EngineAudio.postMusicEvent("Music/Title_Theme");
     fmod_event = EngineAudio.post2DEventGetInst("UI/Splash_Screen");
 
-    return true;
+    ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_splash_screen");
+    bool is_ok = video->getVideoParams()->video->reset();
+    assert(is_ok);
+
+    return is_ok;
 }
 
 void ModuleEONSplashScreen::stop()

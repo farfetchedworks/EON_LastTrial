@@ -7,8 +7,9 @@
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
-#include "ui/widgets/ui_text.h"
 #include "ui/ui_params.h"
+#include "ui/widgets/ui_text.h"
+#include "ui/widgets/ui_video.h"
 #include "audio/module_audio.h"
 
 bool ModuleEONMainMenu::start()
@@ -74,7 +75,23 @@ void ModuleEONMainMenu::stop()
 
 void ModuleEONMainMenu::update(float dt)
 {
-    _menuController.update(dt);
+    if (_creditsOn)
+    {
+        if (input->getButton("pause_game").getsPressed()) {
+            EngineUI.deactivateWidget("eon_credits");
+            _creditsOn = false;
+        }
+
+        ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_credits");
+        if (video->getVideoParams()->video->hasFinished()) {
+            EngineUI.deactivateWidget("eon_credits");
+            _creditsOn = false;
+        }
+    }
+    else
+    {
+        _menuController.update(dt);
+    }
 }
 
 void ModuleEONMainMenu::onNewGame()
@@ -100,7 +117,12 @@ void ModuleEONMainMenu::onSettings()
 
 void ModuleEONMainMenu::onCredits()
 {
+    EngineUI.activateWidget("eon_credits");
+    _creditsOn = true;
 
+    ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_credits");
+    bool is_ok = video->getVideoParams()->video->reset();
+    assert(is_ok);
 }
 
 void ModuleEONMainMenu::onExit()

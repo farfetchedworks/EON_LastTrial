@@ -138,7 +138,7 @@ void CModuleSettings::update(float dt)
 {
     _menuController.update(dt);
 
-    if (input->getButton("pause_game").getsPressed() && _callingScreen == "playing") {
+    if (input->getButton("pause_game").getsPressed()) {
         onGoBack();
     }
 }
