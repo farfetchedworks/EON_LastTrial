@@ -38,8 +38,10 @@ void TCompNPC::update(float dt)
 bool TCompNPC::resolve()
 {
 	CEntity* player = getEntityByName("player");
-	if (!player)
+
+	if (!player || (first_interaction && !caption_scene.length()))
 		return false;
+
 	return PawnUtils::isInsideCone(player, CHandle(this).getOwner(), deg2rad(80.f), sight_radius);
 }
 
