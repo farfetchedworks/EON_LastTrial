@@ -1102,6 +1102,9 @@ void TCompPlayerController::changeLockedTarget(VEC2& dir)
 	float min_distance = 100000.0f;
 	VEC3 front = camera_trans->getForward();
 	CEntity* h_locked_entity = nullptr;
+
+	if (!h_locked_transform.isValid()) removeLockOn(true);
+
 	TCompTransform c_locked_trans = *(static_cast<TCompTransform*>(h_locked_transform));
 
 	QUAT new_rot = QUAT::CreateFromAxisAngle(VEC3(0, 1, 0), atan2(front.x, front.z));
