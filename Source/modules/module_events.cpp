@@ -67,7 +67,7 @@ unsigned int CModuleEventSystem::registerEventCallback(const std::string& name, 
 void CModuleEventSystem::dispatchEvent(const std::string& name, const std::string& trigger_name)
 {
 	CEntity* trigger = getEntityByName(trigger_name);
-	dispatchEvent(name, trigger_name);
+	dispatchEvent(name, trigger);
 }
 
 void CModuleEventSystem::dispatchEvent(const std::string& name, CHandle trigger)
