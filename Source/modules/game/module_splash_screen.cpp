@@ -37,7 +37,7 @@ void ModuleEONSplashScreen::update(float dt)
 {
     if (input->getButton("pause_game").getsPressed()) {
         CEngine::get().getModuleManager().changeToGamestate("main_menu");
-        EngineAudio.setMusicTimelinePosition(23000);
+        EngineAudio.setMusicTimelinePosition(26075);
     }
         
     ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_splash_screen");
