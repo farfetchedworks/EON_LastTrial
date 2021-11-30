@@ -103,7 +103,7 @@ void CDeferredRenderer::renderGBuffer() {
 
 	// Clear output buffers. some can be removed if we intend to fill all the screen
 	// with new data.
-	rt_albedos->clear(VEC4(1, 0, 0, 1));
+	rt_albedos->clear(VEC4(0, 0, 0, 1));
 	rt_normals->clear(VEC4(0, 0, 1, 1));
 	rt_depth->clear(VEC4(100));
 	rt_emissive->clear(VEC4(0, 0, 0, 1));
