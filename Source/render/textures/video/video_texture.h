@@ -16,6 +16,7 @@ struct VideoTexture {
 
   void pause();
   void resume();
+  bool reset();
   void setAutoLoop(bool how);
   bool hasFinished();
   CTexture* getTexture();

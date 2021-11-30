@@ -97,15 +97,24 @@ bool debugCteInMenu<CtesParticleSystem>(CtesParticleSystem& c) {
 // ----------------------------------------------------------------------
 TCompBuffers::~TCompBuffers() {
 	for (auto& b : gpu_buffers)
+	{
 		b->destroy();
+		delete b;
+	}
 	gpu_buffers.clear();
 
 	for (auto& b : cte_buffers)
+	{
 		b->destroy();
+		delete b;
+	}
 	cte_buffers.clear();
 
 	for (auto& b : textures)
+	{
 		b->destroy();
+		delete b;
+	}
 	textures.clear();
 }
 

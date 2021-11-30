@@ -7,8 +7,9 @@
 #include "input/input_module.h"
 #include "ui/ui_module.h"
 #include "ui/ui_widget.h"
-#include "ui/widgets/ui_text.h"
 #include "ui/ui_params.h"
+#include "ui/widgets/ui_text.h"
+#include "ui/widgets/ui_video.h"
 #include "audio/module_audio.h"
 
 bool ModuleEONMainMenu::start()
@@ -40,6 +41,7 @@ bool ModuleEONMainMenu::start()
         _menuController.setInput(input);
         _menuController.bindButton("start_btn", std::bind(&ModuleEONMainMenu::onNewGame, this));
         _menuController.bindButton("settings_btn", std::bind(&ModuleEONMainMenu::onSettings, this));
+        _menuController.bindButton("credits_btn", std::bind(&ModuleEONMainMenu::onCredits, this));
         _menuController.bindButton("exit_btn_menu", std::bind(&ModuleEONMainMenu::onExit, this));
 
         _menuController.reset();
@@ -73,7 +75,23 @@ void ModuleEONMainMenu::stop()
 
 void ModuleEONMainMenu::update(float dt)
 {
-    _menuController.update(dt);
+    if (_creditsOn)
+    {
+        if (input->getButton("pause_game").getsPressed()) {
+            EngineUI.deactivateWidget("eon_credits");
+            _creditsOn = false;
+        }
+
+        ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_credits");
+        if (video->getVideoParams()->video->hasFinished()) {
+            EngineUI.deactivateWidget("eon_credits");
+            _creditsOn = false;
+        }
+    }
+    else
+    {
+        _menuController.update(dt);
+    }
 }
 
 void ModuleEONMainMenu::onNewGame()
@@ -95,6 +113,16 @@ void ModuleEONMainMenu::onSettings()
     Settings.setCaller("main_menu");
     CModuleManager& modules = CEngine::get().getModuleManager();
     modules.changeToGamestate("settings");
+}
+
+void ModuleEONMainMenu::onCredits()
+{
+    EngineUI.activateWidget("eon_credits");
+    _creditsOn = true;
+
+    ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_credits");
+    bool is_ok = video->getVideoParams()->video->reset();
+    assert(is_ok);
 }
 
 void ModuleEONMainMenu::onExit()

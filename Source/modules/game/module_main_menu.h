@@ -1,4 +1,3 @@
-#pragma once
 #include "modules/module.h"
 #include "ui/controllers/ui_menu_controller.h"
 
@@ -16,9 +15,11 @@ public:
 private:
 	void onNewGame();
 	void onSettings();
+	void onCredits();
 	void onExit();
 
 	bool _toSettings = false;
+	bool _creditsOn = false;
 
 	input::CModule* input = nullptr;
 	ui::CMenuController _menuController;

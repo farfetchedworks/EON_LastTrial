@@ -63,17 +63,17 @@ public:
     {
         CEntity* owner = ctx.getOwnerEntity();
 
-        //if (!anim.aborted(ctx)) {
-            TCompTransform* transform = owner->get<TCompTransform>();
-            TCompCollider* collider = owner->get<TCompCollider>();
-            CEntity* e_shrine = PlayerInteraction.getLastShrine();
+        TCompTransform* transform = owner->get<TCompTransform>();
+        TCompCollider* collider = owner->get<TCompCollider>();
+        CEntity* e_shrine = PlayerInteraction.getLastShrine();
 
-            TMsgShrinePray msg;
-            msg.position = transform->getPosition();
-            msg.collider_pos = PXEXVEC3_TO_VEC3(collider->getControllerPosition());
-            e_shrine->sendMsg(msg);
-            dbg("Prayer done!\n");
-        //}
+        TMsgShrinePray msg;
+        msg.position = transform->getPosition();
+        msg.collider_pos = PXEXVEC3_TO_VEC3(collider->getControllerPosition());
+        e_shrine->sendMsg(msg);
+        dbg("Prayer done!\n");
+
+        PlayerInteraction.setActive(false);
 
         ctx.setVariableValue("is_praying", false);
         anim.stop(ctx);

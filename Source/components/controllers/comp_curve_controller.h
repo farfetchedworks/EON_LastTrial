@@ -26,7 +26,9 @@ struct TCompCurveController : public TCompBase
     bool lerping_target = false;
 
     bool active = false;
+    bool follow_path = false;
     float speed = 0.f;
+    float path_speed = 1.f;
 
     void load(const json& j, TEntityParseContext& ctx);
     void onEntityCreated();
@@ -47,5 +49,5 @@ struct TCompCurveController : public TCompBase
     void renderDebug();
 
 private:
-    MAT44 initialTransform;
+    CTransform initialTransform;
 };

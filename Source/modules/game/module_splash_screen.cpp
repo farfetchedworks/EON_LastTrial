@@ -24,7 +24,11 @@ bool ModuleEONSplashScreen::start()
     EngineAudio.postMusicEvent("Music/Title_Theme");
     fmod_event = EngineAudio.post2DEventGetInst("UI/Splash_Screen");
 
-    return true;
+    ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_splash_screen");
+    bool is_ok = video->getVideoParams()->video->reset();
+    assert(is_ok);
+
+    return is_ok;
 }
 
 void ModuleEONSplashScreen::stop()
@@ -37,7 +41,7 @@ void ModuleEONSplashScreen::update(float dt)
 {
     if (input->getButton("pause_game").getsPressed()) {
         CEngine::get().getModuleManager().changeToGamestate("main_menu");
-        EngineAudio.setMusicTimelinePosition(23000);
+        EngineAudio.setMusicTimelinePosition(26075);
     }
         
     ui::CVideo* video = (ui::CVideo*)EngineUI.getWidget("eon_splash_screen");

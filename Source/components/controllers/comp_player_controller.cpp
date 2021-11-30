@@ -508,7 +508,7 @@ void TCompPlayerController::move(float dt)
 	}
 
 	// Manage on stop running/sprinting animations
-	if (!is_turn_sprint && !is_moving && PlayerInput["sprint"].wasPressed() && moving_timer > 0.75f) {
+	if (!is_turn_sprint && !is_moving && (PlayerInput["sprint"].wasPressed() || PlayerInput["sprint"].timeSinceReleased() < .2f) && moving_timer > 0.75f) {
 		moving_timer = 0.f;
 		current_speed = 0.0f;
 		setVariable("is_stopping_sprint", true);
@@ -1338,13 +1338,18 @@ bool TCompPlayerController::canSeeTarget(TCompTransform* camera_trans, CEntity* 
 
 void TCompPlayerController::sprint(float dt)
 {
+	TCompCollider* comp_collider = h_collider;
 	TCompStamina* comp_stamina = h_player_stamina;
 
-	if (comp_stamina->hasStamina(EAction::SPRINT)) {
-		target_speed = sprint_speed;
-		start_sprint_time +=	 dt;
+	bool stopped = comp_collider->getLinearVelocity().Length() < 0.2f;
+	
+	if (stopped) moving_timer = 0.f;
 
-		if (start_sprint_time >= sprint_redux_freq) {
+	if (comp_stamina->hasStamina(EAction::SPRINT) && !stopped) {
+		target_speed = sprint_speed;
+		start_sprint_time += dt;
+
+		if (start_sprint_time >= sprint_redux_freq && is_moving) {
 			comp_stamina->reduceStamina(EAction::SPRINT);
 			start_sprint_time = 0;
 		}

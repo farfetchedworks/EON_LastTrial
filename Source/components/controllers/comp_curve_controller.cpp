@@ -15,6 +15,10 @@ void TCompCurveController::load(const json& j, TEntityParseContext& ctx)
     curve = Resources.get(filename)->as<CCurve>();
     active = j.value("active", active);
     speed = j.value("speed", speed);
+    follow_path = j.value("follow_path", follow_path);
+
+    // more speed, more drift..
+    path_speed = j.value("path_speed", path_speed);
 }
 
 void TCompCurveController::onEntityCreated()
@@ -22,7 +26,7 @@ void TCompCurveController::onEntityCreated()
     TCompTransform* c_target = get<TCompTransform>();
     if (!c_target) return;
 
-    initialTransform = c_target->asMatrix();
+    initialTransform.fromMatrix(*c_target);
 }
 
 void TCompCurveController::update(float dt)
@@ -34,7 +38,8 @@ void TCompCurveController::update(float dt)
     if (target_entity_transform.isValid()) {
         TCompTransform* c_target_entity = target_entity_transform;
         final_target = c_target_entity->getPosition();
-    } else {
+    } 
+    else {
         final_target = target;
     }
 
@@ -53,6 +58,17 @@ void TCompCurveController::update(float dt)
         }
     }
 
+    MAT44 world = initialTransform.asMatrix();
+
+    // Lerp position
+    VEC3 newPosition = curve->evaluate(ratio, world);
+
+    if (curve_lerped) {
+        VEC3 targetPosition = curve_lerped->evaluate(0, world);
+        newPosition = VEC3::Lerp(newPosition, targetPosition, ratio_curve_lerped / curve_lerped_seconds);
+    }
+
+    // Lerp target
     if (lerping_target) {
         ratio_target_lerped += dt;
 
@@ -65,12 +81,9 @@ void TCompCurveController::update(float dt)
         }
     }
 
-    VEC3 newPosition = curve->evaluate(ratio, initialTransform);
-
-    if (curve_lerped) {
-        VEC3 targetPosition = curve_lerped->evaluate(0, initialTransform);
-        newPosition = VEC3::Lerp(newPosition, targetPosition, ratio_curve_lerped / curve_lerped_seconds);
-    }
+    // new target using path
+    if(follow_path)
+        final_target = curve->evaluate(ratio + path_speed * 0.01f, world);
 
     c_target->lookAt(newPosition, final_target, VEC3(0, 1, 0));
 }
@@ -159,8 +172,16 @@ void TCompCurveController::debugInMenu()
         curve->renderInMenu();
         ImGui::TreePop();
     }
+
     ImGui::Checkbox("Active", &active);
-    ImGui::DragFloat("Speed", &speed, 0.1f, 0.0f, 4.0f);
+    ImGui::DragFloat("Speed", &speed, 0.01f, 0.0f, 10.0f);
+    ImGui::DragFloat("Path speed", &path_speed, 0.01f, 0.0f, 10.0f);
+
+    if (ImGui::TreeNode("Initial transform"))
+    {
+        initialTransform.renderInMenu();
+        ImGui::TreePop();
+    }
 }
 
 void TCompCurveController::renderDebug()
@@ -169,7 +190,7 @@ void TCompCurveController::renderDebug()
     TCompTransform* c_target = get<TCompTransform>();
     if (c_target)
     {
-        curve->renderDebug(initialTransform, VEC4(1.f, 1.f, 0.f, 1.f));
+        curve->renderDebug(initialTransform.asMatrix(), VEC4(1.f, 1.f, 0.f, 1.f));
     }
 #endif
 }

@@ -628,6 +628,29 @@ public:
     SAFE_RELEASE(pVideoSample);
   }
 
+  bool reset() {
+      HRESULT hr;
+      PROPVARIANT var = { 0 };
+      var.vt = VT_I8;
+      hr = pSourceReader->SetCurrentPosition(GUID_NULL, var);
+      if (hr != S_OK) { dbg("Failed to set source reader position."); }
+
+      clock_time = 0.0f;
+      streamIndex = 0;
+      flags = 0;
+      llVideoTimeStamp = 0;
+      llSampleDuration = 0;
+      sampleCount = 0;
+      sampleFlags = 0;  
+      video_time = 0;
+
+      finished = false;
+      paused = false;
+
+      update(0.0f);
+      return hr == S_OK;
+  }
+
 };
 
 bool VideoTexture::createAPI() {
@@ -664,6 +687,11 @@ void VideoTexture::pause() {
 void VideoTexture::resume() {
   assert(internal_data);
   internal_data->paused = false;
+}
+
+bool VideoTexture::reset() {
+    assert(internal_data);
+    return internal_data->reset();
 }
 
 void VideoTexture::setAutoLoop(bool how) {
