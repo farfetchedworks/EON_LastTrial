@@ -214,7 +214,6 @@ void CModuleEventSystem::registerGlobalEvents()
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/onShrineActivated", [](CHandle t, CHandle o) {
-		PlayerInteraction.setActive(false);
 		TCompGameManager* comp_gm = GameManager->get<TCompGameManager>();
 		comp_gm->respawnEnemies();
 		CEntity* owner = t;

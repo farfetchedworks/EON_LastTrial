@@ -22,6 +22,15 @@ bool CModulePlayerInteraction::start()
 	return true;
 }
 
+void CModulePlayerInteraction::renderInMenu()
+{
+	if (ImGui::TreeNode("Interaction"))
+	{
+		ImGui::Checkbox("Active", &active);
+		ImGui::TreePop();
+	}
+}
+
 void CModulePlayerInteraction::enableUI(bool v)
 {
 	// Don't activate/deactivate each frame..

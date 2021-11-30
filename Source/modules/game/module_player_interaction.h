@@ -28,8 +28,10 @@ public:
 	void setEnergyWall(CHandle h) { h_currEnergyWall = h; };
 	void setLastShrine(CHandle h) { h_lastShrine = h; };
 	void setActive(bool v) { active = v; };
+	bool getIsActive() { return active; };
 
 	bool start() override;
+	void renderInMenu() override;
 	void checkInteractions();
 	void interact(CHandle object);
 

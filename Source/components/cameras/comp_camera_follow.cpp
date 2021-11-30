@@ -176,13 +176,12 @@ void TCompCameraFollow::update(float dt)
     delta_yaw_lerp.value =  dampRadians(delta_yaw_lerp.value, delta_yaw, delta_yaw_lerp.velocity, 0.05f, dt);
 
     TCompPlayerController* c_player = h_player;
-    bool is_praying = std::get<bool>(c_player->getVariable("is_praying"));
+    bool is_interacting = PlayerInteraction.getIsActive();
 
-
-    float targetDistance = is_praying ? 6.0f : distance;
+    float targetDistance = is_interacting ? 6.0f : distance;
     current_distance.value = smoothDamp(current_distance.value, targetDistance, current_distance.velocity, 0.5f, dt);
 
-    float targetHeight = is_praying ? 2.0f : height;
+    float targetHeight = is_interacting ? 2.0f : height;
     current_height.value = smoothDamp(current_height.value, targetHeight, current_height.velocity, 0.5f, dt);
 
     // Modify camera settings when locked depending on the distance to the target
