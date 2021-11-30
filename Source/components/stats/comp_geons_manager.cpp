@@ -39,6 +39,8 @@ void TCompGeonsManager::load(const json& j, TEntityParseContext& ctx)
 
 void TCompGeonsManager::update(float dt)
 {
+	lerpGeons(dt);
+
 	if (timer > 0.f)
 	{
 		timer -= dt;
@@ -47,6 +49,22 @@ void TCompGeonsManager::update(float dt)
 			EngineUI.deactivateWidget("phase_up");
 		}
 	}
+
+	// Update UI
+	int current_req = phase_requirements[prev_phase + 1];
+	float pct = lerp_geons / (float)current_req;
+	
+	ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "geons_bar");
+	assert(w);
+	ui::CWidget* wChild = w->getChildByName("bar_fill");
+	if (wChild) {
+		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
+		ui::TImageParams& params = fill->imageParams;
+		params.alpha_cut = pct;
+	}
+
+	prev_phase = (prev_phase < phase && pct >= 0.99f) ? ++prev_phase : prev_phase;
+	lerp_geons = pct < 0.001f ? 0.f : lerp_geons;
 }
 
 void TCompGeonsManager::addGeons(int geons)
@@ -70,18 +88,16 @@ void TCompGeonsManager::addGeons(int geons)
 			break;
 		}
 	}
+}
 
-	// Update UI
-	int current_req = phase_requirements[phase + 1];
-	float pct = current_geons / (float)current_req;
-	ui::CWidget* w = EngineUI.getWidgetFrom("eon_hud", "geons_bar");
-	assert(w);
-	ui::CWidget* wChild = w->getChildByName("bar_fill");
-	if (wChild) {
-		ui::CImage* fill = static_cast<ui::CImage*>(wChild);
-		ui::TImageParams& params = fill->imageParams;
-		params.alpha_cut = pct;
-	}
+void TCompGeonsManager::lerpGeons(float dt)
+{
+	int current_req = phase_requirements[prev_phase + 1];
+
+	if (prev_phase < phase)
+		lerp_geons = damp<float>(lerp_geons, (float) current_req, 2.5f, dt);
+	else
+		lerp_geons = damp<float>(lerp_geons, (float) current_geons, 2.5f, dt);
 }
 
 void TCompGeonsManager::increasePhase(bool only_stats)
@@ -146,7 +162,7 @@ void TCompGeonsManager::debugInMenu()
 	}
 	ImGui::Separator();
 	if (ImGui::Button("DBG: Add 150"))
-		addGeons(150);
+		addGeons(34);
 }
 
 void TCompGeonsManager::renderDebug()
