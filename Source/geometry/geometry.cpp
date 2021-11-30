@@ -252,6 +252,7 @@ std::vector<int> loadVECN(const json& j, const char* attr)
 
 float smoothDamp(float current, float target, float& currentVelocity, float smoothTime, float deltaTime, float maxSpeed)
 {
+    deltaTime = std::max(0.0001f, deltaTime);
     smoothTime = std::max(0.0001f, smoothTime);
     float num = 2.0f / smoothTime;
     float num2 = num * deltaTime;
