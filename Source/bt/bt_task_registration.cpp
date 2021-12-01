@@ -1866,7 +1866,7 @@ public:
 		ctx.setIsDying(true);
 
 		// Add a fade out to start the animation
-		EngineUI.fadeOut(0.7f, 0.2f, 0.2f);
+		EngineUI.fadeOut(0.9f, 0.2f, 0.2f);
 
 		// Stop all forces
 		CEntity* player = getPlayer();
@@ -1875,7 +1875,7 @@ public:
 		msgForce.force_origin = "Cygnus";
 		player->sendMsg(msgForce);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 0.7f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 0.9f);
 
 #else
 		// To avoid playing cinematics
@@ -2111,7 +2111,7 @@ public:
 			return EBTNodeResult::SUCCEEDED;
 
 		// The only cinematic is from F2 to F3 (in phase 3)
-		EngineUI.fadeOut(0.7f, 0.2f, 0.2f);
+		EngineUI.fadeOut(0.9f, 0.2f, 0.2f);
 			
 		TCompBT* c_bt = ctx.getComponent<TCompBT>();
 		assert(c_bt);
@@ -2121,7 +2121,7 @@ public:
 		TCompHealth* c_health = ctx.getComponent<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 0.7f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 0.9f);
 		
 		return EBTNodeResult::SUCCEEDED;
 	}
@@ -2417,13 +2417,13 @@ public:
 
 		CEntity* e = ctx.getOwnerEntity();
 
-		EngineUI.fadeOut(0.7f, 0.2f, 0.2f);
+		EngineUI.fadeOut(1.f, 0.25f, 0.25f);
 
 		// Hide health bar
 		TCompHealth* c_health = e->get<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')", 0.7f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')", 1.f);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
