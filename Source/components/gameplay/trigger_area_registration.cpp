@@ -176,6 +176,12 @@ public:
 		TCompFSM* fsm = e_cygnus->get<TCompFSM>();
 		fsm->startCtx();
 
+		CEntity* e_camera = getEntityByName("camera_mixed");
+		assert(e_camera);
+
+		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
+		c_focus->enable(e_cygnus);
+
 		// Intro
 		EngineLua.executeScript("CinematicCygnusPresentation()");
 

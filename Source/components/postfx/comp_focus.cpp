@@ -34,7 +34,7 @@ void TCompFocus::load(const json& j, TEntityParseContext& ctx)
 	enabled = j.value("enabled", enabled);
 	cte_focus.focus_z_center_in_focus = j.value("z_center_in_focus", 5.f);
 	cte_focus.focus_z_margin_in_focus = j.value("z_margin_in_focus", 0.f);
-	cte_focus.focus_transition_distance = j.value("transition_distance", 4.0f);
+	cte_focus.focus_transition_distance = j.value("transition_distance", 3.0f);
 	cte_focus.focus_intensity = j.value("focus_intensity", 0.f);
 	pipeline = Resources.get("focus.pipeline")->as<CPipelineState>();
 	mesh = Resources.get("unit_quad_xy.mesh")->as<CMesh>();
