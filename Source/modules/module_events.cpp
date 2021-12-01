@@ -274,14 +274,21 @@ void CModuleEventSystem::registerGlobalEvents()
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/Phase_1_to_2", [](CHandle t, CHandle o) {
 
+			// Set player in initial pos every cinematic
+			CEntity* playerTargetEntity = getEntityByName("CygnusBeamPosition2");
+			TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
 			CEntity* player = getEntityByName("player");
+			TCompTransform* c_trans_player = player->get<TCompTransform>();
+			c_trans_player->setRotation(c_trans_player->getRotation());
+			player->setPosition(c_trans_target_pos->getPosition(), true);
 		
 			// Place Cygnus in the center
 			CEntity* e = getEntityByName("Cygnus_Form_1");
 			TCompTransform* transform = e->get<TCompTransform>();
 			CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
 			TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-			transform->setPosition(c_trans_arena->getPosition());
+			transform->fromMatrix(*c_trans_arena);
+			transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
 
 			// Spawn the black hole where Cygnus is
 			spawn("data/prefabs/black_hole_cygnus.json", *transform);

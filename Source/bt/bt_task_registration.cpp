@@ -1866,7 +1866,7 @@ public:
 		ctx.setIsDying(true);
 
 		// Add a fade out to start the animation
-		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
+		EngineUI.fadeOut(0.7f, 0.2f, 0.2f);
 
 		// Stop all forces
 		CEntity* player = getPlayer();
@@ -1875,7 +1875,7 @@ public:
 		msgForce.force_origin = "Cygnus";
 		player->sendMsg(msgForce);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 1.f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 0.7f);
 
 #else
 		// To avoid playing cinematics
