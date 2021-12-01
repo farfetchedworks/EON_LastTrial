@@ -258,7 +258,6 @@ void ModuleEONGameplay::togglePause()
 		
 		EngineUI.activateWidget("eon_pause");
 		PlayerInput.blockInput();
-		Time.scale_factor = 0.f;
 		debugging = true;
 		CApplication::get().changeMouseState(debugging);
 	}
@@ -266,7 +265,6 @@ void ModuleEONGameplay::togglePause()
 	{
 		debugging = false;
 		CApplication::get().changeMouseState(debugging);
-		Time.scale_factor = 1.f;
 		EngineUI.deactivateWidget("eon_pause");
 		PlayerInput.unBlockInput();
 		PlayerInput.clearInput();
