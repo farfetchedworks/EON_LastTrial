@@ -20,9 +20,6 @@ struct onCygnusF2ToF3 : public CAnimationCallback
 		if (first_update) {
 			first_update = false;
 
-			// Intro form 3
-			EngineLua.executeScript("CinematicCygnusF2ToF3()");
-
 			EngineAudio.setMusicRTPC("Cygnus_Phase", 3, true);
 			// EngineAudio.postEvent("CHA/Cygnus/P1/AT/Cygnus_P1_To_P2", CHandle(getOwnerEntity(userData)));
 		}

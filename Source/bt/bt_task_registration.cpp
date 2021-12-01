@@ -2111,7 +2111,7 @@ public:
 			return EBTNodeResult::SUCCEEDED;
 
 		// The only cinematic is from F2 to F3 (in phase 3)
-		EngineUI.fadeOut(1.0f, 0.2f, 0.2f);
+		EngineUI.fadeOut(0.7f, 0.2f, 0.2f);
 			
 		TCompBT* c_bt = ctx.getComponent<TCompBT>();
 		assert(c_bt);
@@ -2121,7 +2121,7 @@ public:
 		TCompHealth* c_health = ctx.getComponent<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 0.8f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 0.7f);
 		
 		return EBTNodeResult::SUCCEEDED;
 	}
@@ -2417,22 +2417,13 @@ public:
 
 		CEntity* e = ctx.getOwnerEntity();
 
-		EngineUI.fadeOut(1.0f, 0.2f, 0.2f);
+		EngineUI.fadeOut(0.7f, 0.2f, 0.2f);
 
 		// Hide health bar
 		TCompHealth* c_health = e->get<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')", 0.8f);
-
-		//// Rotate to face player
-		//CEntity* player = getPlayer();
-		//TCompTransform* c_trans = e->get<TCompTransform>();
-		//float yaw = c_trans->getYawRotationToAimTo(player->getPosition());
-		//c_trans->setRotation(QUAT::Concatenate(c_trans->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-
-		//// Death cinematic
-		//EngineLua.executeScript("CinematicCygnusDeath()");
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')", 0.7f);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
