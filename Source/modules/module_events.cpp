@@ -274,53 +274,67 @@ void CModuleEventSystem::registerGlobalEvents()
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/Phase_1_to_2", [](CHandle t, CHandle o) {
 
-			CEntity* player = getEntityByName("player");
+		// Set player in initial pos every cinematic
+		CEntity* playerTargetEntity = getEntityByName("CygnusBeamPosition2");
+		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
+		CEntity* player = getEntityByName("player");
+		TCompTransform* c_trans_player = player->get<TCompTransform>();
+		c_trans_player->setRotation(c_trans_player->getRotation());
+		player->setPosition(c_trans_target_pos->getPosition(), true);
 		
-			// Place Cygnus in the center
-			CEntity* e = getEntityByName("Cygnus_Form_1");
-			TCompTransform* transform = e->get<TCompTransform>();
-			CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
-			TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-			transform->setPosition(c_trans_arena->getPosition());
+		// Place Cygnus in the center
+		CEntity* e = getEntityByName("Cygnus_Form_1");
+		TCompTransform* transform = e->get<TCompTransform>();
+		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
+		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
+		transform->fromMatrix(*c_trans_arena);
+		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
 
-			// Spawn the black hole where Cygnus is
-			spawn("data/prefabs/black_hole_cygnus.json", *transform);
+		// Spawn the black hole where Cygnus is
+		spawn("data/prefabs/black_hole_cygnus.json", *transform);
 
-			// Get Form 1 info
-			CTransform transform_form_1;
-			transform_form_1.fromMatrix(*transform);
-			float yaw = transform->getYawRotationToAimTo(player->getPosition());
-			transform_form_1.setRotation(QUAT::Concatenate(transform_form_1.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+		// Get Form 1 info
+		CTransform transform_form_1;
+		transform_form_1.fromMatrix(*transform);
+		float yaw = transform->getYawRotationToAimTo(player->getPosition());
+		transform_form_1.setRotation(QUAT::Concatenate(transform_form_1.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 
-			// Spawn new form
-			spawn("data/prefabs/cygnus_form_2.json", transform_form_1);
+		// Spawn new form
+		spawn("data/prefabs/cygnus_form_2.json", transform_form_1);
 
-			// Destroy form 1 entity
-			e->destroy();
-			CHandleManager::destroyAllPendingObjects();
+		// Destroy form 1 entity
+		e->destroy();
+		CHandleManager::destroyAllPendingObjects();
 
-			// Intro form 2
-			EngineLua.executeScript("CinematicCygnusF1ToF2()");
-		});
+		// Intro form 2
+		EngineLua.executeScript("CinematicCygnusF1ToF2()");
+	});
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/Phase_2_to_3", [](CHandle t, CHandle o) {
 
-			CEntity* player = getEntityByName("player");
+		// Set player in initial pos every cinematic
+		CEntity* playerTargetEntity = getEntityByName("CygnusBeamPosition2");
+		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
+		CEntity* player = getEntityByName("player");
+		TCompTransform* c_trans_player = player->get<TCompTransform>();
+		c_trans_player->setRotation(c_trans_player->getRotation());
+		player->setPosition(c_trans_target_pos->getPosition(), true);
 
-			// Place Cygnus in the center
-			CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
-			TCompTransform* transform = e_cygnus->get<TCompTransform>();
-			CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
-			TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-			transform->setPosition(c_trans_arena->getPosition());
+		// Place Cygnus in the center
+		CEntity* e = getEntityByName("Cygnus_Form_2");
+		TCompTransform* transform = e->get<TCompTransform>();
+		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
+		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
+		transform->fromMatrix(*c_trans_arena);
+		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
 
-			// Rotate to face player
-			float yaw = transform->getYawRotationToAimTo(player->getPosition());
-			transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+		// Rotate to face player
+		float yaw = transform->getYawRotationToAimTo(player->getPosition());
+		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 
-			// Intro form 3
-			EngineLua.executeScript("CinematicCygnusF2ToF3()");
-		});
+		// Intro form 3
+		EngineLua.executeScript("CinematicCygnusF2ToF3()");
+	});
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/FinalDeath", [](CHandle t, CHandle o) {
 
