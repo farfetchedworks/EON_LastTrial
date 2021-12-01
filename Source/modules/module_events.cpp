@@ -14,6 +14,7 @@
 #include "components/common/comp_parent.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
+#include "components/controllers/comp_ai_controller_base.h"
 #include "components/controllers/comp_focus_controller.h"
 #include "components/controllers/comp_player_controller.h"
 #include "components/controllers/pawn_utils.h"
@@ -344,9 +345,15 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
 		e_cygnus->setPosition(c_trans_arena->getPosition(), true);
 
-		float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		transform->setRotation(transform->getRotation() * QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f));
-
+		// update transform rotation and force controller rotation
+		{
+			float yaw = transform->getYawRotationToAimTo(player->getPosition());
+			QUAT q = QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), transform->getRotation());
+			transform->setRotation(q);
+			TCompAIControllerBase* h_aicontroller = e_cygnus->get<TCompAIControllerBase>();
+			h_aicontroller->setTargetRotation(q);
+		}
+		
 		CEntity* e_camera = getEntityByName("camera_mixed");
 		assert(e_camera);
 		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
@@ -372,6 +379,15 @@ void CModuleEventSystem::registerGlobalEvents()
 		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
 		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
 		e_cygnus->setPosition(c_trans_arena->getPosition(), true);
+
+		// update transform rotation and force controller rotation
+		{
+			float yaw = transform->getYawRotationToAimTo(player->getPosition());
+			QUAT q = QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), transform->getRotation());
+			transform->setRotation(q);
+			TCompAIControllerBase* h_aicontroller = e_cygnus->get<TCompAIControllerBase>();
+			h_aicontroller->setTargetRotation(q);
+		}
 
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
 		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
