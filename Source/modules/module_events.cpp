@@ -338,22 +338,28 @@ void CModuleEventSystem::registerGlobalEvents()
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/FinalDeath", [](CHandle t, CHandle o) {
 
-			CEntity* player = getEntityByName("player");
+		// Set player in initial pos every cinematic
+		CEntity* playerTargetEntity = getEntityByName("CygnusBeamPosition2");
+		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
+		CEntity* player = getEntityByName("player");
+		TCompTransform* c_trans_player = player->get<TCompTransform>();
+		c_trans_player->setRotation(c_trans_target_pos->getRotation());
+		player->setPosition(c_trans_target_pos->getPosition(), true);
 
-			// Place Cygnus in the center
-			CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
-			TCompTransform* transform = e_cygnus->get<TCompTransform>();
-			CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
-			TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-			transform->setPosition(c_trans_arena->getPosition());
+		// Place Cygnus in the center
+		CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
+		TCompTransform* transform = e_cygnus->get<TCompTransform>();
+		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
+		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
+		transform->setPosition(c_trans_arena->getPosition());
 
-			// Rotate to face player
-			float yaw = transform->getYawRotationToAimTo(player->getPosition());
-			transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+		// Rotate to face player
+		float yaw = transform->getYawRotationToAimTo(player->getPosition());
+		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 			
-			// Death cinematic
-			EngineLua.executeScript("CinematicCygnusDeath()");
-		});
+		// Death cinematic
+		EngineLua.executeScript("CinematicCygnusDeath()");
+	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/HoloDestroyed", [](CHandle t, CHandle o) {
 		CEntity* player = getEntityByName("player");

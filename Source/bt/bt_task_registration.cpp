@@ -15,6 +15,7 @@
 #include "components/common/comp_transform.h"
 #include "components/common/comp_parent.h"
 #include "components/controllers/comp_ai_controller_base.h"
+#include "components/controllers/comp_focus_controller.h"
 #include "components/controllers/comp_force_receiver.h"
 #include "components/controllers/pawn_utils.h"
 #include "components/abilities/comp_heal.h"
@@ -1866,7 +1867,13 @@ public:
 		ctx.setIsDying(true);
 
 		// Add a fade out to start the animation
-		EngineUI.fadeOut(0.9f, 0.2f, 0.2f);
+		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
+
+		CEntity* e_cygnus = ctx.getOwnerEntity();
+		CEntity* e_camera = getEntityByName("camera_mixed");
+		assert(e_camera);
+		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
+		c_focus->enable(e_cygnus, 6.0f);
 
 		// Stop all forces
 		CEntity* player = getPlayer();
@@ -1875,7 +1882,7 @@ public:
 		msgForce.force_origin = "Cygnus";
 		player->sendMsg(msgForce);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 0.9f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 1.f);
 
 #else
 		// To avoid playing cinematics
@@ -2111,7 +2118,7 @@ public:
 			return EBTNodeResult::SUCCEEDED;
 
 		// The only cinematic is from F2 to F3 (in phase 3)
-		EngineUI.fadeOut(0.9f, 0.2f, 0.2f);
+		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
 			
 		TCompBT* c_bt = ctx.getComponent<TCompBT>();
 		assert(c_bt);
@@ -2121,7 +2128,7 @@ public:
 		TCompHealth* c_health = ctx.getComponent<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 0.9f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 1.f);
 		
 		return EBTNodeResult::SUCCEEDED;
 	}
@@ -2422,6 +2429,11 @@ public:
 		// Hide health bar
 		TCompHealth* c_health = e->get<TCompHealth>();
 		c_health->setRenderActive(false);
+
+		CEntity* e_camera = getEntityByName("camera_mixed");
+		assert(e_camera);
+		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
+		c_focus->enable(e, 6.0f);
 
 		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')", 1.f);
 	}
