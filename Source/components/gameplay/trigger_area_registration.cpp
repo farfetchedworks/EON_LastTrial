@@ -148,6 +148,7 @@ public:
 			return;
 
 		EngineAudio.postMusicEvent("Music/Cygnus_Theme");
+		EngineAudio.stopCurAmbienceEvent();
 		boss_state.music_event = EngineAudio.getCurMusicEvent();
 		EngineAudio.setMusicRTPC("Cygnus_Phase", 1, true);
 

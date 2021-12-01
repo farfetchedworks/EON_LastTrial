@@ -208,6 +208,11 @@ void TCompGameManager::respawnLevel()
 {
 	VHandles entities_to_destroy = CTagsManager::get().getAllEntitiesByTag("not_persistent");
 
+	// Reset all muffling to make sure
+	EngineAudio.setGlobalRTPC("Eon_Dead", 0, true);
+	EngineAudio.setGlobalRTPC("Eon_Inside_Warp", 0, true);
+	EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
+
 	for (auto h : entities_to_destroy)
 	{
 		if (h.isValid())

@@ -56,6 +56,9 @@ struct onCygnusF1ToF2 : public CAnimationCallback
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		// Fix for major audio bug
+		first_update = true;
+
 		// Enable BT
 		CEntity* e_owner = getOwnerEntity(userData);
 		TCompBT* c_bt = e_owner->get<TCompBT>();
