@@ -231,7 +231,9 @@ bool TCompHealth::aliveAfterHit(int health_points)
 
 void TCompHealth::lerpHealth(float dt)
 {
-    if (elapsedHitTime >= lerpHealthWaitTime) {
+    if (!is_boss && !is_player) {
+        lerp_health = damp<int>(lerp_health, health, 2.f, dt);
+    }else if (elapsedHitTime >= lerpHealthWaitTime) {
         lerp_health = damp<int>(lerp_health, health, 1.f, dt);
     }
 }
@@ -265,7 +267,7 @@ void TCompHealth::renderDebug() {
     static const Color ourOrange = Color(VEC4(0.753f, 0.655f, 0.f, 1));
     static const Color ourRed = Color(VEC4(0.466f, 0.063f, 0.15f, 1));
 
-    float pct = health / (float)max_health;
+    float pct = lerp_health / (float)max_health;
     Color clr = pct > 0.333f ? (pct > 0.666f ? ourGreen : ourOrange) : ourRed;
 
     if (!is_boss && !is_player)
@@ -277,6 +279,6 @@ void TCompHealth::renderDebug() {
 
         TCompTransform* trans = get<TCompTransform>();
         VEC3 pos = trans->getPosition();
-        drawProgressBar3D(pos, clr, (float)health, (float)max_health);
+        drawProgressBar3D(pos, clr, (float)lerp_health, (float)max_health);
     }
 }

@@ -10,6 +10,7 @@
 #include "components/ai/comp_bt.h"
 #include "components/controllers/comp_player_controller.h"
 #include "components/controllers/pawn_utils.h"
+#include "components/controllers/comp_focus_controller.h"
 #include "components/abilities/comp_time_reversal.h"
 #include "components/stats/comp_health.h"
 #include "components/common/comp_hierarchy.h"
@@ -108,6 +109,12 @@ public:
 		if (fsm->getCtx().isEnabled())
 			return;
 
+		CEntity* e_camera = getEntityByName("camera_mixed");
+		assert(e_camera);
+
+		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
+		c_focus->enable(e_gard, 6.0f);
+
 		fsm->startCtx();
 
 		EngineLua.executeScript(_name + "Area()");
@@ -122,7 +129,8 @@ public:
 		EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
 
 		// Cinematics
-		EngineLua.executeScript("CinematicGardPresentation()");
+		EngineUI.fadeOut(0.75f, 0.25f, 0.25f);
+		EngineLua.executeScript("CinematicGardPresentation()", 0.25f);
 	}
 };
 
@@ -167,6 +175,12 @@ public:
 
 		TCompFSM* fsm = e_cygnus->get<TCompFSM>();
 		fsm->startCtx();
+
+		CEntity* e_camera = getEntityByName("camera_mixed");
+		assert(e_camera);
+
+		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
+		c_focus->enable(e_cygnus, 2.0f);
 
 		// Intro
 		EngineLua.executeScript("CinematicCygnusPresentation()");

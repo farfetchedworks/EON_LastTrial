@@ -5,6 +5,7 @@
 #include "lua/module_scripting.h"
 #include "components/controllers/comp_curve_controller.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
+#include "components/controllers/comp_focus_controller.h"
 #include "components/gameplay/comp_game_manager.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "modules/module_camera_mixer.h"
@@ -178,10 +179,13 @@ namespace LogicManager
 		TCompGameManager* c_gm = GameManager->get<TCompGameManager>();
 		c_gm->setIsInCinematic(false);
 
+		CEntity* e_camera_mixed = getEntityByName("camera_mixed");
+		TCompFocusController* c_focus = e_camera_mixed->get<TCompFocusController>();
+		c_focus->disable();
+
 		CEntity* e_camera_follow = getEntityByName("camera_follow");
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->enable();
-
 
 		CEntity* e_camera = getEntityByName("camera_cinematic");
 		TCompTransform* c_trans = e_camera->get<TCompTransform>();

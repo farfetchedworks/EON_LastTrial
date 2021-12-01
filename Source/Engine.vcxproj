@@ -37,6 +37,7 @@
     <ClCompile Include="components\audio\comp_audio_emitter.cpp" />
     <ClCompile Include="components\audio\comp_music_interactor.cpp" />
     <ClCompile Include="components\common\comp_prefab_info.cpp" />
+    <ClCompile Include="components\controllers\comp_focus_controller.cpp" />
     <ClCompile Include="components\gameplay\comp_eter.cpp" />
     <ClCompile Include="components\gameplay\comp_cygnus_key.cpp" />
     <ClCompile Include="components\gameplay\comp_launch_animation.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="components\audio\comp_audio_emitter.h" />
     <ClInclude Include="components\audio\comp_music_interactor.h" />
     <ClInclude Include="components\common\comp_prefab_info.h" />
+    <ClInclude Include="components\controllers\comp_focus_controller.h" />
     <ClInclude Include="components\gameplay\comp_eter.h" />
     <ClInclude Include="components\gameplay\comp_cygnus_key.h" />
     <ClInclude Include="components\gameplay\comp_launch_animation.h" />

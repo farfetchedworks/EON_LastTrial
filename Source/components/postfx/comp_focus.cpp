@@ -4,6 +4,7 @@
 #include "render/textures/render_to_texture.h"
 #include "comp_fx_stack.h"
 #include "render/render_module.h"
+#include "render/draw_primitives.h"
 
 DECL_OBJ_MANAGER("focus", TCompFocus);
 
@@ -28,11 +29,13 @@ void TCompFocus::onEntityCreated()
 
 void TCompFocus::load(const json& j, TEntityParseContext& ctx)
 {
+	TCompBilateralBlur::load(j, ctx);
+
 	enabled = j.value("enabled", enabled);
-	cte_focus.focus_z_center_in_focus = j.value("z_center_in_focus", 30.f);
+	cte_focus.focus_z_center_in_focus = j.value("z_center_in_focus", 5.f);
 	cte_focus.focus_z_margin_in_focus = j.value("z_margin_in_focus", 0.f);
-	cte_focus.focus_transition_distance = j.value("transition_distance", 15.f);
-	cte_focus.focus_modifier = j.value("focus_modifier", 1.f);
+	cte_focus.focus_transition_distance = j.value("transition_distance", 3.0f);
+	cte_focus.focus_intensity = j.value("focus_intensity", 0.f);
 	pipeline = Resources.get("focus.pipeline")->as<CPipelineState>();
 	mesh = Resources.get("unit_quad_xy.mesh")->as<CMesh>();
 
@@ -41,7 +44,7 @@ void TCompFocus::load(const json& j, TEntityParseContext& ctx)
 	// with the first use, init with the input resolution
 	rt = new CRenderToTexture;
 	// Make it HDR!!
-	bool is_ok = rt->createRT("RT_Focus", Render.getWidth(), Render.getHeight(), DXGI_FORMAT_R8G8B8A8_UNORM);
+	bool is_ok = rt->createRT("RT_Focus", Render.getWidth(), Render.getHeight(), DXGI_FORMAT_R16G16B16A16_FLOAT);
 	assert(is_ok);
 
 	// set apply callback
@@ -50,36 +53,48 @@ void TCompFocus::load(const json& j, TEntityParseContext& ctx)
 
 void TCompFocus::debugInMenu()
 {
-	ImGui::Checkbox("Enabled", &enabled);
+	TCompBilateralBlur::debugInMenu();
+
+	ImGui::Checkbox("Focus Enabled", &enabled);
 	ImGui::DragFloat("Z Center In Focus", &cte_focus.focus_z_center_in_focus, 0.1f, 0.f, 1000.f);
 	ImGui::DragFloat("Margin In Focus", &cte_focus.focus_z_margin_in_focus, 0.1f, 0.f, 300.f);
 	ImGui::DragFloat("Transition Distance", &cte_focus.focus_transition_distance, 0.1f, 0.f, 1000.f);
-	ImGui::DragFloat("Focus Modifier", &cte_focus.focus_modifier, 0.1f, 0.f, 1.0f);
+	ImGui::DragFloat("Focus Intensity", &cte_focus.focus_intensity, 0.1f, 0.f, 1.0f);
 }
 
-CTexture* TCompFocus::apply(CTexture* blur_texture, CTexture* last_texture)
+void TCompFocus::enable()
 {
-	CTexture* focus_texture = EngineRender.getFinalRT();
+	TCompFocus::enabled = true;
+	TCompBilateralBlur::enabled = true;
+}
 
+void TCompFocus::disable()
+{
+	TCompFocus::enabled = false;
+	TCompBilateralBlur::enabled = false;
+}
+
+CShaderCte<CtesFocus>& TCompFocus::getCtesFocus()
+{
+	return cte_focus;
+}
+
+CTexture* TCompFocus::apply(CTexture* in_texture, CTexture* last_texture)
+{
 	if (!enabled)
-		return blur_texture;
+		return in_texture;
 
 	CGpuScope gpu_scope("CompFocus");
+
+	rt->clear(VEC4::Zero);
 
 	cte_focus.updateFromCPU();
 	cte_focus.activate();
 
-	assert(mesh);
-	assert(pipeline);
-	assert(focus_texture);
-	assert(blur_texture);
+	CTexture* blurred = TCompBilateralBlur::apply(in_texture, last_texture);
 
 	rt->activateRT();
-	focus_texture->activate(TS_ALBEDO);
-	blur_texture->activate(TS_NORMAL);      // As long as matches the shader, and it's not ALBEDO
-	pipeline->activate();
-	mesh->activate();
-	mesh->render();
+	drawFullScreenQuad("focus.pipeline", in_texture, blurred);
 
 	return rt;
 }
