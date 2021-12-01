@@ -45,8 +45,8 @@ void TCompFocusController::update(float dt)
     TCompFocus* c_focus = get<TCompFocus>();
     CShaderCte<CtesFocus>& ctes_focus = c_focus->getCtesFocus();
 
-    float distance = VEC3::Distance(e_target->getPosition(), e_camera->getPosition());
-    ctes_focus.focus_z_center_in_focus = distance;
+    float distance = VEC3::Distance(e_target->getPosition(), e_camera->getPosition()) - 0.5f;
+    ctes_focus.focus_z_center_in_focus = clampf(distance, 0.0f, 100000.0f);
 
     _intensity += dt * 0.5f;
     _intensity = clampf(_intensity, 0.0f, 1.0f);
