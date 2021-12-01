@@ -13,7 +13,7 @@ struct TCompFocusController : public TCompBase
     void debugInMenu();
     void renderDebug();
 
-    void enable(CHandle target_entity);
+    void enable(CHandle target_entity, float transition_distance);
     void disable();
 
 private:
