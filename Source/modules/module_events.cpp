@@ -325,6 +325,9 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans_player = player->get<TCompTransform>();
 		player->setPosition(c_trans_target_pos->getPosition(), true);
 		c_trans_player->setRotation(c_trans_target_pos->getRotation());
+		// Reset movements
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->reset();
 
 		// Place Cygnus in the center
 		CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
@@ -332,18 +335,14 @@ void CModuleEventSystem::registerGlobalEvents()
 		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
 		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
 		e_cygnus->setPosition(c_trans_arena->getPosition(), true);
-		// transform->setRotation(QUAT::Concatenate(c_trans_arena->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
 
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+		transform->setRotation(transform->getRotation() * QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f));
 
 		CEntity* e_camera = getEntityByName("camera_mixed");
 		assert(e_camera);
 		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
 		c_focus->enable(e_cygnus, 6.0f);
-
-		// Intro form 3
-		EngineLua.executeScript("CinematicCygnusF2ToF3()");
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/FinalDeath", [](CHandle t, CHandle o) {
@@ -355,6 +354,9 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans_player = player->get<TCompTransform>();
 		player->setPosition(c_trans_target_pos->getPosition(), true);
 		c_trans_player->setRotation(c_trans_target_pos->getRotation());
+		// Reset movements
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->reset();
 
 		// Place Cygnus in the center
 		CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
@@ -362,13 +364,9 @@ void CModuleEventSystem::registerGlobalEvents()
 		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
 		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
 		e_cygnus->setPosition(c_trans_arena->getPosition(), true);
-		// transform->setRotation(QUAT::Concatenate(c_trans_arena->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
 
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
 		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-
-		// Death cinematic
-		EngineLua.executeScript("CinematicCygnusDeath()");
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/HoloDestroyed", [](CHandle t, CHandle o) {
