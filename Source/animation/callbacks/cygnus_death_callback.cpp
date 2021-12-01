@@ -38,6 +38,9 @@ struct onCygnusDeathCallback : public CAnimationCallback
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		// Fix for major audio bug
+		first_update = true;
+
 		CEntity* e_owner = getOwnerEntity(userData);
 		TCompHealth* c_health = e_owner->get<TCompHealth>();
 		if (!c_health)

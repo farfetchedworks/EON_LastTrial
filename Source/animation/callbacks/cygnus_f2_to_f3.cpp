@@ -26,6 +26,9 @@ struct onCygnusF2ToF3 : public CAnimationCallback
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		// Fix for major audio bug
+		first_update = true;
+
 		if (!Boot.inGame())
 			return;
 
