@@ -113,7 +113,7 @@ public:
 		assert(e_camera);
 
 		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
-		c_focus->enable(e_gard);
+		c_focus->enable(e_gard, 6.0f);
 
 		fsm->startCtx();
 
@@ -180,7 +180,7 @@ public:
 		assert(e_camera);
 
 		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
-		c_focus->enable(e_cygnus);
+		c_focus->enable(e_cygnus, 2.0f);
 
 		// Intro
 		EngineLua.executeScript("CinematicCygnusPresentation()");

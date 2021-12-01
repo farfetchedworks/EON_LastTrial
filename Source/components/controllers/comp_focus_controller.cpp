@@ -25,7 +25,7 @@ void TCompFocusController::update(float dt)
             TCompFocus* c_focus = get<TCompFocus>();
             CShaderCte<CtesFocus>& ctes_focus = c_focus->getCtesFocus();
 
-            _intensity -= dt * 0.5f;
+            _intensity -= dt;
             _intensity = clampf(_intensity, 0.0f, 1.0f);
             ctes_focus.focus_intensity = _intensity;
             ctes_focus.updateFromCPU();
@@ -45,10 +45,10 @@ void TCompFocusController::update(float dt)
     TCompFocus* c_focus = get<TCompFocus>();
     CShaderCte<CtesFocus>& ctes_focus = c_focus->getCtesFocus();
 
-    float distance = VEC3::Distance(e_target->getPosition(), e_camera->getPosition()) - 0.5f;
+    float distance = VEC3::Distance(e_target->getPosition(), e_camera->getPosition());
     ctes_focus.focus_z_center_in_focus = clampf(distance, 0.0f, 100000.0f);
 
-    _intensity += dt * 0.5f;
+    _intensity += dt;
     _intensity = clampf(_intensity, 0.0f, 1.0f);
 
     ctes_focus.focus_intensity = _intensity;
@@ -67,7 +67,7 @@ void TCompFocusController::renderDebug()
 #endif
 }
 
-void TCompFocusController::enable(CHandle target_entity)
+void TCompFocusController::enable(CHandle target_entity, float transition_distance)
 {
     _enabled = true;
     _target_entity = target_entity;
@@ -75,13 +75,12 @@ void TCompFocusController::enable(CHandle target_entity)
     TCompFocus* c_focus = get<TCompFocus>();
     c_focus->enable();
 
-    dbg("ENABLE\n");
+    CShaderCte<CtesFocus>& ctes_focus = c_focus->getCtesFocus();
+    ctes_focus.focus_transition_distance = transition_distance;
 }
 
 void TCompFocusController::disable()
 {
     _enabled = false;
     _target_entity = CHandle();
-
-    dbg("DISABLE\n");
 }
