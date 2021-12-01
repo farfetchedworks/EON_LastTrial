@@ -129,7 +129,8 @@ public:
 		EngineAudio.setGlobalRTPC("Gard_Phase", 1, true);
 
 		// Cinematics
-		EngineLua.executeScript("CinematicGardPresentation()");
+		EngineUI.fadeOut(0.75f, 0.25f, 0.25f);
+		EngineLua.executeScript("CinematicGardPresentation()", 0.25f);
 	}
 };
 
