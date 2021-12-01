@@ -2,6 +2,7 @@
 #include "draw_primitives.h"
 #include "geometry/geometry.h"
 #include "components/render/comp_dissolve.h"
+#include "components/abilities/comp_time_reversal.h"
 #include "imgui/imgui_internal.h"
 
 extern CShaderCte<CtesCamera> cte_camera;
@@ -236,7 +237,7 @@ void activateObject(const MAT44& world, VEC4 color, CHandle hEntity) {
   cte_object.object_color = color;
   cte_object.object_dissolve_timer = 0.f;
   cte_object.object_max_dissolve_time = 0.f;
-  cte_object.object_dummy1 = 0.f;
+  cte_object.object_time_reversal_halo_intensity = 0.f;
   cte_object.object_dummy2 = 0.f;
 
   CEntity* entity = hEntity;
@@ -244,6 +245,10 @@ void activateObject(const MAT44& world, VEC4 color, CHandle hEntity) {
       TCompDissolveEffect* c_dissolve = entity->get<TCompDissolveEffect>();
       if (c_dissolve)
           c_dissolve->updateObjectCte(cte_object);
+
+      TCompTimeReversal* c_time_reversal = entity->get<TCompTimeReversal>();
+      if (c_time_reversal)
+          c_time_reversal->updateObjectCte(cte_object);
   }
 
   cte_object.updateFromCPU();

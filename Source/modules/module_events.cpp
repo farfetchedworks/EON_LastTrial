@@ -340,6 +340,12 @@ void CModuleEventSystem::registerGlobalEvents()
 			// Death cinematic
 			EngineLua.executeScript("CinematicCygnusDeath()");
 		});
+
+	EventSystem.registerEventCallback("Gameplay/Eon/HoloDestroyed", [](CHandle t, CHandle o) {
+		CEntity* player = getEntityByName("player");
+		TCompTimeReversal* c_time_reversal = player->get<TCompTimeReversal>();
+		c_time_reversal->removeInvisibleEffect();
+	});
 }
 
 void CModuleEventSystem::renderInMenu()

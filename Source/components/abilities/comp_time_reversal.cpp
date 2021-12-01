@@ -15,6 +15,7 @@
 #include "components/gameplay/comp_lifetime.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/render/comp_dissolve.h"
+#include "components/common/comp_render.h"
 #include "render/draw_primitives.h"
 #include "fsm/fsm_state.h"
 #include "cal3d/cal3d.h"
@@ -91,6 +92,22 @@ void TCompTimeReversal::renderEffect(bool state)
         EngineAudio.setGlobalRTPC(FMOD_PARAM_END, 0);
         EngineAudio.postEvent(FMOD_EVENT);
     }
+}
+
+void TCompTimeReversal::updateObjectCte(CShaderCte<CtesObject>& cte)
+{
+    cte.object_time_reversal_halo_intensity = 0.0f;
+}
+
+void TCompTimeReversal::removeInvisibleEffect()
+{
+    if (!invisible_effect) return;
+
+    invisible_effect = false;
+
+    TCompRender* c_render = get<TCompRender>();
+    const std::string& material_name = c_render->draw_calls[0].material->getName();
+    c_render->setMaterialForAll(Resources.get(original_material)->as<CMaterial>());
 }
 
 void TCompTimeReversal::update(float dt)
@@ -205,6 +222,7 @@ bool TCompTimeReversal::startRewinding()
 
     if (!hEonHolo.isValid()) {
         spawnHolo();
+        holo_created = true;
     }
 
     stop_timer = -1.f;
@@ -254,6 +272,14 @@ bool TCompTimeReversal::startRewinding()
 
 void TCompTimeReversal::stopRewinding()
 {
+    //if (holo_created) {
+    //    TCompRender* c_render = get<TCompRender>();
+    //    original_material = c_render->draw_calls[0].material->getName();
+    //    c_render->setMaterialForAll(Resources.get(addSuffixBeforeExtension(original_material, "_time_reversal"))->as<CMaterial>());
+    //    holo_created = false;
+    //    invisible_effect = true;
+    //}
+
     // Reset delta scale
     TCompGameManager* c_game_manager = h_game_manager;
     c_game_manager->setTimeStatusLerped(TCompGameManager::ETimeStatus::NORMAL, 0.5f);

@@ -48,6 +48,10 @@ private:
     bool enabled                    = true;
     eEffectState rendering_effect   = eEffectState::NONE;
 
+    bool invisible_effect = false;
+    bool holo_created = false;
+    std::string original_material;
+
     int warp_consumption = 2;
     int max_seconds = 5;
     float rewind_speed = 1.f;
@@ -95,4 +99,6 @@ public:
     int getWarpConsumption() { return warp_consumption; }
     void clearBuffer() { generated_shots = 0; }
     void renderEffect(bool state);
+    void updateObjectCte(CShaderCte<CtesObject>& cte);
+    void removeInvisibleEffect();
 };
