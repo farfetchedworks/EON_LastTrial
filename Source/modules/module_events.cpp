@@ -255,6 +255,14 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans = owner->get<TCompTransform>();
 		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
 	});
+
+	EventSystem.registerEventCallback("Gameplay/Cygnus/floorHitParticles", [](CHandle t, CHandle o) {
+		CEntity* owner = t;
+		assert(owner);
+		TCompTransform* c_trans = owner->get<TCompTransform>();
+		spawnParticles("data/particles/compute_sword_sparks_particle.json", c_trans->getPosition() + c_trans->getForward() * 0.44f, c_trans->getPosition());
+		spawnParticles("data/particles/compute_sword_sparks_particle.json", c_trans->getPosition() + c_trans->getForward() * 0.5f - c_trans->getRight() * 0.24f, c_trans->getPosition());
+	});
 	
 	EventSystem.registerEventCallback("Gameplay/NPC/Flower", [](CHandle t, CHandle o) {
 	
