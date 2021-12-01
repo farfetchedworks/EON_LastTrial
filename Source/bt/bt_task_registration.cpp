@@ -1869,12 +1869,6 @@ public:
 		// Add a fade out to start the animation
 		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
 
-		CEntity* e_cygnus = ctx.getOwnerEntity();
-		CEntity* e_camera = getEntityByName("camera_mixed");
-		assert(e_camera);
-		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
-		c_focus->enable(e_cygnus, 6.0f);
-
 		// Stop all forces
 		CEntity* player = getPlayer();
 		TMsgRemoveForces msgForce;
