@@ -72,6 +72,9 @@ struct onCygnusF1ToF2 : public CAnimationCallback
 			return;
 
 		bhole->destroy();
+
+		correct_pos = false;
+		first_update = true;
 	}
 };
 

@@ -279,7 +279,7 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
 		CEntity* player = getEntityByName("player");
 		TCompTransform* c_trans_player = player->get<TCompTransform>();
-		c_trans_player->setRotation(c_trans_player->getRotation());
+		c_trans_player->setRotation(c_trans_target_pos->getRotation());
 		player->setPosition(c_trans_target_pos->getPosition(), true);
 		
 		// Place Cygnus in the center
@@ -317,7 +317,7 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
 		CEntity* player = getEntityByName("player");
 		TCompTransform* c_trans_player = player->get<TCompTransform>();
-		c_trans_player->setRotation(c_trans_player->getRotation());
+		c_trans_player->setRotation(c_trans_target_pos->getRotation());
 		player->setPosition(c_trans_target_pos->getPosition(), true);
 
 		// Place Cygnus in the center
