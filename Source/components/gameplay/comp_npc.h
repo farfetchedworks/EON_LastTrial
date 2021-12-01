@@ -10,6 +10,7 @@ class TCompNPC : public TCompBase {
 	bool first_interaction = false;
 	bool talk_3d = true;
 
+	VEC3 lookat_offset;
 	float sight_radius = 2.f;
 	std::string unique_caption_scene;
 	std::string caption_scene;
