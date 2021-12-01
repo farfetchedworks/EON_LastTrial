@@ -22,12 +22,11 @@ void TCompNPC::load(const json& j, TEntityParseContext& ctx)
 {
 	assert(j.count("caption_scenes"));
 	sight_radius = j.value("sight_radius", sight_radius);
+	lookat_offset = loadVEC3(j, "lookat_offset", VEC3());
 	talk_3d = j.value("talk_3d", talk_3d);
 	
 	unique_caption_scene = j["caption_scenes"].value("unique", std::string());
 	caption_scene = j["caption_scenes"].value("the_rest", std::string());
-
-	assert(unique_caption_scene.length());
 }
 
 void TCompNPC::update(float dt)
@@ -38,8 +37,10 @@ void TCompNPC::update(float dt)
 bool TCompNPC::resolve()
 {
 	CEntity* player = getEntityByName("player");
-	if (!player)
+
+	if (!player || (first_interaction && !caption_scene.length()))
 		return false;
+
 	return PawnUtils::isInsideCone(player, CHandle(this).getOwner(), deg2rad(80.f), sight_radius);
 }
 
@@ -53,7 +54,7 @@ void TCompNPC::interact()
 	CEntity* trigger = talk_3d ? getEntity() : nullptr;
 	bool is_ok = false;
 
-	if (!first_interaction)
+	if (!first_interaction && unique_caption_scene.length() > 0)
 	{
 		Subtitles.startCaption(unique_caption_scene, trigger);
 		PlayerInput.blockInput();
@@ -72,7 +73,8 @@ void TCompNPC::interact()
 		CEntity* player = getEntityByName("player");
 		TCompSkelLookAt* look_at = player->get<TCompSkelLookAt>();
 		look_at->setEnabled(true);
-		look_at->setTarget(getEntity()->getPosition());
+		VEC3 lookAtPos = getEntity()->getPosition() + lookat_offset;
+		look_at->setTarget(lookAtPos);
 	}
 }
 

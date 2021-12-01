@@ -13,6 +13,8 @@ private:
 	bool _enabled = true;
 	bool _executed = false;
 
+	std::string _event_callback;
+
 public:
 
 	void load(const json& j, TEntityParseContext& ctx);

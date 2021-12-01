@@ -47,6 +47,11 @@ void TCompDissolveEffect::onEntityCreated()
 	}
 }
 
+bool TCompDissolveEffect::isEnabled()
+{
+	return _enabled;
+}
+
 void TCompDissolveEffect::fromLifetime(float ttl)
 {
 	_waitTimer = std::max(ttl - _dissolveTime, 0.f);
@@ -54,6 +59,8 @@ void TCompDissolveEffect::fromLifetime(float ttl)
 
 void TCompDissolveEffect::enable(float time, float waitTime, bool inversed, bool propagate_childs)
 {
+	if (_enabled) return;
+
 	_waitTimer = waitTime;
 	_dissolveTime = time;
 	_inversed = inversed;
@@ -97,6 +104,16 @@ void TCompDissolveEffect::setMaterial(const std::string& mat_name)
 	CEntity* owner = getEntity();
 	TCompRender* c_render = owner->get<TCompRender>();
 	c_render->setMaterialForAll(Resources.get(mat_name)->as<CMaterial>());
+}
+
+void TCompDissolveEffect::setOriginalMaterial(const std::string& mat_name)
+{
+	_originalMatName = mat_name;
+}
+
+const std::string& TCompDissolveEffect::getOriginalMaterial()
+{
+	return _originalMatName;
 }
 
 void TCompDissolveEffect::setUseDefaultMat(bool use_default)

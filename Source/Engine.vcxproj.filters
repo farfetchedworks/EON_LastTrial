@@ -290,6 +290,7 @@
     <ClCompile Include="components\gameplay\comp_eter.cpp" />
     <ClCompile Include="modules\module_settings.cpp" />
     <ClCompile Include="ui\widgets\ui_checkbox.cpp" />
+    <ClCompile Include="components\controllers\comp_focus_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\callbacks\event_callback.h" />
@@ -595,6 +596,7 @@
     <ClInclude Include="components\gameplay\comp_eter.h" />
     <ClInclude Include="modules\module_settings.h" />
     <ClInclude Include="ui\widgets\ui_checkbox.h" />
+    <ClInclude Include="components\controllers\comp_focus_controller.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

@@ -1,16 +1,9 @@
 #pragma once
 
-#include "components/common/comp_base.h"
-#include "render/render.h"
-#include "components/messages.h"
-
-class CRenderToTexture;
-class CTexture;
-class CMesh;
-class CPipelineState;
+#include "comp_bilateral_blur.h"
 
 // ------------------------------------
-class TCompFocus : public TCompBase
+class TCompFocus : public TCompBilateralBlur
 {
 	int idx = 0;
 
@@ -28,6 +21,11 @@ public:
 	void load(const json& j, TEntityParseContext& ctx);
 	void onEntityCreated();
 	void debugInMenu();
+
+	void enable();
+	void disable();
+
+	CShaderCte<CtesFocus>& getCtesFocus();
 
 	CTexture* apply(CTexture* blur_texture, CTexture* last_texture);
 

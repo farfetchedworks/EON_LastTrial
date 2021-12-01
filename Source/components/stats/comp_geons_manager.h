@@ -10,7 +10,9 @@ class TCompGeonsManager: public TCompBase {
 
 private:
     int current_geons       = 0;
+    float lerp_geons        = .0;
     int phase               = 1;
+    int prev_phase          = 1;
     int total_phases        = 1;
     int first_phase_req     = 0;
     float increase_ratio    = 0.f;
@@ -33,5 +35,6 @@ public:
     void setPhase(int new_phase);
     void increasePhase(bool only_stats = false);
     void addGeons(int geons);
+    void lerpGeons(float dt);
     void onEnemyDied(const TMsgEnemyDied& msg);
 };
