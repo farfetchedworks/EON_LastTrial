@@ -14,6 +14,8 @@
 #include "components/common/comp_parent.h"
 #include "components/cameras/comp_camera_follow.h"
 #include "components/controllers/comp_rigid_animation_controller.h"
+#include "components/controllers/comp_ai_controller_base.h"
+#include "components/controllers/comp_focus_controller.h"
 #include "components/controllers/comp_player_controller.h"
 #include "components/controllers/pawn_utils.h"
 #include "components/gameplay/comp_game_manager.h"
@@ -254,6 +256,14 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans = owner->get<TCompTransform>();
 		spawnParticles("data/particles/compute_run_particles.json", c_trans->getPosition() + c_trans->getForward() * 0.6f, c_trans->getPosition());
 	});
+
+	EventSystem.registerEventCallback("Gameplay/Cygnus/floorHitParticles", [](CHandle t, CHandle o) {
+		CEntity* owner = t;
+		assert(owner);
+		TCompTransform* c_trans = owner->get<TCompTransform>();
+		spawnParticles("data/particles/compute_sword_sparks_particle.json", c_trans->getPosition() + c_trans->getForward() * 0.44f, c_trans->getPosition());
+		spawnParticles("data/particles/compute_sword_sparks_particle.json", c_trans->getPosition() + c_trans->getForward() * 0.5f - c_trans->getRight() * 0.24f, c_trans->getPosition());
+	});
 	
 	EventSystem.registerEventCallback("Gameplay/NPC/Flower", [](CHandle t, CHandle o) {
 	
@@ -279,16 +289,16 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
 		CEntity* player = getEntityByName("player");
 		TCompTransform* c_trans_player = player->get<TCompTransform>();
-		c_trans_player->setRotation(c_trans_player->getRotation());
 		player->setPosition(c_trans_target_pos->getPosition(), true);
+		c_trans_player->setRotation(c_trans_target_pos->getRotation());
 		
 		// Place Cygnus in the center
-		CEntity* e = getEntityByName("Cygnus_Form_1");
-		TCompTransform* transform = e->get<TCompTransform>();
+		CEntity* e_cygnus = getEntityByName("Cygnus_Form_1");
+		TCompTransform* transform = e_cygnus->get<TCompTransform>();
 		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
 		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-		transform->fromMatrix(*c_trans_arena);
-		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
+		e_cygnus->setPosition(c_trans_arena->getPosition(), true);
+		transform->setRotation(QUAT::Concatenate(c_trans_arena->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
 
 		// Spawn the black hole where Cygnus is
 		spawn("data/prefabs/black_hole_cygnus.json", *transform);
@@ -300,10 +310,15 @@ void CModuleEventSystem::registerGlobalEvents()
 		transform_form_1.setRotation(QUAT::Concatenate(transform_form_1.getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
 
 		// Spawn new form
-		spawn("data/prefabs/cygnus_form_2.json", transform_form_1);
+		CEntity* e_cygnus_2 = spawn("data/prefabs/cygnus_form_2.json", transform_form_1);
+
+		CEntity* e_camera = getEntityByName("camera_mixed");
+		assert(e_camera);
+		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
+		c_focus->enable(e_cygnus_2, 6.0f);
 
 		// Destroy form 1 entity
-		e->destroy();
+		e_cygnus->destroy();
 		CHandleManager::destroyAllPendingObjects();
 
 		// Intro form 2
@@ -317,43 +332,66 @@ void CModuleEventSystem::registerGlobalEvents()
 		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
 		CEntity* player = getEntityByName("player");
 		TCompTransform* c_trans_player = player->get<TCompTransform>();
-		c_trans_player->setRotation(c_trans_player->getRotation());
 		player->setPosition(c_trans_target_pos->getPosition(), true);
+		c_trans_player->setRotation(c_trans_target_pos->getRotation());
+		// Reset movements
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->reset();
 
 		// Place Cygnus in the center
-		CEntity* e = getEntityByName("Cygnus_Form_2");
-		TCompTransform* transform = e->get<TCompTransform>();
+		CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
+		TCompTransform* transform = e_cygnus->get<TCompTransform>();
 		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
 		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-		transform->fromMatrix(*c_trans_arena);
-		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromAxisAngle(VEC3::Up, deg2rad(180.f))));
+		e_cygnus->setPosition(c_trans_arena->getPosition(), true);
 
-		// Rotate to face player
-		float yaw = transform->getYawRotationToAimTo(player->getPosition());
-		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-
-		// Intro form 3
-		EngineLua.executeScript("CinematicCygnusF2ToF3()");
+		// update transform rotation and force controller rotation
+		{
+			float yaw = transform->getYawRotationToAimTo(player->getPosition());
+			QUAT q = QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), transform->getRotation());
+			transform->setRotation(q);
+			TCompAIControllerBase* h_aicontroller = e_cygnus->get<TCompAIControllerBase>();
+			h_aicontroller->setTargetRotation(q);
+		}
+		
+		CEntity* e_camera = getEntityByName("camera_mixed");
+		assert(e_camera);
+		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
+		c_focus->enable(e_cygnus, 6.0f);
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/FinalDeath", [](CHandle t, CHandle o) {
 
-			CEntity* player = getEntityByName("player");
+		// Set player in initial pos every cinematic
+		CEntity* playerTargetEntity = getEntityByName("CygnusBeamPosition2");
+		TCompTransform* c_trans_target_pos = playerTargetEntity->get<TCompTransform>();
+		CEntity* player = getEntityByName("player");
+		TCompTransform* c_trans_player = player->get<TCompTransform>();
+		player->setPosition(c_trans_target_pos->getPosition(), true);
+		c_trans_player->setRotation(c_trans_target_pos->getRotation());
+		// Reset movements
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->reset();
 
-			// Place Cygnus in the center
-			CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
-			TCompTransform* transform = e_cygnus->get<TCompTransform>();
-			CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
-			TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
-			transform->setPosition(c_trans_arena->getPosition());
+		// Place Cygnus in the center
+		CEntity* e_cygnus = getEntityByName("Cygnus_Form_2");
+		TCompTransform* transform = e_cygnus->get<TCompTransform>();
+		CEntity* e_arenacenter = getEntityByName("CygnusArenaCenter");
+		TCompTransform* c_trans_arena = e_arenacenter->get<TCompTransform>();
+		e_cygnus->setPosition(c_trans_arena->getPosition(), true);
 
-			// Rotate to face player
+		// update transform rotation and force controller rotation
+		{
 			float yaw = transform->getYawRotationToAimTo(player->getPosition());
-			transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
-			
-			// Death cinematic
-			EngineLua.executeScript("CinematicCygnusDeath()");
-		});
+			QUAT q = QUAT::Concatenate(QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f), transform->getRotation());
+			transform->setRotation(q);
+			TCompAIControllerBase* h_aicontroller = e_cygnus->get<TCompAIControllerBase>();
+			h_aicontroller->setTargetRotation(q);
+		}
+
+		float yaw = transform->getYawRotationToAimTo(player->getPosition());
+		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/HoloDestroyed", [](CHandle t, CHandle o) {
 		CEntity* player = getEntityByName("player");

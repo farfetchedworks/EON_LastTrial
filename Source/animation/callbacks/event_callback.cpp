@@ -3,6 +3,7 @@
 #include "engine.h"
 #include "modules/module_events.h"
 #include "audio/module_audio.h"
+#include "lua/module_scripting.h"
 #include "fsm/fsm.fwd.h"
 #include "components/common/comp_fsm.h"
 #include "fsm/states/logic/state_locomotion.h"
@@ -16,9 +17,11 @@ void EventCallback::parse(const json& j)
 
 	// ------------
 	// Read type
-	std::string type = j.value("type", "default");
-	if (type == "audio") {
-		this->type = EType::AUDIO;
+	std::string type_name = j.value("type", "default");
+	if (type_name == "audio") {
+		type = EType::AUDIO;
+	}else if (type_name == "script") {
+		type = EType::SCRIPT;
 	}
 
 	// ------------
@@ -77,6 +80,10 @@ void EventCallback::AnimationUpdate(float anim_time, CalModel* model, CalCoreAni
 
 		if (type == EType::AUDIO) {
 			EngineAudio.postEvent(name, owner);
+		}
+		else if (type == EType::SCRIPT)
+		{
+			EngineLua.executeScript(name);
 		}
 		else {
 			EventSystem.dispatchEvent(name, owner);
