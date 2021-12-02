@@ -101,7 +101,7 @@
 			<value>113785</value>
 		</property>
 		<property name="wetLevel">
-			<value>-11</value>
+			<value>-10.5</value>
 		</property>
 		<property name="linkChannels">
 			<value>false</value>
@@ -128,6 +128,9 @@
 		</property>
 		<property name="highCut">
 			<value>20000</value>
+		</property>
+		<property name="wetLevel">
+			<value>-5</value>
 		</property>
 		<property name="dryLevel">
 			<value>-80</value>

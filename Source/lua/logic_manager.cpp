@@ -186,6 +186,7 @@ namespace LogicManager
 		CEntity* e_camera_follow = getEntityByName("camera_follow");
 		TCompCameraFollow* c_camera_follow = e_camera_follow->get<TCompCameraFollow>();
 		c_camera_follow->enable();
+		c_camera_follow->must_recenter = true;
 
 		CEntity* e_camera = getEntityByName("camera_cinematic");
 		TCompTransform* c_trans = e_camera->get<TCompTransform>();

@@ -140,6 +140,7 @@ public:
     void setFloorMaterialInfo(const CPhysicalMaterial* material, VEC3 hitPos);
     bool inWater();
 
+    void reset();
     void move(float dt);
     void resetMoveTimer();
     void removeLockOn(bool recenter = true);

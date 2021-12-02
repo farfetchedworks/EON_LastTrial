@@ -597,9 +597,16 @@
     <ClInclude Include="modules\module_settings.h" />
     <ClInclude Include="ui\widgets\ui_checkbox.h" />
     <ClInclude Include="components\controllers\comp_focus_controller.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
     <None Include="geometry\SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\ui\eon.ico" />
   </ItemGroup>
 </Project>

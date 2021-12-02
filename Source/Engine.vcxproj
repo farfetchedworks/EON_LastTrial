@@ -565,6 +565,7 @@
     <ClInclude Include="render\textures\video\video_texture.h" />
     <ClInclude Include="render\vertex_declaration.h" />
     <ClInclude Include="animation\rigid\rigid_animation_data.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="resources\resources.h" />
     <ClInclude Include="animation\animation_callback.h" />
     <ClInclude Include="skeleton\bone_correction.h" />
@@ -617,6 +618,12 @@
   <ItemGroup>
     <Natvis Include="handle\handle.natvis" />
     <Natvis Include="utils\nlohmann_json.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\ui\eon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

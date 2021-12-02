@@ -43,6 +43,7 @@ void TCompDissolveEffect::debugInMenu()
 void TCompDissolveEffect::onEntityCreated()
 {
 	if (_enabled) {
+		_enabled = false;
 		enable(_dissolveTime, _waitTimer);
 	}
 }

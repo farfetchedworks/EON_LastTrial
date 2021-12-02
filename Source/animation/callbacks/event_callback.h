@@ -7,6 +7,7 @@ struct EventCallback : public CAnimationCallback
 {
 	enum class EType {
 		DEFAULT,
+		SCRIPT,
 		AUDIO
 	};
 
