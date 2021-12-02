@@ -34,6 +34,9 @@
 		<property name="lowShelfGain">
 			<value>-3</value>
 		</property>
+		<property name="wetLevel">
+			<value>-5.5</value>
+		</property>
 	</object>
 	<object class="MixerBusFader" id="{f3a96d06-91f4-469c-ad14-730f313f9486}" />
 </objects>
