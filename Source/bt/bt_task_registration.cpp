@@ -1982,6 +1982,8 @@ public:
 
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
 		{
+			ctx.setNodeVariable(name, "allow_aborts", false);
+
 			TCompRender* render = ctx.getComponent<TCompRender>();
 			render->setEnabled(false);
 			// Stop the animation and return to Locomotion state
@@ -2005,6 +2007,8 @@ public:
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
+			ctx.setNodeVariable(name, "allow_aborts", true);
+
 			// Re-enable colliders
 			TCompCollider* c_collider = ctx.getComponent<TCompCollider>();
 			c_collider->disable(false);
@@ -2078,11 +2082,11 @@ public:
 	}
 
 	void onEnter(CBTContext& ctx) override {
-		
+		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
-		return tickCondition(ctx, "is_teleporting", dt, false);
+		return tickCondition(ctx, "is_teleporting", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
 	}
 };
 
@@ -2096,10 +2100,13 @@ public:
 		phase_num = (int)number_field[0];
 	}
 
-	EBTNodeResult executeTask(CBTContext& ctx, float dt) {		
+	void onEnter(CBTContext& ctx) override {
 		clamp(phase_num, 2, 4);
 		ctx.setFSMVariable("phase_number", phase_num);
 		ctx.getBlackboard()->setValue<int>("phaseNumber", phase_num);
+
+		if (phase_num != 3)
+			return;
 
 		// Always remove emissive pinxos on phase change
 		CEntity* owner = ctx.getOwnerEntity();
@@ -2107,23 +2114,25 @@ public:
 		if (mod)
 			mod->blendOut();
 
-		if (phase_num != 3)
-			return EBTNodeResult::SUCCEEDED;
-
 		// The only cinematic is from F2 to F3 (in phase 3)
 		EngineUI.fadeOut(0.7f, 0.2f, 0.2f);
-			
-		TCompBT* c_bt = ctx.getComponent<TCompBT>();
-		assert(c_bt);
-		c_bt->setEnabled(false);
+
+		//TCompBT* c_bt = ctx.getComponent<TCompBT>();
+		//assert(c_bt);
+		//c_bt->setEnabled(false);
 
 		// Hide health bar
 		TCompHealth* c_health = ctx.getComponent<TCompHealth>();
 		c_health->setRenderActive(false);
 
 		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 0.7f);
-		
-		return EBTNodeResult::SUCCEEDED;
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {		
+		if (phase_num == 2)
+			return EBTNodeResult::SUCCEEDED;
+
+		return tickCondition(ctx, "is_changing_form", dt, false);
 	}
 };
 
