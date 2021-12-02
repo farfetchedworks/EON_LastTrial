@@ -645,14 +645,8 @@ void TCompPlayerController::setFloorMaterialInfo(const CPhysicalMaterial* materi
 			waterPos = closest->getPosition();
 	}
 	
-	/*CTransform t;
-	t.setPosition(waterPos);
-	CEntity* splash = spawn("data/particles/water_splash.json", t);
-	EngineLua.executeScript("destroyEntity('" + std::string(splash->getName()) + "')", 1.f);*/
-
 	// The raycast adds 1m
 	floorDistance = fabsf(waterPos.y - hitPos.y);
-	// printFloat("Distance", floorDistance);
 }
 
 bool TCompPlayerController::inWater()
@@ -904,7 +898,6 @@ void TCompPlayerController::updatePath(float dt)
 		// Detect end
 		origin += move_dir;
 		dist = VEC2::Distance(VEC2(origin.x, origin.z), VEC2(target.x, target.z));
-		printFloat("distace to waypoint", dist);
 
 		if (dist < pathAcceptanceDistance) {
 			pathIndex++;

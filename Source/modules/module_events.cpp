@@ -358,6 +358,8 @@ void CModuleEventSystem::registerGlobalEvents()
 		assert(e_camera);
 		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
 		c_focus->enable(e_cygnus, 6.0f);
+
+		EngineLua.executeScript("CinematicCygnusF2ToF3()");
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Cygnus/FinalDeath", [](CHandle t, CHandle o) {
@@ -391,6 +393,8 @@ void CModuleEventSystem::registerGlobalEvents()
 
 		float yaw = transform->getYawRotationToAimTo(player->getPosition());
 		transform->setRotation(QUAT::Concatenate(transform->getRotation(), QUAT::CreateFromYawPitchRoll(yaw, 0.f, 0.f)));
+
+		EngineLua.executeScript("CinematicCygnusDeath()");
 	});
 
 	EventSystem.registerEventCallback("Gameplay/Eon/HoloDestroyed", [](CHandle t, CHandle o) {

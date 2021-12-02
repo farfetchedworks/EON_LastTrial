@@ -1867,7 +1867,7 @@ public:
 		ctx.setIsDying(true);
 
 		// Add a fade out to start the animation
-		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
+		EngineUI.fadeOut(0.8f, 0.2f, 0.2f);
 
 		// Stop all forces
 		CEntity* player = getPlayer();
@@ -1876,7 +1876,7 @@ public:
 		msgForce.force_origin = "Cygnus";
 		player->sendMsg(msgForce);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 1.f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_1_to_2')", 0.2f);
 
 #else
 		// To avoid playing cinematics
@@ -1987,6 +1987,8 @@ public:
 
 		callbacks.onStartupFinished = [&](CBTContext& ctx, float dt)
 		{
+			ctx.setNodeVariable(name, "allow_aborts", false);
+
 			TCompRender* render = ctx.getComponent<TCompRender>();
 			render->setEnabled(false);
 			// Stop the animation and return to Locomotion state
@@ -2010,6 +2012,8 @@ public:
 
 		callbacks.onActiveFinished = [&](CBTContext& ctx, float dt)
 		{
+			ctx.setNodeVariable(name, "allow_aborts", true);
+
 			// Re-enable colliders
 			TCompCollider* c_collider = ctx.getComponent<TCompCollider>();
 			c_collider->disable(false);
@@ -2083,11 +2087,11 @@ public:
 	}
 
 	void onEnter(CBTContext& ctx) override {
-		
+		ctx.setNodeVariable(name, "allow_aborts", true);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {
-		return tickCondition(ctx, "is_teleporting", dt, false);
+		return tickCondition(ctx, "is_teleporting", dt, ctx.getNodeVariable<bool>(name, "allow_aborts"));
 	}
 };
 
@@ -2101,7 +2105,7 @@ public:
 		phase_num = (int)number_field[0];
 	}
 
-	EBTNodeResult executeTask(CBTContext& ctx, float dt) {		
+	void onEnter(CBTContext& ctx) override {
 		clamp(phase_num, 2, 4);
 		ctx.setFSMVariable("phase_number", phase_num);
 		ctx.getBlackboard()->setValue<int>("phaseNumber", phase_num);
@@ -2118,22 +2122,23 @@ public:
 		controller->removeLockOn();
 
 		if (phase_num != 3)
-			return EBTNodeResult::SUCCEEDED;
+			return;
 
 		// The only cinematic is from F2 to F3 (in phase 3)
-		EngineUI.activateWidget("modal_black", true, 0.2f);
-			
-		TCompBT* c_bt = ctx.getComponent<TCompBT>();
-		assert(c_bt);
-		c_bt->setEnabled(false);
+		EngineUI.fadeOut(0.8f, 0.2f, 0.2f);
 
 		// Hide health bar
 		TCompHealth* c_health = ctx.getComponent<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')");
-		
-		return EBTNodeResult::SUCCEEDED;
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 0.2f);
+	}
+
+	EBTNodeResult executeTask(CBTContext& ctx, float dt) {		
+		if (phase_num == 2)
+			return EBTNodeResult::SUCCEEDED;
+
+		return tickCondition(ctx, "is_changing_form", dt, false);
 	}
 };
 
@@ -2427,7 +2432,7 @@ public:
 
 		CEntity* e = ctx.getOwnerEntity();
 
-		EngineUI.activateWidget("modal_black", true, 0.2f);
+		EngineUI.fadeOut(0.8f, 0.2f, 0.2f);
 
 		// Remove lock on
 		CEntity* player = getEntityByName("player");
@@ -2443,7 +2448,7 @@ public:
 		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
 		c_focus->enable(e, 6.0f);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')");
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')", 0.2f);
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {

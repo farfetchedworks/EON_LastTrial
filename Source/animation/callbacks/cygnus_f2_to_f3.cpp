@@ -32,13 +32,8 @@ struct onCygnusF2ToF3 : public CAnimationCallback
 		if (!Boot.inGame())
 			return;
 
-		// Enable BT
-		CEntity* e_owner = getOwnerEntity(userData);
-		TCompBT* c_bt = e_owner->get<TCompBT>();
-		assert(c_bt);
-		c_bt->setEnabled(true);
-
 		// Show health bar
+		CEntity* e_owner = getOwnerEntity(userData);
 		TCompHealth* c_health = e_owner->get<TCompHealth>();
 		c_health->setRenderActive(true, "cygnus");
 	}

@@ -31,15 +31,14 @@ namespace ui
 
         _timer += Time.delta_unscaled;
 
+        setTime(widget);
+
         if (_timer > _time)
         {
             _timer = 0.f;
             widget->setState(EState::STATE_NONE);
             widget->propagateState(EState::STATE_IN);
-            return;
         }
-
-        setTime(widget);
     }
 
     void CEffect_FadeIn::renderInMenu()
@@ -63,14 +62,13 @@ namespace ui
 
         _timer += Time.delta_unscaled;
 
+        setTime(widget);
+
         if (_timer > _time)
         {
             _timer = 0.f;
             widget->setState(EState::STATE_CLEAR);
             widget->propagateState(EState::STATE_OUT);
-            return;
         }
-
-        setTime(widget);
     }
 }
