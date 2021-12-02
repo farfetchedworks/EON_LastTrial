@@ -23,6 +23,8 @@ struct onGardInsertBranchesCallback : public CAnimationCallback
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		// Fix for major audio bug
+		callback_called = false;
 	}
 };
 

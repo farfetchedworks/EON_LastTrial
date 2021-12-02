@@ -424,6 +424,20 @@ VEC3 TCompPlayerController::getMoveDirection(bool& moving)
 	return moveDir;
 }
 
+void TCompPlayerController::reset()
+{
+	last_dir = VEC3::Zero;
+	move_dir = VEC3::Zero;
+	raw_dir = VEC3::Zero;
+	rot_factor = 0.f;
+
+	// Force camera update
+	CEntity* cam = getEntityByName("camera_follow");
+	TCompCameraFollow* c_follow = cam->get<TCompCameraFollow>();
+	c_follow->must_recenter = true;
+	c_follow->update(Time.delta);
+}
+
 void TCompPlayerController::move(float dt)
 {
 	TCompGameManager* c_gm = GameManager->get<TCompGameManager>();

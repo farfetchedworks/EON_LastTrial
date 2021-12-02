@@ -1935,6 +1935,10 @@ public:
 		c_time_reversal->startRewinding();
 		ctx.allowAborts(false);
 
+		// Remove lock on
+		CEntity* player = getEntityByName("player");
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->removeLockOn();
 
 		// FMOD event, as there is no animation bound to the task
 		TCompTransform* h_trans = ctx.getComponent<TCompTransform>();
@@ -2108,11 +2112,16 @@ public:
 		if (mod)
 			mod->blendOut();
 
+		// Remove lock on
+		CEntity* player = getEntityByName("player");
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->removeLockOn();
+
 		if (phase_num != 3)
 			return EBTNodeResult::SUCCEEDED;
 
 		// The only cinematic is from F2 to F3 (in phase 3)
-		EngineUI.fadeOut(1.f, 0.2f, 0.2f);
+		EngineUI.activateWidget("modal_black", true, 0.2f);
 			
 		TCompBT* c_bt = ctx.getComponent<TCompBT>();
 		assert(c_bt);
@@ -2122,7 +2131,7 @@ public:
 		TCompHealth* c_health = ctx.getComponent<TCompHealth>();
 		c_health->setRenderActive(false);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')", 1.f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/Phase_2_to_3')");
 		
 		return EBTNodeResult::SUCCEEDED;
 	}
@@ -2418,7 +2427,12 @@ public:
 
 		CEntity* e = ctx.getOwnerEntity();
 
-		EngineUI.fadeOut(1.f, 0.25f, 0.25f);
+		EngineUI.activateWidget("modal_black", true, 0.2f);
+
+		// Remove lock on
+		CEntity* player = getEntityByName("player");
+		TCompPlayerController* controller = player->get<TCompPlayerController>();
+		controller->removeLockOn();
 
 		// Hide health bar
 		TCompHealth* c_health = e->get<TCompHealth>();
@@ -2429,7 +2443,7 @@ public:
 		TCompFocusController* c_focus = e_camera->get<TCompFocusController>();
 		c_focus->enable(e, 6.0f);
 
-		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')", 1.f);
+		EngineLua.executeScript("dispatchEvent('Gameplay/Cygnus/FinalDeath')");
 	}
 
 	EBTNodeResult executeTask(CBTContext& ctx, float dt) {

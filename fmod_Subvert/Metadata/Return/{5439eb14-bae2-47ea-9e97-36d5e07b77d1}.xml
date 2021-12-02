@@ -71,7 +71,7 @@
 			<value>66007</value>
 		</property>
 		<property name="wetLevel">
-			<value>-25.5</value>
+			<value>-24.5</value>
 		</property>
 		<property name="linkChannels">
 			<value>false</value>
@@ -103,7 +103,7 @@
 			<value>100</value>
 		</property>
 		<property name="wetLevel">
-			<value>-10</value>
+			<value>-9</value>
 		</property>
 		<property name="dryLevel">
 			<value>-10</value>
