@@ -21,12 +21,14 @@ struct onCygnusF2ToF3 : public CAnimationCallback
 			first_update = false;
 
 			EngineAudio.setMusicRTPC("Cygnus_Phase", 3, true);
-			// EngineAudio.postEvent("CHA/Cygnus/P1/AT/Cygnus_P1_To_P2", CHandle(getOwnerEntity(userData)));
 		}
 	}
 
 	void AnimationComplete(CalModel* model, CalCoreAnimation* animation, void* userData)
 	{
+		// Fix for major audio bug
+		first_update = true;
+
 		if (!Boot.inGame())
 			return;
 
